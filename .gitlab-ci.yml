@@ -1,0 +1,24 @@
+stages:
+  - build
+  - deploy
+  
+before_script:
+  - dotnet restore
+
+build:
+  stage: build
+  script:
+    - dotnet restore
+    - dotnet build
+    
+website:
+  stage: deploy
+  only:
+    - master
+  script:
+    - dotnet publish ./smart-home-web/smart-home-web/smart-home-web.csproj -c Release -o ../../publish_web/
+    - rm ./publish_web/appsettings.json
+    - rm ./publish_web/nlog.config
+    - cp -a ./publish_web/. /var/www/academy/
+    - systemctl restart kestrel-academy.service
+
