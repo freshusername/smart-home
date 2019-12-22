@@ -6,7 +6,7 @@ using System.Text;
 namespace Domain.Core.Model
 {
     public class AppUser : IdentityUser
-    {
+	{
 
     }
 }

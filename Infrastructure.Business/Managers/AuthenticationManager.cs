@@ -25,11 +25,10 @@ namespace Infrastructure.Business.Services
             _mapper = mapper;
         }
 
-
-
         public async Task<OperationDetails> Register(UserDTO userDTO)
         {
             var user = await _db.UserManager.FindByEmailAsync(userDTO.Email);
+
             if (user == null)
             {
                 var userIdentity = _mapper.Map<UserDTO, AppUser>(userDTO);
@@ -130,15 +129,14 @@ namespace Infrastructure.Business.Services
             {
                 Email = info.Principal.FindFirst(ClaimTypes.Email).Value,
                 UserName = info.Principal.FindFirst(ClaimTypes.Email).Value,
-                FirstName = names[0],
-                LastName = names[1],
                 EmailConfirmed = true
             };
 
             IdentityResult identResult = await _db.UserManager.CreateAsync(userIdentity);
 
-            if (identResult.Succeeded)
-                await _db.UserManager.AddToRoleAsync(userIdentity, "User");
+			//TODO: Uncomment after Seeding implementation
+            //if (identResult.Succeeded)
+            //    await _db.UserManager.AddToRoleAsync(userIdentity, "User");
 
             return userIdentity;
         }

@@ -40,8 +40,7 @@ namespace smart_home_web
                  options.UseMySql(Configuration.GetConnectionString("DefaultConnection")/*, x => x.MigrationsAssembly("Infrastructure.Data")*/));
 
             services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<ApplicationsDbContext>().AddDefaultTokenProviders();
-
-
+			
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -49,11 +48,14 @@ namespace smart_home_web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddAuthentication().AddGoogle(googleOptions =>
-            {
-                googleOptions.ClientId = Configuration["GoogleAuth:ClientId"];
-                googleOptions.ClientSecret = Configuration["GoogleAuth:ClientSecret"];
-            });
+			//TODO: Uncomment this after get Google Credentials
+			//services.AddAuthentication().AddGoogle(googleOptions =>
+			//{
+			//    googleOptions.ClientId = Configuration["GoogleAuth:ClientId"];
+			//    googleOptions.ClientSecret = Configuration["GoogleAuth:ClientSecret"];
+			//});
+
+			services.AddAuthentication();
 
             services.Configure<IdentityOptions>(options =>
             {
