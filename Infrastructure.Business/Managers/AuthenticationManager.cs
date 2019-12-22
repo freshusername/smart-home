@@ -134,9 +134,8 @@ namespace Infrastructure.Business.Services
 
             IdentityResult identResult = await _db.UserManager.CreateAsync(userIdentity);
 
-			//TODO: Uncomment after Seeding implementation
-            //if (identResult.Succeeded)
-            //    await _db.UserManager.AddToRoleAsync(userIdentity, "User");
+            if (identResult.Succeeded)
+                await _db.UserManager.AddToRoleAsync(userIdentity, "User");
 
             return userIdentity;
         }

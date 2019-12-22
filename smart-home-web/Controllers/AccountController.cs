@@ -60,8 +60,8 @@ namespace smart_home_web.Controllers
                 var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = confrirmaParam.UserId, code = confrirmaParam.Code }, protocol: HttpContext.Request.Scheme);
 
 
-                await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
-                    $"Your information has been sent successfully. In order to complete your registration, please click the confirmation link in the email that we have sent to you.: <a href='{callbackUrl}'>link</a>");
+                //await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
+                //    $"Your information has been sent successfully. In order to complete your registration, please click the confirmation link in the email that we have sent to you.: <a href='{callbackUrl}'>link</a>");
                 return View("EmailConfirmation");
             }
             else
