@@ -6,3 +6,5 @@ v16
 obj
 bin
 DesignTimeBuild
+
+appsettings.json
