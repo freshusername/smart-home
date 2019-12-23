@@ -16,7 +16,7 @@ namespace smart_home_web
 {
     public class Program
     {
-        public static async Task Main(string[] args)
+        public static void Main(string[] args)
         {
             var host = CreateWebHostBuilder(args).Build();
 
@@ -27,7 +27,7 @@ namespace smart_home_web
                 {
                     var userManager = services.GetRequiredService<UserManager<AppUser>>();
                     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                    await DbInitializer.SeedData(userManager, roleManager);
+                    DbInitializer.SeedData(userManager, roleManager).GetAwaiter().GetResult();
                 }
                 catch (Exception ex)
                 {
