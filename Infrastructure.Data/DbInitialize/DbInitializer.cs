@@ -9,22 +9,24 @@ namespace Infrastructure.Data.DbInitialize
 {
     public static class DbInitializer
     {
-        public static async Task SeedData(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
+
+        public static void SeedData(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            await SeedRolesAsync(roleManager);
-            //SeedUsers(userManager);
+            SeedRoles(roleManager);
+            SeedUsers(userManager);
+
         }
 
-        public static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)
+        public static void SeedRoles(RoleManager<IdentityRole> roleManager)
         {
             if (!roleManager.RoleExistsAsync("Admin").Result)
             {
-                await roleManager.CreateAsync(new IdentityRole("Admin"));
+                roleManager.CreateAsync(new IdentityRole("Admin"));
             }
-
+         
             if (!roleManager.RoleExistsAsync("User").Result)
             {
-                await roleManager.CreateAsync(new IdentityRole("User"));
+                roleManager.CreateAsync(new IdentityRole("User"));
             }
         }
 
@@ -33,29 +35,15 @@ namespace Infrastructure.Data.DbInitialize
             var admin = new AppUser
             {
                 Email = "admin@admin.com",
-                UserName = "admin@admin.com",
-                //FirstName = "Admin",
-                //LastName = "Admin",
+                UserName = "admin@admin.com",             
                 PhoneNumber = "+380930000000",
                 EmailConfirmed = true
             };
-
-            var owner = new AppUser
-            {
-                Email = "owner@owner.com",
-                UserName = "owner@owner.com",
-                //FirstName = "Owner",
-                //LastName = "Owner",
-                PhoneNumber = "+380930000000",
-                EmailConfirmed = true
-            };
-
+            
             var user = new AppUser
             {
-                Email = "nechypor.dan@gmail.com",
-                UserName = "nechypor.dan@gmail.com",
-                //FirstName = "User",
-                //LastName = "User",
+                Email = "user@user.com",
+                UserName = "user@user.com",              
                 PhoneNumber = "+380930000000",
                 EmailConfirmed = true
             };
@@ -68,16 +56,7 @@ namespace Infrastructure.Data.DbInitialize
                 if (result.Succeeded)
                     userManager.AddToRoleAsync(admin, "Admin").Wait();
             }
-
-            if (userManager.FindByNameAsync(owner.Email).Result == null)
-            {
-                IdentityResult result;
-                result = userManager.CreateAsync(owner, "owner12345").Result;
-
-                if (result.Succeeded)
-                    userManager.AddToRoleAsync(owner, "Owner").Wait();
-            }
-
+          
             if (userManager.FindByNameAsync(user.Email).Result == null)
             {
                 IdentityResult result;
@@ -87,5 +66,6 @@ namespace Infrastructure.Data.DbInitialize
                     userManager.AddToRoleAsync(user, "User").Wait();
             }
         }
+
     }
 }

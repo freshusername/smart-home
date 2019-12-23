@@ -37,7 +37,7 @@ namespace smart_home_web
         {
 
             services.AddDbContext<ApplicationsDbContext>(options =>
-                 options.UseMySql(Configuration.GetConnectionString("DefaultConnection")/*, x => x.MigrationsAssembly("Infrastructure.Data")*/));
+                 options.UseMySql(Configuration.GetConnectionString("DefaultConnection"), x => x.MigrationsAssembly("Infrastructure.Data")));
 
             services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<ApplicationsDbContext>().AddDefaultTokenProviders();
 			
