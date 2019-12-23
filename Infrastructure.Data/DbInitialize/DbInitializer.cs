@@ -22,11 +22,6 @@ namespace Infrastructure.Data.DbInitialize
                 await roleManager.CreateAsync(new IdentityRole("Admin"));
             }
 
-            if (!roleManager.RoleExistsAsync("Owner").Result)
-            {
-                await roleManager.CreateAsync(new IdentityRole("Owner"));
-            }
-
             if (!roleManager.RoleExistsAsync("User").Result)
             {
                 await roleManager.CreateAsync(new IdentityRole("User"));
