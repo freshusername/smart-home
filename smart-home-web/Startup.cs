@@ -48,14 +48,13 @@ namespace smart_home_web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-			//TODO: Uncomment this after get Google Credentials
-			//services.AddAuthentication().AddGoogle(googleOptions =>
-			//{
-			//    googleOptions.ClientId = Configuration["GoogleAuth:ClientId"];
-			//    googleOptions.ClientSecret = Configuration["GoogleAuth:ClientSecret"];
-			//});
+            services.AddAuthentication().AddGoogle(googleOptions =>
+            {
+                googleOptions.ClientId = Configuration["GoogleAuth:ClientId"];
+                googleOptions.ClientSecret = Configuration["GoogleAuth:ClientSecret"];
+            });
 
-			services.AddAuthentication();
+            services.AddAuthentication();
 
             services.Configure<IdentityOptions>(options =>
             {
