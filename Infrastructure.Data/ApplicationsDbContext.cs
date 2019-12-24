@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Infrastructure.Data
 {
-	public class ApplicationsDbContext : IdentityDbContext<AppUser> // TODO: Use Identity DB context
+	public class ApplicationsDbContext : IdentityDbContext<AppUser>
 	{
 		DbSet<Sensor> Sensors { get; set; }
 
