@@ -27,10 +27,10 @@ namespace Infrastructure.Data
 
             modelBuilder
             .Entity<SensorType>()
-            .Property(e => e.Mv)
+            .Property(e => e.MeasurmentType)
             .HasConversion(
             v => v.ToString(),
-            v => (Mv)Enum.Parse(typeof(Mv), v));
+            v => (MeasurmentType)Enum.Parse(typeof(MeasurmentType), v));
         }
     }
 }

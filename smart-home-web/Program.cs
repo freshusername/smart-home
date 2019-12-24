@@ -27,7 +27,7 @@ namespace smart_home_web
                 {
                     var userManager = services.GetRequiredService<UserManager<AppUser>>();
                     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                    DbInitializer.SeedData(userManager, roleManager).GetAwaiter().GetResult();
+                    DbInitializer.SeedData(userManager, roleManager);
                 }
                 catch (Exception ex)
                 {

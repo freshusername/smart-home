@@ -8,11 +8,14 @@ namespace Domain.Core.Model
     {
         public int Id { get; set; }
         public DateTimeOffset Date { get; set; }
-        public string Value { get; set; } // TODO 4 history 
 
-        public int SensorId { get; set; }
-        public virtual Sensor Sensor { get; set; }
+        public string StringValue { get; set; }
+        public int IntValue { get; set; }
+        public double DoubleValue { get; set; }
+        public bool BoolValue { get; set; }
+		
+        public Sensor Sensor { get; set; }
 
-        public virtual Message Message { get; set; }
+        public Message Message { get; set; }
     }
 }
