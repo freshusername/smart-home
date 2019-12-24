@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +8,7 @@ using Domain.Core.Model.Enums;
 
 namespace Infrastructure.Data
 {
-	public class ApplicationsDbContext : IdentityDbContext<AppUser> // TODO: Use Identity DB context
+	public class ApplicationsDbContext : IdentityDbContext<AppUser>
 	{
         public DbSet<Sensor> Sensors { get; set; }
         public DbSet<History> Histories { get; set; }
