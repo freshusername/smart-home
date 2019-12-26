@@ -23,6 +23,7 @@ namespace smart_home_web.AutoMapper
             CreateMap<UserDTO, AppUser>().ForMember(au => au.UserName, map => map.MapFrom(vm => vm.Email));
 
             CreateMap<SensorDto, Sensor>();
+            CreateMap<HistoryDTO, History>().ReverseMap();
 
 
 		}

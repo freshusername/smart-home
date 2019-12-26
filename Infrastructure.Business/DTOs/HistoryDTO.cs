@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Domain.Core.Model
+namespace Infrastructure.Business.DTOs
 {
-    public class History
+    public class HistoryDTO
     {
         public int Id { get; set; }
         public DateTimeOffset Date { get; set; }
@@ -14,9 +14,6 @@ namespace Domain.Core.Model
         public double DoubleValue { get; set; }
         public bool BoolValue { get; set; }
 
-        public int SensorId { get; set; }		
-        public Sensor Sensor { get; set; }
-
-        public Message Message { get; set; }
+        public int SensorId { get; set; }
     }
 }
