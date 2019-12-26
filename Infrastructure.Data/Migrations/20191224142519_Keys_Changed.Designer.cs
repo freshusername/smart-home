@@ -3,14 +3,16 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationsDbContext))]
-    partial class ApplicationsDbContextModelSnapshot : ModelSnapshot
-    {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+    [Migration("20191224142519_Stasya_Ebanko")]
+    partial class Keys_Changed
+	{
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -80,7 +82,7 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<int>("IntValue");
 
-                    b.Property<int>("SensorId");
+                    b.Property<int?>("SensorId");
 
                     b.Property<string>("StringValue");
 
@@ -96,19 +98,13 @@ namespace Infrastructure.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AppUserId");
-
                     b.Property<string>("Comment");
 
                     b.Property<int>("HistoryId");
 
                     b.Property<bool>("IsRead");
 
-                    b.Property<string>("UserId");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
 
                     b.HasIndex("HistoryId")
                         .IsUnique();
@@ -120,8 +116,6 @@ namespace Infrastructure.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<DateTimeOffset?>("ActivatedOn");
 
                     b.Property<string>("Comment");
 
@@ -272,16 +266,11 @@ namespace Infrastructure.Data.Migrations
                 {
                     b.HasOne("Domain.Core.Model.Sensor", "Sensor")
                         .WithMany("Histories")
-                        .HasForeignKey("SensorId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("SensorId");
                 });
 
             modelBuilder.Entity("Domain.Core.Model.Message", b =>
                 {
-                    b.HasOne("Domain.Core.Model.AppUser", "AppUser")
-                        .WithMany()
-                        .HasForeignKey("AppUserId");
-
                     b.HasOne("Domain.Core.Model.History", "History")
                         .WithOne("Message")
                         .HasForeignKey("Domain.Core.Model.Message", "HistoryId")

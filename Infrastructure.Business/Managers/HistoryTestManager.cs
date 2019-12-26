@@ -1,22 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Domain.Core.Model;
 using Domain.Interfaces;
-using Infrastructure.Business.DTOs.Sensor;
+using Infrastructure.Business.DTOs.History;
+using Infrastructure.Data.Repositories;
 
 namespace Infrastructure.Business.Managers
 {
-	class HistoryTestManager : BaseManager, IHistoryTestManager 
+	public class HistoryTestManager : BaseManager, IHistoryTestManager 
 	{
 		public HistoryTestManager(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
 		{
+
 		}
 
-		public async Task<SensorDto> GetSensorByIdAsync(int id)
+		//public HistoryTestManager(HistoryRepo historyRepo, IMapper mapper) : base(historyRepo, mapper)
+		//{
+
+		//}
+
+		public async Task<HistoryDto> GetHistoryByIdAsync(int id)
 		{
-			throw new Exception();
+			var history = unitOfWork.HistoryRepo.GetById(id);
+			var result = mapper.Map<History, HistoryDto>(history);
+			
+			return result;
+		}
+
+		public async Task<IEnumerable<HistoryDto>> GetAllHistoriesAsync()
+		{
+			var histories = unitOfWork.HistoryRepo.GetAll().ToList();
+			var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories);
+
+			return result;
 		}
 	}
 }

@@ -2,22 +2,21 @@
 using System;
 using Domain.Interfaces;
 using AutoMapper;
-using Infrastructure.Business.DTOs;
+using Infrastructure.Business.DTOs.History;
 using Domain.Core.Model;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Infrastructure.Business.Managers
 {
-    class InvalidSensorManager : BaseManager, IInvalidSensorManager
+    public class InvalidSensorManager : BaseManager, IInvalidSensorManager
     {
         public InvalidSensorManager(IUnitOfWork unitOfWork,IMapper mapper) : base(unitOfWork, mapper)
         { }
 
-        public List<HistoryDTO> getInvalidSensors()
+        public List<HistoryDto> getInvalidSensors()
         {
-            List<HistoryDTO> resultList = new List<HistoryDTO>();
-            HistoryDTO h;
+            List<HistoryDto> resultList = new List<HistoryDto>();
+            HistoryDto h;
 
             foreach (var history in unitOfWork.HistoryRepo.GetAll())
             {
@@ -25,7 +24,7 @@ namespace Infrastructure.Business.Managers
 
                 if (sensor.ActivatedOn == null)
                 {
-                    h = mapper.Map<History, HistoryDTO>(history);
+                    h = mapper.Map<History, HistoryDto>(history);
                     resultList.Add(h);
                 }
             }
