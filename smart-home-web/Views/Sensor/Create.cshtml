@@ -1,0 +1,55 @@
+﻿@using smart_home_web.Models.SensorViewModel
+@model CreateSensorViewModel
+@{
+    <div class="container">
+
+        <h2>Add new sensor</h2>
+        <hr />
+
+        <div class="row">
+            <div class="col-md-4">
+                <form asp-action="Create">
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="@Model.Name" class="control-label"></label>
+                        <input asp-for="@Model.Name" class="form-control" placeholder="Enter name please" />
+
+                        <label asp-for="@Model.Comment" class="control-label"></label>
+                        <input asp-for="@Model.Comment" class="form-control" placeholder="Enter comment please" />
+
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                <p>Upload sensor icon: </p>
+                                <input asp-for="@Model.Icon" type="file" name="file" />
+                            </div>
+                        </div>
+
+                        <label asp-for="@Model.Token" class="control-label"></label>
+                        <input asp-for="@Model.Token" class="form-control" placeholder="Enter valid token please" />
+
+                        <select data-val="true" data-val-required="The SensorType field is required."
+                                id="SensorType" name="SensorType">
+                            <option value="0">Type 1</option>
+                            <option value="1">Type 2</option>
+                            <option value="2">Type 3</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="CreateSensor" class="btn btn-success" />
+                        <a class="btn btn-primary" asp-action="ShowSensors"><em class="glyphicon glyphicon-arrow-left"></em> Back to List</a>
+                    </div>
+
+                    <img src="" width="96" height="96"/>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    $document.ready(function () {
+
+    })
+</script>
