@@ -2,7 +2,7 @@
 
 namespace Infrastructure.Data.Migrations
 {
-    public partial class Stasya_Ebanko : Migration
+    public partial class Keys_Changed : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
