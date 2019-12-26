@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationsDbContext))]
-    [Migration("20191224142519_Stasya_Ebanko")]
-    partial class Stasya_Ebanko
+    [Migration("20191226120104_Message_Keys")]
+    partial class Message_Keys
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -98,13 +98,19 @@ namespace Infrastructure.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("AppUserId");
+
                     b.Property<string>("Comment");
 
                     b.Property<int>("HistoryId");
 
                     b.Property<bool>("IsRead");
 
+                    b.Property<string>("UserId");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
 
                     b.HasIndex("HistoryId")
                         .IsUnique();
@@ -116,6 +122,8 @@ namespace Infrastructure.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<DateTimeOffset?>("ActivatedOn");
 
                     b.Property<string>("Comment");
 
@@ -271,6 +279,10 @@ namespace Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Domain.Core.Model.Message", b =>
                 {
+                    b.HasOne("Domain.Core.Model.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId");
+
                     b.HasOne("Domain.Core.Model.History", "History")
                         .WithOne("Message")
                         .HasForeignKey("Domain.Core.Model.Message", "HistoryId")
