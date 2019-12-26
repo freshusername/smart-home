@@ -9,11 +9,11 @@ namespace Domain.Core.Model
         public int Id { get; set; }
         public DateTimeOffset Date { get; set; }
 
-        public string StringValue { get; set; }
-        public int IntValue { get; set; }
-        public double DoubleValue { get; set; }
-        public bool BoolValue { get; set; }
-        
-        public Sensor Sensor { get; set; }
+        public string StringValue { get; set; } = null;
+        public int? IntValue { get; set; } = null;
+		public double? DoubleValue { get; set; } = null;
+		public bool? BoolValue { get; set; } = null;
+
+		public Sensor Sensor { get; set; }
     }
 }

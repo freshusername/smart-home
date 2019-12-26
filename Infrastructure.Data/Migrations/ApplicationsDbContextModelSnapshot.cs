@@ -72,13 +72,13 @@ namespace Infrastructure.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<bool>("BoolValue");
+                    b.Property<bool?>("BoolValue");
 
                     b.Property<DateTimeOffset>("Date");
 
-                    b.Property<double>("DoubleValue");
+                    b.Property<double?>("DoubleValue");
 
-                    b.Property<int>("IntValue");
+                    b.Property<int?>("IntValue");
 
                     b.Property<int?>("SensorId");
 

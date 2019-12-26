@@ -202,9 +202,9 @@ namespace Infrastructure.Data.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Date = table.Column<DateTimeOffset>(nullable: false),
                     StringValue = table.Column<string>(nullable: true),
-                    IntValue = table.Column<int>(nullable: false),
-                    DoubleValue = table.Column<double>(nullable: false),
-                    BoolValue = table.Column<bool>(nullable: false),
+                    IntValue = table.Column<int>(nullable: true),
+                    DoubleValue = table.Column<double>(nullable: true),
+                    BoolValue = table.Column<bool>(nullable: true),
                     SensorId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>

@@ -25,7 +25,7 @@ namespace smart_home_web.AutoMapper
 
             CreateMap<SensorDto, Sensor>().ReverseMap();
 
-            CreateMap<HistoryDto, History>().ReverseMap().ForMember(hd => hd.SensorId, map => map.MapFrom(h => h.Sensor.Id));
+            CreateMap<HistoryDto, History>().ReverseMap().ForMember(hd => hd.SensorName, map => map.MapFrom(h => h.Sensor.Name));
             CreateMap<HistoryDto, HistoryViewModel>().ReverseMap();
         }
     }

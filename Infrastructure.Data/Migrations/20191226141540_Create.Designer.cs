@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationsDbContext))]
-    [Migration("20191226133149_Create")]
+    [Migration("20191226141540_Create")]
     partial class Create
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -74,13 +74,13 @@ namespace Infrastructure.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<bool>("BoolValue");
+                    b.Property<bool?>("BoolValue");
 
                     b.Property<DateTimeOffset>("Date");
 
-                    b.Property<double>("DoubleValue");
+                    b.Property<double?>("DoubleValue");
 
-                    b.Property<int>("IntValue");
+                    b.Property<int?>("IntValue");
 
                     b.Property<int?>("SensorId");
 
