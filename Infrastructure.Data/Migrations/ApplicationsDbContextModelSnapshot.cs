@@ -104,14 +104,11 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<bool>("IsRead");
 
-                    b.Property<string>("UserId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AppUserId");
 
-                    b.HasIndex("HistoryId")
-                        .IsUnique();
+                    b.HasIndex("HistoryId");
 
                     b.ToTable("Messages");
                 });
@@ -129,7 +126,7 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<int>("SensorTypeId");
+                    b.Property<int?>("SensorTypeId");
 
                     b.Property<Guid>("Token");
 
@@ -282,8 +279,8 @@ namespace Infrastructure.Data.Migrations
                         .HasForeignKey("AppUserId");
 
                     b.HasOne("Domain.Core.Model.History", "History")
-                        .WithOne("Message")
-                        .HasForeignKey("Domain.Core.Model.Message", "HistoryId")
+                        .WithMany()
+                        .HasForeignKey("HistoryId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -291,8 +288,7 @@ namespace Infrastructure.Data.Migrations
                 {
                     b.HasOne("Domain.Core.Model.SensorType", "SensorType")
                         .WithMany("Sensor")
-                        .HasForeignKey("SensorTypeId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("SensorTypeId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

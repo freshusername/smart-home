@@ -18,11 +18,6 @@ namespace Infrastructure.Business.Managers
 
 		}
 
-		//public HistoryTestManager(HistoryRepo historyRepo, IMapper mapper) : base(historyRepo, mapper)
-		//{
-
-		//}
-
 		public async Task<HistoryDto> GetHistoryByIdAsync(int id)
 		{
 			var history = unitOfWork.HistoryRepo.GetById(id);

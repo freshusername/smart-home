@@ -15,7 +15,5 @@ namespace Domain.Core.Model
         public bool BoolValue { get; set; }
         
         public Sensor Sensor { get; set; }
-
-        public Message Message { get; set; }
     }
 }
