@@ -14,6 +14,6 @@ namespace Infrastructure.Business.DTOs.Sensor
 		public Guid Token { get; set; }
 
 		public virtual ICollection<SensorType> SensorTypes { get; set; }
-		public virtual ICollection<History> Histories { get; set; }
+		public virtual ICollection<Domain.Core.Model.History> Histories { get; set; }
 	}
 }

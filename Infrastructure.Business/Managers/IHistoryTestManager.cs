@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Infrastructure.Business.DTOs.History;
 using Infrastructure.Business.DTOs.Sensor;
 
 namespace Infrastructure.Business.Managers
 {
 	public interface IHistoryTestManager
 	{
-		Task<SensorDto> GetSensorByIdAsync(int id);
+		Task<HistoryDto> GetHistoryByIdAsync(int id);
+
+		Task<IEnumerable<HistoryDto>> GetAllHistoriesAsync();
 	}
 }

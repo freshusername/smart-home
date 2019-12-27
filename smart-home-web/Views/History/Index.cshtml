@@ -1,0 +1,38 @@
+﻿@using smart_home_web.Models.History;
+
+@model AllHistoriesViewModel;
+
+
+@{
+    ViewData["Title"] = "Histories";
+}
+
+<h2>Histories List</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">SensorId</th>
+            <th scope="col">Date</th>
+            <th scope="col">StringValue</th>
+            <th scope="col">IntValue</th>
+            <th scope="col">DoubleValue</th>
+            <th scope="col">BoolValue</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var history in Model.Histories)
+        {
+            <tr>
+                <th scope="row">@history.Id</th>
+                <td>@history.SensorId</td>
+                <td>@history.Date</td>
+                <td>@history.StringValue</td>
+                <td>@history.IntValue</td>
+                <td>@history.DoubleValue</td>
+                <td>@history.BoolValue</td>
+            </tr>
+        }
+    </tbody>
+</table>

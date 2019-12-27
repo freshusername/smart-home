@@ -18,7 +18,11 @@ namespace Infrastructure.Data
         private IGenericRepository<Sensor> sensorRepo;
         private IGenericRepository<SensorType> sensorTypeRepo;
 
-        public UnitOfWork(ApplicationsDbContext dbContext , UserManager<AppUser> userManager , RoleManager<IdentityRole> roleManager , SignInManager<AppUser> signInManager)
+        public UnitOfWork(
+	        ApplicationsDbContext dbContext, 
+	        UserManager<AppUser> userManager, 
+	        RoleManager<IdentityRole> roleManager, 
+	        SignInManager<AppUser> signInManager)
         {
             context = dbContext;
             UserManager = userManager;
@@ -30,8 +34,17 @@ namespace Infrastructure.Data
         {
             get
             {
-                if (sensorRepo == null) sensorRepo = new BaseRepository<Sensor>(context);
-                return sensorRepo;
+                if (_sensorRepo == null) _sensorRepo = new BaseRepository<Sensor>(context);
+                return _sensorRepo;
+            }
+        }
+
+        public IGenericRepository<History> HistoryRepo
+        {
+            get
+            {
+                if (_historyRepo == null) _historyRepo = new HistoryRepo(context);
+                return _historyRepo;
             }
         }
         public IGenericRepository<SensorType> SensorTypeRepo
