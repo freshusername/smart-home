@@ -63,27 +63,39 @@
             </tbody>
         </table>
         <br />
-        
-        @if (Model.PageViewModel.HasPreviousPage)
+
+
+        <a asp-action="InvalidSensors"
+           asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+           class="btn btn-outline-dark page-link" id="previousPage">
+            <i class="glyphicon glyphicon-chevron-left"></i>
+            Previous
+        </a>
+        <a asp-action="InvalidSensors"
+           asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+           class="btn btn-outline-dark page-link" id="nextPage">
+            Next
+            <i class="glyphicon glyphicon-chevron-right"></i>
+        </a>
+
+        @if (!Model.PageViewModel.HasPreviousPage)
         {
-            <a asp-action="InvalidSensors"
-               asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
-               class="btn btn-outline-dark page-link">
-                <i class="glyphicon glyphicon-chevron-left"></i>
-                Previous
-            </a>
+            <script>
+                let elem = document.getElementById("previousPage");
+                elem.classList.add("disabled");
+            </script>
         }
-        @if (Model.PageViewModel.HasNextPage)
+        @if (!Model.PageViewModel.HasNextPage)
         {
-            <a asp-action="InvalidSensors"
-               asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
-               class="btn btn-outline-dark page-link">
-                Next
-                <i class="glyphicon glyphicon-chevron-right"></i>
-            </a>
+            <script>
+                let elem = document.getElementById("nextPage");
+                elem.classList.add("disabled");
+            </script>
         }
     </div>
-    
+    <script>
+        
+    </script>
 </body>
 
 
