@@ -20,10 +20,10 @@ namespace Infrastructure.Data
         private IHistoryRepo _historyRepo;
 
         public UnitOfWork(
-	        ApplicationsDbContext dbContext, 
-	        UserManager<AppUser> userManager, 
-	        RoleManager<IdentityRole> roleManager, 
-	        SignInManager<AppUser> signInManager)
+            ApplicationsDbContext dbContext,
+            UserManager<AppUser> userManager,
+            RoleManager<IdentityRole> roleManager,
+            SignInManager<AppUser> signInManager)
         {
             context = dbContext;
             UserManager = userManager;
