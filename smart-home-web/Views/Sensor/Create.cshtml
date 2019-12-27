@@ -34,8 +34,9 @@
 
                         </div>
 
-                        <label asp-for="@Model.Token" class="control-label"></label>
-                        <input asp-for="@Model.Token" class="form-control" placeholder="Enter valid token please" />
+                        @*<label asp-for="@Model.Token" class="control-label"></label>*@
+                        <input hidden asp-for="@Model.Token" value="@Guid.NewGuid()" />
+                        <input hidden asp-for="@Model.CreatedOn" value="@DateTimeOffset.Now" />
 
                         @*<select asp-for="@Model.SensorTypeId" data-val="true" data-val-required="The SensorType field is required."
                                     id="SensorTypeId" name="SensorType">
@@ -68,8 +69,6 @@
                         <input type="submit" value="AddSensor" class="btn btn-success" />
                         <a class="btn btn-primary" asp-action="Index"><em class="glyphicon glyphicon-arrow-left"></em> Back to List</a>
                     </div>
-
-                    <input hidden asp-for="@Model.CreatedOn" value="@DateTimeOffset.Now" />
 
                     <div class="form-group">
                         <label asp-for="@Model.IsActivated" class="control-label">Activate?</label>
