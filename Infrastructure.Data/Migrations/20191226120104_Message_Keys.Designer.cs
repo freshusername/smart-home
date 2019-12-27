@@ -9,14 +9,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationsDbContext))]
-    [Migration("20191227102131_nullable")]
-    partial class nullable
+    [Migration("20191226120104_Message_Keys")]
+    partial class Message_Keys
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.8-servicing-32085")
+                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Domain.Core.Model.AppUser", b =>
@@ -74,13 +74,13 @@ namespace Infrastructure.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<bool?>("BoolValue");
+                    b.Property<bool>("BoolValue");
 
                     b.Property<DateTimeOffset>("Date");
 
-                    b.Property<double?>("DoubleValue");
+                    b.Property<double>("DoubleValue");
 
-                    b.Property<int?>("IntValue");
+                    b.Property<int>("IntValue");
 
                     b.Property<int?>("SensorId");
 

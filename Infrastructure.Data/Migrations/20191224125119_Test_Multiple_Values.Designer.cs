@@ -3,14 +3,16 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationsDbContext))]
-    partial class ApplicationsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191224125119_Test_Multiple_Values")]
+    partial class Test_Multiple_Values
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -96,19 +98,13 @@ namespace Infrastructure.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AppUserId");
-
                     b.Property<string>("Comment");
 
                     b.Property<int>("HistoryId");
 
                     b.Property<bool>("IsRead");
 
-                    b.Property<string>("UserId");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
 
                     b.HasIndex("HistoryId")
                         .IsUnique();
@@ -121,21 +117,15 @@ namespace Infrastructure.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTimeOffset?>("ActivatedOn");
-
                     b.Property<string>("Comment");
 
                     b.Property<byte[]>("Icon");
 
                     b.Property<string>("Name");
 
-                    b.Property<int>("SensorTypeId");
-
                     b.Property<Guid>("Token");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SensorTypeId");
 
                     b.ToTable("Sensors");
                 });
@@ -149,14 +139,18 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<byte[]>("Icon");
 
-                    b.Property<string>("MeasurmentName");
+                    b.Property<string>("Mn");
 
-                    b.Property<string>("MeasurmentType")
+                    b.Property<string>("Mv")
                         .IsRequired();
 
                     b.Property<string>("Name");
 
+                    b.Property<int>("SensorId");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("SensorId");
 
                     b.ToTable("SensorTypes");
                 });
@@ -277,21 +271,17 @@ namespace Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Domain.Core.Model.Message", b =>
                 {
-                    b.HasOne("Domain.Core.Model.AppUser", "AppUser")
-                        .WithMany()
-                        .HasForeignKey("AppUserId");
-
                     b.HasOne("Domain.Core.Model.History", "History")
                         .WithOne("Message")
                         .HasForeignKey("Domain.Core.Model.Message", "HistoryId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Domain.Core.Model.Sensor", b =>
+            modelBuilder.Entity("Domain.Core.Model.SensorType", b =>
                 {
-                    b.HasOne("Domain.Core.Model.SensorType", "SensorType")
-                        .WithMany("Sensor")
-                        .HasForeignKey("SensorTypeId")
+                    b.HasOne("Domain.Core.Model.Sensor", "Sensor")
+                        .WithMany("SensorTypes")
+                        .HasForeignKey("SensorId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
