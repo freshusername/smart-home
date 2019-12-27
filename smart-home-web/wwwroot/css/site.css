@@ -28,6 +28,22 @@ body {
     margin: 15px;
 }
 
+
+#invalidSensorTable td{
+    padding:0px;
+}
+
+#invalidSensorTable a{
+    padding:8px;
+}
+
+#invalidSensorTable tbody a:hover {
+    text-decoration: none;
+}
+#invalidSensorTable tbody tr:hover {
+    background-color: #d9edf7;
+}
+
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
     /* Hide captions */

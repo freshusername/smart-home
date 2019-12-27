@@ -9,27 +9,35 @@
 <body class="body-content">
     <div class="row text-center">
         <h2 style="color:red;">Invalid Sensors</h2>
-        <table class="table table-hover table-responsive">
+        <table class="table table-dark table-hover table-responsivev table-bordered" id="invalidSensorTable">
             <caption>List of invalid sensors</caption>
-            <thead class="thead-dark">
+            <thead class="bg-success">
                 <tr>
                     <th scope="col" class=" text-center">
-                        <a class="menu-toggle text-center" asp-action="InvalidSensors" asp-route-sortState="@ViewBag.SensorSort">
+                        <a class="menu-toggle text-center" asp-action="InvalidSensors"
+                           asp-route-sortState="@ViewBag.SensorSort"
+                           asp-route-CurrentPage="@Model.paginationDTO.CurrentPage"
+                           asp-route-HasPrevious="@Model.paginationDTO.HasPrevious"
+                           asp-route-HasNext="@Model.paginationDTO.HasNext"
+                           asp-route-Amount="@Model.paginationDTO.Amount"
+                           asp-route-PageSize="@Model.paginationDTO.PageSize">
                             Sensor <i class="glyphicon glyphicon-sort"></i>
                         </a>
                     </th>
 
                     <th scope="col" class=" text-center">
-                        <a class="menu-toggle text-center" asp-action="InvalidSensors" asp-route-sortState="@ViewBag.DateSort">
+                        <a class="menu-toggle text-center" asp-action="InvalidSensors" 
+                           asp-route-sortState="@ViewBag.DateSort"
+                           asp-route-CurrentPage="@Model.paginationDTO.CurrentPage"
+                           asp-route-HasPrevious="@Model.paginationDTO.HasPrevious"
+                           asp-route-HasNext="@Model.paginationDTO.HasNext"
+                           asp-route-Amount="@Model.paginationDTO.Amount"
+                           asp-route-PageSize="@Model.paginationDTO.PageSize">
                             Date <i class="glyphicon glyphicon-sort"></i>
                         </a>
                     </th>
 
-                    <th scope="col" class=" text-center">
-                        <a class="menu-toggle text-center" asp-action="InvalidSensors" asp-route-sortState="@ViewBag.StringSort">
-                            Value <i class="glyphicon glyphicon-sort"></i>
-                        </a>
-                    </th>
+                    <th scope="col" class=" text-center">Value</th>
                 </tr>
             </thead>
             <tbody>
@@ -37,7 +45,10 @@
                 {
                     <tr>
                         <td scope="row">
-                            <a asp-controller="History" asp-action="Detail" asp-route-sensorId="@history.SensorId" style="display:block;">
+                            <a asp-controller="History" asp-action="Detail"
+                               asp-route-sensorId="@history.SensorId"
+                               asp-route-page="@Model.paginationDTO.CurrentPage"
+                               style="display:block;">
                                 @history.SensorId
                             </a>
                         </td>
@@ -83,9 +94,7 @@
                                 prev.CurrentPage = Model.paginationDTO.CurrentPage - 1;
                             }
 
-                            @Html.ActionLink("prev", "InvalidSensors", "History", null, null, null,
-                                      prev,
-                                      null)
+                            @Html.ActionLink("Previous", "InvalidSensors", "History", prev)
                         </li>
                     }
 
@@ -95,9 +104,7 @@
                         page_i.CurrentPage = i;
 
                         <li class="page-item @( i == Model.paginationDTO.CurrentPage ? "active" : "")">
-                            @Html.ActionLink(i.ToString(), "InvalidSensors", "History", null, null, null,
-                                page_i,
-                                null)
+                            @Html.ActionLink(i.ToString(), "InvalidSensors", "History", page_i)
                         </li>
                     }
                     @if (Model.paginationDTO.HasNext)
@@ -108,9 +115,7 @@
                                 next.CurrentPage = Model.paginationDTO.CurrentPage + 1;
                             }
 
-                            @Html.ActionLink("next", "InvalidSensors", "History", null, null, null,
-                                      next,
-                                      null)
+                            @Html.ActionLink("Next", "InvalidSensors", "History", next)
                         </li>
                     }
                 }

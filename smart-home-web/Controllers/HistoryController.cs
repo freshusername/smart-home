@@ -77,7 +77,6 @@ namespace smart_home_web.Controllers
         public IActionResult InvalidSensors(PaginationDTO paginationDTO, SortState sortState=SortState.SensorAsc)
         {
             IEnumerable<HistoryDto> histories = _invalidSensorManager.getInvalidSensors();
-
             ViewData["SensorSort"] = sortState == SortState.SensorAsc ? SortState.SensorDesc : SortState.SensorAsc;
             ViewData["DateSort"] = sortState == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
 
