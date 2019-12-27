@@ -46,7 +46,7 @@ namespace smart_home_web.Controllers
 
         #region InvalidSensors
 
-        public IActionResult InvalidSensors(HistorySortState sortState=HistorySortState.SensorAsc)
+        public IActionResult InvalidSensors(int page = 1, HistorySortState sortState=HistorySortState.SensorAsc)
         {
             ViewData["SensorSort"] = sortState == HistorySortState.SensorAsc ? HistorySortState.SensorDesc : HistorySortState.SensorAsc;
             ViewData["DateSort"] = sortState == HistorySortState.DateAsc ? HistorySortState.DateDesc : HistorySortState.DateAsc;
@@ -55,7 +55,7 @@ namespace smart_home_web.Controllers
             ViewData["DoubleSort"] = sortState == HistorySortState.DoubleValueAsc ? HistorySortState.DoubleValueDesc : HistorySortState.DoubleValueAsc;
             ViewData["BoolSort"] = sortState == HistorySortState.BoolValueAsc ? HistorySortState.BoolValueDesc : HistorySortState.BoolValueAsc;
 
-            var histories = _invalidSensorManager.getInvalidSensors();
+            List<HistoryDto> histories = _invalidSensorManager.getInvalidSensors();
             switch (sortState)
             {
                 case HistorySortState.SensorAsc:
@@ -98,7 +98,18 @@ namespace smart_home_web.Controllers
                     histories = histories.OrderBy(p => p.SensorId).ToList();
                     break;
             }
-            return View(_mapper.Map<List<HistoryDto>, List<HistoryViewModel>>(histories));
+
+            int pageSize = 10;
+            int count = histories.Count();
+            histories = histories.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+            HistoriesPageViewModel pageViewModel = new HistoriesPageViewModel(count, page, pageSize);
+            List<HistoryViewModel> historiesViewModel = _mapper.Map<List<HistoryDto>, List<HistoryViewModel>>(histories);
+            return View(new InvalidSensorsViewModel
+            {
+                Histories=historiesViewModel,
+                PageViewModel=pageViewModel
+            });
         }
 
         #endregion
