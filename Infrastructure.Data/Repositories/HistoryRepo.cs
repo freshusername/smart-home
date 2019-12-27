@@ -32,8 +32,6 @@ namespace Infrastructure.Data.Repositories
 				.FirstOrDefault(s => s.Id == id);
 		}
 
-
-
 		public IEnumerable<History> GetHistoriesBySensorId(int SensorId)
 		{
             var histories = _context.Histories.Include(h => h.Sensor)

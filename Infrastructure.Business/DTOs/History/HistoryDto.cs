@@ -15,6 +15,7 @@ namespace Infrastructure.Business.DTOs.History
 		public bool? BoolValue { get; set; }
 
 		public string SensorName { get; set; }
+		public int SensorId { get; set; } // To pass particular sensor into GetHistoriesBySensorId()
 		public string MeasurmentName { get; set; }
 		public string MeasurmentType { get; set; }
 
