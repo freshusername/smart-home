@@ -20,7 +20,9 @@ namespace Infrastructure.Data.Repositories
 		public override IEnumerable<History> GetAll()
 		{
 			var res = _context.Histories
-				.Include(h => h.Sensor);
+				.Include(h => h.Sensor)
+				.ThenInclude(s => s.SensorType);
+
 			return res;
 		}
 
