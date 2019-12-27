@@ -28,5 +28,10 @@ namespace Infrastructure.Data.Repositories
 		{
 			return _context.Histories.Include(h => h.Sensor).FirstOrDefault(s => s.Id == id);
 		}
-	}
+
+		public IEnumerable<History> GetHistoriesBySensorId(int SensorId)
+		{
+			throw new NotImplementedException();
+		}
+    }
 }

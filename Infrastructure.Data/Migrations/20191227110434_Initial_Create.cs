@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Infrastructure.Data.Migrations
 {
-    public partial class Create : Migration
+    public partial class Initial_Create : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -48,20 +48,16 @@ namespace Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SensorTypes",
+                name: "Icons",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(nullable: true),
-                    Comment = table.Column<string>(nullable: true),
-                    MeasurmentType = table.Column<string>(nullable: false),
-                    MeasurmentName = table.Column<string>(nullable: true),
-                    Icon = table.Column<byte[]>(nullable: true)
+                    Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SensorTypes", x => x.Id);
+                    table.PrimaryKey("PK_Icons", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -171,6 +167,29 @@ namespace Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SensorTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(nullable: true),
+                    Comment = table.Column<string>(nullable: true),
+                    MeasurmentType = table.Column<string>(nullable: false),
+                    MeasurmentName = table.Column<string>(nullable: true),
+                    IconId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SensorTypes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SensorTypes_Icons_IconId",
+                        column: x => x.IconId,
+                        principalTable: "Icons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Sensors",
                 columns: table => new
                 {
@@ -178,20 +197,26 @@ namespace Infrastructure.Data.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true),
                     Comment = table.Column<string>(nullable: true),
-                    Icon = table.Column<byte[]>(nullable: true),
                     Token = table.Column<Guid>(nullable: false),
                     ActivatedOn = table.Column<DateTimeOffset>(nullable: true),
-                    SensorTypeId = table.Column<int>(nullable: true)
+                    IconId = table.Column<int>(nullable: false),
+                    SensorTypeId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Sensors", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Sensors_Icons_IconId",
+                        column: x => x.IconId,
+                        principalTable: "Icons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Sensors_SensorTypes_SensorTypeId",
                         column: x => x.SensorTypeId,
                         principalTable: "SensorTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -299,9 +324,19 @@ namespace Infrastructure.Data.Migrations
                 column: "HistoryId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Sensors_IconId",
+                table: "Sensors",
+                column: "IconId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Sensors_SensorTypeId",
                 table: "Sensors",
                 column: "SensorTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SensorTypes_IconId",
+                table: "SensorTypes",
+                column: "IconId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -338,6 +373,9 @@ namespace Infrastructure.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "SensorTypes");
+
+            migrationBuilder.DropTable(
+                name: "Icons");
         }
     }
 }
