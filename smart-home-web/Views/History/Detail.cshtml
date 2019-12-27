@@ -1,7 +1,26 @@
-﻿
+﻿@using smart_home_web.Models.History;
+
+@model HistoryViewModel;
+
+
 @{
     ViewData["Title"] = "Detail";
 }
 
-<h2>Detail</h2>
+<h2><b>@Model.SensorName</b> Detail</h2>
 
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var history in Model.)
+        {
+            <tr>
+                <th scope="row">@history.Id</th>
+            </tr>
+        }
+    </tbody>
+</table>

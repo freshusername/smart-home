@@ -28,8 +28,11 @@ namespace Infrastructure.Data.Repositories
 
 		public override History GetById(int id)
 		{
-			return _context.Histories.Include(h => h.Sensor).FirstOrDefault(s => s.Id == id);
+			return _context.Histories
+				.FirstOrDefault(s => s.Id == id);
 		}
+
+
 
 		public IEnumerable<History> GetHistoriesBySensorId(int SensorId)
 		{

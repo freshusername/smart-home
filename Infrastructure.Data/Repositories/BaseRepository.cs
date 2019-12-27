@@ -43,15 +43,5 @@ namespace Infrastructure.Data.Repositories
         {
             throw new NotImplementedException();
         }
-
-        public IEnumerable<History> GetAllHistories()
-        {
-	        return _context.Histories.Include(h => h.Sensor).ToList();
-        }
-
-        public History GetHistoryById(int id)
-        {
-	        return _context.Histories.Include(h => h.Sensor).FirstOrDefault(s => s.Id == id);
-        }
-	}
+    }
 }
