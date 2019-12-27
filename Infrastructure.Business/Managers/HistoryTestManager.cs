@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Domain.Core.Model;
 using Domain.Interfaces;
+using Infrastructure.Business.DTOs;
 using Infrastructure.Business.DTOs.History;
 using Infrastructure.Data.Repositories;
 
@@ -17,11 +18,6 @@ namespace Infrastructure.Business.Managers
 		{
 
 		}
-
-		//public HistoryTestManager(HistoryRepo historyRepo, IMapper mapper) : base(historyRepo, mapper)
-		//{
-
-		//}
 
 		public async Task<HistoryDto> GetHistoryByIdAsync(int id)
 		{
@@ -38,5 +34,12 @@ namespace Infrastructure.Business.Managers
 
 			return result;
 		}
-	}
+
+        public IEnumerable<GraphDTO> GetHistoryBySensorId(int SensorId)
+        {
+            IEnumerable<History> histories = unitOfWork.HistoryRepo.GetHistoriesBySensorId(SensorId);
+            IEnumerable<GraphDTO> result = mapper.Map<IEnumerable<History>, IEnumerable<GraphDTO>>(histories);
+            return result;
+        }
+    }
 }

@@ -10,6 +10,7 @@ using Infrastructure.Business.Infrastructure;
 using Infrastructure.Business.Managers;
 using Infrastructure.Business.Services;
 using Infrastructure.Data;
+using Infrastructure.Data.Repositories;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -95,6 +96,7 @@ namespace smart_home_web
             services.AddTransient<IUnitOfWork,UnitOfWork>();
             services.AddSingleton<IEmailSender,EmailSender>();
 
+            services.AddTransient<IGenericRepository<History>, BaseRepository<History>>();
             services.AddTransient<IHistoryTestManager, HistoryTestManager>();
             services.AddTransient<IInvalidSensorManager, InvalidSensorManager>();
         }

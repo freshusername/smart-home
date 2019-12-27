@@ -9,7 +9,8 @@ namespace Domain.Interfaces
     public interface IUnitOfWork
     {
         IGenericRepository<Sensor> SensorRepo { get; }
-        IGenericRepository<History> HistoryRepo { get; }
+        IHistoryRepo HistoryRepo { get; }
+        IGenericRepository<SensorType> SensorTypeRepo { get; }
         UserManager<AppUser> UserManager { get; }
         RoleManager<IdentityRole> RoleManager { get; }
         SignInManager<AppUser> SignInManager { get; }

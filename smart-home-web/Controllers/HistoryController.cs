@@ -7,6 +7,7 @@ using Infrastructure.Business.DTOs.History;
 using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Migrations;
+using smart_home_web.Models;
 using smart_home_web.Models.History;
 
 namespace smart_home_web.Controllers

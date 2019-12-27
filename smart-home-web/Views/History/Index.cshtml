@@ -15,10 +15,8 @@
             <th scope="col">Id</th>
             <th scope="col">SensorId</th>
             <th scope="col">Date</th>
-            <th scope="col">StringValue</th>
-            <th scope="col">IntValue</th>
-            <th scope="col">DoubleValue</th>
-            <th scope="col">BoolValue</th>
+            <th scope="col">Value</th>
+            <th scope="col">MeasurmentUnit</th>
         </tr>
     </thead>
     <tbody>
@@ -26,12 +24,10 @@
         {
             <tr>
                 <th scope="row">@history.Id</th>
-                <td>@history.SensorId</td>
+                <td>@history.SensorName</td>
                 <td>@history.Date</td>
-                <td>@history.StringValue</td>
-                <td>@history.IntValue</td>
-                <td>@history.DoubleValue</td>
-                <td>@history.BoolValue</td>
+                <td>@history.Value</td>
+                <td>@history.MeasurmentName</td>
             </tr>
         }
     </tbody>
