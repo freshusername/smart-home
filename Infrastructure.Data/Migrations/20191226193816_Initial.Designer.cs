@@ -9,14 +9,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationsDbContext))]
-    [Migration("20191224125119_Test_Multiple_Values")]
-    partial class Test_Multiple_Values
+    [Migration("20191226193816_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
+                .HasAnnotation("ProductVersion", "2.1.14-servicing-32113")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Domain.Core.Model.AppUser", b =>
@@ -93,6 +93,18 @@ namespace Infrastructure.Data.Migrations
                     b.ToTable("Histories");
                 });
 
+            modelBuilder.Entity("Domain.Core.Model.Icon", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Icons");
+                });
+
             modelBuilder.Entity("Domain.Core.Model.Message", b =>
                 {
                     b.Property<int>("Id")
@@ -119,13 +131,19 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<string>("Comment");
 
-                    b.Property<byte[]>("Icon");
+                    b.Property<int>("IconId");
 
                     b.Property<string>("Name");
+
+                    b.Property<int>("SensorTypeId");
 
                     b.Property<Guid>("Token");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("IconId");
+
+                    b.HasIndex("SensorTypeId");
 
                     b.ToTable("Sensors");
                 });
@@ -137,20 +155,18 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<string>("Comment");
 
-                    b.Property<byte[]>("Icon");
+                    b.Property<int>("IconId");
 
-                    b.Property<string>("Mn");
+                    b.Property<string>("MeasurmentName");
 
-                    b.Property<string>("Mv")
+                    b.Property<string>("MeasurmentType")
                         .IsRequired();
 
                     b.Property<string>("Name");
 
-                    b.Property<int>("SensorId");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("SensorId");
+                    b.HasIndex("IconId");
 
                     b.ToTable("SensorTypes");
                 });
@@ -277,11 +293,24 @@ namespace Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("Domain.Core.Model.Sensor", b =>
+                {
+                    b.HasOne("Domain.Core.Model.Icon", "Icon")
+                        .WithMany()
+                        .HasForeignKey("IconId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Domain.Core.Model.SensorType", "SensorType")
+                        .WithMany("Sensor")
+                        .HasForeignKey("SensorTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("Domain.Core.Model.SensorType", b =>
                 {
-                    b.HasOne("Domain.Core.Model.Sensor", "Sensor")
-                        .WithMany("SensorTypes")
-                        .HasForeignKey("SensorId")
+                    b.HasOne("Domain.Core.Model.Icon", "Icon")
+                        .WithMany()
+                        .HasForeignKey("IconId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

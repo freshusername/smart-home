@@ -26,7 +26,9 @@ namespace smart_home_web.AutoMapper
             CreateMap<CreateSensorViewModel, SensorDto>().ReverseMap();
             CreateMap<SensorDto, Sensor>().ReverseMap();
 
+            CreateMap<CreateSensorViewModel, Sensor>();
 
-		}
+
+        }
     }
 }

@@ -8,6 +8,6 @@ namespace Infrastructure.Business.Managers
 {
     public interface ISensorManager
     {
-        Task<SensorDto> Insert(SensorDto sensorDto);
+        void Insert(SensorDto sensorDto);
     }
 }

@@ -35,27 +35,22 @@ namespace smart_home_web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddDbContext<ApplicationsDbContext>(options =>
                  options.UseMySql(Configuration.GetConnectionString("DefaultConnection"), x => x.MigrationsAssembly("Infrastructure.Data")));
 
             services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<ApplicationsDbContext>().AddDefaultTokenProviders();
-			
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-
             services.AddAuthentication().AddGoogle(googleOptions =>
             {
                 googleOptions.ClientId = Configuration["GoogleAuth:ClientId"];
                 googleOptions.ClientSecret = Configuration["GoogleAuth:ClientSecret"];
             });
-
             services.AddAuthentication();
-
             services.Configure<IdentityOptions>(options =>
             {
                 // Password settings.
@@ -84,16 +79,16 @@ namespace smart_home_web
                 options.LogoutPath = "/Account/Logout";
                 options.SlidingExpiration = true;
             });
-
-
             services.Configure<EmailOptionsModel>(Configuration.GetSection("EmailOptions"));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddAutoMapper(typeof(AutoMapperProfile).GetTypeInfo().Assembly);
 
-            services.AddTransient<IAuthenticationManager,AuthenticationManager>();
-            services.AddTransient<IUnitOfWork,UnitOfWork>();
-            services.AddSingleton<IEmailSender,EmailSender>();
+            services.AddTransient<IAuthenticationManager, AuthenticationManager>();
+            services.AddTransient<ISensorManager, SensorManager>();
+
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddSingleton<IEmailSender, EmailSender>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -23,12 +23,12 @@ namespace Infrastructure.Data.Repositories
             throw new NotImplementedException();
         }
 
-        public IEnumerable<T> GetAll()
+        public virtual IEnumerable<T> GetAll()
         {
             return dbSet.ToList();
         }
 
-        public T GetById(int id)
+        public virtual T GetById(int id)
         {
             return dbSet.Find(id);
         }

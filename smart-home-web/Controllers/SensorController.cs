@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using Domain.Core.Model;
+using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.Managers;
+using Microsoft.AspNetCore.Mvc;
+using smart_home_web.Models.SensorViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,15 +11,31 @@ using System.Threading.Tasks;
 
 namespace smart_home_web.Controllers
 {
-    public class SensorController
+    [Route("[controller]/[action]")]
+    public class SensorController : Controller
     {
         private readonly IMapper _mapper;
-        private readonly ISensorManager<Sensor> _sensorManager { get; private set; }
+        private readonly ISensorManager _sensorManager;
 
-        public SensorController(SensorManager sensorManager, IMapper mapper, ISensorManager sensorManager)
+        public SensorController(IMapper mapper, ISensorManager sensorManager)
         {
             _sensorManager = sensorManager;
             _mapper = mapper;
         }
+
+        public IActionResult AddSensor()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddSensor(CreateSensorViewModel sensor)
+        {
+            SensorDto sensorDto = _mapper.Map<CreateSensorViewModel, SensorDto>(sensor);
+            _sensorManager.Insert(sensorDto);
+            return RedirectToAction("ShowSensors", "Sensor");
+        }
+
+
     }
 }
