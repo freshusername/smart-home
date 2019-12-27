@@ -2,12 +2,14 @@
 using Domain.Core.Model;
 using Infrastructure.Business.DTOs;
 using Infrastructure.Business.DTOs.Sensor;
+using Infrastructure.Business.DTOs.History;
 using smart_home_web.Models;
 using smart_home_web.Models.SensorViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using smart_home_web.Models.History;
 
 namespace smart_home_web.AutoMapper
 {
@@ -29,6 +31,8 @@ namespace smart_home_web.AutoMapper
             CreateMap<CreateSensorViewModel, Sensor>();
 
 
+            CreateMap<HistoryDto, History>().ReverseMap().ForMember(hd => hd.SensorId, map => map.MapFrom(h => h.Sensor.Id));
+            CreateMap<HistoryDto, HistoryViewModel>().ReverseMap();
         }
     }
 }

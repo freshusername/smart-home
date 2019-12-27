@@ -10,6 +10,7 @@ namespace Domain.Core.Model
         public string Name { get; set; }
         public string Comment { get; set; }
         public Guid Token { get; set; }
+		public DateTimeOffset? ActivatedOn { get; set; }
 
         public int SensorTypeId { get; set; }
         public int IconId { get; set; }

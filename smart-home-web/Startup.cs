@@ -85,10 +85,11 @@ namespace smart_home_web
             services.AddAutoMapper(typeof(AutoMapperProfile).GetTypeInfo().Assembly);
 
             services.AddTransient<IAuthenticationManager, AuthenticationManager>();
-            services.AddTransient<ISensorManager, SensorManager>();
-
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddSingleton<IEmailSender, EmailSender>();
+
+            services.AddTransient<ISensorManager, SensorManager>();
+            services.AddTransient<IHistoryTestManager, HistoryTestManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
