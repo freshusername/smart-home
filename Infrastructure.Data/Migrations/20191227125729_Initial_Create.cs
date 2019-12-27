@@ -174,8 +174,8 @@ namespace Infrastructure.Data.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true),
                     Comment = table.Column<string>(nullable: true),
-                    MeasurmentType = table.Column<string>(nullable: false),
-                    MeasurmentName = table.Column<string>(nullable: true),
+                    MeasurementType = table.Column<string>(nullable: false),
+                    MeasurementName = table.Column<string>(nullable: true),
                     IconId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>

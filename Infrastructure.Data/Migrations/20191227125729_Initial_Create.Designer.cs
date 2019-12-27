@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationsDbContext))]
-    [Migration("20191227110434_Initial_Create")]
+    [Migration("20191227125729_Initial_Create")]
     partial class Initial_Create
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -162,9 +162,9 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<int>("IconId");
 
-                    b.Property<string>("MeasurmentName");
+                    b.Property<string>("MeasurementName");
 
-                    b.Property<string>("MeasurmentType")
+                    b.Property<string>("MeasurementType")
                         .IsRequired();
 
                     b.Property<string>("Name");

@@ -36,11 +36,15 @@ namespace smart_home_web.Controllers
 			});
 		}
 
-		public async Task<IActionResult> Detail(int id)
+		public async Task<IActionResult> Detail(int sensorId)
 		{
-			var history = await _historyTestManager.GetHistoryByIdAsync(id);
+			var histories = await _historyTestManager.GetHistoriesBySensorIdAsync(sensorId);
+			var models = _mapper.Map<IEnumerable<HistoryDto>, IEnumerable<HistoryViewModel>>(histories);
 
-			return View(_mapper.Map<HistoryDto, HistoryViewModel>(history));
+			return View(new AllHistoriesViewModel
+			{
+				Histories = models
+			});
 		}
 
 

@@ -13,10 +13,10 @@
     <thead>
         <tr>
             <th scope="col">Id</th>
-            <th scope="col">SensorId</th>
+            <th scope="col">SensorName</th>
             <th scope="col">Date</th>
             <th scope="col">Value</th>
-            <th scope="col">MeasurmentUnit</th>
+            <th scope="col">MeasurementUnit</th>
         </tr>
     </thead>
     <tbody>
@@ -24,10 +24,15 @@
         {
             <tr>
                 <th scope="row">@history.Id</th>
-                <td>@history.SensorName</td>
+                <td>
+                    @{ string id = history.SensorId.ToString(); }
+                    <a asp-controller="History" asp-action="Detail" asp-route-sensorId="@history.SensorId">
+                        @history.SensorName
+                    </a>
+                </td>
                 <td>@history.Date</td>
                 <td>@history.Value</td>
-                <td>@history.MeasurmentName</td>
+                <td>@history.MeasurementName</td>
             </tr>
         }
     </tbody>

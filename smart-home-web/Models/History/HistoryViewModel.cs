@@ -13,7 +13,8 @@ namespace smart_home_web.Models.History
 		public string Value { get; set; }
 		
 		public string SensorName { get; set; }
-		public string MeasurmentName { get; set; }
-		public string MeasurmentType { get; set; }
+		public string SensorId { get; set; }
+		public string MeasurementName { get; set; }
+		public string MeasurementType { get; set; }
 	}
 }

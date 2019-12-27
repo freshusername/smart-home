@@ -35,7 +35,15 @@ namespace Infrastructure.Business.Managers
 			return result;
 		}
 
-        public IEnumerable<GraphDTO> GetHistoryBySensorId(int SensorId)
+		public async Task<IEnumerable<HistoryDto>> GetHistoriesBySensorIdAsync(int sensorId)
+		{
+			var histories = unitOfWork.HistoryRepo.GetHistoriesBySensorId(sensorId);
+			var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories);
+
+			return result;
+		}
+
+        public IEnumerable<GraphDTO> GetGraphBySensorId(int SensorId)
         {
             IEnumerable<History> histories = unitOfWork.HistoryRepo.GetHistoriesBySensorId(SensorId);
             IEnumerable<GraphDTO> result = mapper.Map<IEnumerable<History>, IEnumerable<GraphDTO>>(histories);
