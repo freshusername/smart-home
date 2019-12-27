@@ -31,7 +31,11 @@ namespace Infrastructure.Data.Repositories
 
 		public IEnumerable<History> GetHistoriesBySensorId(int SensorId)
 		{
-			throw new NotImplementedException();
-		}
+            var histories = _context.Histories.Include(h => h.Sensor)
+                                            .ThenInclude(st => st.SensorType)
+                                            .Select(h => h)
+                                            .Where(h => h.Sensor.Id == SensorId);
+            return histories;
+        }
     }
 }
