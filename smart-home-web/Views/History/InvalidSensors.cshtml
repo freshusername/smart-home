@@ -1,31 +1,33 @@
-﻿@model smart_home_web.Models.History.InvalidSensorsViewModel;
-@{ 
+﻿@using Infrastructure.Business.DTOs;
+
+
+@model smart_home_web.Models.History.InvalidSensorsViewModel;
+@{
     ViewData["Title"] = "Invalid sensors";
 }
 
 <body class="body-content">
     <div class="row text-center">
         <h2 style="color:red;">Invalid Sensors</h2>
-        <br />
-        <table class="table table-striped table-hover table-responsive">
+        <table class="table table-hover table-responsive">
             <caption>List of invalid sensors</caption>
             <thead class="thead-dark">
                 <tr>
-                    <th scope="col">
-                        <a class="menu-toggle" asp-action="InvalidSensors" asp-route-sortState="@ViewBag.SensorSort">
+                    <th scope="col" class=" text-center">
+                        <a class="menu-toggle text-center" asp-action="InvalidSensors" asp-route-sortState="@ViewBag.SensorSort">
                             Sensor <i class="glyphicon glyphicon-sort"></i>
                         </a>
                     </th>
 
-                    <th scope="col">
-                        <a class="menu-toggle" asp-action="InvalidSensors" asp-route-sortState="@ViewBag.DateSort">
+                    <th scope="col" class=" text-center">
+                        <a class="menu-toggle text-center" asp-action="InvalidSensors" asp-route-sortState="@ViewBag.DateSort">
                             Date <i class="glyphicon glyphicon-sort"></i>
                         </a>
                     </th>
 
-                    <th scope="col">
-                        <a class="menu-toggle" asp-action="InvalidSensors" asp-route-sortState="@ViewBag.StringSort">
-                            StringValue <i class="glyphicon glyphicon-sort"></i>
+                    <th scope="col" class=" text-center">
+                        <a class="menu-toggle text-center" asp-action="InvalidSensors" asp-route-sortState="@ViewBag.StringSort">
+                            Value <i class="glyphicon glyphicon-sort"></i>
                         </a>
                     </th>
                 </tr>
@@ -34,47 +36,90 @@
                 @foreach (var history in Model.Histories)
                 {
                     <tr>
-                        <td scope="row">@history.SensorId</td>
-                        <td>@history.Date</td>
-                        <td>@history.Value</td>
+                        <td scope="row">
+                            <a asp-controller="History" asp-action="Detail" asp-route-sensorId="@history.SensorId" style="display:block;">
+                                @history.SensorId
+                            </a>
+                        </td>
+                        <td>
+                            <a asp-controller="History" asp-action="Detail" asp-route-sensorId="@history.SensorId" style="display:block;">
+                                @history.Date.DateTime.ToString("dd/MM/yyyy HH:mm:ss")
+                            </a>
+                        </td>
+                        @{ string value;
+                            if (history.Value.ToString() == "False")
+                            {
+                                value = "Unactive";
+                            }
+                            else if (history.Value.ToString() == "True")
+                            {
+                                value = "Active";
+                            }
+                            else
+                            {
+                                value = history.Value;
+                            }
+                        }
+                        <td>
+                            <a asp-controller="History" asp-action="Detail" asp-route-sensorId="@history.SensorId" style="display:block;">
+                                @value
+                            </a>
+                        </td>
+
                     </tr>
                 }
             </tbody>
         </table>
         <br />
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                @if (Model.paginationDTO != null)
+                {
+                    @if (Model.paginationDTO.HasPrevious)
+                    {
+                        <li class="page-item">
+                            @{
+                                var prev = (PaginationDTO)Model.paginationDTO.Clone();
+                                prev.CurrentPage = Model.paginationDTO.CurrentPage - 1;
+                            }
 
+                            @Html.ActionLink("prev", "InvalidSensors", "History", null, null, null,
+                                      prev,
+                                      null)
+                        </li>
+                    }
 
-        <a asp-action="InvalidSensors"
-           asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
-           class="btn btn-outline-dark page-link" id="previousPage">
-            <i class="glyphicon glyphicon-chevron-left"></i>
-            Previous
-        </a>
-        <a asp-action="InvalidSensors"
-           asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
-           class="btn btn-outline-dark page-link" id="nextPage">
-            Next
-            <i class="glyphicon glyphicon-chevron-right"></i>
-        </a>
+                    @for (var i = 1; i <= Model.paginationDTO.PagesCount; i++)
+                    {
+                        var page_i = (PaginationDTO)Model.paginationDTO.Clone();
+                        page_i.CurrentPage = i;
 
-        @if (!Model.PageViewModel.HasPreviousPage)
-        {
-            <script>
-                let elem = document.getElementById("previousPage");
-                elem.classList.add("disabled");
-            </script>
-        }
-        @if (!Model.PageViewModel.HasNextPage)
-        {
-            <script>
-                let elem = document.getElementById("nextPage");
-                elem.classList.add("disabled");
-            </script>
-        }
+                        <li class="page-item @( i == Model.paginationDTO.CurrentPage ? "active" : "")">
+                            @Html.ActionLink(i.ToString(), "InvalidSensors", "History", null, null, null,
+                                page_i,
+                                null)
+                        </li>
+                    }
+                    @if (Model.paginationDTO.HasNext)
+                    {
+                        <li class="page-item">
+                            @{
+                                var next = (PaginationDTO)Model.paginationDTO.Clone();
+                                next.CurrentPage = Model.paginationDTO.CurrentPage + 1;
+                            }
+
+                            @Html.ActionLink("next", "InvalidSensors", "History", null, null, null,
+                                      next,
+                                      null)
+                        </li>
+                    }
+                }
+            </ul>
+        </nav>
+
+        @*<partial name="_PaginationView" />*@
     </div>
-    <script>
-        
-    </script>
+
 </body>
 
 

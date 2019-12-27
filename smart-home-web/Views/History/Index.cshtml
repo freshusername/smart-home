@@ -1,4 +1,6 @@
 ﻿@using smart_home_web.Models.History;
+@using Infrastructure.Business.DTOs;
+
 
 @model AllHistoriesViewModel;
 
@@ -9,31 +11,103 @@
 
 <h2>Histories List</h2>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">Id</th>
-            <th scope="col">SensorName</th>
-            <th scope="col">Date</th>
-            <th scope="col">Value</th>
-            <th scope="col">MeasurementUnit</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var history in Model.Histories)
-        {
-            <tr>
-                <th scope="row">@history.Id</th>
-                <td>
-                    @{ string id = history.SensorId.ToString(); }
-                    <a asp-controller="History" asp-action="Detail" asp-route-sensorId="@history.SensorId">
-                        @history.SensorName
-                    </a>
-                </td>
-                <td>@history.Date</td>
-                <td>@history.Value</td>
-                <td>@history.MeasurementName</td>
-            </tr>
-        }
-    </tbody>
-</table>
+<body class="body-content">
+    <div class="row text-center">
+        <h2 style="color:red;">Sensor`s Histories</h2>
+        <table class="table table-hover table-responsive">
+            <caption>List of sensor`s histories</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">SensorName</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Value</th>
+                    <th scope="col">MeasurementUnit</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var history in Model.Histories)
+                {
+                    <tr>
+                        <td>@history.Id</td>
+                        <td>
+                            <a asp-controller="History" asp-action="Detail" asp-route-sensorId="@history.SensorId">
+                                @history.SensorName
+                            </a>
+                        </td>
+                        <td>@history.Date</td>
+
+                        @{
+                            if (history.Value.ToString() == "False")
+                            {
+                                <td>Unactive</td>
+                            }
+                            else if (history.Value.ToString() == "True")
+                            {
+                                <td>Active</td>
+                            }
+                            else
+                            {
+                                <td>@history.Value</td>
+                            }
+                        }
+
+
+
+                        <td>@history.MeasurementName</td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+        <br />
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                @if (Model.paginationDTO != null)
+                {
+                    @if (Model.paginationDTO.HasPrevious)
+                    {
+                        <li class="page-item">
+                            @{
+                                var prev = (PaginationDTO)Model.paginationDTO.Clone();
+                                prev.CurrentPage = Model.paginationDTO.CurrentPage - 1;
+                            }
+
+                            @Html.ActionLink("prev", "Index", "History", null, null, null,
+                                      prev,
+                                      null)
+                        </li>
+                    }
+
+                    @for (var i = 1; i <= Model.paginationDTO.PagesCount; i++)
+                    {
+                        var page_i = (PaginationDTO)Model.paginationDTO.Clone();
+                        page_i.CurrentPage = i;
+
+                        <li class="page-item @( i == Model.paginationDTO.CurrentPage ? "active" : "")">
+                            @Html.ActionLink(i.ToString(), "Index", "History", null, null, null,
+                                page_i,
+                                null)
+                        </li>
+                    }
+                    @if (Model.paginationDTO.HasNext)
+                    {
+                        <li class="page-item">
+                            @{
+                                var next = (PaginationDTO)Model.paginationDTO.Clone();
+                                next.CurrentPage = Model.paginationDTO.CurrentPage + 1;
+                            }
+
+                            @Html.ActionLink("next", "Index", "History", null, null, null,
+                                      next,
+                                      null)
+                        </li>
+                    }
+                }
+            </ul>
+        </nav>
+
+        @*<partial name="_PaginationView" />*@
+    </div>
+
+</body>

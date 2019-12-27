@@ -1,0 +1,48 @@
+﻿@using Infrastructure.Business.DTOs;
+
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        @if (Model.paginationDTO != null)
+        {
+            @if (Model.paginationDTO.HasPrevious)
+            {
+                <li class="page-item">
+                    @{
+                        var prev = (PaginationDTO)Model.paginationDTO.Clone();
+                        prev.CurrentPage = Model.paginationDTO.CurrentPage - 1;
+                    }
+
+                    @Html.ActionLink("prev", "InvalidSensors", "History", null, null, null,
+                              prev,
+                              null)
+                </li>
+            }
+
+            @for (var i = 1; i <= Model.paginationDTO.PagesCount; i++)
+            {
+                var page_i = (PaginationDTO)Model.paginationDTO.Clone();
+                page_i.CurrentPage = i;
+
+                <li class="page-item @( i == Model.paginationDTO.CurrentPage ? "active" : "")">
+                    @Html.ActionLink(i.ToString(), "InvalidSensors", "History", null, null, null,
+                        page_i,
+                        null)
+                </li>
+            }
+            @if (Model.paginationDTO.HasNext)
+            {
+                <li class="page-item">
+                    @{
+                        var next = (PaginationDTO)Model.paginationDTO.Clone();
+                        next.CurrentPage = Model.paginationDTO.CurrentPage + 1;
+                    }
+
+                    @Html.ActionLink("next", "InvalidSensors", "History", null, null, null,
+                              next,
+                              null)
+                </li>
+            }
+        }
+    </ul>
+</nav>

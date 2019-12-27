@@ -4,6 +4,7 @@ using Domain.Interfaces;
 using AutoMapper;
 using Infrastructure.Business.DTOs.History;
 using Domain.Core.Model;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Infrastructure.Business.Managers
@@ -13,10 +14,9 @@ namespace Infrastructure.Business.Managers
         public InvalidSensorManager(IUnitOfWork unitOfWork,IMapper mapper) : base(unitOfWork, mapper)
         { }
 
-        public List<HistoryDto> getInvalidSensors()
+        public IEnumerable<HistoryDto> getInvalidSensors()
         {
-            List<HistoryDto> resultList = new List<HistoryDto>();
-            HistoryDto h;
+            var resultList = unitOfWork.HistoryRepo.GetAll().ToList();
 
             foreach (var history in unitOfWork.HistoryRepo.GetAll())
             {
@@ -29,7 +29,7 @@ namespace Infrastructure.Business.Managers
                 }
             }
 
-            return resultList;
+            return result;
         }
 
 

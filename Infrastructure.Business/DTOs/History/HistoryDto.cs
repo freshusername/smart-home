@@ -16,8 +16,8 @@ namespace Infrastructure.Business.DTOs.History
 
 		public string SensorName { get; set; }
 		public int SensorId { get; set; } // To pass particular sensor into GetHistoriesBySensorId()
-		public string MeasurmentName { get; set; }
-		public string MeasurmentType { get; set; }
+		public string MeasurementName { get; set; }
+		public string MeasurementType { get; set; }
 
 
 		public string GetStringValue()
