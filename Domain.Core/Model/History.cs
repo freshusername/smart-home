@@ -14,6 +14,6 @@ namespace Domain.Core.Model
 		public double? DoubleValue { get; set; } = null;
 		public bool? BoolValue { get; set; } = null;
 
-		public Sensor Sensor { get; set; }
+		public virtual Sensor Sensor { get; set; }
     }
 }

@@ -7,6 +7,7 @@ using AutoMapper;
 using Domain.Core.Model;
 using Domain.Interfaces;
 using Infrastructure.Business.DTOs.History;
+using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Data.Repositories;
 
 namespace Infrastructure.Business.Managers
@@ -33,5 +34,10 @@ namespace Infrastructure.Business.Managers
 
 			return result;
 		}
+
+        public async Task<SensorDto> GetSensorByToken(Guid token)
+        {
+
+        }
 	}
 }

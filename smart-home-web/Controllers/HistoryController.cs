@@ -7,11 +7,14 @@ using Infrastructure.Business.DTOs.History;
 using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Migrations;
+using smart_home_web.Models;
 using smart_home_web.Models.History;
 
 namespace smart_home_web.Controllers
 {
-	public class HistoryController : Controller
+    [Route("HistoryCotroller")]
+    [Route("[controller]/[action]")]
+    public class HistoryController : Controller
 	{
 		private readonly IHistoryTestManager _historyTestManager;
 		private readonly IMapper _mapper;
@@ -39,5 +42,13 @@ namespace smart_home_web.Controllers
 
 			return View(_mapper.Map<HistoryDto, HistoryViewModel>(history));
 		}
+
+        [HttpGet]
+        [Route("GetSensorValue")]        
+        public async Task<IActionResult> GetSensorValue([FromBody]SensorValueViewModel<int> model)
+        {
+
+
+        }
 	}
 }

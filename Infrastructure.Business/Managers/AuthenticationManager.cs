@@ -56,24 +56,24 @@ namespace Infrastructure.Business.Services
             return new OperationDetails(auth.Succeeded, " ", " ");
         }
 
-        public async Task<ConfirmDTO> GetEmailConfirmationToken(string userName)
+        public async Task<ConfirmDto> GetEmailConfirmationToken(string userName)
         {
             var user = await unitOfWork.UserManager.FindByNameAsync(userName);
             if (user == null || (await unitOfWork.UserManager.IsEmailConfirmedAsync(user)))
                 return (null);
 
             var code = await unitOfWork.UserManager.GenerateEmailConfirmationTokenAsync(user);
-            return new ConfirmDTO { Code = code, UserId = user.Id };
+            return new ConfirmDto { Code = code, UserId = user.Id };
         }
 
-        public async Task<ConfirmDTO> GetPasswordConfirmationToken(string userName)
+        public async Task<ConfirmDto> GetPasswordConfirmationToken(string userName)
         {
             var user = await unitOfWork.UserManager.FindByNameAsync(userName);
             if (user == null || !(await unitOfWork.UserManager.IsEmailConfirmedAsync(user)))
                 return (null);
 
             var code = await unitOfWork.UserManager.GenerateEmailConfirmationTokenAsync(user);
-            return new ConfirmDTO { Code = code, UserId = user.Id };
+            return new ConfirmDto { Code = code, UserId = user.Id };
         }
 
         private async Task<ClaimsIdentity> GetClaimsIdentity(string userName, string password)
