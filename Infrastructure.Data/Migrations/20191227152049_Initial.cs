@@ -174,8 +174,8 @@ namespace Infrastructure.Data.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true),
                     Comment = table.Column<string>(nullable: true),
-                    MeasurmentType = table.Column<string>(nullable: false),
-                    MeasurmentName = table.Column<string>(nullable: true),
+                    MeasurementType = table.Column<string>(nullable: false),
+                    MeasurementName = table.Column<string>(nullable: true),
                     IconId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -198,7 +198,8 @@ namespace Infrastructure.Data.Migrations
                     Name = table.Column<string>(nullable: true),
                     Comment = table.Column<string>(nullable: true),
                     Token = table.Column<Guid>(nullable: false),
-                    ActivatedOn = table.Column<DateTimeOffset>(nullable: true),
+                    CreatedOn = table.Column<DateTimeOffset>(nullable: true),
+                    IsActivated = table.Column<bool>(nullable: false),
                     SensorTypeId = table.Column<int>(nullable: false),
                     IconId = table.Column<int>(nullable: false)
                 },

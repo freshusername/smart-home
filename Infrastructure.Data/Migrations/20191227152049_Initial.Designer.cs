@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationsDbContext))]
-    [Migration("20191227124535_Initial")]
+    [Migration("20191227152049_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -132,11 +132,13 @@ namespace Infrastructure.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTimeOffset?>("ActivatedOn");
-
                     b.Property<string>("Comment");
 
+                    b.Property<DateTimeOffset?>("CreatedOn");
+
                     b.Property<int>("IconId");
+
+                    b.Property<bool>("IsActivated");
 
                     b.Property<string>("Name");
 
@@ -162,9 +164,9 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<int>("IconId");
 
-                    b.Property<string>("MeasurmentName");
+                    b.Property<string>("MeasurementName");
 
-                    b.Property<string>("MeasurmentType")
+                    b.Property<string>("MeasurementType")
                         .IsRequired();
 
                     b.Property<string>("Name");

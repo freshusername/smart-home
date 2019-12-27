@@ -130,11 +130,13 @@ namespace Infrastructure.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTimeOffset?>("ActivatedOn");
-
                     b.Property<string>("Comment");
 
+                    b.Property<DateTimeOffset?>("CreatedOn");
+
                     b.Property<int>("IconId");
+
+                    b.Property<bool>("IsActivated");
 
                     b.Property<string>("Name");
 
@@ -160,9 +162,9 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<int>("IconId");
 
-                    b.Property<string>("MeasurmentName");
+                    b.Property<string>("MeasurementName");
 
-                    b.Property<string>("MeasurmentType")
+                    b.Property<string>("MeasurementType")
                         .IsRequired();
 
                     b.Property<string>("Name");
