@@ -35,9 +35,9 @@ namespace Infrastructure.Business.Managers
 			return result;
 		}
 
-        public async Task<SensorDto> GetSensorByToken(Guid token)
-        {
+        //public async Task<SensorDto> GetSensorByToken(Guid token)
+        //{
 
-        }
+        //}
 	}
 }

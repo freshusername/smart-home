@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Infrastructure.Data.Migrations
 {
-    public partial class Initial : Migration
+    public partial class test : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -199,8 +199,8 @@ namespace Infrastructure.Data.Migrations
                     Comment = table.Column<string>(nullable: true),
                     Token = table.Column<Guid>(nullable: false),
                     ActivatedOn = table.Column<DateTimeOffset>(nullable: true),
-                    SensorTypeId = table.Column<int>(nullable: false),
-                    IconId = table.Column<int>(nullable: false)
+                    IconId = table.Column<int>(nullable: false),
+                    SensorTypeId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {

@@ -9,14 +9,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationsDbContext))]
-    [Migration("20191226120104_Message_Keys")]
-    partial class Message_Keys
+    [Migration("20191227143541_test")]
+    partial class test
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
+                .HasAnnotation("ProductVersion", "2.1.8-servicing-32085")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Domain.Core.Model.AppUser", b =>
@@ -74,13 +74,13 @@ namespace Infrastructure.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<bool>("BoolValue");
+                    b.Property<bool?>("BoolValue");
 
                     b.Property<DateTimeOffset>("Date");
 
-                    b.Property<double>("DoubleValue");
+                    b.Property<double?>("DoubleValue");
 
-                    b.Property<int>("IntValue");
+                    b.Property<int?>("IntValue");
 
                     b.Property<int?>("SensorId");
 
@@ -91,6 +91,18 @@ namespace Infrastructure.Data.Migrations
                     b.HasIndex("SensorId");
 
                     b.ToTable("Histories");
+                });
+
+            modelBuilder.Entity("Domain.Core.Model.Icon", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Icons");
                 });
 
             modelBuilder.Entity("Domain.Core.Model.Message", b =>
@@ -106,14 +118,11 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<bool>("IsRead");
 
-                    b.Property<string>("UserId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AppUserId");
 
-                    b.HasIndex("HistoryId")
-                        .IsUnique();
+                    b.HasIndex("HistoryId");
 
                     b.ToTable("Messages");
                 });
@@ -127,7 +136,7 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<string>("Comment");
 
-                    b.Property<byte[]>("Icon");
+                    b.Property<int>("IconId");
 
                     b.Property<string>("Name");
 
@@ -136,6 +145,8 @@ namespace Infrastructure.Data.Migrations
                     b.Property<Guid>("Token");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("IconId");
 
                     b.HasIndex("SensorTypeId");
 
@@ -149,7 +160,7 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<string>("Comment");
 
-                    b.Property<byte[]>("Icon");
+                    b.Property<int>("IconId");
 
                     b.Property<string>("MeasurmentName");
 
@@ -159,6 +170,8 @@ namespace Infrastructure.Data.Migrations
                     b.Property<string>("Name");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("IconId");
 
                     b.ToTable("SensorTypes");
                 });
@@ -284,16 +297,29 @@ namespace Infrastructure.Data.Migrations
                         .HasForeignKey("AppUserId");
 
                     b.HasOne("Domain.Core.Model.History", "History")
-                        .WithOne("Message")
-                        .HasForeignKey("Domain.Core.Model.Message", "HistoryId")
+                        .WithMany()
+                        .HasForeignKey("HistoryId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Domain.Core.Model.Sensor", b =>
                 {
+                    b.HasOne("Domain.Core.Model.Icon", "Icon")
+                        .WithMany()
+                        .HasForeignKey("IconId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("Domain.Core.Model.SensorType", "SensorType")
                         .WithMany("Sensor")
                         .HasForeignKey("SensorTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Domain.Core.Model.SensorType", b =>
+                {
+                    b.HasOne("Domain.Core.Model.Icon", "Icon")
+                        .WithMany()
+                        .HasForeignKey("IconId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

@@ -43,12 +43,12 @@ namespace smart_home_web.Controllers
 			return View(_mapper.Map<HistoryDto, HistoryViewModel>(history));
 		}
 
-        [HttpGet]
-        [Route("GetSensorValue")]        
-        public async Task<IActionResult> GetSensorValue([FromBody]SensorValueViewModel<int> model)
-        {
+        //[HttpGet]
+        //[Route("GetSensorValue")]        
+        //public async Task<IActionResult> GetSensorValue([FromBody]SensorValueViewModel<int> model)
+        //{
 
 
-        }
+        //}
 	}
 }
