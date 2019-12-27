@@ -17,10 +17,11 @@
             <th scope="col">Id</th>
             <th scope="col">Name</th>
             <th scope="col">Comment</th>
-            <th scope="col">Activated on</th>
+            <th scope="col">Created on</th>
             <th scope="col">Icon Id</th>
             <th scope="col">Sensor Type Id</th>
             <th scope="col">Token</th>
+            <th scope="col">Activated</th>
         </tr>
     </thead>
     <tbody>
@@ -30,10 +31,11 @@
                 <th scope="row">@sensor.Id</th>
                 <td>@sensor.Name</td>
                 <td>@sensor.Comment</td>
-                <td>@sensor.ActivatedOn</td>
+                <td>@sensor.CreatedOn</td>
                 <td>@sensor.IconId</td>
                 <td>@sensor.SensorTypeId</td>
                 <td>@sensor.Token</td>
+                <td>@sensor.IsActivated</td>
             </tr>
         }
     </tbody>

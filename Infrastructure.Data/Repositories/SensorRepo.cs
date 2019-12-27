@@ -1,4 +1,5 @@
 ﻿using Domain.Core.Model;
+using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,10 +8,10 @@ using System.Text;
 
 namespace Infrastructure.Data.Repositories
 {
-    public class SensorRepository : BaseRepository<Sensor>
+    public class SensorRepo : BaseRepository<Sensor>, ISensorRepo
     {
         private readonly ApplicationsDbContext _context;
-        public SensorRepository(ApplicationsDbContext context) : base(context)
+        public SensorRepo(ApplicationsDbContext context) : base(context)
         {
             _context = context;
         }

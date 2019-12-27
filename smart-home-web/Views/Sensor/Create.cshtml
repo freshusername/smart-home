@@ -1,6 +1,8 @@
 ﻿@using smart_home_web.Models.SensorViewModel
 @model CreateSensorViewModel
 @{
+    @*<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">*@
+
     <div class="container">
 
         <h2>Add new sensor</h2>
@@ -68,6 +70,12 @@
                     </div>
 
                     <div class="form-group">
+                        @*<label asp-for="@Model.IsActivated" class="control-label">Activate?</label>
+                            <input asp-for="@Model.IsActivated" type="checkbox" data-toggle="toggle" data-on="Activated" data-off="Disabled">*@
+                        @Html.CheckBoxFor(x => x.IsActivated);
+                    </div>
+
+                    <div class="form-group">
                         <img src="" width="96" height="96" />
                     </div>
 
@@ -76,6 +84,8 @@
         </div>
     </div>
 }
+
+@*<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>*@
 
 <script type="text/javascript">
     $document.ready(function () {
