@@ -15,6 +15,6 @@ namespace smart_home_web.Models.History
 		public double? DoubleValue { get; set; }
 		public bool? BoolValue { get; set; }
 
-		public int? SensorId { get; set; }
+		public string SensorName { get; set; }
 	}
 }

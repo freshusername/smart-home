@@ -17,20 +17,14 @@ namespace Infrastructure.Data.Repositories
 			_context = context;
 		}
 
-		public new IEnumerable<History> GetAll()
+		public override IEnumerable<History> GetAll()
 		{
-			return _context.Histories.Include(h => h.Sensor).ToList();
+			var res = _context.Histories
+				.Include(h => h.Sensor);
+			return res;
 		}
 
-        public IEnumerable<History> GetHistoriesBySensorId(int SensorId)
-        {
-            var histories = _context.Histories.Include(h => h.Sensor)
-                                            .ThenInclude(st => st.SensorType)
-                                            .Select(h => h);
-            return histories;
-        }
-
-        public new History GetById(int id)
+		public override History GetById(int id)
 		{
 			return _context.Histories.Include(h => h.Sensor).FirstOrDefault(s => s.Id == id);
 		}
