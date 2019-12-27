@@ -11,9 +11,8 @@ namespace Domain.Core.Model
         public bool IsRead { get; set; }
 
         public int HistoryId { get; set; }
-        public History History { get;set; }
 
-        public string UserId { get; set; }
-        public AppUser AppUser { get;set; }
+        public History History { get; set; }
+        public AppUser AppUser { get; set; }
     }
 }

@@ -198,6 +198,7 @@ namespace Infrastructure.Data.Migrations
                     Name = table.Column<string>(nullable: true),
                     Comment = table.Column<string>(nullable: true),
                     Token = table.Column<Guid>(nullable: false),
+                    ActivatedOn = table.Column<DateTimeOffset>(nullable: true),
                     SensorTypeId = table.Column<int>(nullable: false),
                     IconId = table.Column<int>(nullable: false)
                 },
@@ -226,9 +227,9 @@ namespace Infrastructure.Data.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Date = table.Column<DateTimeOffset>(nullable: false),
                     StringValue = table.Column<string>(nullable: true),
-                    IntValue = table.Column<int>(nullable: false),
-                    DoubleValue = table.Column<double>(nullable: false),
-                    BoolValue = table.Column<bool>(nullable: false),
+                    IntValue = table.Column<int>(nullable: true),
+                    DoubleValue = table.Column<double>(nullable: true),
+                    BoolValue = table.Column<bool>(nullable: true),
                     SensorId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -250,11 +251,18 @@ namespace Infrastructure.Data.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Comment = table.Column<string>(nullable: true),
                     IsRead = table.Column<bool>(nullable: false),
-                    HistoryId = table.Column<int>(nullable: false)
+                    HistoryId = table.Column<int>(nullable: false),
+                    AppUserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Messages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Messages_AspNetUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Messages_Histories_HistoryId",
                         column: x => x.HistoryId,
@@ -306,10 +314,14 @@ namespace Infrastructure.Data.Migrations
                 column: "SensorId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Messages_AppUserId",
+                table: "Messages",
+                column: "AppUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Messages_HistoryId",
                 table: "Messages",
-                column: "HistoryId",
-                unique: true);
+                column: "HistoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Sensors_IconId",

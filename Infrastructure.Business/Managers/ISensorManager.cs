@@ -9,5 +9,6 @@ namespace Infrastructure.Business.Managers
     public interface ISensorManager
     {
         void Insert(SensorDto sensorDto);
+        IEnumerable<SensorDto> GetAllSensors();
     }
 }

@@ -23,7 +23,7 @@ namespace smart_home_web.Controllers
             _mapper = mapper;
         }
 
-        public IActionResult AddSensor()
+        public IActionResult Create()
         {
             return View();
         }
@@ -33,7 +33,19 @@ namespace smart_home_web.Controllers
         {
             SensorDto sensorDto = _mapper.Map<CreateSensorViewModel, SensorDto>(sensor);
             _sensorManager.Insert(sensorDto);
-            return RedirectToAction("ShowSensors", "Sensor");
+            return RedirectToAction("Index", "Sensor");
+        }
+
+        [HttpGet]
+        public IActionResult Index()
+        {
+            var sensors = _sensorManager.GetAllSensors();
+            var models = _mapper.Map<IEnumerable<SensorDto>, IEnumerable<SensorViewModel>>(sensors);
+
+            return View(new ListSensorViewModel
+            {
+                Sensors = models
+            });
         }
 
 

@@ -36,5 +36,12 @@ namespace Infrastructure.Business.Managers
 
             //return new OperationDetails(false, "Hotel with the same name and location already exists", "Name");
         }
+        public IEnumerable<SensorDto> GetAllSensors()
+        {
+            var sensors = unitOfWork.SensorRepo.GetAll().ToList();
+            var result = mapper.Map<IEnumerable<Sensor>, IEnumerable<SensorDto>>(sensors);
+
+            return result;
+        }
     }
 }

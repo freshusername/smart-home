@@ -72,13 +72,13 @@ namespace Infrastructure.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<bool>("BoolValue");
+                    b.Property<bool?>("BoolValue");
 
                     b.Property<DateTimeOffset>("Date");
 
-                    b.Property<double>("DoubleValue");
+                    b.Property<double?>("DoubleValue");
 
-                    b.Property<int>("IntValue");
+                    b.Property<int?>("IntValue");
 
                     b.Property<int?>("SensorId");
 
@@ -116,14 +116,11 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<bool>("IsRead");
 
-                    b.Property<string>("UserId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AppUserId");
 
-                    b.HasIndex("HistoryId")
-                        .IsUnique();
+                    b.HasIndex("HistoryId");
 
                     b.ToTable("Messages");
                 });
@@ -298,8 +295,8 @@ namespace Infrastructure.Data.Migrations
                         .HasForeignKey("AppUserId");
 
                     b.HasOne("Domain.Core.Model.History", "History")
-                        .WithOne("Message")
-                        .HasForeignKey("Domain.Core.Model.Message", "HistoryId")
+                        .WithMany()
+                        .HasForeignKey("HistoryId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

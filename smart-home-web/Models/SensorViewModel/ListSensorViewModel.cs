@@ -7,9 +7,6 @@ namespace smart_home_web.Models.SensorViewModel
 {
     public class ListSensorViewModel
     {
-        public string Name { get; set; }
-        public string Comment { get; set; }
-        //public byte[] Icon { get; set; }
-        public string Icon { get; set; }
+        public IEnumerable<SensorViewModel> Sensors { get; set; }
     }
 }

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationsDbContext))]
-    [Migration("20191226193816_Initial")]
+    [Migration("20191227124535_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -74,13 +74,13 @@ namespace Infrastructure.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<bool>("BoolValue");
+                    b.Property<bool?>("BoolValue");
 
                     b.Property<DateTimeOffset>("Date");
 
-                    b.Property<double>("DoubleValue");
+                    b.Property<double?>("DoubleValue");
 
-                    b.Property<int>("IntValue");
+                    b.Property<int?>("IntValue");
 
                     b.Property<int?>("SensorId");
 
@@ -110,6 +110,8 @@ namespace Infrastructure.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("AppUserId");
+
                     b.Property<string>("Comment");
 
                     b.Property<int>("HistoryId");
@@ -118,8 +120,9 @@ namespace Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("HistoryId")
-                        .IsUnique();
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("HistoryId");
 
                     b.ToTable("Messages");
                 });
@@ -128,6 +131,8 @@ namespace Infrastructure.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<DateTimeOffset?>("ActivatedOn");
 
                     b.Property<string>("Comment");
 
@@ -287,9 +292,13 @@ namespace Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Domain.Core.Model.Message", b =>
                 {
+                    b.HasOne("Domain.Core.Model.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId");
+
                     b.HasOne("Domain.Core.Model.History", "History")
-                        .WithOne("Message")
-                        .HasForeignKey("Domain.Core.Model.Message", "HistoryId")
+                        .WithMany()
+                        .HasForeignKey("HistoryId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
