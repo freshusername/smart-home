@@ -28,24 +28,6 @@
                             StringValue <i class="glyphicon glyphicon-sort"></i>
                         </a>
                     </th>
-
-                    <th scope="col">
-                        <a class="menu-toggle" asp-action="InvalidSensors" asp-route-sortState="@ViewBag.IntSort">
-                            IntValue <i class="glyphicon glyphicon-sort"></i>
-                        </a>
-                    </th>
-
-                    <th scope="col">
-                        <a class="menu-toggle" asp-action="InvalidSensors" asp-route-sortState="@ViewBag.DoubleSort">
-                            DoubleValue <i class="glyphicon glyphicon-sort"></i>
-                        </a>
-                    </th>
-
-                    <th scope="col">
-                        <a class="menu-toggle" asp-action="InvalidSensors" asp-route-sortState="@ViewBag.BoolSort">
-                            BoolValue <i class="glyphicon glyphicon-sort"></i>
-                        </a>
-                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -54,10 +36,7 @@
                     <tr>
                         <td scope="row">@history.SensorId</td>
                         <td>@history.Date</td>
-                        <td>@history.StringValue</td>
-                        <td>@history.IntValue</td>
-                        <td>@history.DoubleValue</td>
-                        <td>@history.BoolValue</td>
+                        <td>@history.Value</td>
                     </tr>
                 }
             </tbody>

@@ -20,9 +20,9 @@ namespace Infrastructure.Business.Managers
 
             foreach (var history in unitOfWork.HistoryRepo.GetAll())
             {
-                var sensor = unitOfWork.SensorRepo.GetById(history.SensorId);
+                var sensor = unitOfWork.SensorRepo.GetById(history.Sensor.Id);
 
-                if (sensor.ActivatedOn == null)
+                if (sensor.IsActivated == null)
                 {
                     h = mapper.Map<History, HistoryDto>(history);
                     resultList.Add(h);
