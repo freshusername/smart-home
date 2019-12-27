@@ -51,7 +51,7 @@ namespace smart_home_web.Controllers
 		public async Task<IActionResult> Detail(PaginationDTO paginationDTO, int sensorId, SortState sortState = SortState.SensorAsc)
 		{
 			var histories = await _historyTestManager.GetHistoriesBySensorIdAsync(sensorId);
-			var models = _mapper.Map<IEnumerable<HistoryDto>, IEnumerable<HistoryViewModel>>(histories);
+
 
             ViewData["SensorSort"] = sortState == SortState.SensorAsc ? SortState.SensorDesc : SortState.SensorAsc;
             ViewData["DateSort"] = sortState == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
@@ -62,7 +62,7 @@ namespace smart_home_web.Controllers
 
             histories = SortValue.SortHistories(sortState, histories);
 
-
+            var models = _mapper.Map<IEnumerable<HistoryDto>, IEnumerable<HistoryViewModel>>(histories);
             return View(new AllHistoriesViewModel
 			{
 				Histories = models,
@@ -77,7 +77,6 @@ namespace smart_home_web.Controllers
         public IActionResult InvalidSensors(PaginationDTO paginationDTO, SortState sortState=SortState.SensorAsc)
         {
             IEnumerable<HistoryDto> histories = _invalidSensorManager.getInvalidSensors();
-
             ViewData["SensorSort"] = sortState == SortState.SensorAsc ? SortState.SensorDesc : SortState.SensorAsc;
             ViewData["DateSort"] = sortState == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
 
