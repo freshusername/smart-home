@@ -46,9 +46,58 @@ namespace smart_home_web.Controllers
 
         #region InvalidSensors
 
-        public IActionResult InvalidSensors()
+        public IActionResult InvalidSensors(HistorySortState sortState=HistorySortState.SensorAsc)
         {
+            ViewData["SensorSort"] = sortState == HistorySortState.SensorAsc ? HistorySortState.SensorDesc : HistorySortState.SensorAsc;
+            ViewData["DateSort"] = sortState == HistorySortState.DateAsc ? HistorySortState.DateDesc : HistorySortState.DateAsc;
+            ViewData["StringSort"] = sortState == HistorySortState.StringValueAsc ? HistorySortState.StringValueDesc : HistorySortState.StringValueAsc;
+            ViewData["IntSort"] = sortState == HistorySortState.IntValueAsc ? HistorySortState.IntValueDesc : HistorySortState.IntValueAsc;
+            ViewData["DoubleSort"] = sortState == HistorySortState.DoubleValueAsc ? HistorySortState.DoubleValueDesc : HistorySortState.DoubleValueAsc;
+            ViewData["BoolSort"] = sortState == HistorySortState.BoolValueAsc ? HistorySortState.BoolValueDesc : HistorySortState.BoolValueAsc;
+
             var histories = _invalidSensorManager.getInvalidSensors();
+            switch (sortState)
+            {
+                case HistorySortState.SensorAsc:
+                    histories = histories.OrderBy(p => p.SensorId).ToList();
+                    break;
+                case HistorySortState.SensorDesc:
+                    histories = histories.OrderByDescending(p => p.SensorId).ToList();
+                    break;
+                case HistorySortState.DateAsc:
+                    histories = histories.OrderBy(p => p.Date).ToList();
+                    break;
+                case HistorySortState.DateDesc:
+                    histories = histories.OrderByDescending(p => p.Date).ToList();
+                    break;
+                case HistorySortState.StringValueAsc:
+                    histories = histories.OrderBy(p => p.StringValue).ToList();
+                    break;
+                case HistorySortState.StringValueDesc:
+                    histories = histories.OrderByDescending(p => p.StringValue).ToList();
+                    break;
+                case HistorySortState.IntValueAsc:
+                    histories = histories.OrderBy(p => p.IntValue).ToList();
+                    break;
+                case HistorySortState.IntValueDesc:
+                    histories = histories.OrderByDescending(p => p.IntValue).ToList();
+                    break;
+                case HistorySortState.DoubleValueAsc:
+                    histories = histories.OrderBy(p => p.DoubleValue).ToList();
+                    break;
+                case HistorySortState.DoubleValueDesc:
+                    histories = histories.OrderByDescending(p => p.DoubleValue).ToList();
+                    break;
+                case HistorySortState.BoolValueAsc:
+                    histories = histories.OrderBy(p => p.BoolValue).ToList();
+                    break;
+                case HistorySortState.BoolValueDesc:
+                    histories = histories.OrderByDescending(p => p.BoolValue).ToList();
+                    break;
+                default:
+                    histories = histories.OrderBy(p => p.SensorId).ToList();
+                    break;
+            }
             return View(_mapper.Map<List<HistoryDto>, List<HistoryViewModel>>(histories));
         }
 
