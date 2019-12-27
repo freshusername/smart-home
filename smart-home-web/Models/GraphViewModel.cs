@@ -1,15 +1,24 @@
-﻿using System;
+﻿using Domain.Core.Model.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace smart_home_web.Models
 {
-    public class GraphViewModel<T>
+    public class GraphViewModel
     {
-        public string Name { get; set; }
-        public string Type { get; set; }
-        public List<T> Values { get; set; }
-        public List<string> Dates { get; set; }
+        public int SensorId { get; set; }
+        public string SensorName { get; set; }
+        public string SensorType { get; set; }
+
+        public MeasurmentType MeasurmentType { get; set; }
+
+        public List<string> StringDates { get; set; }
+
+        public List<string> StringValues { get; set; }
+        public List<int> IntValues { get; set; }
+        public List<double> DoubleValues { get; set; }
+        public List<bool> BoolValues { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Infrastructure.Business.DTOs;
 using Infrastructure.Business.DTOs.History;
 using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Mvc;
@@ -44,8 +45,17 @@ namespace smart_home_web.Controllers
         [HttpGet]
         public IActionResult Graph(int sensorId)
         {
-            
-            return View();
+            sensorId = 1;
+            GraphDTO graph = _historyTestManager.GetGraphBySensorId(sensorId);
+            GraphViewModel result = _mapper.Map<GraphDTO, GraphViewModel>(graph);
+
+            string specifier = "G";
+            result.StringDates = new List<string>();
+            foreach (DateTimeOffset date in graph.Dates)
+            {
+                result.StringDates.Add(date.ToString(specifier));
+            }
+            return View(result);
         }
 	}
 }
