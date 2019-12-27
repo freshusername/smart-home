@@ -12,8 +12,10 @@ namespace Domain.Core.Model
         public string Comment { get; set; }
         public MeasurmentType MeasurmentType { get; set; }
         public string MeasurmentName { get; set; }
-        public byte[] Icon { get; set; }
-		
-        public virtual ICollection<Sensor> Sensor{ get; set; }
+        
+        public int IconId { get; set; }
+
+        public Icon Icon { get; set; }
+        public virtual ICollection<Sensor> Sensor { get; set; }
     }
 }
