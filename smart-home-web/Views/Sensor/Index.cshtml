@@ -1,0 +1,42 @@
+﻿@using smart_home_web.Models.SensorViewModel;
+
+@model ListSensorViewModel;
+
+
+@{
+    ViewData["Title"] = "Sensors";
+}
+
+<h2>Sensors List</h2>
+<div class="button-center">
+    <a asp-action="Create" class="btn btn-success">Add new sensor</a>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Comment</th>
+            <th scope="col">Created on</th>
+            <th scope="col">Icon Id</th>
+            <th scope="col">Sensor Type Id</th>
+            <th scope="col">Token</th>
+            <th scope="col">Activated</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var sensor in Model.Sensors)
+        {
+            <tr>
+                <th scope="row">@sensor.Id</th>
+                <td>@sensor.Name</td>
+                <td>@sensor.Comment</td>
+                <td>@sensor.CreatedOn</td>
+                <td>@sensor.IconId</td>
+                <td>@sensor.SensorTypeId</td>
+                <td>@sensor.Token</td>
+                <td>@sensor.IsActivated</td>
+            </tr>
+        }
+    </tbody>
+</table>

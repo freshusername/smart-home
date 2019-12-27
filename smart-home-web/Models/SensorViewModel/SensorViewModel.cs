@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using Domain.Core.Model;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Infrastructure.Business.DTOs.Sensor
+namespace smart_home_web.Models.SensorViewModel
 {
-    public class SensorDto
+    public class SensorViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public string Comment { get; set; }
         public Guid Token { get; set; }
-        public int IconId { get; set; }
-        public int SensorTypeId { get; set; }
         public DateTimeOffset? CreatedOn { get; set; }
         public bool IsActivated { get; set; }
+
+        public int SensorTypeId { get; set; }
+        public int IconId { get; set; }
+
     }
 }

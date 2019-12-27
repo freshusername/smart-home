@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Domain.Core.Model 
+namespace Domain.Core.Model
 {
-    public class Sensor 
+    public class Sensor
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -12,8 +12,8 @@ namespace Domain.Core.Model
         public Guid Token { get; set; }
 		public DateTimeOffset? ActivatedOn { get; set; }
 
-		public int IconId { get; set; }
-		public int SensorTypeId { get; set; }
+        public int SensorTypeId { get; set; }
+        public int IconId { get; set; }
 
         public SensorType SensorType { get; set; }
         public Icon Icon { get; set; }
