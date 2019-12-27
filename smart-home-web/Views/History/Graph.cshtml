@@ -1,0 +1,41 @@
+﻿@model smart_home_web.Models.GraphViewModel<bool>
+<div id="container" style="min-width:310px; height:400px; margin:0 auto"></div>
+<script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script>
+        $('#container').highcharts({
+            title: {
+                text: 'Graph of measurements of a sensor with name : ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.Name))'),
+                x: -20 //center
+            },
+            subtitle: {
+                text: 'Sensor type: '+ JSON.parse('@Html.Raw(Json.Serialize(@Model.Type))'),
+                x: -20
+            },
+            xAxis: {
+                categories: JSON.parse('@Html.Raw(Json.Serialize(@Model.Dates))')
+            },
+            yAxis: {
+                title: {
+                    text: 'Temperature (°C)'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                }]
+            },
+            tooltip: {
+                valueSuffix: '°C'
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle',
+                borderWidth: 1
+            },
+            series: [{
+                name: 'Temperature',
+                data: JSON.parse('@Html.Raw(Json.Serialize(@Model.Values))')
+            }]
+        });
+</script>
