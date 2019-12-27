@@ -104,10 +104,17 @@ namespace smart_home_web
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+            app.UseDeveloperExceptionPage();
 
+            app.UseDefaultFiles();
             app.UseStaticFiles();
+     
+            app.UseAuthentication();
+          
+            app.UseStaticFiles();        
             app.UseCookiePolicy();
             app.UseAuthentication();
+   
 
             app.UseMvc(routes =>
             {
@@ -115,6 +122,7 @@ namespace smart_home_web
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
         }
     }
 }

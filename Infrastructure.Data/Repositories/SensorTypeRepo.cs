@@ -8,10 +8,10 @@ namespace Infrastructure.Data.Repositories
 {
     public class SensorTypeRepo : BaseRepository<SensorType>, ISensorTypeRepo
     {
-        private readonly ApplicationsDbContext _context;
-        public SensorTypeRepo(ApplicationsDbContext context) : base(context)
+        
+        public SensorTypeRepo(ApplicationsDbContext _context) : base(_context)
         {
-            _context = context;
+          
         }
 
 

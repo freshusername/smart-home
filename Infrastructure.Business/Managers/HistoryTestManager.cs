@@ -8,6 +8,7 @@ using Domain.Core.Model;
 using Domain.Interfaces;
 using Infrastructure.Business.DTOs.History;
 using Infrastructure.Business.DTOs.Sensor;
+using Infrastructure.Business.Infrastructure;
 using Infrastructure.Data.Repositories;
 
 namespace Infrastructure.Business.Managers
@@ -35,9 +36,21 @@ namespace Infrastructure.Business.Managers
 			return result;
 		}
 
-        //public async Task<SensorDto> GetSensorByToken(Guid token)
-        //{
+        public SensorDto GetSensorByToken(Guid token)
+        {
+            var sensor = mapper.Map<Sensor,SensorDto>(unitOfWork.SensorRepo.GetByToken(token));
 
+            return sensor;
+        }
+
+        //public async Task<OperationDetails> AddHistory<T>(T value)
+        //{
+        //    value.GetType();
+        //    var histroy = new History
+        //    {
+        //        Date = DateTimeOffset.Now,
+
+        //    };
         //}
-	}
+    }
 }

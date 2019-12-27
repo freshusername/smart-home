@@ -17,7 +17,7 @@ namespace Infrastructure.Data
 
         private ISensorRepo _sensorRepo;
         private ISensorTypeRepo _sensorTypeRepo;
-        private IGenericRepository<History> _historyRepo;
+        private IHistoryRepo _historyRepo;
 
         public UnitOfWork(
             ApplicationsDbContext dbContext,

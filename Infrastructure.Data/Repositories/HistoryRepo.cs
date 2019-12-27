@@ -10,11 +10,11 @@ namespace Infrastructure.Data.Repositories
 {
 	public class HistoryRepo : BaseRepository<History>, IHistoryRepo
     {
-		private readonly ApplicationsDbContext _context;
+		
 
-		public HistoryRepo(ApplicationsDbContext context) : base(context)
+		public HistoryRepo(ApplicationsDbContext _context) : base(_context)
 		{
-			_context = context;
+		
 		}
 
 		public override IEnumerable<History> GetAll()

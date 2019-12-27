@@ -12,8 +12,7 @@ using smart_home_web.Models.History;
 
 namespace smart_home_web.Controllers
 {
-    [Route("HistoryCotroller")]
-    [Route("[controller]/[action]")]
+      
     public class HistoryController : Controller
 	{
 		private readonly IHistoryTestManager _historyTestManager;
@@ -42,13 +41,6 @@ namespace smart_home_web.Controllers
 
 			return View(_mapper.Map<HistoryDto, HistoryViewModel>(history));
 		}
-
-        //[HttpGet]
-        //[Route("GetSensorValue")]        
-        //public async Task<IActionResult> GetSensorValue([FromBody]SensorValueViewModel<int> model)
-        //{
-
-
-        //}
-	}
+      
+    }
 }

@@ -10,8 +10,8 @@ namespace Infrastructure.Data.Repositories
 {
     public class BaseRepository<T> : IGenericRepository<T> where T : class
     {
-        private readonly ApplicationsDbContext _context;
-        private DbSet<T> _dbSet;
+        protected readonly ApplicationsDbContext _context;
+        protected DbSet<T> _dbSet;
 
         public BaseRepository(ApplicationsDbContext dbContext)
         {

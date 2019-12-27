@@ -10,10 +10,10 @@ namespace Infrastructure.Data.Repositories
 {
     public class SensorRepo : BaseRepository<Sensor>, ISensorRepo
     {
-        private readonly ApplicationsDbContext _context;
-        public SensorRepo(ApplicationsDbContext context) : base(context)
+       
+        public SensorRepo(ApplicationsDbContext _context) : base(_context)
         {
-            _context = context;
+            
         }
 
         public override IEnumerable<Sensor> GetAll()
@@ -28,6 +28,11 @@ namespace Infrastructure.Data.Repositories
         public override Sensor GetById(int id)
         {
             return _context.Sensors.Find(id);
+        }
+
+        public Sensor GetByToken(Guid token)
+        {
+            return _context.Sensors.Find(token);
         }
 
     }
