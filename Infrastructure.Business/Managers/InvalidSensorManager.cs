@@ -14,24 +14,15 @@ namespace Infrastructure.Business.Managers
         public InvalidSensorManager(IUnitOfWork unitOfWork,IMapper mapper) : base(unitOfWork, mapper)
         { }
 
-        public IEnumerable<HistoryDto> getInvalidSensors()
-        {
-            var resultList = unitOfWork.HistoryRepo.GetAll().ToList();
+		public IEnumerable<HistoryDto> getInvalidSensors()
+		{
+			var resultList = unitOfWork.HistoryRepo.GetAll().ToList();
 
-            foreach (var history in unitOfWork.HistoryRepo.GetAll())
-            {
-                var sensor = unitOfWork.SensorRepo.GetById(history.Sensor.Id);
+			var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(resultList);
 
-                if (sensor.IsActivated == null)
-                {
-                    h = mapper.Map<History, HistoryDto>(history);
-                    resultList.Add(h);
-                }
-            }
-
-            return result;
-        }
+			return result;
+		}
 
 
-    }
+	}
 }

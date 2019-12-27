@@ -32,10 +32,12 @@ namespace smart_home_web.Controllers
 		{
 			var histories = await _historyTestManager.GetAllHistoriesAsync();
 
-            ViewData["SensorSort"] = sortState == SortState.SensorAsc ? SortState.SensorDesc : SortState.SensorAsc;
-            ViewData["DateSort"] = sortState == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
+            //ViewData["SensorSort"] = sortState == SortState.SensorAsc ? SortState.SensorDesc : SortState.SensorAsc;
+            //ViewData["DateSort"] = sortState == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
 
-            var models = _mapper.Map<IEnumerable<HistoryDto>, IEnumerable<HistoryViewModel>>(histories);
+            //histories = SortValue.SortHistories(sortState, histories);
+
+			var models = _mapper.Map<IEnumerable<HistoryDto>, IEnumerable<HistoryViewModel>>(histories);
 
             paginationDTO.Amount = histories.Count();
             histories = histories.Skip((paginationDTO.CurrentPage - 1) * paginationDTO.PageSize).Take(paginationDTO.PageSize).ToList();
@@ -50,19 +52,19 @@ namespace smart_home_web.Controllers
 
 		public async Task<IActionResult> Detail(PaginationDTO paginationDTO, int sensorId, SortState sortState = SortState.SensorAsc)
 		{
-			var history = await _historyTestManager.GetHistoryByIdAsync(id);
+			var histories = await _historyTestManager.GetHistoriesBySensorIdAsync(sensorId);
 
-            ViewData["SensorSort"] = sortState == SortState.SensorAsc ? SortState.SensorDesc : SortState.SensorAsc;
-            ViewData["DateSort"] = sortState == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
-            ViewData["StringSort"] = sortState == SortState.StringValueAsc ? SortState.StringValueDesc : SortState.StringValueAsc;
-            ViewData["IntSort"] = sortState == SortState.IntValueAsc ? SortState.IntValueDesc : SortState.IntValueAsc;
-            ViewData["DoubleSort"] = sortState == SortState.DoubleValueAsc ? SortState.DoubleValueDesc : SortState.DoubleValueAsc;
-            ViewData["BoolSort"] = sortState == SortState.BoolValueAsc ? SortState.BoolValueDesc : SortState.BoolValueAsc;
+            //ViewData["SensorSort"] = sortState == SortState.SensorAsc ? SortState.SensorDesc : SortState.SensorAsc;
+            //ViewData["DateSort"] = sortState == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
+            //ViewData["StringSort"] = sortState == SortState.StringValueAsc ? SortState.StringValueDesc : SortState.StringValueAsc;
+            //ViewData["IntSort"] = sortState == SortState.IntValueAsc ? SortState.IntValueDesc : SortState.IntValueAsc;
+            //ViewData["DoubleSort"] = sortState == SortState.DoubleValueAsc ? SortState.DoubleValueDesc : SortState.DoubleValueAsc;
+            //ViewData["BoolSort"] = sortState == SortState.BoolValueAsc ? SortState.BoolValueDesc : SortState.BoolValueAsc;
 
-            histories = SortValue.SortHistories(sortState, histories);
+            //histories = SortValue.SortHistories(sortState, histories);
+			var models = _mapper.Map<IEnumerable<HistoryDto>, IEnumerable<HistoryViewModel>>(histories);
 
-
-            return View(new AllHistoriesViewModel
+			return View(new AllHistoriesViewModel
 			{
 				Histories = models,
                 paginationDTO=paginationDTO
