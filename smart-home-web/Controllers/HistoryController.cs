@@ -60,7 +60,7 @@ namespace smart_home_web.Controllers
             switch (sortState)
             {
                 case HistorySortState.SensorAsc:
-                    histories = histories.OrderBy(p => p.SensorId).ToList();
+                    histories = histories.OrderBy(p => p.se).ToList();
                     break;
                 case HistorySortState.SensorDesc:
                     histories = histories.OrderByDescending(p => p.SensorId).ToList();
