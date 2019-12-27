@@ -8,6 +8,6 @@ namespace Infrastructure.Business.Managers
 {
     public interface IInvalidSensorManager
     {
-        List<HistoryDto> getInvalidSensors();
+        IEnumerable<HistoryDto> getInvalidSensors();
     }
 }

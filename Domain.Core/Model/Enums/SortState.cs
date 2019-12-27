@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
-namespace smart_home_web.Models.History
+namespace Domain.Core.Model.Enums
 {
-    public enum HistorySortState
+    public enum SortState
     {
         SensorAsc,
         SensorDesc,
