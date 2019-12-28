@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using smart_home_web.Models.History;
+using Infrastructure.Business.DTOs.SensorType;
+using smart_home_web.Models.SensorType;
 
 namespace smart_home_web.AutoMapper
 {
@@ -31,6 +33,9 @@ namespace smart_home_web.AutoMapper
 	            .ForMember(hd => hd.MeasurmentType, map => map.MapFrom(vm => vm.Sensor.SensorType.MeasurmentType));
             CreateMap<HistoryDto, HistoryViewModel>()
 	            .ForMember(hd => hd.Value, map => map.MapFrom(vm => vm.GetStringValue()));
+
+            CreateMap<SensorTypeDto, SensorType>().ReverseMap();
+            CreateMap<SensorTypeDto, SensorTypeViewModel>().ReverseMap();
         }
     }
 }

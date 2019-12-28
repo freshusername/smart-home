@@ -17,7 +17,7 @@ namespace Infrastructure.Data
 
         private IGenericRepository<Sensor> _sensorRepo;
         private IGenericRepository<SensorType> _sensorTypeRepo;
-        private IHistoryRepo _historyRepo;
+        private IGenericRepository<History> _historyRepo;
 
         public UnitOfWork(
 	        ApplicationsDbContext dbContext, 
@@ -40,7 +40,16 @@ namespace Infrastructure.Data
             }
         }
 
-        public IHistoryRepo HistoryRepo
+        public IGenericRepository<SensorType> SensorTypeRepo
+        {
+            get
+            {
+                if (_sensorTypeRepo == null) _sensorTypeRepo = new BaseRepository<SensorType>(context);
+                return _sensorTypeRepo;
+            }
+        }
+
+        public IGenericRepository<History> HistoryRepo
         {
             get
             {

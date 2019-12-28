@@ -98,6 +98,7 @@ namespace smart_home_web
 
             services.AddTransient<IGenericRepository<History>, BaseRepository<History>>();
             services.AddTransient<IHistoryTestManager, HistoryTestManager>();
+            services.AddTransient<ISensorTypeManager, SensorTypeManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
