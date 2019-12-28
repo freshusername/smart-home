@@ -47,6 +47,7 @@ namespace smart_home_web.Controllers
         {
             if (!ModelState.IsValid)
             {
+                ModelState.AddModelError("Error", "Model State is not valid");
                 return View(sensorTypeViewModel);
             }
             var sensorType = mapper.Map<SensorTypeViewModel, SensorTypeDto>(sensorTypeViewModel);
