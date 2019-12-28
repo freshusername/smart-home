@@ -10,5 +10,6 @@ namespace Infrastructure.Business.Managers
     public interface ISensorTypeManager
     {
         Task<OperationDetails> Create(SensorTypeDto sensorTypeDto);
+        Task<IEnumerable<SensorTypeDto>> GetAllSensorTypesAsync();
     }
 }

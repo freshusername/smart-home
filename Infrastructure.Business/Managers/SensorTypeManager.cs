@@ -31,5 +31,13 @@ namespace Infrastructure.Business.Managers
             }
             return new OperationDetails(true, "New sensor type has been added", "Name");
         }
+
+        public async Task<IEnumerable<SensorTypeDto>> GetAllSensorTypesAsync()
+        {
+            var sensorTypes = unitOfWork.SensorTypeRepo.GetAll();
+            var result = mapper.Map<IEnumerable<SensorType>, IEnumerable<SensorTypeDto>>(sensorTypes);
+
+            return result;
+        }
     }
 }

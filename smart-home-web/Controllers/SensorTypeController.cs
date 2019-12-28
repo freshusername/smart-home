@@ -23,9 +23,10 @@ namespace smart_home_web.Controllers
         }
 
         // GET: SensorType
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            return View();
+            var sensortypes = mapper.Map<IEnumerable<SensorTypeViewModel>>(await sensorTypeManager.GetAllSensorTypesAsync());
+            return View(sensortypes);
         }
 
         // GET: SensorType/Details/5
@@ -47,7 +48,6 @@ namespace smart_home_web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("Error", "Model State is not valid");
                 return View(sensorTypeViewModel);
             }
             var sensorType = mapper.Map<SensorTypeViewModel, SensorTypeDto>(sensorTypeViewModel);
