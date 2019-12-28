@@ -12,6 +12,7 @@ namespace Infrastructure.Business.DTOs
         public string SensorType { get; set; }
 
         public MeasurmentType MeasurmentType { get; set; } 
+        public string MeasurmentName { get; set; } 
 
         public List<DateTimeOffset> Dates { get; set; }
 

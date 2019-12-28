@@ -13,6 +13,7 @@ namespace smart_home_web.Models
         public string SensorType { get; set; }
 
         public MeasurmentType MeasurmentType { get; set; }
+        public string MeasurmentName { get; set; }
 
         public List<string> StringDates { get; set; }
 

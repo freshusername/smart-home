@@ -47,10 +47,17 @@ namespace Infrastructure.Business.Managers
                                             .Sensor
                                             .SensorType
                                             .Name,
+
+                MeasurmentName = histories.First()
+                                            .Sensor
+                                            .SensorType
+                                            .MeasurmentName,
+
                 MeasurmentType = histories.First()
                                             .Sensor
                                             .SensorType
                                             .MeasurmentType,
+
                 Dates = new List<DateTimeOffset>()
             };
             foreach(History history in histories)

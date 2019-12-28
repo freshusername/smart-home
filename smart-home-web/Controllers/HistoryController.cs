@@ -45,7 +45,6 @@ namespace smart_home_web.Controllers
         [HttpGet]
         public IActionResult Graph(int sensorId)
         {
-            sensorId = 1;
             GraphDTO graph = _historyTestManager.GetGraphBySensorId(sensorId);
             GraphViewModel result = _mapper.Map<GraphDTO, GraphViewModel>(graph);
 

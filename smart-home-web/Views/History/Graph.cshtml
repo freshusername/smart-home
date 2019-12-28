@@ -1,7 +1,10 @@
-﻿@model smart_home_web.Models.GraphViewModel
+﻿@using Domain.Core.Model.Enums
+@model smart_home_web.Models.GraphViewModel
+
 <div id="container" style="min-width:310px; height:400px; margin:0 auto"></div>
 <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
 <script src="https://code.highcharts.com/highcharts.js"></script>
+
 <script>
         $('#container').highcharts({
             title: {
@@ -17,11 +20,11 @@
             },
             yAxis: {
                 title: {
-                    text: 'Temperature (°C)'
+                    text: JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorType))') + ' ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.MeasurmentName))')
                 },
             },
             tooltip: {
-                valueSuffix: '°C'
+                valueSuffix: ' ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.MeasurmentName))')
             },
             legend: {
                 layout: 'vertical',
@@ -30,8 +33,36 @@
                 borderWidth: 1
             },
             series: [{
-                name: 'Temperature',
-                data: JSON.parse('@Html.Raw(Json.Serialize(@Model.IntValues))')
+                name: JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorType))'),
+                @switch (Model.MeasurmentType)
+                {
+                    case MeasurmentType.Int:
+                        <text>
+                        data: JSON.parse('@Html.Raw(Json.Serialize(@Model.IntValues))')
+                        </text>
+                        break;
+
+                    case MeasurmentType.Double:
+                        <text>
+                        data: JSON.parse('@Html.Raw(Json.Serialize(@Model.DoubleValues))')
+                        </text>
+                        break;
+
+                    case MeasurmentType.Bool:
+                        <text>
+                        data: JSON.parse('@Html.Raw(Json.Serialize(@Model.BoolValues))')
+                        </text>
+                        break;
+
+                    case MeasurmentType.String:
+                        <text>
+                        data: JSON.parse('@Html.Raw(Json.Serialize(@Model.StringValues))')
+                        </text>
+                        break;
+
+                    default:
+                        break;
+                }
             }]
         });
 </script>
