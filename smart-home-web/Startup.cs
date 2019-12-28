@@ -89,6 +89,7 @@ namespace smart_home_web
             services.AddSingleton<IEmailSender, EmailSender>();
 
             services.AddTransient<ISensorManager, SensorManager>();
+            services.AddTransient<IIconManager, IconManager>();
             services.AddTransient<IHistoryTestManager, HistoryTestManager>();
         }
 

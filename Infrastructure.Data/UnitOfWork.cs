@@ -17,6 +17,7 @@ namespace Infrastructure.Data
 
         private ISensorRepo _sensorRepo;
         private ISensorTypeRepo _sensorTypeRepo;
+        private IIconRepo _iconRepo;
         private IGenericRepository<History> _historyRepo;
 
         public UnitOfWork(
@@ -54,6 +55,14 @@ namespace Infrastructure.Data
             {
                 if (_sensorTypeRepo == null) _sensorTypeRepo = new SensorTypeRepo(context);
                 return _sensorTypeRepo;
+            }
+        }
+        public IIconRepo IconRepo
+        {
+            get
+            {
+                if (_iconRepo == null) _iconRepo = new IconRepo(context);
+                return _iconRepo;
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using Domain.Core.Model;
 using Microsoft.AspNetCore.Http;
+using smart_home_web.Models.IconViewModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -32,6 +33,10 @@ namespace smart_home_web.Models.SensorViewModel
         public bool IsActivated { get; set; }
 
         public List<SensorType> SensorTypes { get; set; }
+
+        //public CreateIconViewModel createIconViewModel { get; set; }
+        public IFormFile IconFile { get; set; }
+
 
     }
 }

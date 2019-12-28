@@ -22,6 +22,7 @@
             <th scope="col">Sensor Type Id</th>
             <th scope="col">Token</th>
             <th scope="col">Activated</th>
+            <th scope="col">Icon</th>
         </tr>
     </thead>
     <tbody>
@@ -36,6 +37,7 @@
                 <td>@sensor.SensorTypeId</td>
                 <td>@sensor.Token</td>
                 <td>@sensor.IsActivated</td>
+                <td><img src="@sensor.IconViewModel.IconPath" /></td>
             </tr>
         }
     </tbody>

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Core.Model;
 using Domain.Interfaces;
+using Infrastructure.Business.DTOs.Icon;
 using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.Infrastructure;
 using System;
@@ -19,22 +20,16 @@ namespace Infrastructure.Business.Managers
 
         public void Insert(SensorDto sensorDto)
         {
-            //BaseManager must be async?
-            //Sensor sensorCheck = await unitOfWork.SensorRepo.GetById(sensorDto.Id);
             Sensor sensorCheck = unitOfWork.SensorRepo.GetById(sensorDto.Id);
-
-            if (sensorCheck == null)
+            //Icon iconCheck = unitOfWork.IconRepo.GetById(sensorDto.IconId);
+            if (sensorCheck == null /*&& iconCheck == null*/)
             {
                 Sensor sensor = mapper.Map<SensorDto, Sensor>(sensorDto);
-
-                //await unitOfWork.SensorRepo.Insert(sensor_to_add);
                 unitOfWork.SensorRepo.Insert(sensor);
                 unitOfWork.Save();
 
-                //return new OperationDetails(true, "Hotel added", "Name");
             }
 
-            //return new OperationDetails(false, "Hotel with the same name and location already exists", "Name");
         }
         public IEnumerable<SensorDto> GetAllSensors()
         {

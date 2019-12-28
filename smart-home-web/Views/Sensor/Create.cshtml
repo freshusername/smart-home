@@ -10,7 +10,7 @@
 
         <div class="row">
             <div class="col-md-4">
-                <form asp-action="AddSensor" asp-controller="Sensor" method="post">
+                <form asp-action="AddSensor" asp-controller="Sensor" method="post" enctype="multipart/form-data">
 
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="form-group">
@@ -23,16 +23,6 @@
                             <input asp-for="@Model.Comment" class="form-control" placeholder="Enter comment please" />
                         </div>
 
-                        <div class="form-group">
-                            @*<div class="col-md-10">
-                                    <p>Upload sensor icon: </p>
-                                    <input asp-for="@Model.Icon" type="file" name="file" />
-                                </div>*@
-                            <label asp-for="@Model.IconId" class="control-label"></label>
-                            <input asp-for="@Model.IconId" type="number" class="form-control" placeholder="beta icon Id" />
-
-
-                        </div>
 
                         @*<label asp-for="@Model.Token" class="control-label"></label>*@
                         <input hidden asp-for="@Model.Token" value="@Guid.NewGuid()" />
@@ -66,17 +56,21 @@
                     </div>
 
                     <div class="form-group">
-                        <input type="submit" value="AddSensor" class="btn btn-success" />
-                        <a class="btn btn-primary" asp-action="Index"><em class="glyphicon glyphicon-arrow-left"></em> Back to List</a>
-                    </div>
-
-                    <div class="form-group">
-                        <label asp-for="@Model.IsActivated" class="control-label">Activate?</label>
+                        <label asp-for="@Model.IsActivated" class="control-label">Activate</label>
                         <input asp-for="@Model.IsActivated" type="checkbox" data-toggle="toggle" data-on="Activated" data-off="Disabled">
                     </div>
 
                     <div class="form-group">
-                        <img src="" width="96" height="96" />
+                        <div class="col-md-10">
+                            <p>Upload sensor icon: </p>
+                            <input asp-for="@Model.IconFile" onchange="loadFile(event)" type="file" accept=".jpg, .jpeg, .png" />
+                        </div>
+                        <img src="" id="output" width="96" height="96" />
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="AddSensor" class="btn btn-success" />
+                        <a class="btn btn-primary" asp-action="Index"><em class="glyphicon glyphicon-arrow-left"></em> Back to List</a>
                     </div>
 
                 </form>
@@ -87,11 +81,13 @@
 
 @*<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>*@
 
-<script type="text/javascript">
-    $document.ready(function () {
-        $(".custom-file-input").on("change", function () {
-            var fileName = $(this).val().split("\\").pop();
-            $(this).next("custom-file-label").html(fileName);
-        });
-    });
+<script>
+    var loadFile = function (event) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var output = document.getElementById('output');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    };
 </script>
