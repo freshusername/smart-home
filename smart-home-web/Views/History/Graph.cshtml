@@ -21,7 +21,7 @@
             yAxis: {
                 title: {
                     text: JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorType))')
-                        @if (Model.MeasurmentType != MeasurmentType.String) 
+                        @if (Model.MeasurmentType != MeasurmentType.String)
                          {
                             <text>
                            + ' ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.MeasurmentName))')
@@ -46,7 +46,9 @@
                         case MeasurmentType.Bool:
 
                             <text>
-                            data: JSON.parse('@Html.Raw(Json.Serialize(@Model.BoolValues))')
+                            var boolValues = JSON.parse('@Html.Raw(Json.Serialize(@Model.BoolValues))')
+                            var result = '<b>' + this.x + '</b><br>' + this.series.name + ': <b>' + boolValues[this.point.index] + '</b><br>'
+                            return result;
                             </text>
                             break;
 

@@ -42,18 +42,18 @@ namespace Infrastructure.Business.Managers
             GraphDTO graph = new GraphDTO
             {
                 SensorId = SensorId,
-                SensorName = histories.First().Sensor.Name,
-                SensorType = histories.First()
+                SensorName = histories.FirstOrDefault().Sensor.Name,
+                SensorType = histories.FirstOrDefault()
                                             .Sensor
                                             .SensorType
                                             .Name,
 
-                MeasurmentName = histories.First()
+                MeasurmentName = histories.FirstOrDefault()
                                             .Sensor
                                             .SensorType
                                             .MeasurmentName,
 
-                MeasurmentType = histories.First()
+                MeasurmentType = histories.FirstOrDefault()
                                             .Sensor
                                             .SensorType
                                             .MeasurmentType,
@@ -73,6 +73,7 @@ namespace Infrastructure.Business.Managers
                         graph.IntValues.Add(history.IntValue.Value);
                     }
                     break;
+
                 case MeasurmentType.Double:
                     graph.DoubleValues = new List<double>();
                     foreach(var history in histories)
@@ -80,23 +81,23 @@ namespace Infrastructure.Business.Managers
                         graph.DoubleValues.Add(history.DoubleValue.Value);
                     }
                     break;
+
                 case MeasurmentType.Bool:
                     graph.BoolValues = new List<bool>();
+                    graph.IntValues = new List<int>();
                     foreach(var history in histories)
                     {
                         graph.BoolValues.Add(history.BoolValue.Value);
+                        graph.IntValues.Add(history.BoolValue.Value ? 1 : 0);
                     }
                     break;
+
                 case MeasurmentType.String:
                     graph.StringValues = new List<string>();
+                    graph.IntValues = new List<int>();
                     foreach (var history in histories)
                     {
                         graph.StringValues.Add(history.StringValue);
-                    }
-
-                    graph.IntValues = new List<int>();
-                    for(int i = 0; i < graph.StringValues.Count(); i++)
-                    {
                         graph.IntValues.Add(1);
                     }
                     break;
