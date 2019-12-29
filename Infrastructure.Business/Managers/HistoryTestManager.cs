@@ -93,6 +93,12 @@ namespace Infrastructure.Business.Managers
                     {
                         graph.StringValues.Add(history.StringValue);
                     }
+
+                    graph.IntValues = new List<int>();
+                    for(int i = 0; i < graph.StringValues.Count(); i++)
+                    {
+                        graph.IntValues.Add(1);
+                    }
                     break;
                 default:
                     break;

@@ -20,15 +20,48 @@
             },
             yAxis: {
                 title: {
-                    text: JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorType))') + ' ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.MeasurmentName))')
+                    text: JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorType))')
+                        @if (Model.MeasurmentType != MeasurmentType.String) 
+                         {
+                            <text>
+                           + ' ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.MeasurmentName))')
+                            </text>
+                         }
                 },
             },
             tooltip: {
                 formatter: function () {
-                    var dates = JSON.parse('@Html.Raw(Json.Serialize(@Model.StringDates))');
-                    var result = '<b>' + this.x + '</b><br>' + this.series.name + ': <b>' + this.y + ' '
-                        + JSON.parse('@Html.Raw(Json.Serialize(@Model.MeasurmentName))') + '</b><br>'
-                    return result +dates[this.point.index];
+                    @switch (Model.MeasurmentType)
+                    {
+                        case MeasurmentType.Int:
+                        case MeasurmentType.Double:
+
+                            <text>
+                            var result = '<b>' + this.x + '</b><br>' + this.series.name + ': <b>' + this.y + ' '
+                            + JSON.parse('@Html.Raw(Json.Serialize(@Model.MeasurmentName))') + '</b><br>'
+                            return result;
+                            </text>
+                            break;
+
+                        case MeasurmentType.Bool:
+
+                            <text>
+                            data: JSON.parse('@Html.Raw(Json.Serialize(@Model.BoolValues))')
+                            </text>
+                            break;
+
+                        case MeasurmentType.String:
+
+                            <text>
+                            var stringValues = JSON.parse('@Html.Raw(Json.Serialize(@Model.StringValues))')
+                            var result = '<b>' + this.x + '</b><br>' + this.series.name + ': <b>' + stringValues[this.point.index] + '</b><br>'
+                            return result;
+                            </text>
+                            break;
+
+                        default:
+                            break;
+                     }
             }
             },
             legend: {
@@ -42,6 +75,8 @@
                 @switch (Model.MeasurmentType)
                 {
                     case MeasurmentType.Int:
+                    case MeasurmentType.String:
+                    case MeasurmentType.Bool:
                         <text>
                         data: JSON.parse('@Html.Raw(Json.Serialize(@Model.IntValues))')
                         </text>
@@ -50,18 +85,6 @@
                     case MeasurmentType.Double:
                         <text>
                         data: JSON.parse('@Html.Raw(Json.Serialize(@Model.DoubleValues))')
-                        </text>
-                        break;
-
-                    case MeasurmentType.Bool:
-                        <text>
-                        data: JSON.parse('@Html.Raw(Json.Serialize(@Model.BoolValues))')
-                        </text>
-                        break;
-
-                    case MeasurmentType.String:
-                        <text>
-                        data: JSON.parse('@Html.Raw(Json.Serialize(@Model.StringValues))')
                         </text>
                         break;
 
