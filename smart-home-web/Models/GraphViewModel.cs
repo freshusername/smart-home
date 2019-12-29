@@ -11,6 +11,7 @@ namespace smart_home_web.Models
         public int SensorId { get; set; }
         public string SensorName { get; set; }
         public string SensorType { get; set; }
+        public int Days { get; set; }
 
         public MeasurmentType MeasurmentType { get; set; }
         public string MeasurmentName { get; set; }

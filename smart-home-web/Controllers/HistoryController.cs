@@ -13,41 +13,41 @@ using smart_home_web.Models.History;
 
 namespace smart_home_web.Controllers
 {
-	public class HistoryController : Controller
-	{
-		private readonly IHistoryTestManager _historyTestManager;
-		private readonly IMapper _mapper;
+    public class HistoryController : Controller
+    {
+        private readonly IHistoryTestManager _historyTestManager;
+        private readonly IMapper _mapper;
 
-		public HistoryController(IHistoryTestManager historyTestManager, IMapper mapper)
-		{
-			_historyTestManager = historyTestManager;
-			_mapper = mapper;
-		}
+        public HistoryController(IHistoryTestManager historyTestManager, IMapper mapper)
+        {
+            _historyTestManager = historyTestManager;
+            _mapper = mapper;
+        }
 
-		public async Task<IActionResult> Index()
-		{
-			var histories = await _historyTestManager.GetAllHistoriesAsync();
-			var models = _mapper.Map<IEnumerable<HistoryDto>, IEnumerable<HistoryViewModel>>(histories);
+        public async Task<IActionResult> Index()
+        {
+            var histories = await _historyTestManager.GetAllHistoriesAsync();
+            var models = _mapper.Map<IEnumerable<HistoryDto>, IEnumerable<HistoryViewModel>>(histories);
 
-			return View(new AllHistoriesViewModel
-			{
-				Histories = models
-			});
-		}
+            return View(new AllHistoriesViewModel
+            {
+                Histories = models
+            });
+        }
 
-		public async Task<IActionResult> Detail(int id)
-		{
-			var history = await _historyTestManager.GetHistoryByIdAsync(id);
+        public async Task<IActionResult> Detail(int id)
+        {
+            var history = await _historyTestManager.GetHistoryByIdAsync(id);
 
-			return View(_mapper.Map<HistoryDto, HistoryViewModel>(history));
-		}
+            return View(_mapper.Map<HistoryDto, HistoryViewModel>(history));
+        }
 
         [HttpGet]
-        public IActionResult Graph(int sensorId)
+        public IActionResult Graph(int sensorId, int days)
         {
-            GraphDTO graph = _historyTestManager.GetGraphBySensorId(sensorId);
+            GraphDTO graph = _historyTestManager.GetGraphBySensorId(sensorId, days);
             GraphViewModel result = _mapper.Map<GraphDTO, GraphViewModel>(graph);
-
+            result.Days = days;
             string specifier = "G";
             result.StringDates = new List<string>();
             foreach (DateTimeOffset date in graph.Dates)
@@ -56,5 +56,15 @@ namespace smart_home_web.Controllers
             }
             return View(result);
         }
-	}
+
+        [HttpPost]
+        public IActionResult Graph(GraphViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                return RedirectToAction("Graph", new { sensorId = model.SensorId, days = model.Days == 0 ? 30 : model.Days });
+            }
+            return View(model);
+        }
+    }
 }

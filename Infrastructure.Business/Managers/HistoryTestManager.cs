@@ -13,30 +13,30 @@ using Infrastructure.Data.Repositories;
 
 namespace Infrastructure.Business.Managers
 {
-	public class HistoryTestManager : BaseManager, IHistoryTestManager 
-	{
-		public HistoryTestManager(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
-		{
+    public class HistoryTestManager : BaseManager, IHistoryTestManager
+    {
+        public HistoryTestManager(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
+        {
 
-		}
+        }
 
-		public async Task<HistoryDto> GetHistoryByIdAsync(int id)
-		{
-			var history = unitOfWork.HistoryRepo.GetById(id);
-			var result = mapper.Map<History, HistoryDto>(history);
-			
-			return result;
-		}
+        public async Task<HistoryDto> GetHistoryByIdAsync(int id)
+        {
+            var history = unitOfWork.HistoryRepo.GetById(id);
+            var result = mapper.Map<History, HistoryDto>(history);
 
-		public async Task<IEnumerable<HistoryDto>> GetAllHistoriesAsync()
-		{
-			var histories = unitOfWork.HistoryRepo.GetAll().ToList();
-			var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories);
+            return result;
+        }
 
-			return result;
-		}
+        public async Task<IEnumerable<HistoryDto>> GetAllHistoriesAsync()
+        {
+            var histories = unitOfWork.HistoryRepo.GetAll().ToList();
+            var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories);
 
-        public GraphDTO GetGraphBySensorId(int SensorId)
+            return result;
+        }
+
+        public GraphDTO GetGraphBySensorId(int SensorId, int days)
         {
             IEnumerable<History> histories = unitOfWork.HistoryRepo.GetHistoriesBySensorId(SensorId);
             GraphDTO graph = new GraphDTO
@@ -60,50 +60,43 @@ namespace Infrastructure.Business.Managers
 
                 Dates = new List<DateTimeOffset>()
             };
-            foreach(History history in histories)
+            var date = DateTimeOffset.Now.AddDays(-days);
+
+            graph.IntValues = new List<int>();
+            graph.DoubleValues = new List<double>();
+            graph.BoolValues = new List<bool>();
+            graph.StringValues = new List<string>();
+
+            foreach (History history in histories)
             {
-                graph.Dates.Add(history.Date);
+                if (history.Date > date)
+                {
+                    graph.Dates.Add(history.Date);
+                    switch (graph.MeasurmentType)
+                    {
+                        case MeasurmentType.Int:
+                            graph.IntValues.Add(history.IntValue.Value);
+                            break;
+
+                        case MeasurmentType.Double:
+                            graph.DoubleValues.Add(history.DoubleValue.Value);
+                            break;
+
+                        case MeasurmentType.Bool:
+                            graph.BoolValues.Add(history.BoolValue.Value);
+                            graph.IntValues.Add(history.BoolValue.Value ? 1 : 0);
+                            break;
+
+                        case MeasurmentType.String:
+                            graph.StringValues.Add(history.StringValue);
+                            graph.IntValues.Add(1);
+                            break;
+                        default:
+                            break;
+                    }
+                }
             }
-            switch (graph.MeasurmentType)
-            {
-                case MeasurmentType.Int:
-                    graph.IntValues = new List<int>();
-                    foreach(var history in histories)
-                    {
-                        graph.IntValues.Add(history.IntValue.Value);
-                    }
-                    break;
-
-                case MeasurmentType.Double:
-                    graph.DoubleValues = new List<double>();
-                    foreach(var history in histories)
-                    {
-                        graph.DoubleValues.Add(history.DoubleValue.Value);
-                    }
-                    break;
-
-                case MeasurmentType.Bool:
-                    graph.BoolValues = new List<bool>();
-                    graph.IntValues = new List<int>();
-                    foreach(var history in histories)
-                    {
-                        graph.BoolValues.Add(history.BoolValue.Value);
-                        graph.IntValues.Add(history.BoolValue.Value ? 1 : 0);
-                    }
-                    break;
-
-                case MeasurmentType.String:
-                    graph.StringValues = new List<string>();
-                    graph.IntValues = new List<int>();
-                    foreach (var history in histories)
-                    {
-                        graph.StringValues.Add(history.StringValue);
-                        graph.IntValues.Add(1);
-                    }
-                    break;
-                default:
-                    break;
-            }
+            
             return graph;
         }
     }
