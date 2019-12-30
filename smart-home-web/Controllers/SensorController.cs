@@ -50,7 +50,7 @@ namespace smart_home_web.Controllers
         {
             if (sensor.IconFile != null)
             {
-                string path = @"\images\SensorIcons";
+                string path = @"\images\SensorIcons\";
                 var uploadPath = _env.WebRootPath + path;
 
                 if (!Directory.Exists(uploadPath))
