@@ -28,10 +28,9 @@ namespace smart_home_web.AutoMapper
             CreateMap<LoginViewModel, UserDTO>().ForMember(au => au.UserName, map => map.MapFrom(vm => vm.Email));
             CreateMap<UserDTO, AppUser>().ForMember(au => au.UserName, map => map.MapFrom(vm => vm.Email));
 
-            CreateMap<Sensor, SensorDto>()
-                .ForMember(vm => vm.IconPath, map => map.MapFrom(s => s.Icon.Path))
-                .ReverseMap();
-            CreateMap<SensorDto, SensorViewModel>();
+            CreateMap<Sensor, SensorDto>().ReverseMap();
+            CreateMap<SensorDto, SensorViewModel>()
+                .ForMember(svm => svm.IconPath, map => map.MapFrom( s => s.Icon.Path));
             CreateMap<CreateSensorViewModel, SensorDto>();
             CreateMap<CreateSensorViewModel, Sensor>();
 

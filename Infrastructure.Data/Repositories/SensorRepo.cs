@@ -19,7 +19,8 @@ namespace Infrastructure.Data.Repositories
         {
             var sensors = context.Sensors
                 .Include(s => s.SensorType)
-                    .ThenInclude(i => i.Icon);
+                    .ThenInclude(st => st.Icon)
+                .Include(s => s.Icon);
 
             return sensors;
         }
