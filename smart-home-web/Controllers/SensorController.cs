@@ -61,6 +61,7 @@ namespace smart_home_web.Controllers
                 using (var fileStream = new FileStream(Path.Combine(uploadPath, sensor.IconFile.FileName), FileMode.Create))
                 {
                     await sensor.IconFile.CopyToAsync(fileStream);
+                    await fileStream.FlushAsync();
                 }
 
                 var iconDto = new IconDto()
@@ -77,7 +78,6 @@ namespace smart_home_web.Controllers
             return RedirectToAction("Index", "Sensor");
         }
 
-        // POST: SensorType/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
