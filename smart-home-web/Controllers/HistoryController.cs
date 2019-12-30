@@ -43,16 +43,19 @@ namespace smart_home_web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Graph(int sensorId, int days)
+        public IActionResult Graph(int sensorId, int days = 30)
         {
             GraphDTO graph = _historyTestManager.GetGraphBySensorId(sensorId, days);
             GraphViewModel result = _mapper.Map<GraphDTO, GraphViewModel>(graph);
-            result.Days = days;
-            string specifier = "G";
-            result.StringDates = new List<string>();
-            foreach (DateTimeOffset date in graph.Dates)
+            if (result.IsCorrect)
             {
-                result.StringDates.Add(date.ToString(specifier));
+                result.Days = days;
+                string specifier = "G";
+                result.StringDates = new List<string>();
+                foreach (DateTimeOffset date in graph.Dates)
+                {
+                    result.StringDates.Add(date.ToString(specifier));
+                }
             }
             return View(result);
         }
@@ -60,11 +63,7 @@ namespace smart_home_web.Controllers
         [HttpPost]
         public IActionResult Graph(GraphViewModel model)
         {
-            if (ModelState.IsValid)
-            {
-                return RedirectToAction("Graph", new { sensorId = model.SensorId, days = model.Days == 0 ? 30 : model.Days });
-            }
-            return View(model);
+            return RedirectToAction("Graph", new { sensorId = model.SensorId, days = model.Days == 0 ? 30 : model.Days });
         }
     }
 }

@@ -39,6 +39,8 @@ namespace Infrastructure.Business.Managers
         public GraphDTO GetGraphBySensorId(int SensorId, int days)
         {
             IEnumerable<History> histories = unitOfWork.HistoryRepo.GetHistoriesBySensorId(SensorId);
+            if (!histories.Any())
+                return new GraphDTO { IsCorrect = false };
             GraphDTO graph = new GraphDTO
             {
                 SensorId = SensorId,
@@ -47,7 +49,7 @@ namespace Infrastructure.Business.Managers
                                             .Sensor
                                             .SensorType
                                             .Name,
-
+                IsCorrect = true,
                 MeasurmentName = histories.FirstOrDefault()
                                             .Sensor
                                             .SensorType
@@ -96,7 +98,8 @@ namespace Infrastructure.Business.Managers
                     }
                 }
             }
-            
+            if (!graph.Dates.Any())
+                graph.IsCorrect = false;
             return graph;
         }
     }
