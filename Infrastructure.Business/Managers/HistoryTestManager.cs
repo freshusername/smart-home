@@ -50,12 +50,12 @@ namespace Infrastructure.Business.Managers
                                             .SensorType
                                             .Name,
                 IsCorrect = true,
-                MeasurmentName = histories.FirstOrDefault()
+                MeasurementName = histories.FirstOrDefault()
                                             .Sensor
                                             .SensorType
                                             .MeasurmentName,
 
-                MeasurmentType = histories.FirstOrDefault()
+                MeasurementType = histories.FirstOrDefault()
                                             .Sensor
                                             .SensorType
                                             .MeasurmentType,
@@ -74,22 +74,22 @@ namespace Infrastructure.Business.Managers
                 if (history.Date > date)
                 {
                     graph.Dates.Add(history.Date);
-                    switch (graph.MeasurmentType)
+                    switch (graph.MeasurementType)
                     {
-                        case MeasurmentType.Int:
+                        case MeasurementType.Int:
                             graph.IntValues.Add(history.IntValue.Value);
                             break;
 
-                        case MeasurmentType.Double:
+                        case MeasurementType.Double:
                             graph.DoubleValues.Add(history.DoubleValue.Value);
                             break;
 
-                        case MeasurmentType.Bool:
+                        case MeasurementType.Bool:
                             graph.BoolValues.Add(history.BoolValue.Value);
                             graph.IntValues.Add(history.BoolValue.Value ? 1 : 0);
                             break;
 
-                        case MeasurmentType.String:
+                        case MeasurementType.String:
                             graph.StringValues.Add(history.StringValue);
                             graph.IntValues.Add(1);
                             break;

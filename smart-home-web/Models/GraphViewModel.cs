@@ -14,8 +14,8 @@ namespace smart_home_web.Models
         public bool IsCorrect { get; set; }
         public int Days { get; set; }
 
-        public MeasurmentType MeasurmentType { get; set; }
-        public string MeasurmentName { get; set; }
+        public MeasurementType MeasurementType { get; set; }
+        public string MeasurementName { get; set; }
 
         public List<string> StringDates { get; set; }
 
