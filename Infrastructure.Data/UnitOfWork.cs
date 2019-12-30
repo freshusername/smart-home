@@ -18,6 +18,7 @@ namespace Infrastructure.Data
         private IGenericRepository<Sensor> _sensorRepo;
         private IGenericRepository<SensorType> _sensorTypeRepo;
         private IHistoryRepo _historyRepo;
+        private INotificationRepository _notificationRepository;
 
         public UnitOfWork(
 	        ApplicationsDbContext dbContext, 
@@ -56,7 +57,14 @@ namespace Infrastructure.Data
                 return _sensorTypeRepo;
             }
         }
-
+        public INotificationRepository NotificationRepository
+        {
+            get
+            {
+                if (_notificationRepository == null) _notificationRepository = new NotificationRepository(context);
+                return _notificationRepository;
+            }
+        }
         public int Save()
         {
             return context.SaveChanges();

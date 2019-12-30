@@ -1,0 +1,29 @@
+﻿@using smart_home_web.Models.Notification;
+
+@model AllNotificationsViewModel;
+@{
+    ViewData["Title"] = "Notifications";
+}
+
+<h3>Notifications</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Comment</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var messages in Model.Notifications)
+        {
+                <tr>
+                    <th scope="row">@messages.Id</th>
+                    <td>@messages.Comment</td>
+                    @*<td>@messages.IsRead</td>*@
+                    @*<td>@messages.Date</td>*@
+                </tr>
+         }
+    </tbody>
+</table>
+
