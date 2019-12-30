@@ -22,7 +22,6 @@ namespace smart_home_web.Models.SensorViewModel
         [StringLength(150)]
         public string Comment { get; set; }
 
-        //public byte[] Icon { get; set; }
         //public IFormFile Icon { get; set; }
 
         public int IconId { get; set; }

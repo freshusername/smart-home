@@ -33,7 +33,7 @@ namespace Infrastructure.Business.Managers
             }
             catch (Exception ex)
             {
-                return new OperationDetails(false, ex.Message, "Error");
+                return new OperationDetails(false, "Not implemented", "Error");
             }
             return new OperationDetails(true, "New icon has been added", "Name");
         }
