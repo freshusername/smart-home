@@ -18,16 +18,16 @@ namespace Infrastructure.Business.Managers
 
         public async Task<OperationDetails> Create(SensorTypeDto sensorTypeDto)
         {
-            //try
-            //{
-                SensorType sensortype = mapper.Map<SensorTypeDto, SensorType>(sensorTypeDto);
+            SensorType sensortype = mapper.Map<SensorTypeDto, SensorType>(sensorTypeDto);
+            try
+            {
                 unitOfWork.SensorTypeRepo.Insert(sensortype);
                 unitOfWork.Save();
-            //}
-            //catch(Exception ex)
-            //{
-            //    return new OperationDetails(false, ex.Message, "Error");
-            //}
+            }
+            catch(Exception ex)
+            {
+                return new OperationDetails(false, ex.Message, "Error");
+            }
             return new OperationDetails(true, "New sensor type has been added", "Name");
         }
 

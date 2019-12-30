@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+<h2>List of sensor types</h2>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -50,7 +50,7 @@
                 @{
                     var base64Img = Convert.ToBase64String(item.Icon);
                     string img = String.Format("data:image;base64,{0}", base64Img);
-                    <img src="@img" />
+                    <img src="@img" height="64" width="64"/>
                 }
             </td>
             <td>
