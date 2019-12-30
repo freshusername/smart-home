@@ -7,23 +7,11 @@
 
 <h3>Notifications</h3>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Comment</th>
-        </tr>
-    </thead>
-    <tbody>
         @foreach (var messages in Model.Notifications)
         {
-                <tr>
-                    <th scope="row">@messages.Id</th>
-                    <td>@messages.Comment</td>
-                    @*<td>@messages.IsRead</td>*@
-                    @*<td>@messages.Date</td>*@
-                </tr>
-         }
-    </tbody>
-</table>
-
+            <div class="alert alert-danger alert-dismissable">
+                <p>@messages.Comment</p>
+                <p>@messages.Date</p>
+                <p>@messages.IsRead</p>
+            </div>
+        }
