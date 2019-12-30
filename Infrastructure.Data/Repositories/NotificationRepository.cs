@@ -19,10 +19,8 @@ namespace Infrastructure.Data.Repositories
 
 		public override IEnumerable<Message> GetAll()
 		{
-			var res = _context.Messages;
-				//.Include(h => h.History)
-				//.ThenInclude(d => d.Date);
-
+			var res = _context.Messages
+				.Include(h => h.History);
 			return res;
 		}
 
