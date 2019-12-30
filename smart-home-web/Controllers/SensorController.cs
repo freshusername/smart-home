@@ -48,6 +48,7 @@ namespace smart_home_web.Controllers
         [HttpPost]
         public async Task<ActionResult> AddSensor(CreateSensorViewModel sensor)
         {
+
             if (sensor.IconFile != null)
             {
                 string path = @"\images\SensorIcons\";
@@ -67,7 +68,7 @@ namespace smart_home_web.Controllers
                 var iconDto = new IconDto()
                 {
                     Name = sensor.IconFile.FileName,
-                    Path = uploadPath + sensor.IconFile.FileName
+                    Path = path + sensor.IconFile.FileName
                 };
 
                 SensorDto sensorDto = _mapper.Map<CreateSensorViewModel, SensorDto>(sensor);
