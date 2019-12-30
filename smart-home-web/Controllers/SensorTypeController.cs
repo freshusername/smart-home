@@ -14,12 +14,14 @@ namespace smart_home_web.Controllers
     public class SensorTypeController : Controller
     {
         private readonly ISensorTypeManager sensorTypeManager;
+        private readonly IPhotoManager photoManager;
         private readonly IMapper mapper;
 
-        public SensorTypeController(ISensorTypeManager _sensorTypeManager, IMapper _mapper)
+        public SensorTypeController(ISensorTypeManager _sensorTypeManager, IMapper _mapper, IPhotoManager _photoManager)
         {
             sensorTypeManager = _sensorTypeManager;
             mapper = _mapper;
+            photoManager = _photoManager;
         }
 
         // GET: SensorType
@@ -44,13 +46,14 @@ namespace smart_home_web.Controllers
         // POST: SensorType/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(SensorTypeViewModel sensorTypeViewModel)
+        public async Task<ActionResult> Create(CreateSensorTypeViewModel sensorTypeViewModel)
         {
             if (!ModelState.IsValid)
             {
                 return View(sensorTypeViewModel);
             }
-            var sensorType = mapper.Map<SensorTypeViewModel, SensorTypeDto>(sensorTypeViewModel);
+            var sensorType = mapper.Map<CreateSensorTypeViewModel, SensorTypeDto>(sensorTypeViewModel);
+            sensorType.Icon = await photoManager.GetPhotoFromFile(sensorTypeViewModel.Icon, 450, 450);
             var res = sensorTypeManager.Create(sensorType).Result;
             if (res.Succeeded)
                 return RedirectToAction(nameof(Index));
