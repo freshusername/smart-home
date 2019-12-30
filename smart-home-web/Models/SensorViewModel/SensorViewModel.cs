@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using smart_home_web.Models.IconViewModel;
 
 namespace smart_home_web.Models.SensorViewModel
 {
@@ -18,8 +17,6 @@ namespace smart_home_web.Models.SensorViewModel
         public int SensorTypeId { get; set; }
         public int IconId { get; set; }
         public string IconPath { get; set; }
-
-        public GetIconViewModel IconViewModel { get; set; }
 
     }
 }

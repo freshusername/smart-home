@@ -51,29 +51,10 @@ namespace smart_home_web.Controllers
 
             if (sensor.IconFile != null)
             {
-                string path = @"\images\SensorIcons\";
-                var uploadPath = _env.WebRootPath + path;
-
-                if (!Directory.Exists(uploadPath))
-                {
-                    Directory.CreateDirectory(uploadPath);
-                }
-
-                using (var fileStream = new FileStream(Path.Combine(uploadPath, sensor.IconFile.FileName), FileMode.Create))
-                {
-                    await sensor.IconFile.CopyToAsync(fileStream);
-                    await fileStream.FlushAsync();
-                }
-
-                var iconDto = new IconDto()
-                {
-                    Name = sensor.IconFile.FileName,
-                    Path = path + sensor.IconFile.FileName
-                };
-
+                
                 SensorDto sensorDto = _mapper.Map<CreateSensorViewModel, SensorDto>(sensor);
-                sensorDto.IconId = await _iconManager.CreateAndGetIconId(iconDto);
-
+                sensorDto.IconId = await _iconManager.CreateAndGetIconId(sensor.IconFile);
+                
                 await _sensorManager.Create(sensorDto);
             }
             return RedirectToAction("Index", "Sensor");

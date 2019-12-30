@@ -19,11 +19,8 @@ namespace smart_home_web.Models.SensorViewModel
 
         [Required(ErrorMessage = "The Comment field is required.")]
         [Display(Name = "Additional info")]
-        [StringLength(150)]
+        [StringLength(50)]
         public string Comment { get; set; }
-
-        //public IFormFile Icon { get; set; }
-
         public int IconId { get; set; }
         public int SensorTypeId { get; set; }
         public Guid Token { get; set; }
@@ -33,7 +30,6 @@ namespace smart_home_web.Models.SensorViewModel
 
         public List<SensorType> SensorTypes { get; set; }
 
-        //public CreateIconViewModel createIconViewModel { get; set; }
         public IFormFile IconFile { get; set; }
 
 
