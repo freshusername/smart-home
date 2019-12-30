@@ -86,7 +86,6 @@ namespace Infrastructure.Business.Managers
             return new OperationDetails(true, "Not implemented", "Name");
         }
 
-        //TODO: private metod upload
         private async Task UploadImage(IFormFile formFile)
         {
             using (var fileStream = new FileStream(Path.Combine(UploadPath, formFile.FileName), FileMode.Create))

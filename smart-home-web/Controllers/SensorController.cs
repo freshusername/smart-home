@@ -6,7 +6,6 @@ using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using smart_home_web.Models.IconViewModel;
 using smart_home_web.Models.SensorViewModel;
 using System;
 using System.Collections.Generic;
