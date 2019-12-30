@@ -53,12 +53,12 @@ namespace Infrastructure.Business.Managers
                 MeasurementName = histories.FirstOrDefault()
                                             .Sensor
                                             .SensorType
-                                            .MeasurmentName,
+                                            .MeasurementName,
 
                 MeasurementType = histories.FirstOrDefault()
                                             .Sensor
                                             .SensorType
-                                            .MeasurmentType,
+                                            .MeasurementType,
 
                 Dates = new List<DateTimeOffset>()
             };
