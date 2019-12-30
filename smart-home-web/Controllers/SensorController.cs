@@ -48,6 +48,7 @@ namespace smart_home_web.Controllers
         [HttpPost]
         public async Task<ActionResult> AddSensor(CreateSensorViewModel sensor)
         {
+
             if (sensor.IconFile != null)
             {
                 string path = @"\images\SensorIcons\";
@@ -61,12 +62,13 @@ namespace smart_home_web.Controllers
                 using (var fileStream = new FileStream(Path.Combine(uploadPath, sensor.IconFile.FileName), FileMode.Create))
                 {
                     await sensor.IconFile.CopyToAsync(fileStream);
+                    await fileStream.FlushAsync();
                 }
 
                 var iconDto = new IconDto()
                 {
                     Name = sensor.IconFile.FileName,
-                    Path = uploadPath + sensor.IconFile.FileName
+                    Path = path + sensor.IconFile.FileName
                 };
 
                 SensorDto sensorDto = _mapper.Map<CreateSensorViewModel, SensorDto>(sensor);
@@ -77,7 +79,6 @@ namespace smart_home_web.Controllers
             return RedirectToAction("Index", "Sensor");
         }
 
-        // POST: SensorType/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
