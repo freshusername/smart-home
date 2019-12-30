@@ -1,7 +1,6 @@
 ﻿@using smart_home_web.Models.SensorViewModel;
 
-@model ListSensorViewModel;
-
+@model IEnumerable<SensorViewModel>
 
 @{
     ViewData["Title"] = "Sensors";
@@ -26,7 +25,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var sensor in Model.Sensors)
+        @foreach (var sensor in Model)
         {
             <tr>
                 <th scope="row">@sensor.Id</th>
@@ -37,7 +36,7 @@
                 <td>@sensor.SensorTypeId</td>
                 <td>@sensor.Token</td>
                 <td>@sensor.IsActivated</td>
-                <td><img src="@sensor.IconViewModel.IconPath" /></td>
+                <td><img src="@sensor.IconId" /></td>
             </tr>
         }
     </tbody>

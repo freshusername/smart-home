@@ -28,18 +28,17 @@ namespace smart_home_web.AutoMapper
             CreateMap<LoginViewModel, UserDTO>().ForMember(au => au.UserName, map => map.MapFrom(vm => vm.Email));
             CreateMap<UserDTO, AppUser>().ForMember(au => au.UserName, map => map.MapFrom(vm => vm.Email));
 
+            CreateMap<Sensor, SensorDto>()
+                .ForMember(vm => vm.IconPath, map => map.MapFrom(s => s.Icon.Path))
+                .ReverseMap();
+            CreateMap<SensorDto, SensorViewModel>();
             CreateMap<CreateSensorViewModel, SensorDto>();
-            CreateMap<SensorDto, Sensor>().ReverseMap();
-            CreateMap<SensorDto, SensorViewModel>()
-                .ForPath(svm => svm.IconViewModel.IconPath, map => map.MapFrom(s => s.Name));
             CreateMap<CreateSensorViewModel, Sensor>();
 
             CreateMap<Icon, IconDto>().ReverseMap();
-            CreateMap<IconDto, GetIconViewModel>()
-                .ForMember(ivm => ivm.IconPath, map => map.MapFrom(i => i.Path))
-                .ReverseMap();
+            CreateMap<IconDto, GetIconViewModel>().ReverseMap();
             CreateMap<CreateIconViewModel, IconDto>()
-                .ForMember(i => i.Name, map => map.MapFrom(civm => civm.ImageFile.FileName)); //DBC?
+                .ForMember(i => i.Name, map => map.MapFrom(civm => civm.ImageFile.FileName)); //TOD0: Cut icon extension (.png)
 
 
             CreateMap<HistoryDto, History>().ReverseMap().ForMember(hd => hd.SensorId, map => map.MapFrom(h => h.Sensor.Id));

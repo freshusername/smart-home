@@ -7,7 +7,7 @@ namespace smart_home_web.Models.IconViewModel
 {
     public class GetIconViewModel
     {
+        public string Path { get; set; }
 
-        public string IconPath { get; set; }
     }
 }

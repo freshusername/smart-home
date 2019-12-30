@@ -16,27 +16,30 @@ namespace Infrastructure.Business.Managers
     {
         public SensorManager(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
+
         }
 
-        public void Insert(SensorDto sensorDto)
+        public async Task<OperationDetails> Create(SensorDto sensorDto)
         {
-            Sensor sensorCheck = unitOfWork.SensorRepo.GetById(sensorDto.Id);
-            //Icon iconCheck = unitOfWork.IconRepo.GetById(sensorDto.IconId);
-            if (sensorCheck == null /*&& iconCheck == null*/)
+            try
             {
                 Sensor sensor = mapper.Map<SensorDto, Sensor>(sensorDto);
                 unitOfWork.SensorRepo.Insert(sensor);
                 unitOfWork.Save();
-
             }
-
+            catch (Exception ex)
+            {
+                return new OperationDetails(false, ex.Message, "Error");
+            }
+            return new OperationDetails(true, "New sensor has been added", "Name");
         }
-        public IEnumerable<SensorDto> GetAllSensors()
-        {
-            var sensors = unitOfWork.SensorRepo.GetAll().ToList();
-            var result = mapper.Map<IEnumerable<Sensor>, IEnumerable<SensorDto>>(sensors);
 
-            return result;
+        public async Task<IEnumerable<SensorDto>> GetAllSensorsAsync()
+        {
+            var sensors = unitOfWork.SensorRepo.GetAll();
+            var model = mapper.Map<IEnumerable<Sensor>, IEnumerable<SensorDto>>(sensors);
+
+            return model;
         }
     }
 }

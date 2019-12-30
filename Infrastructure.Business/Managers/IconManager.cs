@@ -2,9 +2,11 @@
 using Domain.Core.Model;
 using Domain.Interfaces;
 using Infrastructure.Business.DTOs.Icon;
+using Infrastructure.Business.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Business.Managers
 {
@@ -21,22 +23,22 @@ namespace Infrastructure.Business.Managers
             return iconDto;
         }
 
-        public void Insert(IconDto iconDto)
+        public async Task<OperationDetails> Create(IconDto iconDto)
         {
-            Icon iconCheck = unitOfWork.IconRepo.GetById(iconDto.Id);
-
-            if (iconCheck == null)
+            try
             {
                 Icon icon = mapper.Map<IconDto, Icon>(iconDto);
-
                 unitOfWork.IconRepo.Insert(icon);
                 unitOfWork.Save();
-
             }
-
+            catch (Exception ex)
+            {
+                return new OperationDetails(false, ex.Message, "Error");
+            }
+            return new OperationDetails(true, "New icon has been added", "Name");
         }
 
-        public int InsertGetIconId(IconDto iconDto)
+        public async Task<int> CreateAndGetIconId(IconDto iconDto)
         {
             Icon iconCheck = unitOfWork.IconRepo.GetById(iconDto.Id);
             int iconId = 0;
@@ -53,9 +55,17 @@ namespace Infrastructure.Business.Managers
             return iconId;
         }
 
-        public void Update(IconDto iconDto)
+        public async Task<OperationDetails> Update(IconDto iconDto)
         {
+            try
+            {
 
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return new OperationDetails(true, "Not implemented", "Name");
         }
     }
 }

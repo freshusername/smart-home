@@ -4,6 +4,7 @@ using Infrastructure.Business.DTOs.Icon;
 using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using smart_home_web.Models.IconViewModel;
 using smart_home_web.Models.SensorViewModel;
@@ -31,13 +32,21 @@ namespace smart_home_web.Controllers
             _env = env;
         }
 
+        [HttpGet]
+        public async Task<ActionResult> Index()
+        {
+            var sensors = _mapper.Map<IEnumerable<SensorViewModel>>(await _sensorManager.GetAllSensorsAsync());
+            return View(sensors);
+        }
+
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddSensor(CreateSensorViewModel sensor)
+        public async Task<ActionResult> AddSensor(CreateSensorViewModel sensor)
         {
             if (sensor.IconFile != null)
             {
@@ -61,30 +70,44 @@ namespace smart_home_web.Controllers
                 };
 
                 SensorDto sensorDto = _mapper.Map<CreateSensorViewModel, SensorDto>(sensor);
-                sensorDto.IconId = _iconManager.InsertGetIconId(iconDto);
+                sensorDto.IconId = await _iconManager.CreateAndGetIconId(iconDto);
 
-                _sensorManager.Insert(sensorDto);
-
+                await _sensorManager.Create(sensorDto);
             }
-
-
-
-
             return RedirectToAction("Index", "Sensor");
         }
 
-        [HttpGet]
-        public IActionResult Index()
+        // POST: SensorType/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int id, IFormCollection collection)
         {
-            var sensors = _sensorManager.GetAllSensors();
-            var models = _mapper.Map<IEnumerable<SensorDto>, IEnumerable<SensorViewModel>>(sensors);
-
-            return View(new ListSensorViewModel
+            try
             {
-                Sensors = models
-            });
+                // TODO: Add update logic here
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id, IFormCollection collection)
+        {
+            try
+            {
+                // TODO: Add delete logic here
 
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
     }
 }
