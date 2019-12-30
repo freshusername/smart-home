@@ -33,7 +33,7 @@
     <tbody>
 @foreach (var item in Model)
 {
-        <tr>
+        <tr height="64">
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
@@ -47,10 +47,15 @@
                 @Html.DisplayFor(modelItem => item.MeasurmentName)
             </td>
             <td>
-                @{
+                @if(item.Icon.Length > 0)
+                {
                     var base64Img = Convert.ToBase64String(item.Icon);
                     string img = String.Format("data:image;base64,{0}", base64Img);
                     <img src="@img" height="64" width="64"/>
+                }
+                else
+                {
+                    <p>No image was added</p>
                 }
             </td>
             <td>

@@ -53,7 +53,8 @@ namespace smart_home_web.Controllers
                 return View(sensorTypeViewModel);
             }
             var sensorType = mapper.Map<CreateSensorTypeViewModel, SensorTypeDto>(sensorTypeViewModel);
-            sensorType.Icon = await photoManager.GetPhotoFromFile(sensorTypeViewModel.Icon, 64, 64);
+            if(sensorTypeViewModel.Icon != null)
+                sensorType.Icon = await photoManager.GetPhotoFromFile(sensorTypeViewModel.Icon, 64, 64);
             var res = sensorTypeManager.Create(sensorType).Result;
             if (res.Succeeded)
                 return RedirectToAction(nameof(Index));
