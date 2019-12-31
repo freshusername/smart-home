@@ -1,6 +1,5 @@
 ﻿using Domain.Core.Model;
 using Microsoft.AspNetCore.Http;
-using smart_home_web.Models.IconViewModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
