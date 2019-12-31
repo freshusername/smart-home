@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using smart_home_web.Models.History;
+using Infrastructure.Business.DTOs.SensorType;
+using smart_home_web.Models.SensorType;
 using Infrastructure.Business.DTOs.Icon;
 using System.IO;
 
@@ -35,8 +37,16 @@ namespace smart_home_web.AutoMapper
 
             CreateMap<Icon, IconDto>().ReverseMap();
 
-            CreateMap<HistoryDto, History>().ReverseMap().ForMember(hd => hd.SensorId, map => map.MapFrom(h => h.Sensor.Id));
-            CreateMap<HistoryDto, HistoryViewModel>().ReverseMap();
+            CreateMap<HistoryDto, History>().ReverseMap()
+	            .ForMember(hd => hd.SensorName, map => map.MapFrom(h => h.Sensor.Name))
+	            .ForMember(hd => hd.MeasurmentName, map => map.MapFrom(vm => vm.Sensor.SensorType.MeasurmentName))
+	            .ForMember(hd => hd.MeasurmentType, map => map.MapFrom(vm => vm.Sensor.SensorType.MeasurmentType));
+            CreateMap<HistoryDto, HistoryViewModel>()
+	            .ForMember(hd => hd.Value, map => map.MapFrom(vm => vm.GetStringValue()));
+
+            CreateMap<SensorTypeDto, SensorType>().ReverseMap();
+            CreateMap<SensorTypeViewModel, SensorTypeDto>().ReverseMap();
+            CreateMap<CreateSensorTypeViewModel, SensorTypeDto>().ForMember(s => s.Icon, map => map.Ignore());
         }
     }
 }

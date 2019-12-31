@@ -14,6 +14,18 @@ namespace Infrastructure.Business.DTOs.History
 		public double? DoubleValue { get; set; }
 		public bool? BoolValue { get; set; }
 
-		public int? SensorId { get; set; }
+		public string SensorName { get; set; }
+		public string MeasurmentName { get; set; }
+		public string MeasurmentType { get; set; }
+
+
+		public string GetStringValue()
+		{
+			if (BoolValue != null) return BoolValue.ToString();
+			if (IntValue.HasValue) return IntValue.ToString();
+			if (DoubleValue.HasValue) return DoubleValue.ToString();
+			if (!string.IsNullOrEmpty(StringValue)) return StringValue;
+			else return "None";
+		}
 	}
 }

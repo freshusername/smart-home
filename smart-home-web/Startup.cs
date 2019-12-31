@@ -10,6 +10,7 @@ using Infrastructure.Business.Infrastructure;
 using Infrastructure.Business.Managers;
 using Infrastructure.Business.Services;
 using Infrastructure.Data;
+using Infrastructure.Data.Repositories;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -91,6 +92,8 @@ namespace smart_home_web
             services.AddTransient<ISensorManager, SensorManager>();
             services.AddTransient<IIconManager, IconManager>();
             services.AddTransient<IHistoryTestManager, HistoryTestManager>();
+            services.AddTransient<ISensorTypeManager, SensorTypeManager>();
+            services.AddTransient<IPhotoManager, PhotoManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

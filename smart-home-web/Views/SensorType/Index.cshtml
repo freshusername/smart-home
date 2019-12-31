@@ -1,0 +1,69 @@
+﻿@model IEnumerable<smart_home_web.Models.SensorType.SensorTypeViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>List of sensor types</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Comment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MeasurmentType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MeasurmentName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Icon)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model)
+{
+        <tr height="64">
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Comment)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MeasurmentType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MeasurmentName)
+            </td>
+            <td>
+                @if(item.Icon.Length > 0)
+                {
+                    var base64Img = Convert.ToBase64String(item.Icon);
+                    string img = String.Format("data:image;base64,{0}", base64Img);
+                    <img src="@img" height="64" width="64"/>
+                }
+                else
+                {
+                    <p>No image was added</p>
+                }
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

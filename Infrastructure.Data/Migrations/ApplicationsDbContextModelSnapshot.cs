@@ -139,6 +139,7 @@ namespace Infrastructure.Data.Migrations
                     b.Property<int>("IconId");
 
                     b.Property<bool>("IsActivated");
+                    b.Property<int>("IconId");
 
                     b.Property<string>("Name");
 

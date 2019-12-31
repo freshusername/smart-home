@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Domain.Core.Model;
 using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,8 +15,8 @@ namespace Infrastructure.Data.Repositories
 
         public BaseRepository(ApplicationsDbContext dbContext)
         {
-            context = dbContext;
-            dbSet = context.Set<T>();
+            _context = dbContext;
+            _dbSet = _context.Set<T>();
         }
 
         public void Delete(T item)
@@ -25,22 +26,32 @@ namespace Infrastructure.Data.Repositories
 
         public virtual IEnumerable<T> GetAll()
         {
-            return dbSet.ToList();
+            return _dbSet.ToList();
         }
 
         public virtual T GetById(int id)
         {
-            return dbSet.Find(id);
+            return _dbSet.Find(id);
         }
 
         public void Insert(T item)
         {
-            dbSet.Add(item);
+	        _dbSet.Add(item);
         }
 
         public void Update(T item)
         {
             throw new NotImplementedException();
         }
-    }
+
+        public IEnumerable<History> GetAllHistories()
+        {
+	        return _context.Histories.Include(h => h.Sensor).ToList();
+        }
+
+        public History GetHistoryById(int id)
+        {
+	        return _context.Histories.Include(h => h.Sensor).FirstOrDefault(s => s.Id == id);
+        }
+	}
 }

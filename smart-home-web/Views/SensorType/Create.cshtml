@@ -1,0 +1,53 @@
+﻿@model smart_home_web.Models.SensorType.CreateSensorTypeViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create new sensor type</h2>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Comment" class="control-label"></label>
+                <input asp-for="Comment" class="form-control" />
+                <span asp-validation-for="Comment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MeasurmentType" class="control-label"></label>
+                <select asp-for="MeasurmentType" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.MeasurmentType>()"  class="form-control">
+                    <option value="none" selected disabled hidden>
+                        Select an Option
+                    </option>
+                </select>
+                <span asp-validation-for="MeasurmentType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MeasurmentName" class="control-label"></label>
+                <input asp-for="MeasurmentName" class="form-control" />
+                <span asp-validation-for="MeasurmentName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Icon" class="control-label"></label>
+                <input asp-for="Icon" class="form-control" type="file" accept="image/*"/>
+                <span asp-validation-for="Icon" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data.Repositories
 {
-	public class HistoryRepo : BaseRepository<History>
-	{
+	public class HistoryRepo : BaseRepository<History>, IHistoryRepo
+    {
 		private readonly ApplicationsDbContext _context;
 
 		public HistoryRepo(ApplicationsDbContext context) : base(context)
@@ -17,14 +17,23 @@ namespace Infrastructure.Data.Repositories
 			_context = context;
 		}
 
-		public new IEnumerable<History> GetAll()
+		public override IEnumerable<History> GetAll()
 		{
-			return _context.Histories.Include(h => h.Sensor).ToList();
+			var res = _context.Histories
+				.Include(h => h.Sensor)
+				.ThenInclude(s => s.SensorType);
+
+			return res;
 		}
 
-		public new History GetById(int id)
+		public override History GetById(int id)
 		{
 			return _context.Histories.Include(h => h.Sensor).FirstOrDefault(s => s.Id == id);
 		}
-	}
+
+		public IEnumerable<History> GetHistoriesBySensorId(int SensorId)
+		{
+			throw new NotImplementedException();
+		}
+    }
 }
