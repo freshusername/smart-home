@@ -21,7 +21,7 @@ namespace Infrastructure.Data.Repositories
 
         public void Delete(T item)
         {
-            throw new NotImplementedException();
+            _dbSet.Remove(item);
         }
 
         public virtual IEnumerable<T> GetAll()
