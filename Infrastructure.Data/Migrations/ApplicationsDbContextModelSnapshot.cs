@@ -14,7 +14,7 @@ namespace Infrastructure.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
+                .HasAnnotation("ProductVersion", "2.1.14-servicing-32113")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Domain.Core.Model.AppUser", b =>
@@ -120,7 +120,8 @@ namespace Infrastructure.Data.Migrations
 
                     b.HasIndex("AppUserId");
 
-                    b.HasIndex("HistoryId");
+                    b.HasIndex("HistoryId")
+                        .IsUnique();
 
                     b.ToTable("Messages");
                 });
@@ -130,11 +131,13 @@ namespace Infrastructure.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTimeOffset?>("ActivatedOn");
-
                     b.Property<string>("Comment");
 
+                    b.Property<DateTimeOffset?>("CreatedOn");
+
                     b.Property<int>("IconId");
+
+                    b.Property<bool>("IsActivated");
 
                     b.Property<string>("Name");
 
@@ -296,8 +299,8 @@ namespace Infrastructure.Data.Migrations
                         .HasForeignKey("AppUserId");
 
                     b.HasOne("Domain.Core.Model.History", "History")
-                        .WithMany()
-                        .HasForeignKey("HistoryId")
+                        .WithOne("Message")
+                        .HasForeignKey("Domain.Core.Model.Message", "HistoryId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

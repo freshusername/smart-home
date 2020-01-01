@@ -16,7 +16,9 @@ namespace Infrastructure.Business.Managers
 
         public IEnumerable<HistoryDto> getInvalidSensors()
         {
-            var resultList = unitOfWork.HistoryRepo.GetAll().ToList();
+            var histories = unitOfWork.HistoryRepo.GetAll().ToList();
+
+            var resultList = histories.Where(p => p.Sensor.IsActivated == false);
 
             var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(resultList);
 

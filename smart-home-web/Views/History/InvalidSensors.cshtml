@@ -9,7 +9,7 @@
 <body class="body-content">
     <div class="row text-center">
         <h2 style="color:red;" class="text-center">Invalid Sensors</h2>
-        <table class="table table-dark table-hover table-responsivev table-bordered text-center" id="invalidSensorTable">
+        <table class="table table-dark table-hover table-responsive table-bordered text-center " id="invalidSensorTable">
             <caption>List of invalid sensors</caption>
             <thead class="bg-success">
                 <tr>
@@ -91,7 +91,7 @@
                                 var prev = (PaginationDTO)Model.paginationDTO.Clone();
                                 prev.CurrentPage = Model.paginationDTO.CurrentPage - 1;
                             }
-                            <a class="menu-toggle text-center" asp-action="InvalidSensors"
+                            <a class="menu-toggle text-center page-link" asp-action="InvalidSensors"
                                asp-route-sortState="@ViewBag.SensorSort"
                                asp-route-CurrentPage="@prev.CurrentPage"
                                asp-route-HasPrevious="@prev.HasPrevious"
@@ -108,7 +108,7 @@
                         page_i.CurrentPage = i;
 
                         <li class="page-item @( i == Model.paginationDTO.CurrentPage ? "active" : "")">
-                            <a class="menu-toggle text-center" asp-action="InvalidSensors"
+                            <a class="menu-toggle text-center page-link" asp-action="InvalidSensors"
                                asp-route-sortState="@ViewBag.SensorSort"
                                asp-route-CurrentPage="@page_i.CurrentPage"
                                asp-route-HasPrevious="@page_i.HasPrevious"
@@ -126,7 +126,7 @@
                                 next.CurrentPage = Model.paginationDTO.CurrentPage + 1;
                             }
 
-                            <a class="menu-toggle text-center" asp-action="InvalidSensors"
+                            <a class="menu-toggle text-center page-link" asp-action="InvalidSensors"
                                asp-route-sortState="@ViewBag.SensorSort"
                                asp-route-CurrentPage="@next.CurrentPage"
                                asp-route-HasPrevious="@next.HasPrevious"
