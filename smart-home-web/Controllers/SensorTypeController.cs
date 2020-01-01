@@ -13,21 +13,23 @@ namespace smart_home_web.Controllers
 {
     public class SensorTypeController : Controller
     {
-        private readonly ISensorTypeManager sensorTypeManager;
+        private readonly ISensorTypeManager _sensorTypeManager;
+        private readonly IIconManager _iconManager;
         private readonly IPhotoManager photoManager;
-        private readonly IMapper mapper;
+        private readonly IMapper _mapper;
 
-        public SensorTypeController(ISensorTypeManager _sensorTypeManager, IMapper _mapper, IPhotoManager _photoManager)
+        public SensorTypeController(ISensorTypeManager sensorTypeManager, IMapper mapper, IIconManager iconManager)
         {
-            sensorTypeManager = _sensorTypeManager;
-            mapper = _mapper;
-            photoManager = _photoManager;
+            _sensorTypeManager = sensorTypeManager;
+            _mapper = mapper;
+            //_photoManager = photoManager;
+            _iconManager = iconManager;
         }
 
         // GET: SensorType
         public async Task<ActionResult> Index()
         {
-            var sensortypes = mapper.Map<IEnumerable<SensorTypeViewModel>>(await sensorTypeManager.GetAllSensorTypesAsync());
+            var sensortypes = _mapper.Map<IEnumerable<SensorTypeViewModel>>(await _sensorTypeManager.GetAllSensorTypesAsync());
             return View(sensortypes);
         }
 
@@ -48,18 +50,27 @@ namespace smart_home_web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(CreateSensorTypeViewModel sensorTypeViewModel)
         {
-            if (!ModelState.IsValid)
+            //if (!ModelState.IsValid)
+            //{
+            //    return View(sensorTypeViewModel);
+            //}
+            //var sensorType = mapper.Map<CreateSensorTypeViewModel, SensorTypeDto>(sensorTypeViewModel);
+            //if(sensorTypeViewModel.Icon != null)
+            //    sensorType.Icon = await photoManager.GetPhotoFromFile(sensorTypeViewModel.Icon, 64, 64);
+            //var res = sensorTypeManager.Create(sensorType).Result;
+            //if (res.Succeeded)
+            //    return RedirectToAction(nameof(Index));
+            //else
+            //    ModelState.AddModelError(res.Property, res.Message);
+
+            if (sensorTypeViewModel.IconFile != null)
             {
-                return View(sensorTypeViewModel);
+
+                SensorTypeDto sensorTypeDto = _mapper.Map<CreateSensorTypeViewModel, SensorTypeDto>(sensorTypeViewModel);
+                sensorTypeDto.IconId = await _iconManager.CreateAndGetIconId(sensorTypeViewModel.IconFile);
+
+                await _sensorTypeManager.Create(sensorTypeDto);
             }
-            var sensorType = mapper.Map<CreateSensorTypeViewModel, SensorTypeDto>(sensorTypeViewModel);
-            if(sensorTypeViewModel.Icon != null)
-                sensorType.Icon = await photoManager.GetPhotoFromFile(sensorTypeViewModel.Icon, 64, 64);
-            var res = sensorTypeManager.Create(sensorType).Result;
-            if (res.Succeeded)
-                return RedirectToAction(nameof(Index));
-            else
-                ModelState.AddModelError(res.Property, res.Message);
 
             return View(sensorTypeViewModel);
         }

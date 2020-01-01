@@ -15,8 +15,8 @@ namespace Infrastructure.Data.Repositories
 
         public BaseRepository(ApplicationsDbContext dbContext)
         {
-            _context = dbContext;
-            _dbSet = _context.Set<T>();
+            context = dbContext;
+            dbSet = context.Set<T>();
         }
 
         public void Delete(T item)
@@ -26,17 +26,17 @@ namespace Infrastructure.Data.Repositories
 
         public virtual IEnumerable<T> GetAll()
         {
-            return _dbSet.ToList();
+            return dbSet.ToList();
         }
 
         public virtual T GetById(int id)
         {
-            return _dbSet.Find(id);
+            return dbSet.Find(id);
         }
 
         public void Insert(T item)
         {
-	        _dbSet.Add(item);
+            dbSet.Add(item);
         }
 
         public void Update(T item)
@@ -46,12 +46,12 @@ namespace Infrastructure.Data.Repositories
 
         public IEnumerable<History> GetAllHistories()
         {
-	        return _context.Histories.Include(h => h.Sensor).ToList();
+            return context.Histories.Include(h => h.Sensor).ToList();
         }
 
         public History GetHistoryById(int id)
         {
-	        return _context.Histories.Include(h => h.Sensor).FirstOrDefault(s => s.Id == id);
+            return context.Histories.Include(h => h.Sensor).FirstOrDefault(s => s.Id == id);
         }
-	}
+    }
 }

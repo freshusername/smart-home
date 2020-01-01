@@ -28,25 +28,31 @@ namespace smart_home_web.AutoMapper
             CreateMap<UserDTO, AppUser>().ForMember(au => au.UserName, map => map.MapFrom(vm => vm.Email));
 
             CreateMap<Sensor, SensorDto>()
-                .ForMember(dto => dto.IconPath, map => map.MapFrom(s =>  s.Icon.Path + s.Icon.Name ))
-                //.ForMember(dto => dto.IconPath, map => map.MapFrom(s => (s.Icon != null) ? s.Icon.Path + s.Icon.Name : ))
+                .ForMember(dto => dto.IconPath, map => map.MapFrom(s => s.Icon.Path))
+                .ForMember(dto => dto.SensorTypeId, map => map.MapFrom(s => s.SensorType.Id))
                 .ReverseMap();
+            CreateMap<SensorDto, Sensor>();
             CreateMap<SensorDto, SensorViewModel>();
             CreateMap<CreateSensorViewModel, SensorDto>();
+            //.ForMember(dto => dto.IconPath, map => map.MapFrom(vm => (vm.IconFile != null) ? vm. : vm.SensorType.Icon.Path));
             CreateMap<CreateSensorViewModel, Sensor>();
 
             CreateMap<Icon, IconDto>().ReverseMap();
 
             CreateMap<HistoryDto, History>().ReverseMap()
-	            .ForMember(hd => hd.SensorName, map => map.MapFrom(h => h.Sensor.Name))
-	            .ForMember(hd => hd.MeasurmentName, map => map.MapFrom(vm => vm.Sensor.SensorType.MeasurmentName))
-	            .ForMember(hd => hd.MeasurmentType, map => map.MapFrom(vm => vm.Sensor.SensorType.MeasurmentType));
+                .ForMember(hd => hd.SensorName, map => map.MapFrom(h => h.Sensor.Name))
+                .ForMember(hd => hd.MeasurmentName, map => map.MapFrom(vm => vm.Sensor.SensorType.MeasurementName))
+                .ForMember(hd => hd.MeasurmentType, map => map.MapFrom(vm => vm.Sensor.SensorType.MeasurementType));
             CreateMap<HistoryDto, HistoryViewModel>()
-	            .ForMember(hd => hd.Value, map => map.MapFrom(vm => vm.GetStringValue()));
+                .ForMember(hd => hd.Value, map => map.MapFrom(vm => vm.GetStringValue()));
 
-            CreateMap<SensorTypeDto, SensorType>().ReverseMap();
-            CreateMap<SensorTypeViewModel, SensorTypeDto>().ReverseMap();
-            CreateMap<CreateSensorTypeViewModel, SensorTypeDto>().ForMember(s => s.Icon, map => map.Ignore());
+            CreateMap<SensorType, SensorTypeDto>();
+            CreateMap<SensorTypeDto, SensorType>();
+            CreateMap<SensorTypeViewModel, SensorTypeDto>();
+            CreateMap<SensorTypeDto, SensorTypeViewModel>();
+            CreateMap<CreateSensorTypeViewModel, SensorTypeDto>();//.ForMember(s => s.IconPath, map => map.MapFrom());
+            CreateMap<SensorType, SensorTypeDto>()
+                .ForMember(dto => dto.IconPath, map => map.MapFrom(st => st.Icon.Path));
         }
     }
 }

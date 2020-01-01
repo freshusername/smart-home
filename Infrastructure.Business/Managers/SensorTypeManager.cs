@@ -24,7 +24,7 @@ namespace Infrastructure.Business.Managers
                 unitOfWork.SensorTypeRepo.Insert(sensortype);
                 unitOfWork.Save();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return new OperationDetails(false, ex.Message, "Error");
             }

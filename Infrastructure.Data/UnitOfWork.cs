@@ -41,15 +41,6 @@ namespace Infrastructure.Data
             }
         }
 
-        public IGenericRepository<SensorType> SensorTypeRepo
-        {
-            get
-            {
-                if (_sensorTypeRepo == null) _sensorTypeRepo = new BaseRepository<SensorType>(context);
-                return _sensorTypeRepo;
-            }
-        }
-
         public IGenericRepository<History> HistoryRepo
         {
             get

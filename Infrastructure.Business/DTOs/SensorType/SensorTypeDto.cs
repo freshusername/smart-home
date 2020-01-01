@@ -11,8 +11,11 @@ namespace Infrastructure.Business.DTOs.SensorType
         public int Id { get; set; }
         public string Name { get; set; }
         public string Comment { get; set; }
-        public MeasurmentType MeasurmentType { get; set; }
+        public MeasurmentType MeasurementType { get; set; }
         public string MeasurmentName { get; set; }
-        public byte[] Icon { get; set; }
+        public int IconId { get; set; }
+        public string IconPath { get; set; }
+
+
     }
 }

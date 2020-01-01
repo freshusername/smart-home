@@ -27,7 +27,7 @@ namespace smart_home_web.Models.SensorViewModel
         public DateTimeOffset? CreatedOn { get; set; }
         public bool IsActivated { get; set; }
 
-        public List<SensorType> SensorTypes { get; set; }
+        //public List<SensorType> SensorTypes { get; set; }
 
         public IFormFile IconFile { get; set; }
 

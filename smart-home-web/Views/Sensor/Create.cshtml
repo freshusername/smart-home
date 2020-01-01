@@ -50,8 +50,16 @@
                                 </select>
                             </div>*@
 
-                        <label asp-for="@Model.SensorTypeId" class="control-label"></label>
-                        <input asp-for="@Model.SensorTypeId" type="number" class="form-control" placeholder="alpha sensor type Id" />
+                        @*<label asp-for="@Model.SensorTypeId" class="control-label"></label>
+                            <input asp-for="@Model.SensorTypeId" type="number" class="form-control" placeholder="alpha sensor type Id" />*@
+
+                        <select asp-for="@Model.SensorTypeId" class="suit-select">
+                            <option value="@String.Empty">Select type</option>
+                            @foreach (var sensortType in ViewBag.SensorTypes)
+                            {
+                                <option value="@sensortType.Id">@sensortType.Name</option>
+                            }
+                        </select>
 
                     </div>
 

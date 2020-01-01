@@ -26,6 +26,6 @@ namespace smart_home_web.Models.SensorType
         [DisplayName("Measurment Name")]
         public string MeasurmentName { get; set; }
 
-        public IFormFile Icon { get; set; }
+        public IFormFile IconFile { get; set; }
     }
 }
