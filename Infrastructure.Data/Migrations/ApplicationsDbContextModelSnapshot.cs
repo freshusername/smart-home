@@ -80,7 +80,7 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<int?>("IntValue");
 
-                    b.Property<int?>("SensorId");
+                    b.Property<int>("SensorId");
 
                     b.Property<string>("StringValue");
 
@@ -287,7 +287,8 @@ namespace Infrastructure.Data.Migrations
                 {
                     b.HasOne("Domain.Core.Model.Sensor", "Sensor")
                         .WithMany("Histories")
-                        .HasForeignKey("SensorId");
+                        .HasForeignKey("SensorId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Domain.Core.Model.Message", b =>

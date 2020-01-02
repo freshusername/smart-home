@@ -1,7 +1,42 @@
-﻿
+﻿@using smart_home_web.Models.History;
+@using Infrastructure.Business.DTOs;
+
+
+@model AllHistoriesViewModel;
+
+
 @{
     ViewData["Title"] = "Detail";
 }
 
-<h2>Detail</h2>
-
+<h2><b>@Model.Histories.First().SensorName</b> Detail</h2>
+<body>
+    <div class="row text-center">
+        <table class="table table-hover table-responsive">
+            <tbody class="text-center">
+                @foreach (var history in Model.Histories)
+                {
+                    <tr>
+                        <td scope="row">@history.Id</td>
+                        <td>@history.Date.DateTime.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                        @{ if (history.Value.ToString() == "False")
+                            {
+                                <td>Inactive</td>
+                            }
+                            else if (history.Value.ToString() == "True")
+                            {
+                                <td>Active</td>
+                            }
+                            else
+                            {
+                                <td>@history.Value</td>
+                            }
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <br />
+        <a class="btn btn-success text-center" asp-action="Graph" asp-route-sensorId="@Model.Histories.First().SensorId" asp-route-days="99999">Graph</a>
+    </div>
+</body>

@@ -1,0 +1,97 @@
+﻿@using smart_home_web.Models.SensorViewModel
+@model CreateSensorViewModel
+@{
+    @*<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">*@
+
+    <div class="container">
+
+        <h2>Add new sensor</h2>
+        <hr />
+
+        <div class="row">
+            <div class="col-md-4">
+                <form asp-action="AddSensor" asp-controller="Sensor" method="post">
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+
+                        <label asp-for="@Model.Name" class="control-label"></label>
+                        <input asp-for="@Model.Name" class="form-control" placeholder="Enter name please" />
+
+                        <div class="form-group">
+                            <label asp-for="@Model.Comment" class="control-label"></label>
+                            <input asp-for="@Model.Comment" class="form-control" placeholder="Enter comment please" />
+                        </div>
+
+                        <div class="form-group">
+                            @*<div class="col-md-10">
+                                    <p>Upload sensor icon: </p>
+                                    <input asp-for="@Model.Icon" type="file" name="file" />
+                                </div>*@
+                            <label asp-for="@Model.IconId" class="control-label"></label>
+                            <input asp-for="@Model.IconId" type="number" class="form-control" placeholder="beta icon Id" />
+
+
+                        </div>
+
+                        <label asp-for="@Model.Token" class="control-label"></label>
+                        <input asp-for="@Model.Token" class="form-control" placeholder="Enter valid token please" />
+
+                        @*<select asp-for="@Model.SensorTypeId" data-val="true" data-val-required="The SensorType field is required."
+                                    id="SensorTypeId" name="SensorType">
+                                @foreach (var sensType in Model.SensorTypes)
+                                    {
+                                        <option value=@sensType.Id>@sensType.Name</option>
+                                    }
+                                <option value="1">Temperature sensor</option>
+                                <option value="2">Door sensor</option>
+                                <option value="3">Light sensor</option>
+
+                            </select>*@
+
+
+                        @*TODO: SelectList from List of SensorTypes*@
+                        @*<div style="margin-bottom:70px">
+                                <select asp-for="SensorTypeId" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.MeasurmentType>()" class="nice-select option col-lg-4 col-md-5 col-sm-6 col-xs-12">
+                                    <option value="none" selected disabled hidden>
+                                        Select an Option
+                                    </option>
+                                </select>
+                            </div>*@
+
+                        <label asp-for="@Model.SensorTypeId" class="control-label"></label>
+                        <input asp-for="@Model.SensorTypeId" type="number" class="form-control" placeholder="alpha sensor type Id" />
+
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="AddSensor" class="btn btn-success" />
+                        <a class="btn btn-primary" asp-action="Index"><em class="glyphicon glyphicon-arrow-left"></em> Back to List</a>
+                    </div>
+
+                    <div class="form-group">
+                        @*<label asp-for="@Model.IsActivated" class="control-label">Activate?</label>
+                            <input asp-for="@Model.IsActivated" type="checkbox" data-toggle="toggle" data-on="Activated" data-off="Disabled">*@
+                        @Html.CheckBoxFor(x => x.IsActivated);
+                    </div>
+
+                    <div class="form-group">
+                        <img src="" width="96" height="96" />
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+@*<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>*@
+
+<script type="text/javascript">
+    $document.ready(function () {
+        $(".custom-file-input").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).next("custom-file-label").html(fileName);
+        });
+    });
+</script>
