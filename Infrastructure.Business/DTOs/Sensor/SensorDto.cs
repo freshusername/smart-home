@@ -17,5 +17,6 @@ namespace Infrastructure.Business.DTOs.Sensor
         public DateTimeOffset? CreatedOn { get; set; }
         public bool IsActivated { get; set; }
         public string IconPath { get; set; }
+        public string SensorTypeName { get; set; }
     }
 }
