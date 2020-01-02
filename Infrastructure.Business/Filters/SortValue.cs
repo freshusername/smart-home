@@ -12,7 +12,7 @@ namespace Infrastructure.Business.Filters
     public class SortValue
     {
 
-        public static IEnumerable<HistoryDto> SortHistories(SortState sortState,IEnumerable<HistoryDto> histories)
+        public static IEnumerable<HistoryDto> SortHistories(SortState sortState, IEnumerable<HistoryDto> histories)
         {
 
             switch (sortState)
@@ -52,6 +52,12 @@ namespace Infrastructure.Business.Filters
                     break;
                 case SortState.BoolValueDesc:
                     histories = histories.OrderByDescending(p => p.BoolValue).ToList();
+                    break;
+                case SortState.HistoryAsc:
+                    histories = histories.OrderBy(p => p.Id).ToList();
+                    break;
+                case SortState.HistoryDesc:
+                    histories = histories.OrderByDescending(p => p.Id).ToList();
                     break;
                 default:
                     histories = histories.OrderBy(p => p.SensorId).ToList();

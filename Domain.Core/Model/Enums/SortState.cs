@@ -17,6 +17,9 @@ namespace Domain.Core.Model.Enums
         DoubleValueAsc,
         DoubleValueDesc,
         BoolValueAsc,
-        BoolValueDesc
+        BoolValueDesc,
+        HistoryAsc,
+        HistoryDesc,
+        None
     }
 }

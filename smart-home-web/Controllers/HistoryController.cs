@@ -29,12 +29,16 @@ namespace smart_home_web.Controllers
             _invalidSensorManager = invalidSensorManager;
 		}
 
-		public async Task<IActionResult> Index(FilterDTO FilterDTO, SortState sortState = SortState.SensorAsc )
+        public async Task<IActionResult> Index(FilterDTO FilterDTO)
 		{
-			var histories = await _historyTestManager.GetAllHistoriesAsync();
+            if (FilterDTO.sortState == SortState.None) FilterDTO.sortState = SortState.HistoryAsc;
+
+            var histories = await _historyTestManager.GetAllHistoriesAsync();
+
+            histories = SortValue.SortHistories(FilterDTO.sortState, histories);
 
             var models = _mapper.Map<IEnumerable<HistoryDto>, IEnumerable<HistoryViewModel>>(histories);
-
+            
             FilterDTO.Amount = histories.Count();
             histories = histories.Skip((FilterDTO.CurrentPage - 1) * FilterDTO.PageSize).Take(FilterDTO.PageSize).ToList();
             IEnumerable<HistoryViewModel> historiesViewModel = _mapper.Map<IEnumerable<HistoryDto>, IEnumerable<HistoryViewModel>>(histories);
@@ -46,17 +50,20 @@ namespace smart_home_web.Controllers
 
 		}
 
-		public async Task<IActionResult> Detail(FilterDTO FilterDTO, int sensorId, SortState sortState = SortState.SensorAsc)
+		public async Task<IActionResult> Detail(FilterDTO FilterDTO)
 		{
-			var resultList = await _historyTestManager.GetHistoriesBySensorIdAsync(sensorId);
+            if (FilterDTO.sortState == SortState.None) FilterDTO.sortState = SortState.HistoryAsc;
 
-            var histories = SortValue.SortHistories(sortState, resultList);
+            var histories = await _historyTestManager.GetHistoriesBySensorIdAsync(FilterDTO.sensorId);
 
-            var models = _mapper.Map<IEnumerable<HistoryDto>, IEnumerable<HistoryViewModel>>(histories);
+            histories = SortValue.SortHistories(FilterDTO.sortState, histories);
+                  
+            var result = _mapper.Map<IEnumerable<HistoryDto>, IEnumerable<HistoryViewModel>>(histories);
+
             return View(new AllHistoriesViewModel
 			{
-				Histories = models,
-                FilterDTO=FilterDTO
+				Histories = result,
+                FilterDTO = FilterDTO
 			});
 		}
 

@@ -1,5 +1,6 @@
 ﻿@using smart_home_web.Models.History;
 @using Infrastructure.Business.DTOs;
+@using Domain.Core.Model.Enums;
 
 
 @model AllHistoriesViewModel;
@@ -19,18 +20,27 @@
             <thead class="text-center">
                 <tr>
                     <th scope="col" class=" text-center">
-                        Id
-                        
-                            @*<a class="menu-toggle text-center" asp-action="Index" asp-route-paginationDTO="@Model.paginationDTO.Clone()">
-                                <i class="glyphicon glyphicon-sort"></i>
-                            </a>*@
+                        @{
+                            var sensor = (FilterDTO)Model.FilterDTO.Clone();
+                            sensor.sortState = (sensor.sortState == SortState.HistoryAsc) ? SortState.HistoryDesc : SortState.HistoryAsc;
+                        }
+                        <a href="@Url.Action("Index", "History",
+                                        sensor,
+                                        null)">
+                            Id <i class="glyphicon glyphicon-sort"></i>
+                        </a>
                     </th>
                     <th class="text-center">SensorName</th>
                     <th scope="col" class=" text-center">
-                        Date
-                            @*<a class="menu-toggle text-center" asp-action="Index" asp-route-paginationDTO="@Model.paginationDTO.Clone()">
-                                <i class="glyphicon glyphicon-sort"></i>
-                            </a>*@
+                        @{
+                            var date = (FilterDTO)Model.FilterDTO.Clone();
+                            date.sortState = (sensor.sortState == SortState.DateAsc) ? SortState.DateDesc : SortState.DateAsc;
+                        }
+                        <a href="@Url.Action("Index", "History",
+                                        date,
+                                        null)">
+                            Date <i class="glyphicon glyphicon-sort"></i>
+                        </a>
                     </th>
                     <th class="text-center">Value</th>
                     <th class="text-center">MeasurementUnit</th>
@@ -51,7 +61,7 @@
                         @{
                             if (history.Value.ToString() == "False")
                             {
-                                <td>Unactive</td>
+                                <td>Inactive</td>
                             }
                             else if (history.Value.ToString() == "True")
                             {
