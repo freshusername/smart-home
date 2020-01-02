@@ -20,7 +20,7 @@ namespace Infrastructure.Business.Managers
 
 		public async Task<HistoryDto> GetHistoryByIdAsync(int id)
 		{
-			var history = unitOfWork.HistoryRepo.GetById(id);
+			var history = await unitOfWork.HistoryRepo.GetById(id);
 			var result = mapper.Map<History, HistoryDto>(history);
 			
 			return result;
@@ -28,7 +28,7 @@ namespace Infrastructure.Business.Managers
 
 		public async Task<IEnumerable<HistoryDto>> GetAllHistoriesAsync()
 		{
-			var histories = unitOfWork.HistoryRepo.GetAll().ToList();
+			var histories = await unitOfWork.HistoryRepo.GetAll();
 			var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories);
 
 			return result;

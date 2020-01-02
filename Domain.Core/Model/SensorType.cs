@@ -14,8 +14,8 @@ namespace Domain.Core.Model
         public string MeasurementName { get; set; }
 
         public int IconId { get; set; }
-
         public Icon Icon { get; set; }
+
         public virtual ICollection<Sensor> Sensor { get; set; }
     }
 }

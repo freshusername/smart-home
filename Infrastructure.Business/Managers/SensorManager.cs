@@ -25,10 +25,10 @@ namespace Infrastructure.Business.Managers
             {
                 if (sensorDto.IconId == 0)
                 {
-                    sensorDto.IconId = unitOfWork.SensorTypeRepo.GetById(sensorDto.SensorTypeId).IconId;
+                    sensorDto.IconId = (await unitOfWork.SensorTypeRepo.GetById(sensorDto.SensorTypeId)).IconId;
                 }
                 Sensor sensor = mapper.Map<SensorDto, Sensor>(sensorDto);
-                unitOfWork.SensorRepo.Insert(sensor);
+                await unitOfWork.SensorRepo.Insert(sensor);
                 unitOfWork.Save();
             }
             catch (Exception ex)
@@ -40,7 +40,7 @@ namespace Infrastructure.Business.Managers
 
         public async Task<IEnumerable<SensorDto>> GetAllSensorsAsync()
         {
-            var sensors = unitOfWork.SensorRepo.GetAll();
+            var sensors = await unitOfWork.SensorRepo.GetAll();
             var model = mapper.Map<IEnumerable<Sensor>, IEnumerable<SensorDto>>(sensors);
 
             return model;

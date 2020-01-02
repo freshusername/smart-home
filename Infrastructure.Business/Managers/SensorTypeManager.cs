@@ -21,7 +21,7 @@ namespace Infrastructure.Business.Managers
             SensorType sensortype = mapper.Map<SensorTypeDto, SensorType>(sensorTypeDto);
             try
             {
-                unitOfWork.SensorTypeRepo.Insert(sensortype);
+                await unitOfWork.SensorTypeRepo.Insert(sensortype);
                 unitOfWork.Save();
             }
             catch (Exception ex)
@@ -33,7 +33,7 @@ namespace Infrastructure.Business.Managers
 
         public async Task<IEnumerable<SensorTypeDto>> GetAllSensorTypesAsync()
         {
-            var sensorTypes = unitOfWork.SensorTypeRepo.GetAll();
+            var sensorTypes = await unitOfWork.SensorTypeRepo.GetAll();
             var result = mapper.Map<IEnumerable<SensorType>, IEnumerable<SensorTypeDto>>(sensorTypes);
 
             return result;

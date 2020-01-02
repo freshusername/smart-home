@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Domain.Core.Model;
 using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -21,27 +22,27 @@ namespace Infrastructure.Data.Repositories
 
         public void Delete(T item)
         {
-            throw new NotImplementedException();
+            dbSet.Remove(item);
         }
 
-        public virtual IEnumerable<T> GetAll()
+        public async virtual Task<IEnumerable<T>> GetAll()
         {
-            return dbSet.ToList();
+            return await dbSet.ToListAsync();
         }
 
-        public virtual T GetById(int id)
+        public async virtual Task<T> GetById(int id)
         {
-            return dbSet.Find(id);
+            return await dbSet.FindAsync(id);
         }
 
-        public void Insert(T item)
+        public async Task Insert(T item)
         {
-            dbSet.Add(item);
+            await dbSet.AddAsync(item);
         }
 
         public void Update(T item)
         {
-            throw new NotImplementedException();
+            dbSet.Update(item);
         }
 
         public IEnumerable<History> GetAllHistories()

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Data.Repositories
 {
@@ -14,10 +15,10 @@ namespace Infrastructure.Data.Repositories
 
         }
 
-        public override IEnumerable<SensorType> GetAll()
+        public override async Task<IEnumerable<SensorType>> GetAll()
         {
-            var sensorTypes = context.SensorTypes
-                .Include(i => i.Icon);
+            var sensorTypes = await context.SensorTypes
+                .Include(i => i.Icon).ToListAsync();
 
             return sensorTypes;
         }

@@ -33,9 +33,9 @@ namespace Infrastructure.Business.Managers
             }
         }
 
-        public IconDto GetById(int id)
+        public async Task<IconDto> GetById(int id)
         {
-            Icon icon = unitOfWork.IconRepo.GetById(id);
+            Icon icon = await unitOfWork.IconRepo.GetById(id);
             IconDto iconDto = mapper.Map<Icon, IconDto>(icon);
             return iconDto;
         }
@@ -45,12 +45,12 @@ namespace Infrastructure.Business.Managers
             try
             {
                 Icon icon = mapper.Map<IconDto, Icon>(iconDto);
-                unitOfWork.IconRepo.Insert(icon);
+                await unitOfWork.IconRepo.Insert(icon);
                 unitOfWork.Save();
             }
             catch (Exception ex)
             {
-                return new OperationDetails(false, "Not implemented", "Error");
+                return new OperationDetails(false, ex.Message, "Error");
             }
             return new OperationDetails(true, "New icon has been added", "Name");
         }
@@ -67,7 +67,7 @@ namespace Infrastructure.Business.Managers
 
             Icon icon = mapper.Map<IconDto, Icon>(iconDto);
 
-            unitOfWork.IconRepo.Insert(icon);
+            await unitOfWork.IconRepo.Insert(icon);
             unitOfWork.Save();
 
             return icon.Id;
@@ -81,7 +81,7 @@ namespace Infrastructure.Business.Managers
             }
             catch (Exception ex)
             {
-
+                return new OperationDetails(true, ex.Message, "Name");
             }
             return new OperationDetails(true, "Not implemented", "Name");
         }
