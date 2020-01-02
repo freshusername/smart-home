@@ -41,41 +41,51 @@
             <tbody class="text-center">
                 @foreach (var history in Model.Histories)
                 {
-                    <tr>
-                        <td scope="row">
-                            <a asp-controller="History" asp-action="Detail"
-                               asp-route-sensorId="@history.SensorId"
-                               asp-route-page="@Model.paginationDTO.CurrentPage"
-                               style="display:block;">
-                                @history.SensorId
-                            </a>
-                        </td>
-                        <td>
-                            <a asp-controller="History" asp-action="Detail" asp-route-sensorId="@history.SensorId" style="display:block;">
-                                @history.Date.DateTime.ToString("dd/MM/yyyy HH:mm:ss")
-                            </a>
-                        </td>
-                        @{ string value;
-                            if (history.Value.ToString() == "False")
-                            {
-                                value = "Unactive";
-                            }
-                            else if (history.Value.ToString() == "True")
-                            {
-                                value = "Active";
-                            }
-                            else
-                            {
-                                value = history.Value;
-                            }
+                <tr>
+                    <td scope="row">
+                        <a asp-controller="History" asp-action="Detail"
+                           asp-route-sensorId="@history.SensorId"
+                           asp-route-page="@Model.paginationDTO.CurrentPage"
+                           style="display:block;">
+                            @history.SensorId
+                        </a>
+                    </td>
+                    <td>
+                        <a asp-controller="History" asp-action="Detail" asp-route-sensorId="@history.SensorId" style="display:block;">
+                            @history.Date.DateTime.ToString("dd/MM/yyyy HH:mm:ss")
+                        </a>
+                    </td>
+                    @{ 
+                        if (history.Value.ToString() == "False")
+                        {
+                            <td>
+                                <a asp-controller="History" asp-action="Detail" asp-route-sensorId="@history.SensorId"
+                                 style="display:block; color:red;">
+                                    Unactive
+                                </a>
+                            </td>
                         }
-                        <td>
-                            <a asp-controller="History" asp-action="Detail" asp-route-sensorId="@history.SensorId" style="display:block;">
-                                @value
-                            </a>
-                        </td>
+                        else if (history.Value.ToString() == "True")
+                        {
+                            <td>
+                                <a asp-controller="History" asp-action="Detail" asp-route-sensorId="@history.SensorId"
+                                 style="display:block; color:lightseagreen;">
+                                    Active
+                                </a>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                <a asp-controller="History" asp-action="Detail" asp-route-sensorId="@history.SensorId"
+                                 style="display:block; color: dodgerblue;">
+                                    @history.Value
+                                </a>
+                            </td>
+                        }
+                    }
 
-                    </tr>
+                </tr>
                 }
             </tbody>
         </table>
@@ -87,6 +97,7 @@
                     @if (Model.paginationDTO.HasPrevious)
                     {
                         <li class="page-item">
+
                             @{
                                 var prev = (PaginationDTO)Model.paginationDTO.Clone();
                                 prev.CurrentPage = Model.paginationDTO.CurrentPage - 1;
@@ -139,8 +150,6 @@
                 }
             </ul>
         </nav>
-
-        @*<partial name="_PaginationView" />*@
     </div>
 
 </body>
