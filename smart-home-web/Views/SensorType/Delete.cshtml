@@ -33,20 +33,17 @@
             @Html.DisplayFor(model => model.MeasurementName)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Icon)
+            @Html.DisplayNameFor(model => model.IconPath)
         </dt>
         <dd>
-            @*@if (Model.Icon.Length > 0)
+            @if (Model.IconPath != null)
             {
-                var base64Img = Convert.ToBase64String(Model.Icon);
-                string img = String.Format("data:image;base64,{0}", base64Img);
-                <img src="@img" height="64" width="64" />
+                <img src="@Model.IconPath" width="64" height="64" />
             }
             else
             {
                 <p>No image was added</p>
-            }*@
-            <img src="@Model.IconPath" width="64" height="64" />
+            }
         </dd>
     </dl>
     

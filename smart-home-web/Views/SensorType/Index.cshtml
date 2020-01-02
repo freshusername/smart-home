@@ -25,7 +25,7 @@
                 @Html.DisplayNameFor(model => model.MeasurementName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Icon)
+                @Html.DisplayNameFor(model => model.IconPath)
             </th>
             <th></th>
         </tr>
@@ -47,7 +47,14 @@
                     @Html.DisplayFor(modelItem => item.MeasurementName)
                 </td>
                 <td>
-                    <img src="@item.IconPath" width="64" height="64" />
+                    @if (item.IconPath != null)
+                    {
+                        <img src="@item.IconPath" width="64" height="64" />
+                    }
+                    else
+                    {
+                        <p>No image was added</p>
+                    }
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

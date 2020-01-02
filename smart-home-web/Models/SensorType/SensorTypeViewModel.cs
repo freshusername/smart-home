@@ -17,7 +17,7 @@ namespace smart_home_web.Models.SensorType
         public MeasurmentType MeasurementType { get; set; }
         [DisplayName("Measurement Name")]
         public string MeasurementName { get; set; }
-        public byte[] Icon { get; set; }
+        [DisplayName("Icon")]
         public string IconPath { get; set; }
     }
 }

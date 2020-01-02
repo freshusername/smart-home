@@ -13,7 +13,7 @@ namespace Infrastructure.Business.DTOs.SensorType
         public string Comment { get; set; }
         public MeasurmentType MeasurementType { get; set; }
         public string MeasurementName { get; set; }
-        public int IconId { get; set; }
+        public int? IconId { get; set; }
         public string IconPath { get; set; }
 
 

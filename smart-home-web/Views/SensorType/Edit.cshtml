@@ -37,8 +37,17 @@
             </div>
             <div class="form-group">
                 <label asp-for="IconFile" class="control-label"></label>
-                <img src="@Model.IconPath" width="64" height="64" />
-                <input asp-for="@Model.IconId" type="hidden"/>
+
+                @if (Model.IconPath != null)
+                {
+                    <img src="@Model.IconPath" width="64" height="64" />
+                }
+                else
+                {
+                    <p>No image was added</p>
+                }
+
+                <input asp-for="@Model.IconId" type="hidden" />
                 <input asp-for="IconFile" class="form-control" type="file" accept="image/*" />
                 <span asp-validation-for="IconFile" class="text-danger"></span>
             </div>

@@ -54,6 +54,7 @@ namespace smart_home_web.Controllers
             }
 
             var res = _sensorTypeManager.Create(sensorTypeDto).Result;
+
             if (res.Succeeded)
                 return RedirectToAction(nameof(Index));
             else

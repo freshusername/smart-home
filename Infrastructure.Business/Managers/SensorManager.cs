@@ -25,7 +25,7 @@ namespace Infrastructure.Business.Managers
             {
                 if (sensorDto.IconId == 0)
                 {
-                    sensorDto.IconId = (await unitOfWork.SensorTypeRepo.GetById(sensorDto.SensorTypeId)).IconId;
+                    sensorDto.IconId = (await unitOfWork.SensorTypeRepo.GetById(sensorDto.SensorTypeId)).IconId.Value;
                 }
                 Sensor sensor = mapper.Map<SensorDto, Sensor>(sensorDto);
                 await unitOfWork.SensorRepo.Insert(sensor);

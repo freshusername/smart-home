@@ -28,6 +28,8 @@ namespace smart_home_web.Models.SensorType
 
         public int IconId { get; set; }
         public string IconPath { get; set; }
+
+        [DisplayName("Icon")]
         public IFormFile IconFile { get; set; }
     }
 }
