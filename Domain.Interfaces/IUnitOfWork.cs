@@ -10,7 +10,6 @@ namespace Domain.Interfaces
     {
         IHistoryRepo HistoryRepo { get; }
         INotificationRepository NotificationRepository { get; }
-        IGenericRepository<SensorType> SensorTypeRepo { get; }
         ISensorRepo SensorRepo { get; }
         ISensorTypeRepo SensorTypeRepo { get; }
         UserManager<AppUser> UserManager { get; }

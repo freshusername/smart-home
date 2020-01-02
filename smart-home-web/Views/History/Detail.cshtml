@@ -21,7 +21,6 @@
                             Sensor <i class="glyphicon glyphicon-sort"></i>
                         </a>
                     </th>
-
                     <th scope="col" class=" text-center">
                         <a class="menu-toggle text-center" asp-action="InvalidSensors" asp-route-sortState="@ViewBag.DateSort">
                             Date <i class="glyphicon glyphicon-sort"></i>
@@ -62,50 +61,51 @@
         </table>
         <br />
         @*<nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-center">
-                @if (Model.paginationDTO != null)
-                {
-                    @if (Model.paginationDTO.HasPrevious)
+                <ul class="pagination justify-content-center">
+                    @if (Model.paginationDTO != null)
                     {
-                        <li class="page-item">
-                            @{
-                                var prev = (PaginationDTO)Model.paginationDTO.Clone();
-                                prev.CurrentPage = Model.paginationDTO.CurrentPage - 1;
-                            }
+                        @if (Model.paginationDTO.HasPrevious)
+                        {
+                            <li class="page-item">
+                                @{
+                                    var prev = (PaginationDTO)Model.paginationDTO.Clone();
+                                    prev.CurrentPage = Model.paginationDTO.CurrentPage - 1;
+                                }
 
-                            @Html.ActionLink("prev", "Detail", "History", null, null, null,
-                                      prev,
-                                      null)
-                        </li>
+                                @Html.ActionLink("prev", "Detail", "History", null, null, null,
+                                          prev,
+                                          null)
+                            </li>
+                        }
+
+                        @for (var i = 1; i <= Model.paginationDTO.PagesCount; i++)
+                        {
+                            var page_i = (PaginationDTO)Model.paginationDTO.Clone();
+                            page_i.CurrentPage = i;
+
+                            <li class="page-item @( i == Model.paginationDTO.CurrentPage ? "active" : "")">
+                                @Html.ActionLink(i.ToString(), "Detail", "History", null, null, null,
+                                    page_i,
+                                    null)
+                            </li>
+                        }
+                        @if (Model.paginationDTO.HasNext)
+                        {
+                            <li class="page-item">
+                                @{
+                                    var next = (PaginationDTO)Model.paginationDTO.Clone();
+                                    next.CurrentPage = Model.paginationDTO.CurrentPage + 1;
+                                }
+
+                                @Html.ActionLink("next", "Detail", "History", null, null, null,
+                                          next,
+                                          null)
+                            </li>
+                        }
                     }
-
-                    @for (var i = 1; i <= Model.paginationDTO.PagesCount; i++)
-                    {
-                        var page_i = (PaginationDTO)Model.paginationDTO.Clone();
-                        page_i.CurrentPage = i;
-
-                        <li class="page-item @( i == Model.paginationDTO.CurrentPage ? "active" : "")">
-                            @Html.ActionLink(i.ToString(), "Detail", "History", null, null, null,
-                                page_i,
-                                null)
-                        </li>
-                    }
-                    @if (Model.paginationDTO.HasNext)
-                    {
-                        <li class="page-item">
-                            @{
-                                var next = (PaginationDTO)Model.paginationDTO.Clone();
-                                next.CurrentPage = Model.paginationDTO.CurrentPage + 1;
-                            }
-
-                            @Html.ActionLink("next", "Detail", "History", null, null, null,
-                                      next,
-                                      null)
-                        </li>
-                    }
-                }
-            </ul>
-        </nav>*@
+                </ul>
+            </nav>*@
         @*<partial name="_PaginationView" />*@
+        <a asp-action="Graph" asp-route-sortState="@Model.Histories.First().SensorId">Value </a>
     </div>
 </body>
