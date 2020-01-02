@@ -1,16 +1,16 @@
-﻿@model smart_home_web.Models.SensorType.CreateSensorTypeViewModel
+﻿@model smart_home_web.Models.SensorType.EditSensorTypeViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Edit";
 }
 
-<h2>Create new sensor type</h2>
-
+<h2>Edit sensor type</h2>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create" enctype="multipart/form-data">
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
@@ -37,11 +37,13 @@
             </div>
             <div class="form-group">
                 <label asp-for="IconFile" class="control-label"></label>
+                <img src="@Model.IconPath" width="64" height="64" />
+                <input asp-for="@Model.IconId" type="hidden"/>
                 <input asp-for="IconFile" class="form-control" type="file" accept="image/*" />
                 <span asp-validation-for="IconFile" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Save" class="btn btn-default" />
             </div>
         </form>
     </div>

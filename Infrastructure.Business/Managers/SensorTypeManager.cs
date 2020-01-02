@@ -21,7 +21,7 @@ namespace Infrastructure.Business.Managers
             SensorType sensortype = mapper.Map<SensorTypeDto, SensorType>(sensorTypeDto);
             try
             {
-                unitOfWork.SensorTypeRepo.Insert(sensortype);
+                await unitOfWork.SensorTypeRepo.Insert(sensortype);
                 unitOfWork.Save();
             }
             catch (Exception ex)
@@ -31,12 +31,51 @@ namespace Infrastructure.Business.Managers
             return new OperationDetails(true, "New sensor type has been added", "Name");
         }
 
+        public OperationDetails Update(SensorTypeDto sensorTypeDto)
+        {
+            SensorType sensortype = mapper.Map<SensorTypeDto, SensorType>(sensorTypeDto);
+            try
+            {
+                unitOfWork.SensorTypeRepo.Update(sensortype);
+                unitOfWork.Save();
+            }
+            catch (Exception ex)
+            {
+                return new OperationDetails(false, ex.Message, "Error");
+            }
+            return new OperationDetails(true, "New sensor type has been added", "Name");
+        }
+
+        public async Task<OperationDetails> Delete(int id)
+        {
+            try
+            {
+                SensorType sensorType = await unitOfWork.SensorTypeRepo.GetById(id);
+                unitOfWork.SensorTypeRepo.Delete(sensorType);
+                unitOfWork.Save();
+            }
+            catch (Exception ex)
+            {
+                return new OperationDetails(false, ex.Message, "Error");
+            }
+            return new OperationDetails(true, "Sensor type has been deleted", "Name");
+        }
+
+        public async Task<SensorTypeDto> GetSensorTypeByIdAsync(int id)
+        {
+            var sensorType = await unitOfWork.SensorTypeRepo.GetById(id);
+            var result = mapper.Map<SensorType, SensorTypeDto>(sensorType);
+
+            return result;
+        }
+
         public async Task<IEnumerable<SensorTypeDto>> GetAllSensorTypesAsync()
         {
-            var sensorTypes = unitOfWork.SensorTypeRepo.GetAll();
+            var sensorTypes = await unitOfWork.SensorTypeRepo.GetAll();
             var result = mapper.Map<IEnumerable<SensorType>, IEnumerable<SensorTypeDto>>(sensorTypes);
 
             return result;
         }
+
     }
 }

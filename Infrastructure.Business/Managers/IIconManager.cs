@@ -13,6 +13,6 @@ namespace Infrastructure.Business.Managers
         Task<OperationDetails> Create(IconDto iconDto);
         Task<int> CreateAndGetIconId(IFormFile formFile);
         Task<OperationDetails> Update(IconDto iconDto);
-        IconDto GetById(int id);
+        Task<IconDto> GetById(int id);
     }
 }

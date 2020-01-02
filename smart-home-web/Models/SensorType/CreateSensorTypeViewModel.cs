@@ -19,12 +19,12 @@ namespace smart_home_web.Models.SensorType
         public string Comment { get; set; }
 
         [Required]
-        [DisplayName("Measurment Type")]
-        public MeasurmentType MeasurmentType { get; set; }
+        [DisplayName("Measurement Type")]
+        public MeasurmentType MeasurementType { get; set; }
 
         [Required]
-        [DisplayName("Measurment Name")]
-        public string MeasurmentName { get; set; }
+        [DisplayName("Measurement Name")]
+        public string MeasurementName { get; set; }
 
         public IFormFile IconFile { get; set; }
     }

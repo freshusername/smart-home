@@ -3,6 +3,7 @@ using Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Data.Repositories
 {
@@ -13,9 +14,9 @@ namespace Infrastructure.Data.Repositories
 
         }
 
-        public override Icon GetById(int id)
+        public async override Task<Icon> GetById(int id)
         {
-            return context.Icons.Find(id);
+            return await context.Icons.FindAsync(id);
         }
     }
 }
