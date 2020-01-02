@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Domain.Core.Model.Enums
 {
-    public enum MeasurmentType
+    public enum MeasurementType
 	{
         Int,
         Double,

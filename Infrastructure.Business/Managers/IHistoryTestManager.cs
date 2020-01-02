@@ -15,6 +15,6 @@ namespace Infrastructure.Business.Managers
 		Task<IEnumerable<HistoryDto>> GetAllHistoriesAsync();
 		Task<IEnumerable<HistoryDto>> GetHistoriesBySensorIdAsync(int sensorId);
 
-		IEnumerable<GraphDTO> GetGraphBySensorId(int SensorId);
+        GraphDTO GetGraphBySensorId(int SensorId, int days);
     }
 }

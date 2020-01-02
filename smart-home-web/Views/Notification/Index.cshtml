@@ -1,0 +1,24 @@
+﻿@using smart_home_web.Models.Notification;
+
+@model AllNotificationsViewModel;
+@{
+    ViewData["Title"] = "Notifications";
+}
+
+<h3>Notifications</h3>
+<span class="badge" id="ntCnt"></span>
+
+        @foreach (var messages in Model.Notifications)
+        {
+            <div class="alert alert-success alert-dismissable">
+                <p>@messages.Comment</p>
+                <p>@messages.Date</p>
+                <p>@messages.IsRead</p>
+            </div>
+        }
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script>
+    var texts = $('.alert').length;
+    $('#ntCnt').text(texts);
+</script>
