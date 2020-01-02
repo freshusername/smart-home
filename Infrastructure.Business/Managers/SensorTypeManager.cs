@@ -31,6 +31,21 @@ namespace Infrastructure.Business.Managers
             return new OperationDetails(true, "New sensor type has been added", "Name");
         }
 
+        public async Task<OperationDetails> Update(SensorTypeDto sensorTypeDto)
+        {
+            SensorType sensortype = mapper.Map<SensorTypeDto, SensorType>(sensorTypeDto);
+            try
+            {
+                unitOfWork.SensorTypeRepo.Update(sensortype);
+                unitOfWork.Save();
+            }
+            catch (Exception ex)
+            {
+                return new OperationDetails(false, ex.Message, "Error");
+            }
+            return new OperationDetails(true, "New sensor type has been added", "Name");
+        }
+
         public async Task<OperationDetails> Delete(int id)
         {
             try

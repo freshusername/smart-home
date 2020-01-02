@@ -37,6 +37,7 @@ namespace smart_home_web.AutoMapper
             CreateMap<SensorTypeDto, SensorType>().ReverseMap();
             CreateMap<SensorTypeViewModel, SensorTypeDto>().ReverseMap();
             CreateMap<CreateSensorTypeViewModel, SensorTypeDto>().ForMember(s => s.Icon, map => map.Ignore());
+            CreateMap<SensorTypeDto, CreateSensorTypeViewModel>().ForMember(s => s.Icon, map => map.Ignore());
         }
     }
 }

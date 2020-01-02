@@ -59,19 +59,24 @@ namespace smart_home_web.Controllers
         }
 
         // GET: SensorType/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return View();
+            var sensorTypeDto = await sensorTypeManager.GetSensorTypeByIdAsync(id);
+            CreateSensorTypeViewModel sensorTypeViewModel = mapper.Map<SensorTypeDto, CreateSensorTypeViewModel>(sensorTypeDto);
+            return View(sensorTypeViewModel);
         }
 
         // POST: SensorType/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(CreateSensorTypeViewModel sensorTypeViewModel)
         {
+            var sensorType = mapper.Map<CreateSensorTypeViewModel, SensorTypeDto>(sensorTypeViewModel);
+            if (sensorTypeViewModel.Icon != null)
+                sensorType.Icon = await photoManager.GetPhotoFromFile(sensorTypeViewModel.Icon, 64, 64);
             try
             {
-                // TODO: Add update logic here
+                await sensorTypeManager.Update(sensorType);
 
                 return RedirectToAction(nameof(Index));
             }

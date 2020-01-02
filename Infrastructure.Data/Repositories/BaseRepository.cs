@@ -41,7 +41,7 @@ namespace Infrastructure.Data.Repositories
 
         public void Update(T item)
         {
-            throw new NotImplementedException();
+            _dbSet.Update(item);
         }
 
         public IEnumerable<History> GetAllHistories()
