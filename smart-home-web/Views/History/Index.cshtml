@@ -20,17 +20,10 @@
                 <tr>
                     <th scope="col" class=" text-center">
                         Id
-                        
-                            @*<a class="menu-toggle text-center" asp-action="Index" asp-route-paginationDTO="@Model.paginationDTO.Clone()">
-                                <i class="glyphicon glyphicon-sort"></i>
-                            </a>*@
                     </th>
                     <th class="text-center">SensorName</th>
                     <th scope="col" class=" text-center">
                         Date
-                            @*<a class="menu-toggle text-center" asp-action="Index" asp-route-paginationDTO="@Model.paginationDTO.Clone()">
-                                <i class="glyphicon glyphicon-sort"></i>
-                            </a>*@
                     </th>
                     <th class="text-center">Value</th>
                     <th class="text-center">MeasurementUnit</th>
@@ -51,7 +44,7 @@
                         @{
                             if (history.Value.ToString() == "False")
                             {
-                                <td>Unactive</td>
+                                <td>Inactive</td>
                             }
                             else if (history.Value.ToString() == "True")
                             {

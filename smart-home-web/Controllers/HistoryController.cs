@@ -28,40 +28,28 @@ namespace smart_home_web.Controllers
             _invalidSensorManager = invalidSensorManager;
 		}
 
-		public async Task<IActionResult> Index(PaginationDTO paginationDTO, SortState sortState = SortState.SensorAsc )
+		public async Task<IActionResult> Index(PaginationDTO paginationDTO)
 		{
 			var histories = await _historyTestManager.GetAllHistoriesAsync();
-
-            //ViewData["SensorSort"] = sortState == SortState.SensorAsc ? SortState.SensorDesc : SortState.SensorAsc;
-            //ViewData["DateSort"] = sortState == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
-
-            //histories = SortValue.SortHistories(sortState, histories);
+			histories = histories.OrderBy(s => s.Id);
 
 			var models = _mapper.Map<IEnumerable<HistoryDto>, IEnumerable<HistoryViewModel>>(histories);
 
             paginationDTO.Amount = histories.Count();
             histories = histories.Skip((paginationDTO.CurrentPage - 1) * paginationDTO.PageSize).Take(paginationDTO.PageSize).ToList();
+			
             IEnumerable<HistoryViewModel> historiesViewModel = _mapper.Map<IEnumerable<HistoryDto>, IEnumerable<HistoryViewModel>>(histories);
             return View(new AllHistoriesViewModel
             {
                 Histories = historiesViewModel,
                 paginationDTO = paginationDTO
             });
-
 		}
 
-		public async Task<IActionResult> Detail(PaginationDTO paginationDTO, int sensorId, SortState sortState = SortState.SensorAsc)
+		public async Task<IActionResult> Detail(PaginationDTO paginationDTO, int sensorId)
 		{
 			var histories = await _historyTestManager.GetHistoriesBySensorIdAsync(sensorId);
 
-            //ViewData["SensorSort"] = sortState == SortState.SensorAsc ? SortState.SensorDesc : SortState.SensorAsc;
-            //ViewData["DateSort"] = sortState == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
-            //ViewData["StringSort"] = sortState == SortState.StringValueAsc ? SortState.StringValueDesc : SortState.StringValueAsc;
-            //ViewData["IntSort"] = sortState == SortState.IntValueAsc ? SortState.IntValueDesc : SortState.IntValueAsc;
-            //ViewData["DoubleSort"] = sortState == SortState.DoubleValueAsc ? SortState.DoubleValueDesc : SortState.DoubleValueAsc;
-            //ViewData["BoolSort"] = sortState == SortState.BoolValueAsc ? SortState.BoolValueDesc : SortState.BoolValueAsc;
-
-            //histories = SortValue.SortHistories(sortState, histories);
 			var models = _mapper.Map<IEnumerable<HistoryDto>, IEnumerable<HistoryViewModel>>(histories);
 
 			return View(new AllHistoriesViewModel
@@ -71,9 +59,7 @@ namespace smart_home_web.Controllers
 			});
 		}
 
-
-
-        #region InvalidSensors
+		#region InvalidSensors
 
         public IActionResult InvalidSensors(PaginationDTO paginationDTO, SortState sortState=SortState.SensorAsc)
         {
@@ -94,6 +80,30 @@ namespace smart_home_web.Controllers
             });
         }
 
-        #endregion
-    }
+		#endregion
+
+		[HttpGet]
+		public IActionResult Graph(int sensorId, int days = 30)
+		{
+			GraphDTO graph = _historyTestManager.GetGraphBySensorId(sensorId, days);
+			GraphViewModel result = _mapper.Map<GraphDTO, GraphViewModel>(graph);
+			if (result.IsCorrect)
+			{
+				result.Days = days;
+				string specifier = "G";
+				result.StringDates = new List<string>();
+				foreach (DateTimeOffset date in graph.Dates)
+				{
+					result.StringDates.Add(date.ToString(specifier));
+				}
+			}
+			return View(result);
+		}
+
+		[HttpPost]
+		public IActionResult Graph(GraphViewModel model)
+		{
+			return RedirectToAction("Graph", new { sensorId = model.SensorId, days = model.Days == 0 ? 30 : model.Days });
+		}
+	}
 }
