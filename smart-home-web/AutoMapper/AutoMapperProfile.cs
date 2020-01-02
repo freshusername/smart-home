@@ -10,6 +10,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using smart_home_web.Models.History;
+using Infrastructure.Business.DTOs.SensorType;
+using smart_home_web.Models.SensorType;
+using Infrastructure.Business.DTOs.Icon;
+using System.IO;
 using Infrastructure.Business.DTOs.Notification;
 using smart_home_web.Models.Notification;
 
@@ -17,21 +21,24 @@ namespace smart_home_web.AutoMapper
 {
     public class AutoMapperProfile : Profile
     {
-
         public AutoMapperProfile()
         {
-	        CreateMap<RegisterViewModel, UserDTO>().ForMember(au => au.UserName, map => map.MapFrom(vm => vm.Email));
+            CreateMap<RegisterViewModel, UserDTO>().ForMember(au => au.UserName, map => map.MapFrom(vm => vm.Email));
             CreateMap<UserDTO, AppUser>().ForMember(au => au.UserName, map => map.MapFrom(vm => vm.Email));
 
             CreateMap<LoginViewModel, UserDTO>().ForMember(au => au.UserName, map => map.MapFrom(vm => vm.Email));
             CreateMap<UserDTO, AppUser>().ForMember(au => au.UserName, map => map.MapFrom(vm => vm.Email));
 
-            CreateMap<CreateSensorViewModel, SensorDto>().ReverseMap();
-            CreateMap<SensorDto, Sensor>().ReverseMap();
+            CreateMap<Sensor, SensorDto>()
+                .ForMember(dto => dto.IconPath, map => map.MapFrom(s => s.Icon.Path))
+                .ForMember(dto => dto.SensorTypeId, map => map.MapFrom(s => s.SensorType.Id))
+                .ForMember(dto => dto.SensorTypeName, map => map.MapFrom(s => s.SensorType.Name))
+                .ReverseMap();
+            CreateMap<SensorDto, Sensor>();
             CreateMap<SensorDto, SensorViewModel>();
+            CreateMap<CreateSensorViewModel, SensorDto>();
 
-            CreateMap<CreateSensorViewModel, Sensor>();
-
+            CreateMap<Icon, IconDto>().ReverseMap();
 
             CreateMap<HistoryDto, History>().ReverseMap()
 	            .ForMember(hd => hd.SensorName, map => map.MapFrom(h => h.Sensor.Name))
@@ -47,6 +54,13 @@ namespace smart_home_web.AutoMapper
             CreateMap<NotificationDto, NotificationViewModel>().ReverseMap();
 
             CreateMap<GraphDTO, GraphViewModel>();
+
+            CreateMap<SensorTypeDto, SensorType>();
+            CreateMap<SensorTypeViewModel, SensorTypeDto>().ReverseMap();
+            CreateMap<CreateSensorTypeViewModel, SensorTypeDto>().ReverseMap();
+            CreateMap<EditSensorTypeViewModel, SensorTypeDto>().ReverseMap();
+            CreateMap<SensorType, SensorTypeDto>()
+                .ForMember(dto => dto.IconPath, map => map.MapFrom(st => st.Icon.Path));
         }
     }
 }

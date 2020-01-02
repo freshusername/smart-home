@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <AssemblyName>smart_home_web</AssemblyName>
+    <RootNamespace>smart_home_web</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +19,14 @@
     <ProjectReference Include="..\Infrastructure.Business\Infrastructure.Business.csproj" />
   </ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JSONSchema="" /></VisualStudio></ProjectExtensions>
+  <ItemGroup>
+    <Folder Include="wwwroot\images\SensorTypeIcons\" />
+  </ItemGroup>
+
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties appsettings_1json__JsonSchema="" />
+    </VisualStudio>
+  </ProjectExtensions>
 
 </Project>

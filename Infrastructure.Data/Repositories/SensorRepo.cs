@@ -5,29 +5,30 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Data.Repositories
 {
     public class SensorRepo : BaseRepository<Sensor>, ISensorRepo
     {
-        private readonly ApplicationsDbContext _context;
         public SensorRepo(ApplicationsDbContext context) : base(context)
         {
-            _context = context;
+
         }
 
-        public override IEnumerable<Sensor> GetAll()
+        public override async Task<IEnumerable<Sensor>> GetAll()
         {
-            var sensors = _context.Sensors
+            var sensors = await context.Sensors
                 .Include(s => s.SensorType)
-                    .ThenInclude(i => i.Icon);
+                    .ThenInclude(st => st.Icon)
+                .Include(s => s.Icon).ToListAsync();
 
             return sensors;
         }
 
-        public override Sensor GetById(int id)
+        public override async Task<Sensor> GetById(int id)
         {
-            return _context.Sensors.Find(id);
+            return await context.Sensors.FindAsync(id);
         }
 
     }

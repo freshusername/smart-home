@@ -17,6 +17,7 @@ namespace Infrastructure.Data
 
         private ISensorRepo _sensorRepo;
         private ISensorTypeRepo _sensorTypeRepo;
+        private IIconRepo _iconRepo;
         private IHistoryRepo _historyRepo;
         private INotificationRepository _notificationRepository;
 
@@ -57,6 +58,15 @@ namespace Infrastructure.Data
                 return _sensorTypeRepo;
             }
         }
+        public IIconRepo IconRepo
+        {
+            get
+            {
+                if (_iconRepo == null) _iconRepo = new IconRepo(context);
+                return _iconRepo;
+            }
+        }
+
         public INotificationRepository NotificationRepository
         {
             get

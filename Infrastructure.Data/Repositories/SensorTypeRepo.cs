@@ -1,20 +1,36 @@
 ﻿using Domain.Core.Model;
 using Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Data.Repositories
 {
     public class SensorTypeRepo : BaseRepository<SensorType>, ISensorTypeRepo
     {
-        private readonly ApplicationsDbContext _context;
         public SensorTypeRepo(ApplicationsDbContext context) : base(context)
         {
-            _context = context;
+
         }
 
+        public override async Task<SensorType> GetById(int id)
+        {
+            var sensorTypes = await context.SensorTypes
+                                    .Include(i => i.Icon)
+                                    .FirstOrDefaultAsync(st => st.Id == id);
 
+            return sensorTypes;
+        }
+
+        public override async Task<IEnumerable<SensorType>> GetAll()
+        {
+            var sensorTypes = await context.SensorTypes
+                .Include(i => i.Icon).ToListAsync();
+
+            return sensorTypes;
+        }
     }
 }
 

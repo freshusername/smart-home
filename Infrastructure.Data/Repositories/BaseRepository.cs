@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Domain.Core.Model;
 using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -10,38 +11,38 @@ namespace Infrastructure.Data.Repositories
 {
     public class BaseRepository<T> : IGenericRepository<T> where T : class
     {
-        private readonly ApplicationsDbContext _context;
-        private DbSet<T> _dbSet;
+        protected readonly ApplicationsDbContext context;
+        protected readonly DbSet<T> dbSet;
 
         public BaseRepository(ApplicationsDbContext dbContext)
         {
-            _context = dbContext;
-            _dbSet = _context.Set<T>();
+            context = dbContext;
+            dbSet = context.Set<T>();
         }
 
         public void Delete(T item)
         {
-            throw new NotImplementedException();
+            dbSet.Remove(item);
         }
 
-        public virtual IEnumerable<T> GetAll()
+        public async virtual Task<IEnumerable<T>> GetAll()
         {
-            return _dbSet.ToList();
+            return await dbSet.ToListAsync();
         }
 
-        public virtual T GetById(int id)
+        public async virtual Task<T> GetById(int id)
         {
-            return _dbSet.Find(id);
+            return await dbSet.FindAsync(id);
         }
 
-        public void Insert(T item)
+        public async Task Insert(T item)
         {
-	        _dbSet.Add(item);
+            await dbSet.AddAsync(item);
         }
 
         public void Update(T item)
         {
-            throw new NotImplementedException();
+            dbSet.Update(item);
         }
     }
 }

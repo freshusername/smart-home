@@ -20,7 +20,7 @@ namespace Infrastructure.Business.Managers
 
 		public async Task<NotificationDto> GetNotificationByIdAsync(int id)
 		{
-			var notification = unitOfWork.NotificationRepository.GetById(id);
+			var notification = await unitOfWork.NotificationRepository.GetById(id);
 			var result = mapper.Map<Message, NotificationDto>(notification);
 
 			return result;
@@ -28,7 +28,7 @@ namespace Infrastructure.Business.Managers
 
 		public async Task<IEnumerable<NotificationDto>> GetAllNotificationsAsync()
 		{
-			var notifications = unitOfWork.NotificationRepository.GetAll().ToList();
+			var notifications = await unitOfWork.NotificationRepository.GetAll();
 			var result = mapper.Map<IEnumerable<Message>, IEnumerable<NotificationDto>>(notifications);
 
 			return result;

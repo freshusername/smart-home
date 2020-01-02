@@ -90,9 +90,10 @@ namespace smart_home_web
             services.AddSingleton<IEmailSender, EmailSender>();
 
             services.AddTransient<ISensorManager, SensorManager>();
-            services.AddTransient<IGenericRepository<History>, BaseRepository<History>>();
+            services.AddTransient<IIconManager, IconManager>();
             services.AddTransient<IHistoryTestManager, HistoryTestManager>();
-
+            services.AddTransient<ISensorTypeManager, SensorTypeManager>();
+            services.AddTransient<IPhotoManager, PhotoManager>();
             services.AddTransient<IGenericRepository<Message>, BaseRepository<Message>>();
             services.AddTransient<INotificationManager, NotificationManager>();
             services.AddTransient<IInvalidSensorManager, InvalidSensorManager>();
