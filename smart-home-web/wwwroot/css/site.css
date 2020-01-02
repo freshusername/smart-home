@@ -35,3 +35,12 @@ body {
         display: none;
     }
 }
+
+.graph-label {
+    color: #333333;
+    font-size: 32px;
+    font-weight: normal;
+    line-height: 40px;
+    margin: 20px 0;
+    text-align: center;
+}
