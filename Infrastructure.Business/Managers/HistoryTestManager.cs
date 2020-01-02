@@ -43,25 +43,28 @@ namespace Infrastructure.Business.Managers
             return sensor;
         }
 
-        public OperationDetails AddHistory(dynamic value , int sensorId)
+        public OperationDetails AddHistory(string value , int sensorId)
         {
+           
             var history = new History
             {
                 Date = DateTimeOffset.Now,
-                SensorId = sensorId
+                SensorId = sensorId,
+                
             };
 
-            if (value is int)
-                history.IntValue = value;
+            var valuemMdel = ValueParser.Parse(value);
 
-            if (value is double)
-                history.StringValue = value;
-
-            if (value is bool)
-                history.DoubleValue = value;
-
-            if (value is string)
-                history.BoolValue = value;
+            if (valuemMdel is int)
+                history.IntValue = valuemMdel;
+             else
+            if (valuemMdel is double)
+                history.DoubleValue = valuemMdel;
+             else
+            if (valuemMdel is bool)
+                history.BoolValue = valuemMdel;
+             else
+                history.StringValue = valuemMdel;
 
             if (history == null)
                 return new OperationDetails(false, "Operation did not succeed!", "");

@@ -23,42 +23,25 @@ namespace smart_home_web.Controllers
         [HttpGet("getdata")]
         public IActionResult AddHistory(Guid token, string value)
         {
-
             var sensor = _historyTestManager.GetSensorByToken(token);
-            MeasurmentType? measurment = null;
-            int intValue;
-            double doubleValue;    
-            bool boolValue;
-
             if (sensor == null)
             {
-
-                if (int.TryParse(value , out intValue))
-                    measurment = MeasureType<int>.GetMeasureType(intValue);
-
-                if (double.TryParse(value, out doubleValue))
-                    measurment = MeasureType<double>.GetMeasureType(doubleValue);
-
-                if (bool.TryParse(value, out boolValue))
-                    measurment = MeasureType<bool>.GetMeasureType(boolValue);
-
-                    measurment = MeasureType<string>.GetMeasureType(value);
-
-                var result = _sensorManager.AddUnclaimedSensor(token, measurment);
-
-                if (result.Succeeded)
-                    return Ok(result.Property);
-
-                return BadRequest(result.Message);
+              var result =  _sensorManager.AddUnclaimedSensor(token , value);
+              if (result.Succeeded)
+              {
+                  result = _historyTestManager.AddHistory(value, Convert.ToInt32(result.Property));
+                   return Ok(result.Message);
+              } 
+                                
+               return BadRequest(result.Message);       
             }
-
+             
             var histroyResult = _historyTestManager.AddHistory(value, sensor.Id);
 
             if (histroyResult.Succeeded)
-                return Ok(histroyResult.Property);
+                return Ok(histroyResult.Message);
 
-            return BadRequest(histroyResult.Message);
-           
+            return BadRequest(histroyResult.Message);        
         }
     }
 }

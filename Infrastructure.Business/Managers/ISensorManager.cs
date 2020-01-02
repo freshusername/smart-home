@@ -12,6 +12,6 @@ namespace Infrastructure.Business.Managers
     {
         void Insert(SensorDto sensorDto);
         IEnumerable<SensorDto> GetAllSensors();
-        OperationDetails AddUnclaimedSensor(Guid token, MeasurmentType? mesurmentType);       
+        OperationDetails AddUnclaimedSensor(Guid token,string value);       
     }
 }

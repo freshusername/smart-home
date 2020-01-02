@@ -4,22 +4,23 @@ using System.Text;
 
 namespace Infrastructure.Business.Infrastructure
 {
-    class ValueParser 
+    public static class ValueParser
     {
-        public ValuesModel Values;
-
-        public ValuesModel Parse (string value)
+        public static int IntValue;
+        public static double DoubleValue;
+        public static bool BoolValue;
+   
+        public static dynamic Parse (string value)
         {
-            if (int.TryParse(value, out Values.IntValue))
-                return Values;
-            if (double.TryParse(value, out Values.DoubleValue))
-                return Values;
-            if (bool.TryParse(value, out Values.BoolValue))
-                return Values;
+            if (int.TryParse(value, out IntValue))
+                return IntValue;
+            if (double.TryParse(value, out DoubleValue))
+                return DoubleValue;
+            if (bool.TryParse(value, out BoolValue))
+                return BoolValue;
 
-            Values.StringValue = value;
-           
-            return Values;
+            return value;
+                     
         }
     }
 }

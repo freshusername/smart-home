@@ -16,7 +16,7 @@ namespace Infrastructure.Business.Managers
 
         SensorDto GetSensorByToken(Guid token);
 
-        OperationDetails AddHistory(dynamic value, int sensorId);
+        OperationDetails AddHistory(string value, int sensorId);
 
     }
 }
