@@ -12,6 +12,7 @@ namespace Domain.Interfaces
         INotificationRepository NotificationRepository { get; }
         ISensorRepo SensorRepo { get; }
         ISensorTypeRepo SensorTypeRepo { get; }
+        IIconRepo IconRepo { get; }
         UserManager<AppUser> UserManager { get; }
         RoleManager<IdentityRole> RoleManager { get; }
         SignInManager<AppUser> SignInManager { get; }

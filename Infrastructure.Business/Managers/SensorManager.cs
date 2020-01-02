@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Core.Model;
 using Domain.Interfaces;
+using Infrastructure.Business.DTOs.Icon;
 using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.Infrastructure;
 using System;
@@ -15,33 +16,34 @@ namespace Infrastructure.Business.Managers
     {
         public SensorManager(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
+
         }
 
-        public void Insert(SensorDto sensorDto)
+        public async Task<OperationDetails> Create(SensorDto sensorDto)
         {
-            //BaseManager must be async?
-            //Sensor sensorCheck = await unitOfWork.SensorRepo.GetById(sensorDto.Id);
-            Sensor sensorCheck = unitOfWork.SensorRepo.GetById(sensorDto.Id);
-
-            if (sensorCheck == null)
+            try
             {
+                if (sensorDto.IconId == 0)
+                {
+                    sensorDto.IconId = (await unitOfWork.SensorTypeRepo.GetById(sensorDto.SensorTypeId)).IconId.Value;
+                }
                 Sensor sensor = mapper.Map<SensorDto, Sensor>(sensorDto);
-
-                //await unitOfWork.SensorRepo.Insert(sensor_to_add);
-                unitOfWork.SensorRepo.Insert(sensor);
+                await unitOfWork.SensorRepo.Insert(sensor);
                 unitOfWork.Save();
-
-                //return new OperationDetails(true, "Hotel added", "Name");
             }
-
-            //return new OperationDetails(false, "Hotel with the same name and location already exists", "Name");
+            catch (Exception ex)
+            {
+                return new OperationDetails(false, ex.Message, "Error");
+            }
+            return new OperationDetails(true, "New sensor has been added", "Name");
         }
-        public IEnumerable<SensorDto> GetAllSensors()
-        {
-            var sensors = unitOfWork.SensorRepo.GetAll().ToList();
-            var result = mapper.Map<IEnumerable<Sensor>, IEnumerable<SensorDto>>(sensors);
 
-            return result;
+        public async Task<IEnumerable<SensorDto>> GetAllSensorsAsync()
+        {
+            var sensors = await unitOfWork.SensorRepo.GetAll();
+            var model = mapper.Map<IEnumerable<Sensor>, IEnumerable<SensorDto>>(sensors);
+
+            return model;
         }
     }
 }

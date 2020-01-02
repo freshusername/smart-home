@@ -10,73 +10,49 @@
 
         <div class="row">
             <div class="col-md-4">
-                <form asp-action="AddSensor" asp-controller="Sensor" method="post">
-
+                <form asp-action="AddSensor" asp-controller="Sensor" method="post" enctype="multipart/form-data">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div class="form-group">
 
+                    <div class="form-group">
                         <label asp-for="@Model.Name" class="control-label"></label>
                         <input asp-for="@Model.Name" class="form-control" placeholder="Enter name please" />
-
-                        <div class="form-group">
-                            <label asp-for="@Model.Comment" class="control-label"></label>
-                            <input asp-for="@Model.Comment" class="form-control" placeholder="Enter comment please" />
-                        </div>
-
-                        <div class="form-group">
-                            @*<div class="col-md-10">
-                                    <p>Upload sensor icon: </p>
-                                    <input asp-for="@Model.Icon" type="file" name="file" />
-                                </div>*@
-                            <label asp-for="@Model.IconId" class="control-label"></label>
-                            <input asp-for="@Model.IconId" type="number" class="form-control" placeholder="beta icon Id" />
-
-
-                        </div>
-
-                        <label asp-for="@Model.Token" class="control-label"></label>
-                        <input asp-for="@Model.Token" class="form-control" placeholder="Enter valid token please" />
-
-                        @*<select asp-for="@Model.SensorTypeId" data-val="true" data-val-required="The SensorType field is required."
-                                    id="SensorTypeId" name="SensorType">
-                                @foreach (var sensType in Model.SensorTypes)
-                                    {
-                                        <option value=@sensType.Id>@sensType.Name</option>
-                                    }
-                                <option value="1">Temperature sensor</option>
-                                <option value="2">Door sensor</option>
-                                <option value="3">Light sensor</option>
-
-                            </select>*@
-
-
-                        @*TODO: SelectList from List of SensorTypes*@
-                        @*<div style="margin-bottom:70px">
-                                <select asp-for="SensorTypeId" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.MeasurmentType>()" class="nice-select option col-lg-4 col-md-5 col-sm-6 col-xs-12">
-                                    <option value="none" selected disabled hidden>
-                                        Select an Option
-                                    </option>
-                                </select>
-                            </div>*@
-
-                        <label asp-for="@Model.SensorTypeId" class="control-label"></label>
-                        <input asp-for="@Model.SensorTypeId" type="number" class="form-control" placeholder="alpha sensor type Id" />
-
+                        <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
+
+                    <div class="form-group">
+                        <label asp-for="@Model.Comment" class="control-label"></label>
+                        <input asp-for="@Model.Comment" class="form-control" placeholder="Enter comment please" />
+                        <span asp-validation-for="Comment" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <select asp-for="@Model.SensorTypeId" class="form-control">
+                            <option value="@String.Empty">Select type</option>
+                            @foreach (var sensortType in ViewBag.SensorTypes)
+                            {
+                                <option class="form-control" value="@sensortType.Id">@sensortType.Name</option>
+                            }
+                        </select>
+                        <span asp-validation-for="SensorTypeId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="@Model.IsActivated" class="control-label">Activate</label>
+                        <input asp-for="@Model.IsActivated" class="checkbox-inline" type="checkbox" data-toggle="toggle" data-on="Activated" data-off="Disabled">
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="@Model.IconFile" class="control-label"></label>
+                        <input class="form-control " asp-for="@Model.IconFile" onchange="loadFile(event)" type="file" accept=".jpg, .jpeg, .png" />
+                        <img class="img-rounded" id="output" width="64" height="64" style="visibility: hidden" />
+                    </div>
+
+                    <input hidden asp-for="@Model.Token" value="@Guid.NewGuid()" />
+                    <input hidden asp-for="@Model.CreatedOn" value="@DateTimeOffset.Now" />
 
                     <div class="form-group">
                         <input type="submit" value="AddSensor" class="btn btn-success" />
                         <a class="btn btn-primary" asp-action="Index"><em class="glyphicon glyphicon-arrow-left"></em> Back to List</a>
-                    </div>
-
-                    <div class="form-group">
-                        @*<label asp-for="@Model.IsActivated" class="control-label">Activate?</label>
-                            <input asp-for="@Model.IsActivated" type="checkbox" data-toggle="toggle" data-on="Activated" data-off="Disabled">*@
-                        @Html.CheckBoxFor(x => x.IsActivated);
-                    </div>
-
-                    <div class="form-group">
-                        <img src="" width="96" height="96" />
                     </div>
 
                 </form>
@@ -87,11 +63,20 @@
 
 @*<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>*@
 
-<script type="text/javascript">
-    $document.ready(function () {
-        $(".custom-file-input").on("change", function () {
-            var fileName = $(this).val().split("\\").pop();
-            $(this).next("custom-file-label").html(fileName);
-        });
-    });
+<script>
+    var loadFile = function (event) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var output = document.getElementById('output');
+            output.src = reader.result;
+            output.style.visibility = "visible";
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    };
 </script>
+
+@section scripts{
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

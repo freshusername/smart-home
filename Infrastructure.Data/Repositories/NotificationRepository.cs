@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Domain.Core.Model;
 using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -17,16 +18,16 @@ namespace Infrastructure.Data.Repositories
 			_context = context;
 		}
 
-		public override IEnumerable<Message> GetAll()
+		public override async Task<IEnumerable<Message>> GetAll()
 		{
-			var res = _context.Messages
-				.Include(h => h.History);
+			var res = await _context.Messages
+				.Include(h => h.History).ToListAsync();
 			return res;
 		}
 
-		public override Message GetById(int id)
+		public override async Task<Message> GetById(int id)
 		{
-			return _context.Messages.Include(h => h.Id).FirstOrDefault(s => s.Id == id);
+			return await _context.Messages.Include(h => h.Id).FirstOrDefaultAsync(s => s.Id == id);
 		}
 
 		public IEnumerable<Message> GetNotificationByHistoryId(int HistoryId)

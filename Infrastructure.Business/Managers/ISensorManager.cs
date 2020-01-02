@@ -1,4 +1,5 @@
 ﻿using Infrastructure.Business.DTOs.Sensor;
+using Infrastructure.Business.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,7 +9,7 @@ namespace Infrastructure.Business.Managers
 {
     public interface ISensorManager
     {
-        void Insert(SensorDto sensorDto);
-        IEnumerable<SensorDto> GetAllSensors();
+        Task<OperationDetails> Create(SensorDto sensorDto);
+        Task<IEnumerable<SensorDto>> GetAllSensorsAsync();
     }
 }
