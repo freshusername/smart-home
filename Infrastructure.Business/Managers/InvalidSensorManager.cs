@@ -6,6 +6,8 @@ using Infrastructure.Business.DTOs.History;
 using Domain.Core.Model;
 using System.Linq;
 using System.Collections.Generic;
+using Domain.Core.Model.Enums;
+using Infrastructure.Business.Filters;
 
 namespace Infrastructure.Business.Managers
 {
@@ -14,15 +16,17 @@ namespace Infrastructure.Business.Managers
         public InvalidSensorManager(IUnitOfWork unitOfWork,IMapper mapper) : base(unitOfWork, mapper)
         { }
 
-        public IEnumerable<HistoryDto> getInvalidSensors()
+        public IEnumerable<HistoryDto> getInvalidSensors(SortState sortState)
         {
-            var histories = unitOfWork.HistoryRepo.GetAll().ToList();
+            var histories = unitOfWork.HistoryRepo.GetAll();
 
-            var resultList = histories.Where(p => p.Sensor.IsActivated == false);
+            var historiesfilter = histories.Where(p => p.Sensor.IsActivated==true);
 
-            var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(resultList);
+            var historiesmapper = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(historiesfilter);
 
-            return result;
+            var res = SortValue.SortHistories(sortState, historiesmapper);
+
+            return res;
         }
 
 

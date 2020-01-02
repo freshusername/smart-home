@@ -63,14 +63,14 @@
         <br />
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
-                @if (Model.paginationDTO != null)
+                @if (Model.FilterDTO != null)
                 {
-                    @if (Model.paginationDTO.HasPrevious)
+                    @if (Model.FilterDTO.HasPrevious)
                     {
                         <li class="page-item">
                             @{
-                                var prev = (PaginationDTO)Model.paginationDTO.Clone();
-                                prev.CurrentPage = Model.paginationDTO.CurrentPage - 1;
+                                var prev = (FilterDTO)Model.FilterDTO.Clone();
+                                prev.CurrentPage = Model.FilterDTO.CurrentPage - 1;
                             }
 
                             @Html.ActionLink("prev", "Detail", "History", null, null, null,
@@ -79,23 +79,23 @@
                         </li>
                     }
 
-                    @for (var i = 1; i <= Model.paginationDTO.PagesCount; i++)
+                    @for (var i = 1; i <= Model.FilterDTO.PagesCount; i++)
                     {
-                        var page_i = (PaginationDTO)Model.paginationDTO.Clone();
+                        var page_i = (FilterDTO)Model.FilterDTO.Clone();
                         page_i.CurrentPage = i;
 
-                        <li class="page-item @( i == Model.paginationDTO.CurrentPage ? "active" : "")">
+                        <li class="page-item @( i == Model.FilterDTO.CurrentPage ? "active" : "")">
                             @Html.ActionLink(i.ToString(), "Detail", "History", null, null, null,
                                 page_i,
                                 null)
                         </li>
                     }
-                    @if (Model.paginationDTO.HasNext)
+                    @if (Model.FilterDTO.HasNext)
                     {
                         <li class="page-item">
                             @{
-                                var next = (PaginationDTO)Model.paginationDTO.Clone();
-                                next.CurrentPage = Model.paginationDTO.CurrentPage + 1;
+                                var next = (FilterDTO)Model.FilterDTO.Clone();
+                                next.CurrentPage = Model.FilterDTO.CurrentPage + 1;
                             }
 
                             @Html.ActionLink("next", "Detail", "History", null, null, null,

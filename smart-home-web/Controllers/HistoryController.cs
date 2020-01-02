@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Migrations;
 using smart_home_web.Models;
 using smart_home_web.Models.History;
+using Domain.Core.Model;
 
 namespace smart_home_web.Controllers
 {
@@ -28,45 +29,34 @@ namespace smart_home_web.Controllers
             _invalidSensorManager = invalidSensorManager;
 		}
 
-		public async Task<IActionResult> Index(PaginationDTO paginationDTO, SortState sortState = SortState.SensorAsc )
+		public async Task<IActionResult> Index(FilterDTO FilterDTO, SortState sortState = SortState.SensorAsc )
 		{
 			var histories = await _historyTestManager.GetAllHistoriesAsync();
 
-            ViewData["SensorSort"] = sortState == SortState.SensorAsc ? SortState.SensorDesc : SortState.SensorAsc;
-            ViewData["DateSort"] = sortState == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
-
             var models = _mapper.Map<IEnumerable<HistoryDto>, IEnumerable<HistoryViewModel>>(histories);
 
-            paginationDTO.Amount = histories.Count();
-            histories = histories.Skip((paginationDTO.CurrentPage - 1) * paginationDTO.PageSize).Take(paginationDTO.PageSize).ToList();
+            FilterDTO.Amount = histories.Count();
+            histories = histories.Skip((FilterDTO.CurrentPage - 1) * FilterDTO.PageSize).Take(FilterDTO.PageSize).ToList();
             IEnumerable<HistoryViewModel> historiesViewModel = _mapper.Map<IEnumerable<HistoryDto>, IEnumerable<HistoryViewModel>>(histories);
             return View(new AllHistoriesViewModel
             {
                 Histories = historiesViewModel,
-                paginationDTO = paginationDTO
+                FilterDTO = FilterDTO
             });
 
 		}
 
-		public async Task<IActionResult> Detail(PaginationDTO paginationDTO, int sensorId, SortState sortState = SortState.SensorAsc)
+		public async Task<IActionResult> Detail(FilterDTO FilterDTO, int sensorId, SortState sortState = SortState.SensorAsc)
 		{
-			var histories = await _historyTestManager.GetHistoriesBySensorIdAsync(sensorId);
+			var resultList = await _historyTestManager.GetHistoriesBySensorIdAsync(sensorId);
 
-
-            ViewData["SensorSort"] = sortState == SortState.SensorAsc ? SortState.SensorDesc : SortState.SensorAsc;
-            ViewData["DateSort"] = sortState == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
-            ViewData["StringSort"] = sortState == SortState.StringValueAsc ? SortState.StringValueDesc : SortState.StringValueAsc;
-            ViewData["IntSort"] = sortState == SortState.IntValueAsc ? SortState.IntValueDesc : SortState.IntValueAsc;
-            ViewData["DoubleSort"] = sortState == SortState.DoubleValueAsc ? SortState.DoubleValueDesc : SortState.DoubleValueAsc;
-            ViewData["BoolSort"] = sortState == SortState.BoolValueAsc ? SortState.BoolValueDesc : SortState.BoolValueAsc;
-
-            histories = SortValue.SortHistories(sortState, histories);
+            var histories = SortValue.SortHistories(sortState, resultList);
 
             var models = _mapper.Map<IEnumerable<HistoryDto>, IEnumerable<HistoryViewModel>>(histories);
             return View(new AllHistoriesViewModel
 			{
 				Histories = models,
-                paginationDTO=paginationDTO
+                FilterDTO=FilterDTO
 			});
 		}
 
@@ -74,21 +64,17 @@ namespace smart_home_web.Controllers
 
         #region InvalidSensors
 
-        public IActionResult InvalidSensors(PaginationDTO paginationDTO, SortState sortState=SortState.SensorAsc)
+        public IActionResult InvalidSensors(FilterDTO filterDTO)
         {
-            IEnumerable<HistoryDto> histories = _invalidSensorManager.getInvalidSensors();
-            ViewData["SensorSort"] = sortState == SortState.SensorAsc ? SortState.SensorDesc : SortState.SensorAsc;
-            ViewData["DateSort"] = sortState == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
+            IEnumerable<HistoryDto> histories = _invalidSensorManager.getInvalidSensors(filterDTO.sortState);
 
-            histories = SortValue.SortHistories(sortState, histories);
-
-            paginationDTO.Amount = histories.Count();
-            histories = histories.Skip((paginationDTO.CurrentPage - 1) * paginationDTO.PageSize).Take(paginationDTO.PageSize).ToList();
+            filterDTO.Amount = histories.Count();
+            histories = histories.Skip((filterDTO.CurrentPage - 1) * filterDTO.PageSize).Take(filterDTO.PageSize).ToList();
             IEnumerable<HistoryViewModel> historiesViewModel = _mapper.Map<IEnumerable<HistoryDto>, IEnumerable<HistoryViewModel>>(histories);
             return View(new InvalidSensorsViewModel
             {
                 Histories=historiesViewModel,
-                paginationDTO =paginationDTO
+                FilterDTO =filterDTO
             });
         }
 

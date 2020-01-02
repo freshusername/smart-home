@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 using Infrastructure.Business.DTOs.History;
-using Domain.Core.Model;
+using Domain.Core.Model.Enums;
 
 namespace Infrastructure.Business.Managers
 {
     public interface IInvalidSensorManager
     {
-        IEnumerable<HistoryDto> getInvalidSensors();
+        IEnumerable<HistoryDto> getInvalidSensors(SortState sortState);
     }
 }
