@@ -23,6 +23,10 @@ namespace Infrastructure.Business.Managers
         {
             try
             {
+                if (sensorDto.IconId == 0)
+                {
+                    sensorDto.IconId = unitOfWork.SensorTypeRepo.GetById(sensorDto.SensorTypeId).IconId;
+                }
                 Sensor sensor = mapper.Map<SensorDto, Sensor>(sensorDto);
                 unitOfWork.SensorRepo.Insert(sensor);
                 unitOfWork.Save();
