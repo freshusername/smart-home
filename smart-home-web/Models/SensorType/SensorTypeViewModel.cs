@@ -13,10 +13,10 @@ namespace smart_home_web.Models.SensorType
         public int Id { get; set; }
         public string Name { get; set; }
         public string Comment { get; set; }
-        [DisplayName("Measurment Type")]
-        public MeasurmentType MeasurmentType { get; set; }
-        [DisplayName("Measurment Name")]
-        public string MeasurmentName { get; set; }
+        [DisplayName("Measurement Type")]
+        public MeasurmentType MeasurementType { get; set; }
+        [DisplayName("Measurement Name")]
+        public string MeasurementName { get; set; }
         public byte[] Icon { get; set; }
         public string IconPath { get; set; }
     }

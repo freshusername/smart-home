@@ -50,27 +50,22 @@ namespace smart_home_web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(CreateSensorTypeViewModel sensorTypeViewModel)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return View(sensorTypeViewModel);
-            //}
-            //var sensorType = mapper.Map<CreateSensorTypeViewModel, SensorTypeDto>(sensorTypeViewModel);
-            //if(sensorTypeViewModel.Icon != null)
-            //    sensorType.Icon = await photoManager.GetPhotoFromFile(sensorTypeViewModel.Icon, 64, 64);
-            //var res = sensorTypeManager.Create(sensorType).Result;
-            //if (res.Succeeded)
-            //    return RedirectToAction(nameof(Index));
-            //else
-            //    ModelState.AddModelError(res.Property, res.Message);
+            if (!ModelState.IsValid)
+            {
+                return View(sensorTypeViewModel);
+            }
+            SensorTypeDto sensorTypeDto = _mapper.Map<CreateSensorTypeViewModel, SensorTypeDto>(sensorTypeViewModel);
 
             if (sensorTypeViewModel.IconFile != null)
             {
-
-                SensorTypeDto sensorTypeDto = _mapper.Map<CreateSensorTypeViewModel, SensorTypeDto>(sensorTypeViewModel);
                 sensorTypeDto.IconId = await _iconManager.CreateAndGetIconId(sensorTypeViewModel.IconFile);
-
-                await _sensorTypeManager.Create(sensorTypeDto);
             }
+
+            var res = _sensorTypeManager.Create(sensorTypeDto).Result;
+            if (res.Succeeded)
+                return RedirectToAction(nameof(Index));
+            else
+                ModelState.AddModelError(res.Property, res.Message);
 
             return View(sensorTypeViewModel);
         }
