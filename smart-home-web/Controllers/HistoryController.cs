@@ -72,7 +72,7 @@ namespace smart_home_web.Controllers
 		{
 	        if (filterDTO.sortState == SortState.None) filterDTO.sortState = SortState.SensorAsc;
 
-			IEnumerable<HistoryDto> histories = _invalidSensorManager.getInvalidSensors(filterDTO.sortState);
+			IEnumerable<HistoryDto> histories = await _invalidSensorManager.getInvalidSensors(filterDTO.sortState);
 
             filterDTO.Amount = histories.Count();
             histories = histories.Skip((filterDTO.CurrentPage - 1) * filterDTO.PageSize).Take(filterDTO.PageSize).ToList();
