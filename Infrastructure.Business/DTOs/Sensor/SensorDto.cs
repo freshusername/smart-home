@@ -16,7 +16,8 @@ namespace Infrastructure.Business.DTOs.Sensor
         public DateTimeOffset? CreatedOn { get; set; }
         public bool IsActivated { get; set; }
 
-        public virtual ICollection<SensorType> SensorTypes { get; set; }
-        public virtual ICollection<Domain.Core.Model.History> Histories { get; set; }
+
+		public int IconId { get; set; }
+		public int SensorTypeId { get; set; }
 	}
 }

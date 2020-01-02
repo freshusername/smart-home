@@ -120,7 +120,8 @@ namespace Infrastructure.Data.Migrations
 
                     b.HasIndex("AppUserId");
 
-                    b.HasIndex("HistoryId");
+                    b.HasIndex("HistoryId")
+                        .IsUnique();
 
                     b.ToTable("Messages");
                 });
@@ -136,7 +137,7 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<int>("IconId");
 
-                    b.Property<bool?>("IsActivated");
+                    b.Property<bool>("IsActivated");
 
                     b.Property<string>("Name");
 
@@ -298,8 +299,8 @@ namespace Infrastructure.Data.Migrations
                         .HasForeignKey("AppUserId");
 
                     b.HasOne("Domain.Core.Model.History", "History")
-                        .WithMany()
-                        .HasForeignKey("HistoryId")
+                        .WithOne("Message")
+                        .HasForeignKey("Domain.Core.Model.Message", "HistoryId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

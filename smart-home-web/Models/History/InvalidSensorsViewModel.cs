@@ -9,6 +9,6 @@ namespace smart_home_web.Models.History
     public class InvalidSensorsViewModel
     {
         public IEnumerable<HistoryViewModel> Histories { get; set; }
-        public PaginationDTO paginationDTO { get; set; }
+        public FilterDTO FilterDTO { get; set; }
     }
 }

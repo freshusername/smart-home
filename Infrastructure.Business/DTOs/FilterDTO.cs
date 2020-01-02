@@ -1,11 +1,12 @@
 ﻿using System;
-
+using Domain.Core.Model.Enums;
 
 namespace Infrastructure.Business.DTOs
 {
-    public class PaginationDTO:ICloneable
+    public class FilterDTO:ICloneable
     {
-        
+
+        public SortState sortState { get; set; }
         public int CurrentPage { get; set; } = 1;
         public int PageSize { get; set; } = 20;
         public int Amount { get; set; }
