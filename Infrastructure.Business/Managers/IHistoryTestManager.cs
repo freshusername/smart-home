@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Infrastructure.Business.DTOs.History;
 using Infrastructure.Business.DTOs.Sensor;
+using Infrastructure.Business.Infrastructure;
 
 namespace Infrastructure.Business.Managers
 {
@@ -14,6 +15,8 @@ namespace Infrastructure.Business.Managers
 		Task<IEnumerable<HistoryDto>> GetAllHistoriesAsync();
 
         SensorDto GetSensorByToken(Guid token);
+
+        OperationDetails AddHistory(dynamic value, int sensorId);
 
     }
 }

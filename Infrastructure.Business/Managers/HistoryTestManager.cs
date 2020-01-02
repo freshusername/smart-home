@@ -43,14 +43,32 @@ namespace Infrastructure.Business.Managers
             return sensor;
         }
 
-        //public async Task<OperationDetails> AddHistory<T>(T value)
-        //{
-        //    value.GetType();
-        //    var histroy = new History
-        //    {
-        //        Date = DateTimeOffset.Now,
+        public OperationDetails AddHistory(dynamic value , int sensorId)
+        {
+            var history = new History
+            {
+                Date = DateTimeOffset.Now,
+                SensorId = sensorId
+            };
 
-        //    };
-        //}
+            if (value is int)
+                history.IntValue = value;
+
+            if (value is double)
+                history.StringValue = value;
+
+            if (value is bool)
+                history.DoubleValue = value;
+
+            if (value is string)
+                history.BoolValue = value;
+
+            if (history == null)
+                return new OperationDetails(false, "Operation did not succeed!", "");
+            unitOfWork.HistoryRepo.Insert(history);
+
+            return new OperationDetails(true, "Operation succeed", "");
+
+        }
     }
 }

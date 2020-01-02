@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Core.Model;
+using Domain.Core.Model.Enums;
 using Domain.Interfaces;
 using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.Infrastructure;
@@ -43,5 +44,24 @@ namespace Infrastructure.Business.Managers
 
             return result;
         }
+
+        public OperationDetails AddUnclaimedSensor(Guid token , MeasurmentType? mesurmentType)
+        {
+            var sensorType = new SensorType { MeasurmentType = mesurmentType };
+
+            if (sensorType == null)
+                return new OperationDetails(false, "Operation did not succeed!", "");
+            unitOfWork.SensorTypeRepo.Insert(sensorType);
+
+            var sensor = new Sensor {Token = token, CreatedOn= DateTimeOffset.Now,IsActivated = true , SensorTypeId = sensorType.Id };
+
+            if (sensor == null)
+                return new OperationDetails(false, "Operation did not succeed!", "");
+            unitOfWork.SensorRepo.Insert(sensor);
+
+            return new OperationDetails(true , "Operation succeed" , "");
+        }
+
+        
     }
 }

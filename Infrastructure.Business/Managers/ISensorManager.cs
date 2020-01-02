@@ -1,4 +1,6 @@
-﻿using Infrastructure.Business.DTOs.Sensor;
+﻿using Domain.Core.Model.Enums;
+using Infrastructure.Business.DTOs.Sensor;
+using Infrastructure.Business.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,5 +12,6 @@ namespace Infrastructure.Business.Managers
     {
         void Insert(SensorDto sensorDto);
         IEnumerable<SensorDto> GetAllSensors();
+        OperationDetails AddUnclaimedSensor(Guid token, MeasurmentType? mesurmentType);       
     }
 }
