@@ -1,0 +1,57 @@
+﻿@model smart_home_web.Models.SensorType.SensorTypeViewModel
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Are you sure you want to delete this sensor type?</h2>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Comment)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Comment)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.MeasurmentType)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MeasurmentType)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.MeasurmentName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MeasurmentName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Icon)
+        </dt>
+        <dd>
+            @if (Model.Icon.Length > 0)
+            {
+                var base64Img = Convert.ToBase64String(Model.Icon);
+                string img = String.Format("data:image;base64,{0}", base64Img);
+                <img src="@img" height="64" width="64" />
+            }
+            else
+            {
+                <p>No image was added</p>
+            }
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Delete" class="btn btn-default" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>
