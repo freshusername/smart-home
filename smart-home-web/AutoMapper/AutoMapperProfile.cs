@@ -29,14 +29,16 @@ namespace smart_home_web.AutoMapper
 
             CreateMap<HistoryDto, History>().ReverseMap()
 	            .ForMember(hd => hd.SensorName, map => map.MapFrom(h => h.Sensor.Name))
-	            .ForMember(hd => hd.MeasurmentName, map => map.MapFrom(vm => vm.Sensor.SensorType.MeasurmentName))
-	            .ForMember(hd => hd.MeasurmentType, map => map.MapFrom(vm => vm.Sensor.SensorType.MeasurmentType));
+	            .ForMember(hd => hd.MeasurmentName, map => map.MapFrom(vm => vm.Sensor.SensorType.MeasurementName))
+	            .ForMember(hd => hd.MeasurmentType, map => map.MapFrom(vm => vm.Sensor.SensorType.MeasurementType));
             CreateMap<HistoryDto, HistoryViewModel>()
 	            .ForMember(hd => hd.Value, map => map.MapFrom(vm => vm.GetStringValue()));
 
             CreateMap<NotificationDto, Message>().ReverseMap()
                 .ForMember(hd => hd.Date, map => map.MapFrom(h => h.History.Date));
             CreateMap<NotificationDto, NotificationViewModel>().ReverseMap();
+
+            CreateMap<GraphDTO, GraphViewModel>();
         }
     }
 }

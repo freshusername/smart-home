@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Infrastructure.Business.DTOs;
 using Infrastructure.Business.DTOs.History;
 using Infrastructure.Business.DTOs.Sensor;
 
@@ -12,5 +13,7 @@ namespace Infrastructure.Business.Managers
 		Task<HistoryDto> GetHistoryByIdAsync(int id);
 
 		Task<IEnumerable<HistoryDto>> GetAllHistoriesAsync();
-	}
+
+        GraphDTO GetGraphBySensorId(int SensorId, int days);
+    }
 }
