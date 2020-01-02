@@ -18,11 +18,12 @@
                             var sensor = (FilterDTO)Model.FilterDTO.Clone();
                             sensor.sortState = (sensor.sortState == SortState.SensorAsc) ? SortState.SensorDesc : SortState.SensorAsc;
                         }
-                        <a href="@Url.Action("InvalidSensors", "History", 
-                                        sensor,
-                                        null)">
-                        Sensor <i class="glyphicon glyphicon-sort"></i></a>
-                        
+                        <a href="@Url.Action("InvalidSensors", "History",
+                                 sensor,
+                                 null)">
+                            Sensor <i class="glyphicon glyphicon-sort"></i>
+                        </a>
+
                     </th>
 
                     <th scope="col" class=" text-center">
@@ -30,11 +31,12 @@
                             var date = (FilterDTO)Model.FilterDTO.Clone();
                             date.sortState = (sensor.sortState == SortState.DateAsc) ? SortState.DateDesc : SortState.DateAsc;
                         }
-                        <a href="@Url.Action("InvalidSensors", "History", 
-                                        date,
-                                        null)">
-                        Date <i class="glyphicon glyphicon-sort"></i></a>
-                        
+                        <a href="@Url.Action("InvalidSensors", "History",
+                                 date,
+                                 null)">
+                            Date <i class="glyphicon glyphicon-sort"></i>
+                        </a>
+
                     </th>
 
                     <th scope="col" class=" text-center">Value</th>
@@ -43,51 +45,51 @@
             <tbody class="text-center">
                 @foreach (var history in Model.Histories)
                 {
-                <tr>
-                    <td scope="row">
-                        <a asp-controller="History" asp-action="Detail"
-                           asp-route-sensorId="@history.SensorId"
-                           asp-route-page="@Model.FilterDTO.CurrentPage"
-                           style="display:block;">
-                            @history.SensorId
-                        </a>
-                    </td>
-                    <td>
-                        <a asp-controller="History" asp-action="Detail" asp-route-sensorId="@history.SensorId" style="display:block;">
-                            @history.Date.DateTime.ToString("dd/MM/yyyy HH:mm:ss")
-                        </a>
-                    </td>
-                    @{ 
-                        if (history.Value.ToString() == "False")
-                        {
-                            <td>
-                                <a asp-controller="History" asp-action="Detail" asp-route-sensorId="@history.SensorId"
-                                 style="display:block; color:red;">
-                                    Inactive
-                                </a>
-                            </td>
+                    <tr>
+                        <td scope="row">
+                            <a asp-controller="History" asp-action="Detail"
+                               asp-route-sensorId="@history.SensorId"
+                               asp-route-page="@Model.FilterDTO.CurrentPage"
+                               style="display: block;">
+                                @history.SensorId
+                            </a>
+                        </td>
+                        <td>
+                            <a asp-controller="History" asp-action="Detail" asp-route-sensorId="@history.SensorId" style="display: block;">
+                                @history.Date.DateTime.ToString("dd/MM/yyyy HH:mm:ss")
+                            </a>
+                        </td>
+                        @{
+                            if (history.Value.ToString() == "False")
+                            {
+                                <td>
+                                    <a asp-controller="History" asp-action="Detail" asp-route-sensorId="@history.SensorId"
+                                       style="display: block; color: red;">
+                                        Inactive
+                                    </a>
+                                </td>
+                            }
+                            else if (history.Value.ToString() == "True")
+                            {
+                                <td>
+                                    <a asp-controller="History" asp-action="Detail" asp-route-sensorId="@history.SensorId"
+                                       style="display: block; color: lightseagreen;">
+                                        Active
+                                    </a>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <a asp-controller="History" asp-action="Detail" asp-route-sensorId="@history.SensorId"
+                                       style="display: block; color: dodgerblue;">
+                                        @history.Value
+                                    </a>
+                                </td>
+                            }
                         }
-                        else if (history.Value.ToString() == "True")
-                        {
-                            <td>
-                                <a asp-controller="History" asp-action="Detail" asp-route-sensorId="@history.SensorId"
-                                 style="display:block; color:lightseagreen;">
-                                    Active
-                                </a>
-                            </td>
-                        }
-                        else
-                        {
-                            <td>
-                                <a asp-controller="History" asp-action="Detail" asp-route-sensorId="@history.SensorId"
-                                 style="display:block; color: dodgerblue;">
-                                    @history.Value
-                                </a>
-                            </td>
-                        }
-                    }
 
-                </tr>
+                    </tr>
                 }
             </tbody>
         </table>
@@ -98,17 +100,17 @@
                 {
                     @if (Model.FilterDTO.HasPrevious)
                     {
-                <li class="page-item">
+                        <li class="page-item">
 
-                    @{
-                        var prev = (FilterDTO)Model.FilterDTO.Clone();
-                        prev.CurrentPage = Model.FilterDTO.CurrentPage - 1;
-                    }
+                            @{
+                                var prev = (FilterDTO)Model.FilterDTO.Clone();
+                                prev.CurrentPage = Model.FilterDTO.CurrentPage - 1;
+                            }
 
-                    @Html.ActionLink("Previous", "InvalidSensors", "History", null, null, null,
-                                        prev,
-                                        null)
-                </li>
+                            @Html.ActionLink("Previous", "InvalidSensors", "History", null, null, null,
+                                                prev,
+                                                null)
+                        </li>
                     }
 
                     @for (var i = 1; i <= Model.FilterDTO.PagesCount; i++)

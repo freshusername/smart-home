@@ -68,9 +68,11 @@ namespace smart_home_web.Controllers
 
 		#region InvalidSensors
 
-        public IActionResult InvalidSensors(FilterDTO filterDTO)
-        {
-            IEnumerable<HistoryDto> histories = _invalidSensorManager.getInvalidSensors(filterDTO.sortState);
+		public async Task<IActionResult> InvalidSensors(FilterDTO filterDTO)
+		{
+	        if (filterDTO.sortState == SortState.None) filterDTO.sortState = SortState.SensorAsc;
+
+			IEnumerable<HistoryDto> histories = _invalidSensorManager.getInvalidSensors(filterDTO.sortState);
 
             filterDTO.Amount = histories.Count();
             histories = histories.Skip((filterDTO.CurrentPage - 1) * filterDTO.PageSize).Take(filterDTO.PageSize).ToList();
