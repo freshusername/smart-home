@@ -31,7 +31,7 @@ namespace Infrastructure.Business.Managers
             return new OperationDetails(true, "New sensor type has been added", "Name");
         }
 
-        public async Task<OperationDetails> Update(SensorTypeDto sensorTypeDto)
+        public OperationDetails Update(SensorTypeDto sensorTypeDto)
         {
             SensorType sensortype = mapper.Map<SensorTypeDto, SensorType>(sensorTypeDto);
             try
@@ -50,7 +50,7 @@ namespace Infrastructure.Business.Managers
         {
             try
             {
-                SensorType sensorType = unitOfWork.SensorTypeRepo.GetById(id);
+                SensorType sensorType = await unitOfWork.SensorTypeRepo.GetById(id);
                 unitOfWork.SensorTypeRepo.Delete(sensorType);
                 unitOfWork.Save();
             }
@@ -63,7 +63,7 @@ namespace Infrastructure.Business.Managers
 
         public async Task<SensorTypeDto> GetSensorTypeByIdAsync(int id)
         {
-            var sensorType = unitOfWork.SensorTypeRepo.GetById(id);
+            var sensorType = await unitOfWork.SensorTypeRepo.GetById(id);
             var result = mapper.Map<SensorType, SensorTypeDto>(sensorType);
 
             return result;

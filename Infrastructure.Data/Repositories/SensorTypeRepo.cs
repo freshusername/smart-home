@@ -15,6 +15,15 @@ namespace Infrastructure.Data.Repositories
 
         }
 
+        public override async Task<SensorType> GetById(int id)
+        {
+            var sensorTypes = await context.SensorTypes
+                                    .Include(i => i.Icon)
+                                    .FirstOrDefaultAsync(st => st.Id == id);
+
+            return sensorTypes;
+        }
+
         public override async Task<IEnumerable<SensorType>> GetAll()
         {
             var sensorTypes = await context.SensorTypes
