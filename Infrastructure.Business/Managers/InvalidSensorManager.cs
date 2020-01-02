@@ -21,7 +21,7 @@ namespace Infrastructure.Business.Managers
         {
             var histories = await unitOfWork.HistoryRepo.GetAll();
 
-            var historiesfilter = histories.Where(p => p.Sensor.IsActivated==true);
+            var historiesfilter = histories.Where(p => p.Sensor.IsActivated==false);
 
             var historiesmapper = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(historiesfilter);
 

@@ -15,7 +15,7 @@ namespace smart_home_web.Models.SensorViewModel
         public bool IsActivated { get; set; }
 
         public int SensorTypeId { get; set; }
-        public int IconId { get; set; }
+        public int? IconId { get; set; }
         public string IconPath { get; set; }
         public string SensorTypeName { get; set; }
 

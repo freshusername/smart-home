@@ -37,7 +37,16 @@
                 <td>@sensor.SensorTypeName</td>
                 <td>@sensor.Token</td>
                 <td>@sensor.IsActivated</td>
-                <td><img src="@sensor.IconPath" width="64" height="64" alt="@sensor.Name" /></td>
+                <td>
+                    @if (sensor.IconPath != null)
+                    {
+                        <img src="@sensor.IconPath" width="64" height="64" />
+                    }
+                    else
+                    {
+                        <p>No image was added</p>
+                    }
+                </td>
             </tr>
         }
     </tbody>

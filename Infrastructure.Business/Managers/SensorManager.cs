@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Infrastructure.Business.DTOs.SensorType;
 
 namespace Infrastructure.Business.Managers
 {
@@ -23,13 +24,27 @@ namespace Infrastructure.Business.Managers
         {
             try
             {
-                if (sensorDto.IconId == 0)
-                {
-                    sensorDto.IconId = (await unitOfWork.SensorTypeRepo.GetById(sensorDto.SensorTypeId)).IconId.Value;
-                }
-                Sensor sensor = mapper.Map<SensorDto, Sensor>(sensorDto);
-                await unitOfWork.SensorRepo.Insert(sensor);
-                unitOfWork.Save();
+	            if (sensorDto.IconId.HasValue)
+	            {
+		            if (sensorDto.IconId == 0)
+		            {
+			            sensorDto.IconId = (await unitOfWork.SensorTypeRepo.GetById(sensorDto.SensorTypeId)).IconId
+				            .Value;
+		            }
+	            }
+
+	            Sensor sensor = mapper.Map<SensorDto, Sensor>(sensorDto);
+	            try
+	            {
+		            await unitOfWork.SensorRepo.Insert(sensor);
+
+		            unitOfWork.Save();
+	            }
+	            catch (Exception ex)
+	            {
+		            return new OperationDetails(false, ex.Message, "Error");
+				}
+                
             }
             catch (Exception ex)
             {

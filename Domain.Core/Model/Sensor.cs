@@ -14,7 +14,7 @@ namespace Domain.Core.Model
         public bool IsActivated { get; set; }
 
         public int SensorTypeId { get; set; }
-        public int IconId { get; set; }
+        public int? IconId { get; set; }
 
         public SensorType SensorType { get; set; }
         public Icon Icon { get; set; }
