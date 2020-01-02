@@ -1,5 +1,6 @@
 ﻿@using smart_home_web.Models.History;
 @using Infrastructure.Business.DTOs;
+@using Domain.Core.Model.Enums;
 
 
 @model AllHistoriesViewModel;
@@ -19,11 +20,27 @@
             <thead class="text-center">
                 <tr>
                     <th scope="col" class=" text-center">
-                        Id
+                        @{
+                            var sensor = (FilterDTO)Model.FilterDTO.Clone();
+                            sensor.sortState = (sensor.sortState == SortState.HistoryAsc) ? SortState.HistoryDesc : SortState.HistoryAsc;
+                        }
+                        <a href="@Url.Action("Index", "History",
+                                        sensor,
+                                        null)">
+                            Id <i class="glyphicon glyphicon-sort"></i>
+                        </a>
                     </th>
                     <th class="text-center">SensorName</th>
                     <th scope="col" class=" text-center">
-                        Date
+                        @{
+                            var date = (FilterDTO)Model.FilterDTO.Clone();
+                            date.sortState = (sensor.sortState == SortState.DateAsc) ? SortState.DateDesc : SortState.DateAsc;
+                        }
+                        <a href="@Url.Action("Index", "History",
+                                        date,
+                                        null)">
+                            Date <i class="glyphicon glyphicon-sort"></i>
+                        </a>
                     </th>
                     <th class="text-center">Value</th>
                     <th class="text-center">MeasurementUnit</th>
@@ -67,14 +84,14 @@
         <br />
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
-                @if (Model.paginationDTO != null)
+                @if (Model.FilterDTO != null)
                 {
-                    @if (Model.paginationDTO.HasPrevious)
+                    @if (Model.FilterDTO.HasPrevious)
                     {
                         <li class="page-item">
                             @{
-                                var prev = (PaginationDTO)Model.paginationDTO.Clone();
-                                prev.CurrentPage = Model.paginationDTO.CurrentPage - 1;
+                                var prev = (FilterDTO)Model.FilterDTO.Clone();
+                                prev.CurrentPage = Model.FilterDTO.CurrentPage - 1;
                             }
 
                             @Html.ActionLink("prev", "Index", "History", null, null, null,
@@ -83,23 +100,23 @@
                         </li>
                     }
 
-                    @for (var i = 1; i <= Model.paginationDTO.PagesCount; i++)
+                    @for (var i = 1; i <= Model.FilterDTO.PagesCount; i++)
                     {
-                        var page_i = (PaginationDTO)Model.paginationDTO.Clone();
+                        var page_i = (FilterDTO)Model.FilterDTO.Clone();
                         page_i.CurrentPage = i;
 
-                        <li class="page-item @( i == Model.paginationDTO.CurrentPage ? "active" : "")">
+                        <li class="page-item @( i == Model.FilterDTO.CurrentPage ? "active" : "")">
                             @Html.ActionLink(i.ToString(), "Index", "History", null, null, null,
                                 page_i,
                                 null)
                         </li>
                     }
-                    @if (Model.paginationDTO.HasNext)
+                    @if (Model.FilterDTO.HasNext)
                     {
                         <li class="page-item">
                             @{
-                                var next = (PaginationDTO)Model.paginationDTO.Clone();
-                                next.CurrentPage = Model.paginationDTO.CurrentPage + 1;
+                                var next = (FilterDTO)Model.FilterDTO.Clone();
+                                next.CurrentPage = Model.FilterDTO.CurrentPage + 1;
                             }
 
                             @Html.ActionLink("next", "Index", "History", null, null, null,
