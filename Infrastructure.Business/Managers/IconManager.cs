@@ -18,11 +18,11 @@ namespace Infrastructure.Business.Managers
         private readonly string _path = @"\images\SensorIcons\";
         private readonly IHostingEnvironment _env;
 
-        public string UploadPath 
-        { 
-            get { return _env.WebRootPath + _path; } 
+        public string UploadPath
+        {
+            get { return _env.WebRootPath + _path; }
         }
-        
+
         public IconManager(IUnitOfWork unitOfWork, IMapper mapper, IHostingEnvironment env) : base(unitOfWork, mapper)
         {
             _env = env;
@@ -56,13 +56,13 @@ namespace Infrastructure.Business.Managers
         }
 
         public async Task<int> CreateAndGetIconId(IFormFile iformFile)
-        {  
-            await UploadImage(iformFile);
+        {
+            var newFileName = Guid.NewGuid() + Path.GetExtension(iformFile.FileName);
+            await UploadImage(iformFile, newFileName);
 
             var iconDto = new IconDto()
             {
-                Name = iformFile.FileName,
-                Path = _path + iformFile.FileName
+                Path = _path + newFileName
             };
 
             Icon icon = mapper.Map<IconDto, Icon>(iconDto);
@@ -86,9 +86,9 @@ namespace Infrastructure.Business.Managers
             return new OperationDetails(true, "Not implemented", "Name");
         }
 
-        private async Task UploadImage(IFormFile formFile)
+        private async Task UploadImage(IFormFile formFile, string newFileName)
         {
-            using (var fileStream = new FileStream(Path.Combine(UploadPath, formFile.FileName), FileMode.Create))
+            using (var fileStream = new FileStream(Path.Combine(UploadPath, newFileName), FileMode.Create))
             {
                 await formFile.CopyToAsync(fileStream);
                 await fileStream.FlushAsync();
@@ -96,4 +96,3 @@ namespace Infrastructure.Business.Managers
         }
     }
 }
-    

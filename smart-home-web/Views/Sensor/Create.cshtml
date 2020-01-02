@@ -10,49 +10,25 @@
 
         <div class="row">
             <div class="col-md-4">
-                <form asp-action="AddSensor" asp-controller="Sensor" method="post" enctype="multipart/form-data">
-
+                <form asp-antiforgery="true" asp-action="AddSensor" asp-controller="Sensor" method="post" enctype="multipart/form-data">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div class="form-group">
 
+                    <div class="form-group">
                         <label asp-for="@Model.Name" class="control-label"></label>
                         <input asp-for="@Model.Name" class="form-control" placeholder="Enter name please" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
 
-                        <div class="form-group">
-                            <label asp-for="@Model.Comment" class="control-label"></label>
-                            <input asp-for="@Model.Comment" class="form-control" placeholder="Enter comment please" />
-                        </div>
+                    <div class="form-group">
+                        <label asp-for="@Model.Comment" class="control-label"></label>
+                        <input asp-for="@Model.Comment" class="form-control" placeholder="Enter comment please" />
+                        <span asp-validation-for="Comment" class="text-danger"></span>
+                    </div>
 
+                    <input hidden asp-for="@Model.Token" value="@Guid.NewGuid()" />
+                    <input hidden asp-for="@Model.CreatedOn" value="@DateTimeOffset.Now" />
 
-                        @*<label asp-for="@Model.Token" class="control-label"></label>*@
-                        <input hidden asp-for="@Model.Token" value="@Guid.NewGuid()" />
-                        <input hidden asp-for="@Model.CreatedOn" value="@DateTimeOffset.Now" />
-
-                        @*<select asp-for="@Model.SensorTypeId" data-val="true" data-val-required="The SensorType field is required."
-                                    id="SensorTypeId" name="SensorType">
-                                @foreach (var sensType in Model.SensorTypes)
-                                    {
-                                        <option value=@sensType.Id>@sensType.Name</option>
-                                    }
-                                <option value="1">Temperature sensor</option>
-                                <option value="2">Door sensor</option>
-                                <option value="3">Light sensor</option>
-
-                            </select>*@
-
-
-                        @*TODO: SelectList from List of SensorTypes*@
-                        @*<div style="margin-bottom:70px">
-                                <select asp-for="SensorTypeId" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.MeasurmentType>()" class="nice-select option col-lg-4 col-md-5 col-sm-6 col-xs-12">
-                                    <option value="none" selected disabled hidden>
-                                        Select an Option
-                                    </option>
-                                </select>
-                            </div>*@
-
-                        @*<label asp-for="@Model.SensorTypeId" class="control-label"></label>
-                            <input asp-for="@Model.SensorTypeId" type="number" class="form-control" placeholder="alpha sensor type Id" />*@
-
+                    <div class="form-group">
                         <select asp-for="@Model.SensorTypeId" class="suit-select">
                             <option value="@String.Empty">Select type</option>
                             @foreach (var sensortType in ViewBag.SensorTypes)
@@ -60,7 +36,6 @@
                                 <option value="@sensortType.Id">@sensortType.Name</option>
                             }
                         </select>
-
                     </div>
 
                     <div class="form-group">
@@ -69,11 +44,11 @@
                     </div>
 
                     <div class="form-group">
-                        <div class="col-md-10">
+                        <div class="row">
                             <p>Upload sensor icon: </p>
                             <input asp-for="@Model.IconFile" onchange="loadFile(event)" type="file" accept=".jpg, .jpeg, .png" />
+                            <img src="" id="output" width="64" height="64" style="visibility: hidden" />
                         </div>
-                        <img src="" id="output" width="96" height="96" style="visibility: hidden" />
                     </div>
 
                     <div class="form-group">
@@ -100,3 +75,9 @@
         reader.readAsDataURL(event.target.files[0]);
     };
 </script>
+
+@section scripts{
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

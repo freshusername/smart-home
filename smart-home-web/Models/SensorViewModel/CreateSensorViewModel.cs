@@ -20,17 +20,14 @@ namespace smart_home_web.Models.SensorViewModel
         [Display(Name = "Additional info")]
         [StringLength(50)]
         public string Comment { get; set; }
+
         public int IconId { get; set; }
         public int SensorTypeId { get; set; }
         public Guid Token { get; set; }
 
         public DateTimeOffset? CreatedOn { get; set; }
         public bool IsActivated { get; set; }
-
-        //public List<SensorType> SensorTypes { get; set; }
-
         public IFormFile IconFile { get; set; }
-
 
     }
 }

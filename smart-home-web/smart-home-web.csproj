@@ -21,9 +21,12 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\images\SensorTypeIcons\" />
-    <Folder Include="wwwroot\images\SensorIcons\" />
   </ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties appsettings_1json__JsonSchema="" />
+    </VisualStudio>
+  </ProjectExtensions>
 
 </Project>
