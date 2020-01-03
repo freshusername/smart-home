@@ -25,11 +25,6 @@ namespace Infrastructure.Business.Managers
         {
             try
             {
-	            if (!sensorDto.IconId.HasValue)
-	            {
-                    sensorDto.IconId = (await unitOfWork.SensorTypeRepo.GetById(sensorDto.SensorTypeId)).IconId;
-                }
-
 	            Sensor sensor = mapper.Map<SensorDto, Sensor>(sensorDto);
 	            try
 	            {
