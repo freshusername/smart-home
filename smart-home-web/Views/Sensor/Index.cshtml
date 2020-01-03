@@ -31,7 +31,11 @@
         {
             <tr>
                 <th scope="row">@sensor.Id</th>
-                <td>@sensor.Name</td>
+                <td>
+                    <a asp-controller="History" asp-action="Graph" asp-route-sensorId="@sensor.Id" asp-route-days="99999">
+                        @sensor.Name
+                    </a>
+                </td>
                 <td>@sensor.Comment</td>
                 <td>@sensor.CreatedOn</td>
                 <td>@sensor.SensorTypeName</td>

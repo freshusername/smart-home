@@ -24,9 +24,6 @@
             <div class="form-group">
                 <label asp-for="MeasurementType" class="control-label"></label>
                 <select asp-for="MeasurementType" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.MeasurementType>()" class="form-control">
-                    <option value="none" selected disabled hidden>
-                        Select an Option
-                    </option>
                 </select>
                 <span asp-validation-for="MeasurementType" class="text-danger"></span>
             </div>

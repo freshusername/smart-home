@@ -44,8 +44,8 @@
 
                     <th scope="col" class=" text-center">
                         @*<a class="menu-toggle text-center" asp-action="Detail" asp-route-sortState="@ViewBag.StringSort">
-                                Value <i class="glyphicon glyphicon-sort"></i>
-                            </a>*@
+                            Value <i class="glyphicon glyphicon-sort"></i>
+                        </a>*@
                         Value
                     </th>
 
@@ -77,7 +77,7 @@
         </table>
         <br />
         <a class="btn btn-success text-center" asp-action="Graph" asp-route-sensorId="@Model.Histories.First().SensorId" asp-route-days="99999">Graph</a>
-        <a class="btn btn-primary" asp-action="Index"><em class="glyphicon glyphicon-arrow-left"></em> Back to List</a>
+        <a class="btn btn-primary" asp-action="BackToList" asp-route-sensorId="@Model.Histories.First().SensorId"><em class="glyphicon glyphicon-arrow-left"></em> Back to list</a>
         @*<partial name="_PaginationView" />*@
     </div>
 </body>

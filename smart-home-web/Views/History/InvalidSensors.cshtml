@@ -29,7 +29,7 @@
                     <th scope="col" class=" text-center">
                         @{
                             var date = (FilterDTO)Model.FilterDTO.Clone();
-                            date.sortState = (sensor.sortState == SortState.DateAsc) ? SortState.DateDesc : SortState.DateAsc;
+                            date.sortState = (date.sortState == SortState.DateAsc) ? SortState.DateDesc : SortState.DateAsc;
                         }
                         <a href="@Url.Action("InvalidSensors", "History",
                                  date,

@@ -31,5 +31,12 @@ namespace Infrastructure.Data.Repositories
             return await context.Sensors.FindAsync(id);
         }
 
+        public Sensor GetByToken(Guid token)
+        {
+            var sensor = context.Sensors.FirstOrDefault(e => e.Token == token);
+
+            return sensor;
+        }
+
     }
 }

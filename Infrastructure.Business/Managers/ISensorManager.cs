@@ -1,4 +1,5 @@
-﻿using Infrastructure.Business.DTOs.Sensor;
+﻿using Domain.Core.Model.Enums;
+using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.Infrastructure;
 using System;
 using System.Collections.Generic;
@@ -11,5 +12,6 @@ namespace Infrastructure.Business.Managers
     {
         Task<OperationDetails> Create(SensorDto sensorDto);
         Task<IEnumerable<SensorDto>> GetAllSensorsAsync();
+        OperationDetails AddUnclaimedSensor(Guid token, string value);
     }
 }

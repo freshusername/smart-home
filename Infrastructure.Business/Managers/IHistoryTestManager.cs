@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Infrastructure.Business.DTOs;
 using Infrastructure.Business.DTOs.History;
 using Infrastructure.Business.DTOs.Sensor;
+using Infrastructure.Business.Infrastructure;
 
 namespace Infrastructure.Business.Managers
 {
@@ -13,8 +14,13 @@ namespace Infrastructure.Business.Managers
 		Task<HistoryDto> GetHistoryByIdAsync(int id);
 
 		Task<IEnumerable<HistoryDto>> GetAllHistoriesAsync();
-		Task<IEnumerable<HistoryDto>> GetHistoriesBySensorIdAsync(int sensorId);
+
+        SensorDto GetSensorByToken(Guid token);
+
+        OperationDetails AddHistory(string value, int sensorId);
+        Task<IEnumerable<HistoryDto>> GetHistoriesBySensorIdAsync(int sensorId);
 
         GraphDTO GetGraphBySensorId(int SensorId, int days);
+
     }
 }

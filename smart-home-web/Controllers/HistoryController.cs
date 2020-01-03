@@ -16,7 +16,8 @@ using Domain.Core.Model;
 
 namespace smart_home_web.Controllers
 {
-	public class HistoryController : Controller
+      
+    public class HistoryController : Controller
 	{
 		private readonly IHistoryTestManager _historyTestManager;
 		private readonly IMapper _mapper;
@@ -76,6 +77,7 @@ namespace smart_home_web.Controllers
 
             filterDTO.Amount = histories.Count();
             histories = histories.Skip((filterDTO.CurrentPage - 1) * filterDTO.PageSize).Take(filterDTO.PageSize).ToList();
+
             IEnumerable<HistoryViewModel> historiesViewModel = _mapper.Map<IEnumerable<HistoryDto>, IEnumerable<HistoryViewModel>>(histories);
             return View(new InvalidSensorsViewModel
             {
@@ -84,9 +86,22 @@ namespace smart_home_web.Controllers
             });
         }
 
-		#endregion
+        public async Task<IActionResult> BackToList(int sensorId)
+        {
+            Sensor sensor = await _invalidSensorManager.GetSensorById(sensorId);
+            if (sensor.IsActivated == true)
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return RedirectToAction("InvalidSensors");
+            }
+        }
 
-		[HttpGet]
+        #endregion
+
+        [HttpGet]
 		public IActionResult Graph(int sensorId, int days = 30)
 		{
 			GraphDTO graph = _historyTestManager.GetGraphBySensorId(sensorId, days);
@@ -109,5 +124,6 @@ namespace smart_home_web.Controllers
 		{
 			return RedirectToAction("Graph", new { sensorId = model.SensorId, days = model.Days == 0 ? 30 : model.Days });
 		}
-	}
+      
+    }
 }

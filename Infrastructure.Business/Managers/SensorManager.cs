@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Core.Model;
+using Domain.Core.Model.Enums;
 using Domain.Interfaces;
 using Infrastructure.Business.DTOs.Icon;
 using Infrastructure.Business.DTOs.Sensor;
@@ -24,14 +25,10 @@ namespace Infrastructure.Business.Managers
         {
             try
             {
-	            if (sensorDto.IconId.HasValue)
+	            if (!sensorDto.IconId.HasValue)
 	            {
-		            if (sensorDto.IconId == 0)
-		            {
-			            sensorDto.IconId = (await unitOfWork.SensorTypeRepo.GetById(sensorDto.SensorTypeId)).IconId
-				            .Value;
-		            }
-	            }
+                    sensorDto.IconId = (await unitOfWork.SensorTypeRepo.GetById(sensorDto.SensorTypeId)).IconId;
+                }
 
 	            Sensor sensor = mapper.Map<SensorDto, Sensor>(sensorDto);
 	            try
@@ -60,5 +57,19 @@ namespace Infrastructure.Business.Managers
 
             return model;
         }
+
+        public OperationDetails AddUnclaimedSensor(Guid token , string value)
+        {
+                                                        
+            var sensor = new Sensor { Name = "Unidentified", Token = token, CreatedOn= DateTimeOffset.Now,IsActivated = false};
+
+            if (sensor == null)
+                return new OperationDetails(false, "Operation did not succeed!", "");
+            unitOfWork.SensorRepo.Insert(sensor);
+
+            unitOfWork.Save();
+            return new OperationDetails(true , "Operation succeed" , sensor.Id.ToString());
+        }
+             
     }
 }

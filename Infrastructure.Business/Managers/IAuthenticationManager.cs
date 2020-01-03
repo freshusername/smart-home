@@ -11,8 +11,8 @@ namespace Infrastructure.Business.Managers
     {
         Task<OperationDetails> Register(UserDTO userDTO);
         Task<OperationDetails> Login(UserDTO userDTO);
-        Task<ConfirmDTO> GetPasswordConfirmationToken(string userName);
-        Task<ConfirmDTO> GetEmailConfirmationToken(string userName);
+        Task<ConfirmDto> GetPasswordConfirmationToken(string userName);
+        Task<ConfirmDto> GetEmailConfirmationToken(string userName);
         Task Logout();
         Task<OperationDetails> GoogleAuthentication();
     }
