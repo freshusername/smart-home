@@ -25,14 +25,10 @@ namespace Infrastructure.Business.Managers
         {
             try
             {
-	            if (sensorDto.IconId.HasValue)
+	            if (!sensorDto.IconId.HasValue)
 	            {
-		            if (sensorDto.IconId == 0)
-		            {
-			            sensorDto.IconId = (await unitOfWork.SensorTypeRepo.GetById(sensorDto.SensorTypeId)).IconId
-				            .Value;
-		            }
-	            }
+                    sensorDto.IconId = (await unitOfWork.SensorTypeRepo.GetById(sensorDto.SensorTypeId)).IconId;
+                }
 
 	            Sensor sensor = mapper.Map<SensorDto, Sensor>(sensorDto);
 	            try
@@ -64,14 +60,8 @@ namespace Infrastructure.Business.Managers
 
         public OperationDetails AddUnclaimedSensor(Guid token , string value)
         {
-            var measurmentType = GetMeasurment(value);
-            var sensorType = new SensorType { MeasurementType = measurmentType };
-                                  
-            if (sensorType == null)
-                return new OperationDetails(false, "Operation did not succeed!", "");
-            unitOfWork.SensorTypeRepo.Insert(sensorType);
-
-            var sensor = new Sensor {Token = token, CreatedOn= DateTimeOffset.Now,IsActivated = false , SensorTypeId = sensorType.Id };
+                                                        
+            var sensor = new Sensor { Name = "Unidentified", Token = token, CreatedOn= DateTimeOffset.Now,IsActivated = false};
 
             if (sensor == null)
                 return new OperationDetails(false, "Operation did not succeed!", "");
@@ -80,23 +70,6 @@ namespace Infrastructure.Business.Managers
             unitOfWork.Save();
             return new OperationDetails(true , "Operation succeed" , sensor.Id.ToString());
         }
-
-        private MeasurementType GetMeasurment(string value)
-        {
-            var valuemMdel = ValueParser.Parse(value);
-
-            if (valuemMdel is int)
-                return MeasurementType.Int;
-            else
-            if (valuemMdel is double)
-                return MeasurementType.Double;
-            else
-            if (valuemMdel is bool)
-                return MeasurementType.Bool;
-            else
-                return MeasurementType.String;
-           
-        }
-       
+             
     }
 }
