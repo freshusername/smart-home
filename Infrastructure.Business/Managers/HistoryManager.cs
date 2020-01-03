@@ -15,9 +15,9 @@ using Infrastructure.Data.Repositories;
 
 namespace Infrastructure.Business.Managers
 {
-    public class HistoryTestManager : BaseManager, IHistoryTestManager
+    public class HistoryManager : BaseManager, IHistoryManager
     {
-        public HistoryTestManager(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
+        public HistoryManager(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
 
         }
