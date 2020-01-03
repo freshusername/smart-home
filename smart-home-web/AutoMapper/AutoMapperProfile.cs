@@ -30,7 +30,7 @@ namespace smart_home_web.AutoMapper
             CreateMap<UserDTO, AppUser>().ForMember(au => au.UserName, map => map.MapFrom(vm => vm.Email));
 
             CreateMap<Sensor, SensorDto>()
-                .ForMember(dto => dto.IconPath, map => map.MapFrom(s => s.Icon.Path))
+                .ForMember(dto => dto.IconPath, map => map.MapFrom(s => (s.IconId.HasValue) ? s.Icon.Path : s.SensorType.Icon.Path))
                 .ForMember(dto => dto.SensorTypeId, map => map.MapFrom(s => s.SensorType.Id))
                 .ForMember(dto => dto.SensorTypeName, map => map.MapFrom(s => s.SensorType.Name))
                 .ReverseMap();
