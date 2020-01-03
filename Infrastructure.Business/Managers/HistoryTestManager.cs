@@ -147,9 +147,9 @@ namespace Infrastructure.Business.Managers
             if (history == null)
                 return new OperationDetails(false, "Operation did not succeed!", "");
             unitOfWork.HistoryRepo.Insert(history);
+            unitOfWork.Save();
 
             return new OperationDetails(true, "Operation succeed", "");
-
         
         }
     }
