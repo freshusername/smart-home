@@ -13,7 +13,7 @@ namespace Domain.Core.Model
         public DateTimeOffset? CreatedOn { get; set; }
         public bool IsActivated { get; set; }
 
-        public int SensorTypeId { get; set; }
+        public int? SensorTypeId { get; set; }
         public int? IconId { get; set; }
 
         public SensorType SensorType { get; set; }
