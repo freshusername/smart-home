@@ -80,20 +80,20 @@ namespace Infrastructure.Business.Managers
             return new OperationDetails(true , "Operation succeed" , sensor.Id.ToString());
         }
 
-        private MeasurmentType GetMeasurment(string value)
+        private MeasurementType GetMeasurment(string value)
         {
             var valuemMdel = ValueParser.Parse(value);
 
             if (valuemMdel is int)
-                return MeasurmentType.Int;
+                return MeasurementType.Int;
             else
             if (valuemMdel is double)
-                return MeasurmentType.Double;
+                return MeasurementType.Double;
             else
             if (valuemMdel is bool)
-                return MeasurmentType.Bool;
+                return MeasurementType.Bool;
             else
-                return MeasurmentType.String;
+                return MeasurementType.String;
            
         }
        

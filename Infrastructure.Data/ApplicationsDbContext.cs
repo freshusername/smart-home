@@ -28,7 +28,7 @@ namespace Infrastructure.Data
 
             modelBuilder
             .Entity<SensorType>()
-            .Property(e => e.MeasurementType)
+            .Property(e => e.MeasurmentType)
             .HasConversion(
             v => v.ToString(),
             v => (MeasurementType)Enum.Parse(typeof(MeasurementType), v));

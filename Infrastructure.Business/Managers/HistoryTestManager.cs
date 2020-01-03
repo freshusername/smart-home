@@ -38,15 +38,15 @@ namespace Infrastructure.Business.Managers
             return result;
         }
 
-		public async Task<IEnumerable<HistoryDto>> GetHistoriesBySensorIdAsync(int sensorId)
-		{
-			var histories = unitOfWork.HistoryRepo.GetHistoriesBySensorId(sensorId);
-			var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories);
+        public async Task<IEnumerable<HistoryDto>> GetHistoriesBySensorIdAsync(int sensorId)
+        {
+            var histories = unitOfWork.HistoryRepo.GetHistoriesBySensorId(sensorId);
+            var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories);
 
-			return result;
-		}
+            return result;
+        }
 
-		public GraphDTO GetGraphBySensorId(int SensorId, int days)
+        public GraphDTO GetGraphBySensorId(int SensorId, int days)
         {
             IEnumerable<History> histories = unitOfWork.HistoryRepo.GetHistoriesBySensorId(SensorId);
             if (!histories.Any())
@@ -63,12 +63,12 @@ namespace Infrastructure.Business.Managers
                 MeasurementName = histories.FirstOrDefault()
                                             .Sensor
                                             .SensorType
-                                            .MeasurementName,
+                                            .MeasurmentName,
 
                 MeasurementType = histories.FirstOrDefault()
                                             .Sensor
                                             .SensorType
-                                            .MeasurementType,
+                                            .MeasurmentType,
 
                 Dates = new List<DateTimeOffset>()
             };
@@ -112,9 +112,7 @@ namespace Infrastructure.Business.Managers
                 graph.IsCorrect = false;
             return graph;
         }
-    }
-			return result;
-		}
+    
 
         public SensorDto GetSensorByToken(Guid token)
         {
@@ -152,6 +150,9 @@ namespace Infrastructure.Business.Managers
 
             return new OperationDetails(true, "Operation succeed", "");
 
+        
         }
     }
 }
+
+

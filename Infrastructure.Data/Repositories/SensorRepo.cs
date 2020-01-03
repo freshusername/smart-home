@@ -33,7 +33,7 @@ namespace Infrastructure.Data.Repositories
 
         public Sensor GetByToken(Guid token)
         {
-            var sensor = _context.Sensors.FirstOrDefault(e => e.Token == token);
+            var sensor = context.Sensors.FirstOrDefault(e => e.Token == token);
 
             return sensor;
         }

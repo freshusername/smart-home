@@ -13,14 +13,14 @@ namespace Infrastructure.Data.Repositories
     {
 		
 
-		public HistoryRepo(ApplicationsDbContext _context) : base(_context)
+		public HistoryRepo(ApplicationsDbContext context) : base(context)
 		{
 		
 		}
 
 		public override async Task<IEnumerable<History>> GetAll()
 		{
-			var res = await _context.Histories
+			var res = await context.Histories
 				.Include(h => h.Sensor)
 				.ThenInclude(s => s.SensorType).ToListAsync();
 
@@ -29,13 +29,13 @@ namespace Infrastructure.Data.Repositories
 
 		public override async Task<History> GetById(int id)
 		{
-			return _context.Histories
+			return context.Histories
 				.FirstOrDefault(s => s.Id == id);
 		}
 
 		public IEnumerable<History> GetHistoriesBySensorId(int SensorId)
 		{
-            var histories = _context.Histories.Include(h => h.Sensor)
+            var histories = context.Histories.Include(h => h.Sensor)
                                             .ThenInclude(st => st.SensorType)
                                             .Select(h => h)
                                             .Where(h => h.Sensor.Id == SensorId);
