@@ -68,7 +68,7 @@ namespace Infrastructure.Business.Managers
                 MeasurementType = histories.FirstOrDefault()
                                             .Sensor
                                             .SensorType
-                                            .MeasurmentType,
+                                            .MeasurementType,
 
                 Dates = new List<DateTimeOffset>()
             };

@@ -65,7 +65,7 @@ namespace Infrastructure.Business.Managers
         public OperationDetails AddUnclaimedSensor(Guid token , string value)
         {
             var measurmentType = GetMeasurment(value);
-            var sensorType = new SensorType { MeasurmentType = measurmentType };
+            var sensorType = new SensorType { MeasurementType = measurmentType };
                                   
             if (sensorType == null)
                 return new OperationDetails(false, "Operation did not succeed!", "");

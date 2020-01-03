@@ -2,6 +2,7 @@
 using Domain.Core.Model;
 using Domain.Interfaces;
 using Infrastructure.Business.DTOs.Icon;
+using Infrastructure.Data.Repositories;
 using Infrastructure.Business.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
