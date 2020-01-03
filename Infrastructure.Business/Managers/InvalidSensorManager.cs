@@ -30,6 +30,9 @@ namespace Infrastructure.Business.Managers
             return res;
         }
 
-
-	}
+        public async Task<Sensor> GetSensorById(int sensorId)
+        {
+            return await unitOfWork.SensorRepo.GetById(sensorId);
+        }
+    }
 }
