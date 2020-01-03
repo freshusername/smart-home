@@ -11,7 +11,7 @@ namespace Domain.Core.Model
         public string Name { get; set; }
         public string Comment { get; set; }
         public MeasurementType? MeasurementType { get; set; }
-        public string MeasurmentName { get; set; }
+        public string MeasurementName { get; set; }
         
         public int? IconId { get; set; }
         public Icon Icon { get; set; }
