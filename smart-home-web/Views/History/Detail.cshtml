@@ -32,8 +32,8 @@
                     <th scope="col" class=" text-center">
                         @{
                             var date = (FilterDTO)Model.FilterDTO.Clone();
-                            date.sortState = (sensor.sortState == SortState.DateAsc) ? SortState.DateDesc : SortState.DateAsc;
-                            sensor.sensorId = Model.Histories.First().Id;
+                            date.sortState = (date.sortState == SortState.DateAsc) ? SortState.DateDesc : SortState.DateAsc;
+                            date.sensorId = Model.Histories.First().Id;
                         }
                         <a href="@Url.Action("Detail", "History",
                                         date,
