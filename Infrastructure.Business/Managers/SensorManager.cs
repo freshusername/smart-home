@@ -77,6 +77,7 @@ namespace Infrastructure.Business.Managers
                 return new OperationDetails(false, "Operation did not succeed!", "");
             unitOfWork.SensorRepo.Insert(sensor);
 
+            unitOfWork.Save();
             return new OperationDetails(true , "Operation succeed" , sensor.Id.ToString());
         }
 
