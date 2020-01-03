@@ -9,6 +9,8 @@ using Domain.Core.Model.Enums;
 using Domain.Interfaces;
 using Infrastructure.Business.DTOs;
 using Infrastructure.Business.DTOs.History;
+using Infrastructure.Business.DTOs.Sensor;
+using Infrastructure.Business.Infrastructure;
 using Infrastructure.Data.Repositories;
 
 namespace Infrastructure.Business.Managers
@@ -109,6 +111,47 @@ namespace Infrastructure.Business.Managers
             if (!graph.Dates.Any())
                 graph.IsCorrect = false;
             return graph;
+        }
+    }
+			return result;
+		}
+
+        public SensorDto GetSensorByToken(Guid token)
+        {
+            var sensor = mapper.Map<Sensor,SensorDto>(unitOfWork.SensorRepo.GetByToken(token));
+
+            return sensor;
+        }
+
+        public OperationDetails AddHistory(string value , int sensorId)
+        {
+           
+            var history = new History
+            {
+                Date = DateTimeOffset.Now,
+                SensorId = sensorId,
+                
+            };
+
+            var valuemMdel = ValueParser.Parse(value);
+
+            if (valuemMdel is int)
+                history.IntValue = valuemMdel;
+             else
+            if (valuemMdel is double)
+                history.DoubleValue = valuemMdel;
+             else
+            if (valuemMdel is bool)
+                history.BoolValue = valuemMdel;
+             else
+                history.StringValue = valuemMdel;
+
+            if (history == null)
+                return new OperationDetails(false, "Operation did not succeed!", "");
+            unitOfWork.HistoryRepo.Insert(history);
+
+            return new OperationDetails(true, "Operation succeed", "");
+
         }
     }
 }

@@ -16,7 +16,8 @@ using Domain.Core.Model;
 
 namespace smart_home_web.Controllers
 {
-	public class HistoryController : Controller
+      
+    public class HistoryController : Controller
 	{
 		private readonly IHistoryTestManager _historyTestManager;
 		private readonly IMapper _mapper;
@@ -109,5 +110,6 @@ namespace smart_home_web.Controllers
 		{
 			return RedirectToAction("Graph", new { sensorId = model.SensorId, days = model.Days == 0 ? 30 : model.Days });
 		}
-	}
+      
+    }
 }

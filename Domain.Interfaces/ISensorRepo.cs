@@ -7,6 +7,6 @@ namespace Domain.Interfaces
 {
     public interface ISensorRepo : IGenericRepository<Sensor>
     {
-
+        Sensor GetByToken(Guid token);
     }
 }
