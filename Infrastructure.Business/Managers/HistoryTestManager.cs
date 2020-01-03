@@ -63,7 +63,7 @@ namespace Infrastructure.Business.Managers
                 MeasurementName = histories.FirstOrDefault()
                                             .Sensor
                                             .SensorType
-                                            .MeasurmentName,
+                                            .MeasurementName,
 
                 MeasurementType = histories.FirstOrDefault()
                                             .Sensor
