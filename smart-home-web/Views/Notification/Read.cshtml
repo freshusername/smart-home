@@ -2,9 +2,9 @@
 
 @model AllNotificationsViewModel;
 @{
-    ViewData["Title"] = "Unread notifications";
+    ViewData["Title"] = "Read notifications";
 }
-   
+
 <body>
     <h3>Notifications</h3>
     <span class="badge" id="ntCnt"></span>
@@ -24,7 +24,7 @@
             <div class="col-lg-6">
                 @foreach (var messages in Model.Notifications)
                 {
-                    if (messages.IsRead.ToString() == "True")
+                    if (messages.IsRead.ToString() == "False")
                     {
                         <div class="alert alert-info">
                             <p>@messages.Comment</p>
@@ -32,7 +32,7 @@
                             <p>@messages.IsRead</p>
                             <a asp-controller="Notification" asp-action="Index">
                                 <div class="right">
-                                    <span class="glyphicon glyphicon-ok-circle" style="font-size:20px" title="Mark as read"></span>
+                                    <span class="glyphicon glyphicon-remove-circle" style="font-size:20px" title="Mark as unread"></span>
                                 </div>
                             </a>
                         </div>
@@ -45,6 +45,6 @@
 
 <script src="~/lib/jquery/dist/jquery.js"></script>
 <script>
-    var texts = $('.alert').length;
-    $('#ntCnt').text(texts);
+        var texts = $('.alert').length;
+        $('#ntCnt').text(texts);
 </script>
