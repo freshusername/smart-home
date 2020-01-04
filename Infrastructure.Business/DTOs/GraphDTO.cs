@@ -10,7 +10,7 @@ namespace Infrastructure.Business.DTOs
         public int SensorId { get; set; }
         public string SensorName { get; set; }
         public string SensorType { get; set; }
-        public bool IsCorrect { get; set; }
+        public bool IsCorrect { get; set; } = true;
 
         public MeasurementType MeasurementType { get; set; } 
         public string MeasurementName { get; set; } 
