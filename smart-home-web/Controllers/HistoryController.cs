@@ -21,13 +21,11 @@ namespace smart_home_web.Controllers
 	{
 		private readonly IHistoryManager _historyTestManager;
 		private readonly IMapper _mapper;
-        private readonly IInvalidSensorManager _invalidSensorManager;
 
-		public HistoryController(IHistoryManager historyTestManager, IMapper mapper,IInvalidSensorManager invalidSensorManager)
+		public HistoryController(IHistoryManager historyTestManager, IMapper mapper)
 		{
 			_historyTestManager = historyTestManager;
 			_mapper = mapper;
-            _invalidSensorManager = invalidSensorManager;
 		}
 
         public async Task<IActionResult> Index(FilterDTO FilterDTO)
@@ -71,7 +69,7 @@ namespace smart_home_web.Controllers
 		{
 	        if (filterDTO.sortState == SortState.None) filterDTO.sortState = SortState.SensorAsc;
 
-			IEnumerable<HistoryDto> histories = await _invalidSensorManager.getInvalidSensors(filterDTO.sortState);
+			IEnumerable<HistoryDto> histories = await _historyTestManager.GetInvalidSensors(filterDTO.sortState);
 
             filterDTO.Amount = histories.Count();
             histories = histories.Skip((filterDTO.CurrentPage - 1) * filterDTO.PageSize).Take(filterDTO.PageSize).ToList();

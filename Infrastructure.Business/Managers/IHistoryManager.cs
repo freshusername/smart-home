@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Core.Model.Enums;
 using Infrastructure.Business.DTOs;
 using Infrastructure.Business.DTOs.History;
 using Infrastructure.Business.DTOs.Sensor;
@@ -21,6 +22,7 @@ namespace Infrastructure.Business.Managers
         Task<IEnumerable<HistoryDto>> GetHistoriesBySensorIdAsync(int sensorId);
 
         GraphDTO GetGraphBySensorId(int SensorId, int days);
+        Task<IEnumerable<HistoryDto>> GetInvalidSensors(SortState sortState);
 
     }
 }

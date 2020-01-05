@@ -10,6 +10,7 @@ using Domain.Interfaces;
 using Infrastructure.Business.DTOs;
 using Infrastructure.Business.DTOs.History;
 using Infrastructure.Business.DTOs.Sensor;
+using Infrastructure.Business.Filters;
 using Infrastructure.Business.Infrastructure;
 using Infrastructure.Data.Repositories;
 
@@ -151,6 +152,17 @@ namespace Infrastructure.Business.Managers
 
             return new OperationDetails(true, "Operation succeed", "");
         
+        }
+
+        public async Task<IEnumerable<HistoryDto>> GetInvalidSensors(SortState sortState)
+        {
+            var histories = await unitOfWork.HistoryRepo.GetAll();
+
+            var historiesfilter = histories.Where(p => p.Sensor.IsActivated == true);
+
+            var historiesmapper = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(historiesfilter);
+
+            return SortValue.SortHistories(sortState, historiesmapper);
         }
     }
 }
