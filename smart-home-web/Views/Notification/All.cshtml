@@ -24,12 +24,12 @@
             <div class="col-lg-6">
                 @foreach (var messages in Model.Notifications)
                 {
+                    @if (messages.UserName == User.Identity.Name)
+                    {
                     <div class="alert alert-info">
                         <p>@messages.Comment</p>
                         <p>@messages.Date</p>
-                        <p>@messages.IsRead</p>
-
-                        @if (messages.IsRead.ToString() == "False")
+                        @if (messages.IsRead.ToString() == "False" && messages.UserName == User.Identity.Name)
                         {
                             <a asp-controller="Notification" asp-action="Index">
                                 <div class="right">
@@ -37,7 +37,7 @@
                                 </div>
                             </a>
                         }
-                        @if (messages.IsRead.ToString() == "True")
+                        @if (messages.IsRead.ToString() == "True" && messages.UserName == User.Identity.Name)
                         {
                             <a asp-controller="Notification" asp-action="Index">
                                 <div class="right">
@@ -46,14 +46,9 @@
                             </a>
                         }
                     </div>
+                    }
                 }
             </div>
         </div>
     </div>
 </body>
-
-<script src="~/lib/jquery/dist/jquery.js"></script>
-<script>
-        var texts = $('.alert').length;
-        $('#ntCnt').text(texts);
-</script>

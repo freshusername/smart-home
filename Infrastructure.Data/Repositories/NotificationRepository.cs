@@ -21,6 +21,7 @@ namespace Infrastructure.Data.Repositories
 		public override async Task<IEnumerable<Message>> GetAll()
 		{
 			var res = await _context.Messages
+				.Include(s => s.AppUser)
 				.Include(h => h.History).ToListAsync();
 			return res;
 		}

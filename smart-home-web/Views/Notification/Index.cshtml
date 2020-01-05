@@ -24,12 +24,11 @@
             <div class="col-lg-6">
                 @foreach (var messages in Model.Notifications)
                 {
-                    if (messages.IsRead.ToString() == "True")
+                    if (messages.IsRead.ToString() == "True" && messages.UserName == User.Identity.Name)
                     {
                         <div class="alert alert-info">
                             <p>@messages.Comment</p>
                             <p>@messages.Date</p>
-                            <p>@messages.IsRead</p>
                             <a asp-controller="Notification" asp-action="Index">
                                 <div class="right">
                                     <span class="glyphicon glyphicon-ok-circle" style="font-size:20px" title="Mark as read"></span>

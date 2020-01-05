@@ -24,12 +24,11 @@
             <div class="col-lg-6">
                 @foreach (var messages in Model.Notifications)
                 {
-                    if (messages.IsRead.ToString() == "False")
+                    if (messages.IsRead.ToString() == "False" && messages.UserName == User.Identity.Name)
                     {
                         <div class="alert alert-info">
                             <p>@messages.Comment</p>
                             <p>@messages.Date</p>
-                            <p>@messages.IsRead</p>
                             <a asp-controller="Notification" asp-action="Index">
                                 <div class="right">
                                     <span class="glyphicon glyphicon-remove-circle" style="font-size:20px" title="Mark as unread"></span>
@@ -42,9 +41,3 @@
         </div>
     </div>
 </body>
-
-<script src="~/lib/jquery/dist/jquery.js"></script>
-<script>
-        var texts = $('.alert').length;
-        $('#ntCnt').text(texts);
-</script>
