@@ -90,47 +90,11 @@
             </tbody>
         </table>
         <br />
-        <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-center">
-                @if (Model.FilterDTO != null)
-                {
-                    @if (Model.FilterDTO.HasPrevious)
-                    {
-                        <li class="page-item">
-
-                            @{
-                                var prev = (FilterDTO)Model.FilterDTO.Clone();
-                                prev.CurrentPage = Model.FilterDTO.CurrentPage - 1;
-                            }
-
-                            @Html.ActionLink("Previous", "InvalidSensors", "History", prev)
-                        </li>
-                    }
-
-                    @for (var i = 1; i <= Model.FilterDTO.PagesCount; i++)
-                    {
-                        var page_i = (FilterDTO)Model.FilterDTO.Clone();
-                        page_i.CurrentPage = i;
-
-                        <li class="page-item @( i == Model.FilterDTO.CurrentPage ? "active" : "")">
-
-                            @Html.ActionLink(i.ToString(), "InvalidSensors", "History", page_i)
-                        </li>
-                    }
-                    @if (Model.FilterDTO.HasNext)
-                    {
-                        <li class="page-item">
-                            @{
-                                var next = (FilterDTO)Model.FilterDTO.Clone();
-                                next.CurrentPage = Model.FilterDTO.CurrentPage + 1;
-                            }
-
-                            @Html.ActionLink("Next", "InvalidSensors", "History", next)
-                        </li>
-                    }
-                }
-            </ul>
-        </nav>
+        @{ 
+            ViewData["Action"] = "InvalidSensors";
+            ViewData["Controller"] = "History";
+        }
+        <partial name="~/Views/Shared/_PaginationView.cshtml" view-data="ViewData" for="FilterDTO" />
     </div>
 
 </body>

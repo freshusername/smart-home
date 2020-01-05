@@ -1,46 +1,41 @@
 ﻿@using Infrastructure.Business.DTOs;
+@model Infrastructure.Business.DTOs.FilterDTO;
 
 
 <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
-        @if (Model.FilterDTO != null)
+        @if (Model != null)
         {
-            @if (Model.FilterDTO.HasPrevious)
-            {
+            
                 <li class="page-item">
                     @{
-                        var prev = (FilterDTO)Model.FilterDTO.Clone();
-                        prev.CurrentPage = Model.FilterDTO.CurrentPage - 1;
+                        var prev = (FilterDTO)Model.Clone();
+                        prev.CurrentPage = Model.CurrentPage - 1;
+                        string state = Model.HasNext ? "active" : "disabled";
                     }
 
-                    @Html.ActionLink("prev", "InvalidSensors", "History", null, null, null,
-                              prev,
-                              null)
+                    @Html.ActionLink("Previous", (string)ViewData["Action"], (string)ViewData["Controller"],
+                    prev, new { @class=state })
                 </li>
-            }
 
-            @for (var i = 1; i <= Model.FilterDTO.PagesCount; i++)
+            @for (var i = 1; i <= Model.PagesCount; i++)
             {
-                var page_i = (FilterDTO)Model.FilterDTO.Clone();
+                var page_i = (FilterDTO)Model.Clone();
                 page_i.CurrentPage = i;
 
-                <li class="page-item @( i == Model.FilterDTO.CurrentPage ? "active" : "")">
-                    @Html.ActionLink(i.ToString(), "InvalidSensors", "History", null, null, null,
-                        page_i,
-                        null)
+                <li class="page-item @( i == Model.CurrentPage ? "active" : "")">
+                    @Html.ActionLink(i.ToString(), (string)ViewData["Action"], (string)ViewData["Controller"], page_i)
                 </li>
             }
-            @if (Model.FilterDTO.HasNext)
+            @if (Model.HasNext)
             {
                 <li class="page-item">
                     @{
-                        var next = (FilterDTO)Model.FilterDTO.Clone();
-                        next.CurrentPage = Model.FilterDTO.CurrentPage + 1;
+                        var next = (FilterDTO)Model.Clone();
+                        next.CurrentPage = Model.CurrentPage + 1;
                     }
 
-                    @Html.ActionLink("next", "InvalidSensors", "History", null, null, null,
-                              next,
-                              null)
+                    @Html.ActionLink("Next", (string)ViewData["Action"], (string)ViewData["Controller"], next)
                 </li>
             }
         }
