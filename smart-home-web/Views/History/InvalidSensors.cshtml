@@ -8,19 +8,17 @@
 
 <body class="body-content">
     <div class="row text-center">
-        <h2 style="color:red;" class="text-center">Invalid Sensors</h2>
-        <table class="table table-dark table-hover table-responsive table-bordered text-center " id="invalidSensorTable">
+        <h2>Invalid Sensors</h2>
+        <table class="table table-hover table-responsive text-center" id="invalidSensorTable">
             <caption>List of invalid sensors</caption>
-            <thead class="bg-success">
+            <thead class="text-center">
                 <tr>
                     <th scope="col" class=" text-center">
                         @{
                             var sensor = (FilterDTO)Model.FilterDTO.Clone();
                             sensor.sortState = (sensor.sortState == SortState.SensorAsc) ? SortState.SensorDesc : SortState.SensorAsc;
                         }
-                        <a href="@Url.Action("InvalidSensors", "History",
-                                 sensor,
-                                 null)">
+                        <a href="@Url.Action("InvalidSensors", sensor)">
                             Sensor <i class="glyphicon glyphicon-sort"></i>
                         </a>
 
@@ -31,9 +29,7 @@
                             var date = (FilterDTO)Model.FilterDTO.Clone();
                             date.sortState = (date.sortState == SortState.DateAsc) ? SortState.DateDesc : SortState.DateAsc;
                         }
-                        <a href="@Url.Action("InvalidSensors", "History",
-                                 date,
-                                 null)">
+                        <a href="@Url.Action("InvalidSensors", date)">
                             Date <i class="glyphicon glyphicon-sort"></i>
                         </a>
 
@@ -64,7 +60,7 @@
                             {
                                 <td>
                                     <a asp-controller="History" asp-action="Detail" asp-route-sensorId="@history.SensorId"
-                                       style="display: block; color: red;">
+                                       style="display: block;">
                                         Inactive
                                     </a>
                                 </td>
@@ -73,7 +69,7 @@
                             {
                                 <td>
                                     <a asp-controller="History" asp-action="Detail" asp-route-sensorId="@history.SensorId"
-                                       style="display: block; color: lightseagreen;">
+                                       style="display: block;">
                                         Active
                                     </a>
                                 </td>
@@ -82,7 +78,7 @@
                             {
                                 <td>
                                     <a asp-controller="History" asp-action="Detail" asp-route-sensorId="@history.SensorId"
-                                       style="display: block; color: dodgerblue;">
+                                       style="display: block;">
                                         @history.Value
                                     </a>
                                 </td>
@@ -107,9 +103,7 @@
                                 prev.CurrentPage = Model.FilterDTO.CurrentPage - 1;
                             }
 
-                            @Html.ActionLink("Previous", "InvalidSensors", "History", null, null, null,
-                                                prev,
-                                                null)
+                            @Html.ActionLink("Previous", "InvalidSensors", "History", prev)
                         </li>
                     }
 
@@ -120,9 +114,7 @@
 
                         <li class="page-item @( i == Model.FilterDTO.CurrentPage ? "active" : "")">
 
-                            @Html.ActionLink(i.ToString(), "InvalidSensors", "History", null, null, null,
-                                        page_i,
-                                        null)
+                            @Html.ActionLink(i.ToString(), "InvalidSensors", "History", page_i)
                         </li>
                     }
                     @if (Model.FilterDTO.HasNext)
@@ -133,9 +125,7 @@
                                 next.CurrentPage = Model.FilterDTO.CurrentPage + 1;
                             }
 
-                            @Html.ActionLink("Next", "InvalidSensors", "History", null, null, null,
-                                        next,
-                                        null)
+                            @Html.ActionLink("Next", "InvalidSensors", "History", next)
                         </li>
                     }
                 }
