@@ -50,7 +50,8 @@ namespace Infrastructure.Business.Managers
             if (!histories.Any())
                 return new GraphDTO { IsCorrect = false };
 
-            GraphDTO graph = mapper.Map<IEnumerable<History>, GraphDTO>(histories);
+            Sensor sensor = histories.FirstOrDefault().Sensor;
+            GraphDTO graph = mapper.Map<Sensor, GraphDTO>(sensor);
             
             graph.Dates = new List<DateTimeOffset>();
             
