@@ -18,11 +18,11 @@ namespace smart_home_web.Controllers
 {
 	public class HistoryController : Controller
 	{
-		private readonly IHistoryTestManager _historyTestManager;
+		private readonly IHistoryManager _historyTestManager;
 		private readonly IMapper _mapper;
         private readonly IInvalidSensorManager _invalidSensorManager;
 
-		public HistoryController(IHistoryTestManager historyTestManager, IMapper mapper,IInvalidSensorManager invalidSensorManager)
+		public HistoryController(IHistoryManager historyTestManager, IMapper mapper,IInvalidSensorManager invalidSensorManager)
 		{
 			_historyTestManager = historyTestManager;
 			_mapper = mapper;
