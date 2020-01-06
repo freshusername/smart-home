@@ -16,7 +16,7 @@
 
                     <label class="graph-title" style="font-size:18px;">@title</label>
                     <label class="graph-title" style="font-size:12px;">@subtitle</label>
-                    
+
                     <table class="table">
                         <thead>
                             <tr>
@@ -29,8 +29,9 @@
                             {
                                 <tr>
                                     <th scope="row">@Model.StringValues[i]</th>
-                                    <td scope="col">@Model.StringDates[i]</td>
-                                </tr>
+                                    <td scope="col">@((new DateTime(1970,1,1)).AddMilliseconds(Model.longDates[i]))</td>
+
+                      </tr>
                             }
                         </tbody>
                     </table>
@@ -98,7 +99,12 @@
                 x: -20
             },
             xAxis: {
-                categories: JSON.parse('@Html.Raw(Json.Serialize(@Model.StringDates))')
+                categories: JSON.parse('@Html.Raw(Json.Serialize(@Model.longDates))'),
+                labels: {
+                    formatter: function () {
+                        return new Date(this.value).toUTCString();
+                    }
+                }
             },
             yAxis: {
                 title: {
@@ -113,7 +119,8 @@
                         case MeasurementType.Double:
 
                             <text>
-                            var result = '<b>' + this.x + '</b><br>' + this.series.name + ': <b>' + this.y + ' '
+                            var date = new Date(this.x).toUTCString();
+                            var result = '<b>' + date + '</b><br>' + this.series.name + ': <b>' + this.y + ' '
                             + JSON.parse('@Html.Raw(Json.Serialize(@Model.MeasurementName))') + '</b><br>'
                             return result;
                             </text>
@@ -122,8 +129,9 @@
                         case MeasurementType.Bool:
 
                             <text>
+                            var date = new Date(this.x).toUTCString();
                             var boolValues = JSON.parse('@Html.Raw(Json.Serialize(@Model.BoolValues))')
-                            var result = '<b>' + this.x + '</b><br>' + this.series.name + ': <b>' + boolValues[this.point.index] + '</b><br>'
+                            var result = '<b>' + date + '</b><br>' + this.series.name + ': <b>' + boolValues[this.point.index] + '</b><br>'
                             return result;
                             </text>
                             break;

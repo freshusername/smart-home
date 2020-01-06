@@ -17,7 +17,7 @@ namespace smart_home_web.Models
         public MeasurementType MeasurementType { get; set; }
         public string MeasurementName { get; set; }
 
-        public List<string> StringDates { get; set; }
+        public List<long> longDates { get; set; }
 
         public List<string> StringValues { get; set; }
         public List<int> IntValues { get; set; }

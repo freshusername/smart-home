@@ -94,11 +94,11 @@ namespace smart_home_web.Controllers
 			if (result.IsCorrect)
 			{
 				result.Days = days;
-				string specifier = "G";
-				result.StringDates = new List<string>();
+				result.longDates = new List<long>();
 				foreach (DateTimeOffset date in graph.Dates)
 				{
-					result.StringDates.Add(date.ToString(specifier));
+					DateTimeOffset unixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+					result.longDates.Add((long)date.Subtract(unixEpoch).TotalMilliseconds);
 				}
 			}
 			return View(result);
