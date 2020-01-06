@@ -10,7 +10,8 @@
     ViewData["Title"] = "Detail";
 }
 
-<h2><b>@Model.Histories.First().SensorName</b> Detail</h2>
+<h2><b>@Model.Histories.First().SensorName</b> Detail <a class="btn btn-success text-center" asp-action="Graph" asp-route-sensorId="@Model.Histories.First().SensorId" asp-route-days="99999"><i class="fa fa-bar-chart"></i></a></h2>
+
 <body>
     <div class="row text-center">
         <table class="table table-hover table-responsive">
@@ -73,6 +74,5 @@
             </tbody>
         </table>
         <br />
-        <a class="btn btn-success text-center" asp-action="Graph" asp-route-sensorId="@Model.Histories.First().SensorId" asp-route-days="99999">Graph</a>
     </div>
 </body>

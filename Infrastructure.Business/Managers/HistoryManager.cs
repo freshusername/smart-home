@@ -51,28 +51,13 @@ namespace Infrastructure.Business.Managers
             IEnumerable<History> histories = unitOfWork.HistoryRepo.GetHistoriesBySensorId(SensorId);
             if (!histories.Any())
                 return new GraphDTO { IsCorrect = false };
-            GraphDTO graph = new GraphDTO
-            {
-                SensorId = SensorId,
-                SensorName = histories.FirstOrDefault().Sensor.Name,
-                SensorType = histories.FirstOrDefault()
-                                            .Sensor
-                                            .SensorType
-                                            .Name,
-                IsCorrect = true,
-                MeasurementName = histories.FirstOrDefault()
-                                            .Sensor
-                                            .SensorType
-                                            .MeasurementName,
 
-                MeasurementType = histories.FirstOrDefault()
-                                            .Sensor
-                                            .SensorType
-                                            .MeasurementType,
-
-                Dates = new List<DateTimeOffset>()
-            };
-            var date = DateTimeOffset.Now.AddDays(-days);
+            Sensor sensor = histories.FirstOrDefault().Sensor;
+            GraphDTO graph = mapper.Map<Sensor, GraphDTO>(sensor);
+            
+            graph.Dates = new List<DateTimeOffset>();
+            
+            DateTimeOffset date = DateTimeOffset.Now.AddDays(-days);
 
             graph.IntValues = new List<int>();
             graph.DoubleValues = new List<double>();
@@ -101,7 +86,6 @@ namespace Infrastructure.Business.Managers
 
                         case MeasurementType.String:
                             graph.StringValues.Add(history.StringValue);
-                            graph.IntValues.Add(1);
                             break;
                         default:
                             break;

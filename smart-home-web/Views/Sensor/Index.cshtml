@@ -21,9 +21,9 @@
             <th scope="col">Comment</th>
             <th scope="col">Created on</th>
             <th scope="col">Sensor Type</th>
-            <th scope="col">Token</th>
             <th scope="col">Activated</th>
             <th scope="col">Icon</th>
+            <th scope="col">Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -31,15 +31,10 @@
         {
             <tr>
                 <th scope="row">@sensor.Id</th>
-                <td>
-                    <a asp-controller="History" asp-action="Graph" asp-route-sensorId="@sensor.Id" asp-route-days="99999">
-                        @sensor.Name
-                    </a>
-                </td>
+                <td>@sensor.Name</td>
                 <td>@sensor.Comment</td>
                 <td>@sensor.CreatedOn</td>
                 <td>@sensor.SensorTypeName</td>
-                <td>@sensor.Token</td>
                 <td>@sensor.IsActivated</td>
                 <td>
                     @if (sensor.IconPath != null)
@@ -51,6 +46,7 @@
                         <p>No image was added</p>
                     }
                 </td>
+                <td><a class="btn btn-success text-center" asp-controller="History" asp-action="Graph" asp-route-sensorId="@sensor.Id" asp-route-days="99999"><i class="fa fa-bar-chart"></i></a></td>
             </tr>
         }
     </tbody>

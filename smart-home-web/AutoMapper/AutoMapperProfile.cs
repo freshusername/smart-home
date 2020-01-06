@@ -53,8 +53,14 @@ namespace smart_home_web.AutoMapper
                 .ForMember(hd => hd.Date, map => map.MapFrom(h => h.History.Date));
             CreateMap<NotificationDto, NotificationViewModel>().ReverseMap();
 
+            CreateMap<Sensor, GraphDTO>()
+               .ForMember(gd => gd.SensorId, map => map.MapFrom(s => s.Id))
+               .ForMember(gd => gd.SensorName, map => map.MapFrom(s => s.Name))
+               .ForMember(gd => gd.SensorType, map => map.MapFrom(s => s.SensorType.Name))
+               .ForMember(gd => gd.MeasurementName, map => map.MapFrom(s => s.SensorType.MeasurementName))
+               .ForMember(gd => gd.MeasurementType, map => map.MapFrom(s => s.SensorType.MeasurementType));
             CreateMap<GraphDTO, GraphViewModel>();
-
+           
             CreateMap<SensorTypeDto, SensorType>();
             CreateMap<SensorTypeViewModel, SensorTypeDto>().ReverseMap();
             CreateMap<CreateSensorTypeViewModel, SensorTypeDto>().ReverseMap();
