@@ -1,0 +1,43 @@
+﻿@using smart_home_web.Models.Notification;
+
+@model AllNotificationsViewModel;
+@{
+    ViewData["Title"] = "Read notifications";
+}
+
+<body>
+    <h3>Notifications</h3>
+    <span class="badge" id="ntCnt"></span>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2 list-group">
+                <a asp-action="Index" aria-current="page" class="list-group-item list-group-item-action bg-light">
+                    Unread
+                </a>
+                <a asp-action="Read" class="list-group-item list-group-item-action bg-light">
+                    Read
+                </a>
+                <a asp-action="All" class="list-group-item list-group-item-action bg-light">
+                    All notifications
+                </a>
+            </div>
+            <div class="col-lg-6">
+                @foreach (var messages in Model.Notifications)
+                {
+                    if (messages.IsRead.ToString() == "False" && messages.UserName == User.Identity.Name)
+                    {
+                        <div class="alert alert-info">
+                            <p>@messages.Comment</p>
+                            <p>@messages.Date</p>
+                            <a href="@Url.Action("ChangeStatus", "Notification", new { id = messages.Id, page = "Read"}, null)">
+                                <div class="right">
+                                    <span class="glyphicon glyphicon-remove-circle" style="font-size:20px" title="Mark as unread"></span>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</body>

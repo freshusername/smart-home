@@ -20,6 +20,9 @@ namespace Infrastructure.Business.Managers
 
 		public async Task<NotificationDto> GetNotificationByIdAsync(int id)
 		{
+			//if (!this.unitOfWork.UserManager.GetUserId()
+			//	return this.Redirect("/");
+
 			var notification = await unitOfWork.NotificationRepository.GetById(id);
 			var result = mapper.Map<Message, NotificationDto>(notification);
 
@@ -32,6 +35,13 @@ namespace Infrastructure.Business.Managers
 			var result = mapper.Map<IEnumerable<Message>, IEnumerable<NotificationDto>>(notifications);
 
 			return result;
+		}
+
+		public async Task ChangeStatusAsync(int id)
+		{
+			var notification = await unitOfWork.NotificationRepository.GetById(id);
+			notification.IsRead = notification.IsRead ? false : true;
+			unitOfWork.Save();
 		}
 	}
 }

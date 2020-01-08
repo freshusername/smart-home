@@ -26,15 +26,9 @@ namespace Infrastructure.Business.Managers
                 throw new ArgumentException();
             }
 
-            byte[] imgData;
-            using (var reader = new BinaryReader(uploadedFile.OpenReadStream()))
-            {
-                imgData = reader.ReadBytes((int)uploadedFile.Length);
-            }
-
             Image img = await ResizeImage(uploadedFile, width, height);
 
-            imgData = ImageToByteArray(img);
+            byte[] imgData = ImageToByteArray(img);
 
             return imgData;
         }
@@ -43,7 +37,7 @@ namespace Infrastructure.Business.Managers
         {
             using (var ms = new MemoryStream())
             {
-                imageIn.Save(ms, ImageFormat.Jpeg);
+                imageIn.Save(ms, ImageFormat.Png);
                 return ms.ToArray();
             }
         }

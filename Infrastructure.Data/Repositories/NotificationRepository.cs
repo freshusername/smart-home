@@ -21,13 +21,14 @@ namespace Infrastructure.Data.Repositories
 		public override async Task<IEnumerable<Message>> GetAll()
 		{
 			var res = await _context.Messages
+				.Include(s => s.AppUser)
 				.Include(h => h.History).ToListAsync();
 			return res;
 		}
 
 		public override async Task<Message> GetById(int id)
 		{
-			return await _context.Messages.Include(h => h.Id).FirstOrDefaultAsync(s => s.Id == id);
+			return await _context.Messages.FirstOrDefaultAsync(s => s.Id == id);
 		}
 
 		public IEnumerable<Message> GetNotificationByHistoryId(int HistoryId)
