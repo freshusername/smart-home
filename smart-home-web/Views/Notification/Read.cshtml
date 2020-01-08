@@ -29,7 +29,7 @@
                         <div class="alert alert-info">
                             <p>@messages.Comment</p>
                             <p>@messages.Date</p>
-                            <a asp-controller="Notification" asp-action="Index">
+                            <a href="@Url.Action("ChangeStatus", "Notification", new { id = messages.Id, page = "Read"}, null)">
                                 <div class="right">
                                     <span class="glyphicon glyphicon-remove-circle" style="font-size:20px" title="Mark as unread"></span>
                                 </div>

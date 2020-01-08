@@ -22,21 +22,21 @@
                 </a>
             </div>
             <div class="col-lg-6">
-                @foreach (var messages in Model.Notifications)
-                {
-                    if (messages.IsRead.ToString() == "True" && messages.UserName == User.Identity.Name)
+                    @foreach (var messages in Model.Notifications)
                     {
-                        <div class="alert alert-info">
-                            <p>@messages.Comment</p>
-                            <p>@messages.Date</p>
-                            <a asp-controller="Notification" asp-action="Index">
-                                <div class="right">
-                                    <span class="glyphicon glyphicon-ok-circle" style="font-size:20px" title="Mark as read"></span>
-                                </div>
-                            </a>
-                        </div>
+                        if (messages.IsRead.ToString() == "True" && messages.UserName == User.Identity.Name)
+                        {
+                    <div class="alert alert-info">
+                        <p>@messages.Comment</p>
+                        <p>@messages.Date</p>
+                        <a href="@Url.Action("ChangeStatus", "Notification", new { id = messages.Id, page = "Index"}, null)">
+                            <div class="right">
+                                <span class="glyphicon glyphicon-ok-circle" style="font-size:20px" title="Mark as read"></span>
+                            </div>
+                        </a>
+                    </div>
+                        }
                     }
-                }
             </div>
         </div>
     </div>

@@ -43,6 +43,13 @@ namespace smart_home_web.Controllers
 			});
 		}
 
+		public async Task<IActionResult> ChangeStatus(int id, string page = "Index")
+		{
+			await _notificationManager.ChangeStatusAsync(id);
+
+			return RedirectToAction(page);
+		}
+
 		public async Task<IActionResult> All()
 		{
 			var notifications = await _notificationManager.GetAllNotificationsAsync();

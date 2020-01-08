@@ -36,5 +36,12 @@ namespace Infrastructure.Business.Managers
 
 			return result;
 		}
+
+		public async Task ChangeStatusAsync(int id)
+		{
+			var notification = await unitOfWork.NotificationRepository.GetById(id);
+			notification.IsRead = notification.IsRead ? false : true;
+			unitOfWork.Save();
+		}
 	}
 }
