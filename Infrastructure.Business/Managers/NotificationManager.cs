@@ -20,6 +20,9 @@ namespace Infrastructure.Business.Managers
 
 		public async Task<NotificationDto> GetNotificationByIdAsync(int id)
 		{
+			//if (!this.unitOfWork.UserManager.GetUserId()
+			//	return this.Redirect("/");
+
 			var notification = await unitOfWork.NotificationRepository.GetById(id);
 			var result = mapper.Map<Message, NotificationDto>(notification);
 

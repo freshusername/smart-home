@@ -1,4 +1,5 @@
 ﻿@using Domain.Core.Model.Enums
+@using System.Collections.Generic
 @model smart_home_web.Models.GraphViewModel
 
 <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
@@ -8,7 +9,37 @@
         <div class="col-lg-12">
             @if (Model.IsCorrect)
             {
-                <div id="container" style="min-width:310px; height:400px; margin:0 auto"></div>
+                @if (Model.MeasurementType == MeasurementType.String)
+                {
+                    string title = "Table of measurements (for " + (Model.Days == 99999 ? " all time" : @Model.Days == 1 ? Model.Days.ToString() + " day" : Model.Days.ToString() + " days") + ")" + " of a sensor with name : " + Model.SensorName;
+                    string subtitle = "Sensor type: " + Model.SensorType;
+
+                    <label class="graph-title" style="font-size:18px;">@title</label>
+                    <label class="graph-title" style="font-size:12px;">@subtitle</label>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Value</th>
+                                <th scope="col">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.StringValues.Count; i++)
+                            {
+                                <tr>
+                                    <th scope="row">@Model.StringValues[i]</th>
+                                    <td scope="col">@((new DateTime(1970, 1, 1)).AddMilliseconds(Model.longDates[i]))</td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div id="container" style="min-width:310px; height:400px; margin:0 auto"></div>
+                }
             }
             else
             {
@@ -68,17 +99,16 @@
                 x: -20
             },
             xAxis: {
-                categories: JSON.parse('@Html.Raw(Json.Serialize(@Model.StringDates))')
+                categories: JSON.parse('@Html.Raw(Json.Serialize(@Model.longDates))'),
+                labels: {
+                    formatter: function () {
+                        return new Date(this.value).toUTCString();
+                    }
+                }
             },
             yAxis: {
                 title: {
-                    text: JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorType))')
-                        @if (Model.MeasurementType != MeasurementType.String)
-                         {
-                            <text>
-                           + ' ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.MeasurementName))')
-                            </text>
-                         }
+                    text: JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorType))') + ' ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.MeasurementName))')
                 },
             },
             tooltip: {
@@ -89,7 +119,8 @@
                         case MeasurementType.Double:
 
                             <text>
-                            var result = '<b>' + this.x + '</b><br>' + this.series.name + ': <b>' + this.y + ' '
+                            var date = new Date(this.x).toUTCString();
+                            var result = '<b>' + date + '</b><br>' + this.series.name + ': <b>' + this.y + ' '
                             + JSON.parse('@Html.Raw(Json.Serialize(@Model.MeasurementName))') + '</b><br>'
                             return result;
                             </text>
@@ -98,17 +129,9 @@
                         case MeasurementType.Bool:
 
                             <text>
+                            var date = new Date(this.x).toUTCString();
                             var boolValues = JSON.parse('@Html.Raw(Json.Serialize(@Model.BoolValues))')
-                            var result = '<b>' + this.x + '</b><br>' + this.series.name + ': <b>' + boolValues[this.point.index] + '</b><br>'
-                            return result;
-                            </text>
-                            break;
-
-                        case MeasurementType.String:
-
-                            <text>
-                            var stringValues = JSON.parse('@Html.Raw(Json.Serialize(@Model.StringValues))')
-                            var result = '<b>' + this.x + '</b><br>' + this.series.name + ': <b>' + stringValues[this.point.index] + '</b><br>'
+                            var result = '<b>' + date + '</b><br>' + this.series.name + ': <b>' + boolValues[this.point.index] + '</b><br>'
                             return result;
                             </text>
                             break;
@@ -129,7 +152,6 @@
                 @switch (Model.MeasurementType)
                 {
                     case MeasurementType.Int:
-                    case MeasurementType.String:
                     case MeasurementType.Bool:
                         <text>
                         data: JSON.parse('@Html.Raw(Json.Serialize(@Model.IntValues))')
@@ -149,7 +171,3 @@
         });
     </script>
 }
-
-
-
-

@@ -13,9 +13,9 @@ namespace smart_home_web.Controllers
     [Route("api/[controller]")]
     public class ValueController : ControllerBase
     {
-        private readonly IHistoryTestManager _historyTestManager;
+        private readonly IHistoryManager _historyTestManager;
         private readonly ISensorManager _sensorManager;
-        public ValueController(IHistoryTestManager historyTestManager ,ISensorManager sensorManager)
+        public ValueController(IHistoryManager historyTestManager ,ISensorManager sensorManager)
         {
             _historyTestManager = historyTestManager;
             _sensorManager = sensorManager;

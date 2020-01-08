@@ -9,7 +9,7 @@ using Infrastructure.Business.Infrastructure;
 
 namespace Infrastructure.Business.Managers
 {
-	public interface IHistoryTestManager
+	public interface IHistoryManager
 	{
 		Task<HistoryDto> GetHistoryByIdAsync(int id);
 

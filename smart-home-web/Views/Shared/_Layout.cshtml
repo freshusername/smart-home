@@ -8,6 +8,7 @@
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
@@ -26,7 +27,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">smart_home_web</a>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-right"><img class="img-rounded" src="~/images/smart_home.png" width="35" height="35" style="margin-right: 30px;" /></a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
@@ -36,16 +37,19 @@
                     <li><a asp-area="" asp-controller="History" asp-action="InvalidSensors">Invalid Sensors</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                 </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a asp-area="" asp-controller="Notification" asp-action="Index">
-                            <div class="notification-icon">
-                                <span class="glyphicon glyphicon-bell " style="font-size:20px"></span>
-                                <span class="badge" id="ntCnt"></span>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
+                @if (User.Identity.IsAuthenticated == true)
+                {
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a asp-area="" asp-controller="Notification" asp-action="Index">
+                                <div class="notification-icon">
+                                    <span class="glyphicon glyphicon-bell " style="font-size:20px"></span>
+                                    <span class="badge" id="ntCnt"></span>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                }
                 <partial name="_LoginPartial" />
             </div>
         </div>

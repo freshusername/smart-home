@@ -10,7 +10,8 @@
     ViewData["Title"] = "Detail";
 }
 
-<h2><b>@Model.Histories.First().SensorName</b> Detail</h2>
+<h2><b>@Model.Histories.First().SensorName</b> Detail <a class="btn btn-success text-center" asp-action="Graph" asp-route-sensorId="@Model.Histories.First().SensorId" asp-route-days="99999"><i class="fa fa-bar-chart"></i></a></h2>
+
 <body>
     <div class="row text-center">
         <table class="table table-hover table-responsive">
@@ -33,7 +34,7 @@
                         @{
                             var date = (FilterDTO)Model.FilterDTO.Clone();
                             date.sortState = (date.sortState == SortState.DateAsc) ? SortState.DateDesc : SortState.DateAsc;
-                            date.sensorId = Model.Histories.First().Id;
+                            date.sensorId = Model.Histories.FirstOrDefault().SensorId;
                         }
                         <a href="@Url.Action("Detail", "History",
                                         date,
@@ -43,9 +44,6 @@
                     </th>
 
                     <th scope="col" class=" text-center">
-                        @*<a class="menu-toggle text-center" asp-action="Detail" asp-route-sortState="@ViewBag.StringSort">
-                            Value <i class="glyphicon glyphicon-sort"></i>
-                        </a>*@
                         Value
                     </th>
 
@@ -76,8 +74,5 @@
             </tbody>
         </table>
         <br />
-        <a class="btn btn-success text-center" asp-action="Graph" asp-route-sensorId="@Model.Histories.First().SensorId" asp-route-days="99999">Graph</a>
-        <a class="btn btn-primary" asp-action="BackToList" asp-route-sensorId="@Model.Histories.First().SensorId"><em class="glyphicon glyphicon-arrow-left"></em> Back to list</a>
-        @*<partial name="_PaginationView" />*@
     </div>
 </body>
