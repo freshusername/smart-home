@@ -7,7 +7,7 @@
 }
 
 <h2>Sensors List</h2>
-@if (!User.Identity.IsAuthenticated)
+@if (User.Identity.IsAuthenticated)
 {
     <div class="button-center">
         <a asp-action="Create" class="btn btn-success">Add new sensor</a>
