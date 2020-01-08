@@ -1,0 +1,65 @@
+﻿@model IEnumerable<smart_home_web.Models.SensorType.SensorTypeViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>List of sensor types</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Comment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MeasurementType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MeasurementName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IconPath)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr height="64">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Comment)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MeasurementType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MeasurementName)
+                </td>
+                <td>
+                    @if (item.IconPath != null)
+                    {
+                        <img src="@item.IconPath" width="64" height="64" />
+                    }
+                    else
+                    {
+                        <p>No image was added</p>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

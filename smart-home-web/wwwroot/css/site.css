@@ -28,10 +28,43 @@ body {
     margin: 15px;
 }
 
+
+#invalidSensorTable td{
+    padding:0px;
+}
+
+#invalidSensorTable a{
+    padding:8px;
+}
+
+#invalidSensorTable tbody a:hover {
+    text-decoration: none;
+}
+#invalidSensorTable tbody tr:hover {
+    background-color: #d9edf7;
+}
+
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
     /* Hide captions */
     .carousel-caption {
         display: none;
     }
+}
+
+.graph-label {
+    color: #333333;
+    font-size: 32px;
+    font-weight: normal;
+    line-height: 40px;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.graph-title {
+    font-family: "Lucida Grande", "Lucida Sans Unicode", Arial, Helvetica, sans-serif;
+    font-weight: normal;
+    text-align: center;
+    margin-top:10px;
+    display: block;
 }
