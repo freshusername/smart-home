@@ -29,7 +29,7 @@
                             {
                                 <tr>
                                     <th scope="row">@Model.StringValues[i]</th>
-                                    <td scope="col">@((new DateTime(1970, 1, 1)).AddMilliseconds(Model.longDates[i]))</td>
+                                    <td scope="col">@(((new DateTime(1970, 1, 1)).AddMilliseconds(Model.longDates[i])).ToLocalTime())</td>
 
                                 </tr>
                             }
@@ -102,7 +102,7 @@
                 categories: JSON.parse('@Html.Raw(Json.Serialize(@Model.longDates))'),
                 labels: {
                     formatter: function () {
-                        return new Date(this.value).toUTCString();
+                        return new Date(this.value).toLocaleString();
                     }
                 }
             },
@@ -119,7 +119,7 @@
                         case MeasurementType.Double:
 
                             <text>
-                            var date = new Date(this.x).toUTCString();
+                            var date = new Date(this.x).toLocaleString();
                             var result = '<b>' + date + '</b><br>' + this.series.name + ': <b>' + this.y + ' '
                             + JSON.parse('@Html.Raw(Json.Serialize(@Model.MeasurementName))') + '</b><br>'
                             return result;
@@ -129,7 +129,7 @@
                         case MeasurementType.Bool:
 
                             <text>
-                            var date = new Date(this.x).toUTCString();
+                            var date = new Date(this.x).toLocaleString();
                             var boolValues = JSON.parse('@Html.Raw(Json.Serialize(@Model.BoolValues))')
                             var result = '<b>' + date + '</b><br>' + this.series.name + ': <b>' + boolValues[this.point.index] + '</b><br>'
                             return result;

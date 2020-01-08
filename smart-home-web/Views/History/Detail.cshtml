@@ -10,6 +10,8 @@
     ViewData["Title"] = "Detail";
 }
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 <h2><b>@Model.Histories.First().SensorName</b> Detail <a class="btn btn-success text-center" asp-action="Graph" asp-route-sensorId="@Model.Histories.First().SensorId" asp-route-days="99999"><i class="fa fa-bar-chart"></i></a></h2>
 
 <body>
