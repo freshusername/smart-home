@@ -90,11 +90,7 @@
             </tbody>
         </table>
         <br />
-        @{ 
-            ViewData["Action"] = "InvalidSensors";
-            ViewData["Controller"] = "History";
-        }
-        <partial name="~/Views/Shared/_PaginationView.cshtml" view-data="ViewData" for="FilterDTO" />
+        @await  Component.InvokeAsync("Pagination",new {action="InvalidSensors", controller="History", filterDTO=Model.FilterDTO })
     </div>
 
 </body>

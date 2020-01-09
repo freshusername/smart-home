@@ -1,0 +1,39 @@
+﻿@using Infrastructure.Business.DTOs;
+@model smart_home_web.Models.PaginationViewModel;
+
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        @if (Model.filterDTO != null)
+        {
+
+            <li class="page-item @( Model.filterDTO.HasPrevious ? "active" : "disabled" ) ">
+                @{
+                    var prev = (FilterDTO)Model.filterDTO.Clone();
+                    prev.CurrentPage = Model.filterDTO.CurrentPage - 1;
+                }
+
+                @Html.ActionLink("Previous", Model.action, Model.controller, prev)
+            </li>
+
+            @for (var i = 1; i <= Model.filterDTO.PagesCount; i++)
+            {
+                var page_i = (FilterDTO)Model.filterDTO.Clone();
+                page_i.CurrentPage = i;
+
+                <li class="page-item @( i == Model.filterDTO.CurrentPage ? "active" : "")">
+                    @Html.ActionLink(i.ToString(), Model.action, Model.controller, page_i)
+                </li>
+            }
+
+            <li class="page-item @( Model.filterDTO.HasNext ? "active" : "disabled" )">
+                @{
+                    var next = (FilterDTO)Model.filterDTO.Clone();
+                    next.CurrentPage = Model.filterDTO.CurrentPage + 1;
+                }
+
+                @Html.ActionLink("Next", Model.action, Model.controller, next)
+            </li>
+        }
+    </ul>
+</nav>
