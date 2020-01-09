@@ -11,6 +11,5 @@ namespace Infrastructure.Business.Managers
     public interface IInvalidSensorManager
     {
         Task<IEnumerable<HistoryDto>> getInvalidSensors(SortState sortState);
-        Task<Sensor> GetSensorById(int sensorId);
     }
 }

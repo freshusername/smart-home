@@ -15,7 +15,7 @@ namespace Infrastructure.Business.Managers
 {
     public class IconManager : BaseManager, IIconManager
     {
-        private readonly string _path = @"\images\SensorIcons\";
+        private readonly string _path = @"\images\Icons\";
         private readonly IHostingEnvironment _env;
 
         public string UploadPath

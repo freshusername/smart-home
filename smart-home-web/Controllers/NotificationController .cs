@@ -32,6 +32,34 @@ namespace smart_home_web.Controllers
 				Notifications = models
 			});
 		}
+		public async Task<IActionResult> Read()
+		{
+			var notifications = await _notificationManager.GetAllNotificationsAsync();
+			var models = _mapper.Map<IEnumerable<NotificationDto>, IEnumerable<NotificationViewModel>>(notifications);
+
+			return View(new AllNotificationsViewModel
+			{
+				Notifications = models
+			});
+		}
+
+		public async Task<IActionResult> ChangeStatus(int id, string page = "Index")
+		{
+			await _notificationManager.ChangeStatusAsync(id);
+
+			return RedirectToAction(page);
+		}
+
+		public async Task<IActionResult> All()
+		{
+			var notifications = await _notificationManager.GetAllNotificationsAsync();
+			var models = _mapper.Map<IEnumerable<NotificationDto>, IEnumerable<NotificationViewModel>>(notifications);
+
+			return View(new AllNotificationsViewModel
+			{
+				Notifications = models
+			});
+		}
 
 		public async Task<IActionResult> Detail(int id)
 		{

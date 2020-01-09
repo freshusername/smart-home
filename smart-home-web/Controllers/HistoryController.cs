@@ -19,11 +19,11 @@ namespace smart_home_web.Controllers
       
     public class HistoryController : Controller
 	{
-		private readonly IHistoryTestManager _historyTestManager;
+		private readonly IHistoryManager _historyTestManager;
 		private readonly IMapper _mapper;
         private readonly IInvalidSensorManager _invalidSensorManager;
 
-		public HistoryController(IHistoryTestManager historyTestManager, IMapper mapper,IInvalidSensorManager invalidSensorManager)
+		public HistoryController(IHistoryManager historyTestManager, IMapper mapper,IInvalidSensorManager invalidSensorManager)
 		{
 			_historyTestManager = historyTestManager;
 			_mapper = mapper;
@@ -85,19 +85,6 @@ namespace smart_home_web.Controllers
             });
         }
 
-        public async Task<IActionResult> BackToList(int sensorId)
-        {
-            Sensor sensor = await _invalidSensorManager.GetSensorById(sensorId);
-            if (sensor.IsActivated == true)
-            {
-                return RedirectToAction("Index");
-            }
-            else
-            {
-                return RedirectToAction("InvalidSensors");
-            }
-        }
-
         #endregion
 
         [HttpGet]
@@ -108,11 +95,11 @@ namespace smart_home_web.Controllers
 			if (result.IsCorrect)
 			{
 				result.Days = days;
-				string specifier = "G";
-				result.StringDates = new List<string>();
+				result.longDates = new List<long>();
 				foreach (DateTimeOffset date in graph.Dates)
 				{
-					result.StringDates.Add(date.ToString(specifier));
+					DateTimeOffset unixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+					result.longDates.Add((long)date.Subtract(unixEpoch).TotalMilliseconds);
 				}
 			}
 			return View(result);
