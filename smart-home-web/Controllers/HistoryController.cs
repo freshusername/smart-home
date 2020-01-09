@@ -14,7 +14,6 @@ using smart_home_web.Models;
 using smart_home_web.Models.History;
 using Domain.Core.Model;
 using Infrastructure.Business.Services;
-using Domain.Core.Model.Pagination;
 
 namespace smart_home_web.Controllers
 {
