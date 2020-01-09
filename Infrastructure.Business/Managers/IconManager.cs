@@ -20,7 +20,7 @@ namespace Infrastructure.Business.Managers
 
         public string UploadPath
         {
-            get { return _env.WebRootPath + _path; }
+            get { return Path.Combine(_env.WebRootPath, _path); }
         }
 
         public IconManager(IUnitOfWork unitOfWork, IMapper mapper, IHostingEnvironment env) : base(unitOfWork, mapper)
