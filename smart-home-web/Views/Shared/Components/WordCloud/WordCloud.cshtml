@@ -63,7 +63,7 @@
     Highcharts.chart('wordcloud_container', {
 
         title: {
-            text: 'Word cloud for ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))')
+            text: 'Word cloud for ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))') + ' for dashboard' + JSON.parse('@Html.Raw(Json.Serialize(@Model.DashboardName))')
         },
         tooltip: {
             useHTML: true,
