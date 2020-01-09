@@ -68,24 +68,39 @@ namespace Infrastructure.Business.Managers
             {
                 if (history.Date > date)
                 {
-                    graph.Dates.Add(history.Date);
                     switch (graph.MeasurementType)
                     {
                         case MeasurementType.Int:
-                            graph.IntValues.Add(history.IntValue.Value);
+                            if (history.IntValue.HasValue)
+                            {
+                                graph.Dates.Add(history.Date);
+                                graph.IntValues.Add(history.IntValue.Value);
+                            }
                             break;
 
                         case MeasurementType.Double:
-                            graph.DoubleValues.Add(history.DoubleValue.Value);
+                            if (history.DoubleValue.HasValue)
+                            {
+                                graph.Dates.Add(history.Date);
+                                graph.DoubleValues.Add(history.DoubleValue.Value);
+                            }
                             break;
 
                         case MeasurementType.Bool:
-                            graph.BoolValues.Add(history.BoolValue.Value);
-                            graph.IntValues.Add(history.BoolValue.Value ? 1 : 0);
+                            if (history.BoolValue.HasValue)
+                            {
+                                graph.Dates.Add(history.Date);
+                                graph.BoolValues.Add(history.BoolValue.Value);
+                                graph.IntValues.Add(history.BoolValue.Value ? 1 : 0);
+                            }
                             break;
 
                         case MeasurementType.String:
-                            graph.StringValues.Add(history.StringValue);
+                            if (!String.IsNullOrEmpty(history.StringValue))
+                            {
+                                graph.Dates.Add(history.Date);
+                                graph.StringValues.Add(history.StringValue);
+                            }
                             break;
                         default:
                             break;
