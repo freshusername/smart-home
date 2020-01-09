@@ -13,35 +13,33 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using smart_home_web.Models;
 using smart_home_web.Models.History;
 using Domain.Core.Model;
+using Infrastructure.Business.Services;
+using Domain.Core.Model.Pagination;
 
 namespace smart_home_web.Controllers
 {
       
     public class HistoryController : Controller
 	{
-		private readonly IHistoryManager _historyTestManager;
+		private readonly IHistoryManager _historyManager;
 		private readonly IMapper _mapper;
         private readonly IInvalidSensorManager _invalidSensorManager;
 
-		public HistoryController(IHistoryManager historyTestManager, IMapper mapper,IInvalidSensorManager invalidSensorManager)
+		public HistoryController(IHistoryManager historyManager, IMapper mapper,IInvalidSensorManager invalidSensorManager)
 		{
-			_historyTestManager = historyTestManager;
+			_historyManager = historyManager;
 			_mapper = mapper;
             _invalidSensorManager = invalidSensorManager;
 		}
 
-        public async Task<IActionResult> Index(FilterDTO FilterDTO)
+		public async Task<IActionResult> Index(FilterDTO FilterDTO)
 		{
-            if (FilterDTO.sortState == SortState.None) FilterDTO.sortState = SortState.HistoryAsc;
+            var histories = await _historyManager.GetHistoriesAsync(FilterDTO.PageSize, FilterDTO.CurrentPage, FilterDTO.sortState);
+			
+            FilterDTO.Amount = await _historyManager.GetAmountAsync();
 
-            var histories = await _historyTestManager.GetAllHistoriesAsync();
-
-            histories = SortValue.SortHistories(FilterDTO.sortState, histories);
-
-            FilterDTO.Amount = histories.Count();
-
-            histories = histories.Skip((FilterDTO.CurrentPage - 1) * FilterDTO.PageSize).Take(FilterDTO.PageSize).ToList();
-            IEnumerable<HistoryViewModel> historiesViewModel = _mapper.Map<IEnumerable<HistoryDto>, IEnumerable<HistoryViewModel>>(histories);
+			//TODO: Replace mapper to service
+            var historiesViewModel = _mapper.Map<IEnumerable<HistoryDto>, IEnumerable<HistoryViewModel>>(histories);
             return View(new AllHistoriesViewModel
             {
                 Histories = historiesViewModel,
@@ -51,18 +49,14 @@ namespace smart_home_web.Controllers
 
 		public async Task<IActionResult> Detail(FilterDTO FilterDTO)
 		{
-            if (FilterDTO.sortState == SortState.None) FilterDTO.sortState = SortState.HistoryAsc;
+			var histories = await _historyManager.GetHistoriesAsync(FilterDTO.PageSize, FilterDTO.CurrentPage, FilterDTO.sortState, FilterDTO.sensorId);
+			
+			var result = _mapper.Map<IEnumerable<HistoryDto>, IEnumerable<HistoryViewModel>>(histories);
 
-            var histories = await _historyTestManager.GetHistoriesBySensorIdAsync(FilterDTO.sensorId);
-
-            histories = SortValue.SortHistories(FilterDTO.sortState, histories);
-                  
-            var result = _mapper.Map<IEnumerable<HistoryDto>, IEnumerable<HistoryViewModel>>(histories);
-
-            return View(new AllHistoriesViewModel
+			return View(new AllHistoriesViewModel
 			{
 				Histories = result,
-                FilterDTO = FilterDTO
+				FilterDTO = FilterDTO
 			});
 		}
 
@@ -88,9 +82,9 @@ namespace smart_home_web.Controllers
         #endregion
 
         [HttpGet]
-		public IActionResult Graph(int sensorId, int days = 30)
+		public async Task<IActionResult> Graph(int sensorId, int days = 30)
 		{
-			GraphDTO graph = _historyTestManager.GetGraphBySensorId(sensorId, days);
+			GraphDTO graph = await _historyManager.GetGraphBySensorId(sensorId, days);
 			GraphViewModel result = _mapper.Map<GraphDTO, GraphViewModel>(graph);
 			if (result.IsCorrect)
 			{
