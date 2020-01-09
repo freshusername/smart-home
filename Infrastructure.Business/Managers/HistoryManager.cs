@@ -38,17 +38,27 @@ namespace Infrastructure.Business.Managers
             return result;
         }
 
-        public async Task<IEnumerable<HistoryDto>> GetHistoriesBySensorIdAsync(int sensorId)
-        {
-            var histories = unitOfWork.HistoryRepo.GetHistoriesBySensorId(sensorId);
-            var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories);
+		public async Task<IEnumerable<HistoryDto>> GetHistoriesAsync(int count, int page, SortState sortState, int sensorId = 0)
+		{
+			var histories = await unitOfWork.HistoryRepo.GetByPage(count, page, sortState, sensorId);
+			
+			var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories);
 
-            return result;
-        }
+			return result;
+		}
 
-        public GraphDTO GetGraphBySensorId(int SensorId, int days)
+
+		public async Task<IEnumerable<HistoryDto>> GetHistoriesBySensorIdAsync(int sensorId)
+		{
+			var histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorId(sensorId);
+			var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories);
+
+			return result;
+		}
+
+		public async Task<GraphDTO> GetGraphBySensorId(int SensorId, int days)
         {
-            IEnumerable<History> histories = unitOfWork.HistoryRepo.GetHistoriesBySensorId(SensorId);
+            IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorId(SensorId);
             if (!histories.Any())
                 return new GraphDTO { IsCorrect = false };
 
@@ -136,6 +146,11 @@ namespace Infrastructure.Business.Managers
             return new OperationDetails(true, "Operation succeed", "");
         
         }
+
+		public async Task<int> GetAmountAsync()
+		{
+			return await unitOfWork.HistoryRepo.GetAmountAsync();
+		}
     }
 }
 
