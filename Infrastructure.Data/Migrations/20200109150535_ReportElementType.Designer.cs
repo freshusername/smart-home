@@ -3,14 +3,16 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationsDbContext))]
-    partial class ApplicationsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200109150535_ReportElementType")]
+    partial class ReportElementType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -322,7 +324,7 @@ namespace Infrastructure.Data.Migrations
             modelBuilder.Entity("Domain.Core.Model.Dashboard", b =>
                 {
                     b.HasOne("Domain.Core.Model.AppUser", "AppUser")
-                        .WithMany("Dashboards")
+                        .WithMany()
                         .HasForeignKey("AppUserId");
                 });
 

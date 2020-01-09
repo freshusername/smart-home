@@ -15,6 +15,8 @@ namespace Infrastructure.Data
         public DbSet<History> Histories { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<SensorType> SensorTypes { get; set; }
+        public DbSet<Dashboard> Dashboards { get; set; }
+        public DbSet<ReportElement> ReportElements { get; set; }
 
         public ApplicationsDbContext(DbContextOptions<ApplicationsDbContext> options) : base(options)
         {

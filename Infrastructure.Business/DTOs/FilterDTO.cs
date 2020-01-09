@@ -3,13 +3,13 @@ using Domain.Core.Model.Enums;
 
 namespace Infrastructure.Business.DTOs
 {
-    public class FilterDTO:ICloneable
+    public class FilterDTO : ICloneable
     {
 
         public SortState sortState { get; set; } = SortState.None;
         public int CurrentPage { get; set; } = 1;
         public int PageSize { get; set; } = 20;
-        public int Amount { get; set; }
+        public int Amount { get; set; } 
         public int PagesCount => (int)Math.Ceiling(decimal.Divide(Amount, PageSize));
 
         public bool HasPrevious => CurrentPage > 1;

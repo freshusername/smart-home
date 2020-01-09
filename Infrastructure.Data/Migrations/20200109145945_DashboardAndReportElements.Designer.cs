@@ -3,14 +3,16 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationsDbContext))]
-    partial class ApplicationsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200109145945_DashboardAndReportElements")]
+    partial class DashboardAndReportElements
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -151,13 +153,15 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<int>("SensorId");
 
-                    b.Property<int>("Type");
+                    b.Property<int?>("TypeId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DashboardId");
 
                     b.HasIndex("SensorId");
+
+                    b.HasIndex("TypeId");
 
                     b.ToTable("ReportElements");
                 });
@@ -322,7 +326,7 @@ namespace Infrastructure.Data.Migrations
             modelBuilder.Entity("Domain.Core.Model.Dashboard", b =>
                 {
                     b.HasOne("Domain.Core.Model.AppUser", "AppUser")
-                        .WithMany("Dashboards")
+                        .WithMany()
                         .HasForeignKey("AppUserId");
                 });
 
@@ -357,6 +361,10 @@ namespace Infrastructure.Data.Migrations
                         .WithMany()
                         .HasForeignKey("SensorId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Domain.Core.Model.ReportElement", "Type")
+                        .WithMany()
+                        .HasForeignKey("TypeId");
                 });
 
             modelBuilder.Entity("Domain.Core.Model.Sensor", b =>
