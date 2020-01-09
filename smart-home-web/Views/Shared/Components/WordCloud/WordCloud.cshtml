@@ -1,0 +1,89 @@
+﻿@model GraphViewModel;
+@using Domain.Core.Model.Enums
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/wordcloud.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+<link rel="stylesheet" href="~/css/WordCloud.css">
+
+
+<figure class="highcharts-figure">
+    <div id="wordcloud_container"></div>
+</figure>
+
+
+<script>
+            @switch (Model.MeasurementType)
+            {
+                    case MeasurementType.Int:
+                        <text>
+                        values = JSON.parse('@Html.Raw(Json.Serialize(@Model.IntValues))')
+                        </text>
+                        break;
+
+                    case MeasurementType.Double:
+                        <text>
+                        values = JSON.parse('@Html.Raw(Json.Serialize(@Model.DoubleValues))')
+                        </text>
+                        break;
+
+                    case MeasurementType.Bool:
+                        <text>
+                        values = JSON.parse('@Html.Raw(Json.Serialize(@Model.BoolValues))')
+                        </text>
+                        break;
+
+                    case MeasurementType.String:
+                        <text>
+                        values = JSON.parse('@Html.Raw(Json.Serialize(@Model.StringValues))')
+                        </text>
+                        break;
+
+                    default:
+                        break;
+             }
+            data = Highcharts.reduce(values, function (arr, word) {
+            var obj = Highcharts.find(arr, function (obj) {
+                return obj.name === word;
+            });
+            if (obj) {
+                obj.weight += 1;
+            } else {
+                obj = {
+                    name: word,
+                    weight: 1
+                };
+                arr.push(obj);
+            }
+            return arr;
+        }, []);
+
+    Highcharts.chart('wordcloud_container', {
+
+        title: {
+            text: 'Word cloud for ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))')
+        },
+        tooltip: {
+            useHTML: true,
+            @if (Model.MeasurementType == MeasurementType.Int || Model.MeasurementType == MeasurementType.Double)
+            {
+                <text>
+                    headerFormat: '<span style="font-size: 12px">{point.key} </span>' + JSON.parse('@Html.Raw(Json.Serialize(@Model.MeasurementName))') + '<br />',
+                </text>
+            }
+            else
+            {
+                <text>
+                    headerFormat: '<span style="font-size: 12px">{point.key} </span>' + '<br />',
+                </text>
+            }
+            },
+        series: [{
+            type: 'wordcloud',
+            data: data,
+            name: 'Periodicity',
+        }]
+    });
+</script>
