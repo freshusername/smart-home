@@ -71,7 +71,7 @@ namespace smart_home_web.Controllers
             histories = histories.Skip((filterDTO.CurrentPage - 1) * filterDTO.PageSize).Take(filterDTO.PageSize).ToList();
 
             IEnumerable<HistoryViewModel> historiesViewModel = _mapper.Map<IEnumerable<HistoryDto>, IEnumerable<HistoryViewModel>>(histories);
-            return View(new InvalidSensorsViewModel
+            return View(new AllHistoriesViewModel
             {
                 Histories=historiesViewModel,
                 FilterDTO =filterDTO
