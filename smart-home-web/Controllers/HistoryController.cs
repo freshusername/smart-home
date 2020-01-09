@@ -38,9 +38,8 @@ namespace smart_home_web.Controllers
 
             histories = SortValue.SortHistories(FilterDTO.sortState, histories);
 
-            var models = _mapper.Map<IEnumerable<HistoryDto>, IEnumerable<HistoryViewModel>>(histories);
-            
             FilterDTO.Amount = histories.Count();
+
             histories = histories.Skip((FilterDTO.CurrentPage - 1) * FilterDTO.PageSize).Take(FilterDTO.PageSize).ToList();
             IEnumerable<HistoryViewModel> historiesViewModel = _mapper.Map<IEnumerable<HistoryDto>, IEnumerable<HistoryViewModel>>(histories);
             return View(new AllHistoriesViewModel
