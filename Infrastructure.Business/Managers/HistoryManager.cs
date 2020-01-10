@@ -39,17 +39,27 @@ namespace Infrastructure.Business.Managers
             return result;
         }
 
-        public async Task<IEnumerable<HistoryDto>> GetHistoriesBySensorIdAsync(int sensorId)
-        {
-            var histories = unitOfWork.HistoryRepo.GetHistoriesBySensorId(sensorId);
-            var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories);
+		public async Task<IEnumerable<HistoryDto>> GetHistoriesAsync(int count, int page, SortState sortState, int sensorId = 0)
+		{
+			var histories = await unitOfWork.HistoryRepo.GetByPage(count, page, sortState, sensorId);
+			
+			var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories);
 
-            return result;
-        }
+			return result;
+		}
 
-        public GraphDTO GetGraphBySensorId(int SensorId, int days)
+
+		public async Task<IEnumerable<HistoryDto>> GetHistoriesBySensorIdAsync(int sensorId)
+		{
+			var histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorId(sensorId);
+			var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories);
+
+			return result;
+		}
+
+		public async Task<GraphDTO> GetGraphBySensorId(int SensorId, int days)
         {
-            IEnumerable<History> histories = unitOfWork.HistoryRepo.GetHistoriesBySensorId(SensorId);
+            IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorId(SensorId);
             if (!histories.Any())
                 return new GraphDTO { IsCorrect = false };
 
@@ -69,24 +79,39 @@ namespace Infrastructure.Business.Managers
             {
                 if (history.Date > date)
                 {
-                    graph.Dates.Add(history.Date);
                     switch (graph.MeasurementType)
                     {
                         case MeasurementType.Int:
-                            graph.IntValues.Add(history.IntValue.Value);
+                            if (history.IntValue.HasValue)
+                            {
+                                graph.Dates.Add(history.Date);
+                                graph.IntValues.Add(history.IntValue.Value);
+                            }
                             break;
 
                         case MeasurementType.Double:
-                            graph.DoubleValues.Add(history.DoubleValue.Value);
+                            if (history.DoubleValue.HasValue)
+                            {
+                                graph.Dates.Add(history.Date);
+                                graph.DoubleValues.Add(history.DoubleValue.Value);
+                            }
                             break;
 
                         case MeasurementType.Bool:
-                            graph.BoolValues.Add(history.BoolValue.Value);
-                            graph.IntValues.Add(history.BoolValue.Value ? 1 : 0);
+                            if (history.BoolValue.HasValue)
+                            {
+                                graph.Dates.Add(history.Date);
+                                graph.BoolValues.Add(history.BoolValue.Value);
+                                graph.IntValues.Add(history.BoolValue.Value ? 1 : 0);
+                            }
                             break;
 
                         case MeasurementType.String:
-                            graph.StringValues.Add(history.StringValue);
+                            if (!String.IsNullOrEmpty(history.StringValue))
+                            {
+                                graph.Dates.Add(history.Date);
+                                graph.StringValues.Add(history.StringValue);
+                            }
                             break;
                         default:
                             break;
@@ -137,6 +162,11 @@ namespace Infrastructure.Business.Managers
             return new OperationDetails(true, "Operation succeed", "");
         
         }
+
+		public async Task<int> GetAmountAsync()
+		{
+			return await unitOfWork.HistoryRepo.GetAmountAsync();
+		}
 
         public async Task<IEnumerable<HistoryDto>> GetInvalidSensors(SortState sortState)
         {

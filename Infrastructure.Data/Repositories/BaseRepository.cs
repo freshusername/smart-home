@@ -29,6 +29,7 @@ namespace Infrastructure.Data.Repositories
         {
             return await dbSet.ToListAsync();
         }
+		
 
         public async virtual Task<T> GetById(int id)
         {
