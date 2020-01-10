@@ -15,12 +15,12 @@ namespace Infrastructure.Business.Managers
 {
     public class IconManager : BaseManager, IIconManager
     {
-        private readonly string _path = @"\images\Icons\";
+        private readonly string _uploadPath = Path.Combine("images", "Icons"); // "\\images\\Icons\\ ";
+        private readonly string _dbPath = @"/images/Icons/";
         private readonly IHostingEnvironment _env;
-
         public string UploadPath
         {
-            get { return Path.Combine(_env.WebRootPath, _path); }
+            get { return Path.Combine(_env.WebRootPath, _uploadPath); }
         }
 
         public IconManager(IUnitOfWork unitOfWork, IMapper mapper, IHostingEnvironment env) : base(unitOfWork, mapper)
@@ -62,7 +62,7 @@ namespace Infrastructure.Business.Managers
 
             var iconDto = new IconDto()
             {
-                Path = _path + newFileName
+                Path = _dbPath + newFileName
             };
 
             Icon icon = mapper.Map<IconDto, Icon>(iconDto);
