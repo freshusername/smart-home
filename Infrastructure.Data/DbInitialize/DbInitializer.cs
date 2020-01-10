@@ -17,7 +17,7 @@ namespace Infrastructure.Data.DbInitialize
         {
             SeedRoles(roleManager);
             SeedUsers(userManager);
-			SeedDashboard(userManager);
+			SeedDashboard(userManager, unitOfWork);
         }
 
         public static void SeedRoles(RoleManager<IdentityRole> roleManager)
@@ -70,7 +70,7 @@ namespace Infrastructure.Data.DbInitialize
             }
         }
 
-		public static void SeedDashboard(UserManager<AppUser> userManager)
+		public static void SeedDashboard(UserManager<AppUser> userManager, UnitOfWork unitOfWork)
 		{
 			var dashboard = new Dashboard
 			{
@@ -91,8 +91,8 @@ namespace Infrastructure.Data.DbInitialize
 				}
 			};
 
-			
+			unitOfWork.DashboardRepo.Insert(dashboard);
+			unitOfWork.Save();
 		}
-
 	}
 }
