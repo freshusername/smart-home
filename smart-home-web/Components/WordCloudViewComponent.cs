@@ -21,9 +21,9 @@ namespace smart_home_web.Components
             _mapper = mapper;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(int reportElementId, int days)
+        public async Task<IViewComponentResult> InvokeAsync(int reportElementId)
         {
-            WordCloudDTO wordCloud = await _reportElementManager.GetWordCloudBySensorId(reportElementId, days);
+            WordCloudDTO wordCloud = await _reportElementManager.GetWordCloudBySensorId(reportElementId);
             WordCloudViewModel result = _mapper.Map<WordCloudDTO, WordCloudViewModel>(wordCloud);
             return View("WordCloud", result);
         }

@@ -18,12 +18,12 @@ namespace Infrastructure.Business.Managers
 
         }
 
-        public async Task<WordCloudDTO> GetWordCloudBySensorId(int ReportElementId, int days)
+        public async Task<WordCloudDTO> GetWordCloudBySensorId(int ReportElementId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
             Dashboard dashboard = await unitOfWork.DashboardRepo.GetById(reportElement.DashboardId);
 
-            DateTime date = DateTime.Now.AddDays(-days);
+            DateTime date = DateTime.Now.AddDays(-reportElement.Days);
 
             IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
 

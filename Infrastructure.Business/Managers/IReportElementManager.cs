@@ -8,6 +8,6 @@ namespace Infrastructure.Business.Managers
 {
     public interface IReportElementManager
     {
-        Task<WordCloudDTO> GetWordCloudBySensorId(int ReportElementId, int days);
+        Task<WordCloudDTO> GetWordCloudBySensorId(int ReportElementId);
     }
 }

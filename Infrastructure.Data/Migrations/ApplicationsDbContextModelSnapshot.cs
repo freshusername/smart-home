@@ -149,9 +149,12 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<int>("DashboardId");
 
+                    b.Property<int>("Days");
+
                     b.Property<int>("SensorId");
 
-                    b.Property<int>("Type");
+                    b.Property<string>("Type")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
@@ -354,7 +357,7 @@ namespace Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Domain.Core.Model.Sensor", "Sensor")
-                        .WithMany()
+                        .WithMany("ReportElements")
                         .HasForeignKey("SensorId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

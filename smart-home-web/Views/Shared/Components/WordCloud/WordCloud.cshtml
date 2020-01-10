@@ -1,19 +1,16 @@
 ﻿@model WordCloudViewModel;
 @using Domain.Core.Model.Enums
+
+<link rel="stylesheet" href="~/css/WordCloud.css">
+
+<figure class="highcharts-figure">
+    <div id=@(Model.Id.ToString())></div>
+</figure>
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/wordcloud.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
-
-<link rel="stylesheet" href="~/css/WordCloud.css">
-
-
-<figure class="highcharts-figure">
-    <div id="wordcloud_container"></div>
-</figure>
-
-
 <script>
             @switch (Model.MeasurementType)
             {
@@ -58,10 +55,9 @@
                 arr.push(obj);
             }
             return arr;
-        }, []);
+            }, []);
 
-    Highcharts.chart('wordcloud_container', {
-
+    Highcharts.chart(JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
         title: {
             text: 'Word cloud for ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))') + ' for ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.DashboardName))')
         },
