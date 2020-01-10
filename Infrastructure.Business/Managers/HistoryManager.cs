@@ -46,6 +46,15 @@ namespace Infrastructure.Business.Managers
             return result;
         }
 
+        public double? GetMinValueAfterDate(int sensorId, DateTimeOffset dateTime)
+        {
+            return unitOfWork.HistoryRepo.GetMinValueAfterDate(sensorId, dateTime);
+        }
+        public double? GetMaxValueAfterDate(int sensorId, DateTimeOffset dateTime)
+        {
+            return unitOfWork.HistoryRepo.GetMaxValueAfterDate(sensorId, dateTime);;
+        }
+
         public GraphDTO GetGraphBySensorId(int SensorId, int days)
         {
             IEnumerable<History> histories = unitOfWork.HistoryRepo.GetHistoriesBySensorId(SensorId);

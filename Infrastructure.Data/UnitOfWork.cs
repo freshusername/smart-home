@@ -20,6 +20,7 @@ namespace Infrastructure.Data
         private IIconRepo _iconRepo;
         private IHistoryRepo _historyRepo;
         private INotificationRepository _notificationRepository;
+        private IReportElementRepo _reportElementRepository;
 
         public UnitOfWork(
             ApplicationsDbContext dbContext,
@@ -67,6 +68,15 @@ namespace Infrastructure.Data
             }
         }
 
+        public IReportElementRepo ReportElementRepo
+        {
+            get
+            {
+                if (_reportElementRepository == null) _reportElementRepository = new ReportElementRepo(context);
+                return _reportElementRepository;
+            }
+        }
+
         public INotificationRepository NotificationRepository
         {
             get
@@ -75,6 +85,7 @@ namespace Infrastructure.Data
                 return _notificationRepository;
             }
         }
+
         public int Save()
         {
             return context.SaveChanges();

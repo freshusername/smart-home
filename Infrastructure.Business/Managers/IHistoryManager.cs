@@ -20,6 +20,10 @@ namespace Infrastructure.Business.Managers
         OperationDetails AddHistory(string value, int sensorId);
         Task<IEnumerable<HistoryDto>> GetHistoriesBySensorIdAsync(int sensorId);
 
+        double? GetMinValueAfterDate(int sensorId, DateTimeOffset dateTime);
+
+        double? GetMaxValueAfterDate(int sensorId, DateTimeOffset dateTime);
+
         GraphDTO GetGraphBySensorId(int SensorId, int days);
 
     }

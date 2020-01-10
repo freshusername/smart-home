@@ -16,6 +16,8 @@ using Infrastructure.Business.DTOs.Icon;
 using System.IO;
 using Infrastructure.Business.DTOs.Notification;
 using smart_home_web.Models.Notification;
+using Infrastructure.Business.DTOs.ReportElements;
+using smart_home_web.Models.ReportElements;
 
 namespace smart_home_web.AutoMapper
 {
@@ -68,6 +70,9 @@ namespace smart_home_web.AutoMapper
             CreateMap<EditSensorTypeViewModel, SensorTypeDto>().ReverseMap();
             CreateMap<SensorType, SensorTypeDto>()
                 .ForMember(dto => dto.IconPath, map => map.MapFrom(st => st.Icon.Path));
+
+            CreateMap<ReportElement, GaugeDto>().ReverseMap();
+            CreateMap<GaugeDto, GaugeViewModel>().ReverseMap();
         }
     }
 }
