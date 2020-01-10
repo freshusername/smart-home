@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Domain.Core.Model;
+using Domain.Interfaces;
 using Infrastructure.Data.DbInitialize;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
@@ -27,7 +28,8 @@ namespace smart_home_web
                 {
                     var userManager = services.GetRequiredService<UserManager<AppUser>>();
                     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                    DbInitializer.SeedData(userManager, roleManager);
+					var unitOfWork = services.GetRequiredService<IUnitOfWork>();
+                    DbInitializer.SeedData(userManager, roleManager, unitOfWork);
                 }
                 catch (Exception ex)
                 {
