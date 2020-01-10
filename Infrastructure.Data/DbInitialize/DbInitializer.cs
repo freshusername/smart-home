@@ -10,11 +10,14 @@ namespace Infrastructure.Data.DbInitialize
     public static class DbInitializer
     {
 
-        public static void SeedData(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
+        public static void SeedData(
+			UserManager<AppUser> userManager, 
+			RoleManager<IdentityRole> roleManager,
+			UnitOfWork unitOfWork)
         {
             SeedRoles(roleManager);
             SeedUsers(userManager);
-
+			SeedDashboard(userManager);
         }
 
         public static void SeedRoles(RoleManager<IdentityRole> roleManager)
@@ -67,5 +70,29 @@ namespace Infrastructure.Data.DbInitialize
             }
         }
 
-    }
+		public static void SeedDashboard(UserManager<AppUser> userManager)
+		{
+			var dashboard = new Dashboard
+			{
+				Name = "Test1",
+				AppUserId = userManager.FindByNameAsync("user@user.com").Result.Id,
+				ReportElements = new List<ReportElement>
+				{
+					new ReportElement
+					{
+						SensorId = 4,
+						Type = Domain.Core.Model.Enums.ReportElementType.Clock
+					},
+					new ReportElement
+					{
+						SensorId = 5,
+						Type = Domain.Core.Model.Enums.ReportElementType.Clock
+					}
+				}
+			};
+
+			
+		}
+
+	}
 }
