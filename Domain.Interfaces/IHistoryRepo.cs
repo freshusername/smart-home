@@ -11,7 +11,8 @@ namespace Domain.Interfaces
     public interface IHistoryRepo : IGenericRepository<History>
     {
 		Task<IEnumerable<History>> GetHistoriesBySensorId(int SensorId);
-		Task<IEnumerable<History>> GetByPage(int count, int page, SortState sortState, int sensorId = 0);
+        Task<IEnumerable<History>> GetHistoriesBySensorIdAndDate(int SensorId, DateTime date);
+        Task<IEnumerable<History>> GetByPage(int count, int page, SortState sortState, int sensorId = 0);
 		Task<int> GetAmountAsync();
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Infrastructure.Business.DTOs;
+using Infrastructure.Business.DTOs.ReportElements;
 using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Mvc;
 using smart_home_web.Models;
@@ -12,28 +13,18 @@ namespace smart_home_web.Components
 {
     public class WordCloudViewComponent : BaseViewComponent
     {
-        private readonly IHistoryManager _historyManager;
+        private readonly IReportElementManager _reportElementManager;
         private readonly IMapper _mapper;
-        public WordCloudViewComponent(IHistoryManager historyManager, IMapper mapper)
+        public WordCloudViewComponent(IReportElementManager reportElementManager, IMapper mapper)
         {
-            _historyManager = historyManager;
+            _reportElementManager = reportElementManager;
             _mapper = mapper;
         }
 
-        public async Task<IViewComponentResult> Invoke(int dashboardId, int sensorId, int days)
+        public async Task<IViewComponentResult> InvokeAsync(int reportElementId, int days)
         {
-            GraphDTO graph = await _historyManager.GetGraphBySensorId(sensorId, days);
-            GraphViewModel result = _mapper.Map<GraphDTO, GraphViewModel>(graph);
-            if (result.IsCorrect)
-            {
-                result.Days = days;
-                result.longDates = new List<long>();
-                foreach (DateTimeOffset date in graph.Dates)
-                {
-                    DateTimeOffset unixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-                    result.longDates.Add((long)date.Subtract(unixEpoch).TotalMilliseconds);
-                }
-            }
+            WordCloudDTO wordCloud = await _reportElementManager.GetWordCloudBySensorId(reportElementId, days);
+            WordCloudViewModel result = _mapper.Map<WordCloudDTO, WordCloudViewModel>(wordCloud);
             return View("WordCloud", result);
         }
     }

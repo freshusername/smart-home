@@ -1,4 +1,4 @@
-﻿@model GraphViewModel;
+﻿@model WordCloudViewModel;
 @using Domain.Core.Model.Enums
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/wordcloud.js"></script>
@@ -63,7 +63,7 @@
     Highcharts.chart('wordcloud_container', {
 
         title: {
-            text: 'Word cloud for ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))') + ' for dashboard' + JSON.parse('@Html.Raw(Json.Serialize(@Model.DashboardName))')
+            text: 'Word cloud for ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))') + ' for ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.DashboardName))')
         },
         tooltip: {
             useHTML: true,

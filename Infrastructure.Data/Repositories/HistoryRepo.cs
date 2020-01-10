@@ -50,7 +50,18 @@ namespace Infrastructure.Data.Repositories
 			return await histories.ToListAsync();
 		}
 
-		public async Task<IEnumerable<History>> GetByPage(int count, int page, SortState sortState, int sensorId = 0)
+        public async Task<IEnumerable<History>> GetHistoriesBySensorIdAndDate(int SensorId, DateTime date)
+        {
+            var histories = context.Histories.Include(h => h.Sensor)
+                .ThenInclude(st => st.SensorType)
+                .Select(h => h)
+                .Where(h => h.Sensor.Id == SensorId && h.Date > date);
+
+            return await histories.ToListAsync();
+        }
+
+
+        public async Task<IEnumerable<History>> GetByPage(int count, int page, SortState sortState, int sensorId = 0)
 		{
 			IQueryable<History> histories = context.Histories
 				.Include(h => h.Sensor)
