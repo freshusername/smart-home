@@ -20,7 +20,7 @@ namespace smart_home_web.Components
             _mapper = mapper;
         }
 
-        public async Task<IViewComponentResult> Invoke(int dashboardId, int sensorId, int days)
+        public async Task<IViewComponentResult> InvokeAsync(int dashboardId, int sensorId, int days)
         {
             GraphDTO graph = await _historyManager.GetGraphBySensorId(sensorId, days);
             GraphViewModel result = _mapper.Map<GraphDTO, GraphViewModel>(graph);

@@ -1,22 +1,30 @@
 ﻿@using smart_home_web.Models.Dashboard;
+@using smart_home_web.Components;
 @model DashboardViewModel;
+@*<link href="~/lib/gridstack.js/gridstack.css" rel="stylesheet" />
+    <script src="~/lib/gridstack.js/gridstack.js"></script>*@
 
-<head>
-    <link href="~/lib/gridstack.js/gridstack.css" rel="stylesheet" />
-    <script src="~/lib/gridstack.js/gridstack.js"></script>
-</head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@0.6.0/dist/gridstack.min.css" />
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gridstack@0.6.0/dist/gridstack.all.js"></script>
+
+
+<h1>Dash</h1>
 
 <div class="grid-stack">
     @foreach (var report in Model.ReportElements)
-    {<div class="grid-stack-item" data-gs-x="4" data-gs-y="0" data-gs-width="4" data-gs-height="4">
+    {<div class="grid-stack-item shadow-standart" data-gs-x="4" data-gs-y="0" data-gs-width="4" data-gs-height="4">
             <div class="grid-stack-item-content">
-               @report.Id
+                <div>@report.Id</div>
             </div>
         </div>
     }
-
 </div>
 
 <script type="text/javascript">
     $('.grid-stack').gridstack();
 </script>
+
+@*box-shadow: -6px 4px 10px 5px rgba(0, 0, 0, 0.18)*@
+
+ @*style=" border-style: solid; border-width: 1px"*@

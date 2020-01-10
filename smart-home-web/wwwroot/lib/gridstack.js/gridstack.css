@@ -10,9 +10,9 @@
   direction: ltr;
 }
 
-.grid-stack.grid-stack-rtl > .grid-stack-item {
-  direction: rtl;
-}
+    .grid-stack.grid-stack-rtl > .grid-stack-item {
+        direction: rtl;
+    }
 
 .grid-stack .grid-stack-placeholder > .placeholder-content {
   border: 1px dashed lightgray;
@@ -27,11 +27,11 @@
   text-align: center;
 }
 
-.grid-stack > .grid-stack-item {
-  min-width: 8.3333333333%;
-  position: absolute;
-  padding: 0;
-}
+    .grid-stack > .grid-stack-item {
+        min-width: 8.3333333333%;
+        position: absolute;
+        padding: 0;
+    }
 
 .grid-stack > .grid-stack-item > .grid-stack-item-content {
   margin: 0;

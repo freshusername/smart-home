@@ -17,12 +17,12 @@ namespace smart_home_web.Components
 			_mapper = mapper;
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(int dashboardId)
+		public async Task<IViewComponentResult> InvokeAsync()
         {
-			var dashboard = await _dashboardManager.GetById(dashboardId);
+			var dashboard = await _dashboardManager.GetById(1);
 			var result = _mapper.Map<DashboardDto, DashboardViewModel>(dashboard);
 
-			return View("Detail", dashboard);
+			return View("Detail", result);
         }
     }
 }
