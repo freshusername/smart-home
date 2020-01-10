@@ -7,13 +7,16 @@
         @if (Model.filterDTO != null)
         {
 
-            <li class="page-item @( Model.filterDTO.HasPrevious ? "active" : "disabled" ) ">
+            <li class="page-item">
                 @{
                     var prev = (FilterDTO)Model.filterDTO.Clone();
                     prev.CurrentPage = Model.filterDTO.CurrentPage - 1;
                 }
 
-                @Html.ActionLink("Previous", Model.action, Model.controller, prev)
+                <a asp-controller="@Model.controller" asp-action="@Model.action"
+                   asp-route-filterDTO="@prev" class="page-link @( !Model.filterDTO.HasPrevious ? "btn btn-info disabled" : "" )">
+                    &lt;&lt;
+                </a>
             </li>
 
             @for (var i = 1; i <= Model.filterDTO.PagesCount; i++)
@@ -26,13 +29,16 @@
                 </li>
             }
 
-            <li class="page-item @( Model.filterDTO.HasNext ? "active" : "disabled" )">
+            <li class="page-item">
                 @{
                     var next = (FilterDTO)Model.filterDTO.Clone();
                     next.CurrentPage = Model.filterDTO.CurrentPage + 1;
                 }
 
-                @Html.ActionLink("Next", Model.action, Model.controller, next)
+                <a asp-controller="@Model.controller" asp-action="@Model.action"
+                   asp-route-filterDTO="@next" class="page-link @( !Model.filterDTO.HasNext ? "btn btn-info disabled" : "" )">
+                    &gt;&gt;
+                </a>
             </li>
         }
     </ul>

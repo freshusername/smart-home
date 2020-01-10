@@ -15,7 +15,7 @@ namespace Infrastructure.Business.Managers
 		Task<HistoryDto> GetHistoryByIdAsync(int id);
 
 		Task<IEnumerable<HistoryDto>> GetAllHistoriesAsync();
-		Task<IEnumerable<HistoryDto>> GetHistoriesAsync(int count, int page, SortState sortState, int sensorId = 0);
+		Task<IEnumerable<HistoryDto>> GetHistoriesAsync(int count, int page, SortState sortState, bool IsActivated = true, int sensorId = 0);
 
 		SensorDto GetSensorByToken(Guid token);
 
@@ -23,7 +23,7 @@ namespace Infrastructure.Business.Managers
 		Task<IEnumerable<HistoryDto>> GetHistoriesBySensorIdAsync(int sensorId);
 
 		Task<GraphDTO> GetGraphBySensorId(int SensorId, int days);
-		Task<int> GetAmountAsync();
+		Task<int> GetAmountAsync(bool isActivated);
         Task<IEnumerable<HistoryDto>> GetInvalidSensors(SortState sortState);
 
     }

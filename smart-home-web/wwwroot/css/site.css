@@ -37,6 +37,14 @@ body {
     text-decoration: none;
 }
 
+a.disabledclass {
+    /* Make the disabled links grayish*/
+    color: gray;
+    /* And disable the pointer events */
+    pointer-events: none;
+    cursor:not-allowed;
+}
+
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
     /* Hide captions */

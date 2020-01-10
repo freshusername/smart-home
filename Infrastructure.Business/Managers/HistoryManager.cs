@@ -39,9 +39,9 @@ namespace Infrastructure.Business.Managers
             return result;
         }
 
-		public async Task<IEnumerable<HistoryDto>> GetHistoriesAsync(int count, int page, SortState sortState, int sensorId = 0)
+		public async Task<IEnumerable<HistoryDto>> GetHistoriesAsync(int count, int page, SortState sortState, bool isActivated = true, int sensorId = 0)
 		{
-			var histories = await unitOfWork.HistoryRepo.GetByPage(count, page, sortState, sensorId);
+			var histories = await unitOfWork.HistoryRepo.GetByPage(count, page, sortState, isActivated, sensorId);
 			
 			var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories);
 
@@ -163,9 +163,9 @@ namespace Infrastructure.Business.Managers
         
         }
 
-		public async Task<int> GetAmountAsync()
+		public async Task<int> GetAmountAsync(bool isActivated)
 		{
-			return await unitOfWork.HistoryRepo.GetAmountAsync();
+			return await unitOfWork.HistoryRepo.GetAmountAsync(isActivated);
 		}
 
         public async Task<IEnumerable<HistoryDto>> GetInvalidSensors(SortState sortState)
