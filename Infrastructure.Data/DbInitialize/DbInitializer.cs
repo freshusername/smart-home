@@ -1,4 +1,5 @@
 ﻿using Domain.Core.Model;
+using Domain.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace Infrastructure.Data.DbInitialize
         public static void SeedData(
 			UserManager<AppUser> userManager, 
 			RoleManager<IdentityRole> roleManager,
-			UnitOfWork unitOfWork)
+			IUnitOfWork unitOfWork)
         {
             SeedRoles(roleManager);
             SeedUsers(userManager);
@@ -70,7 +71,7 @@ namespace Infrastructure.Data.DbInitialize
             }
         }
 
-		public static void SeedDashboard(UserManager<AppUser> userManager, UnitOfWork unitOfWork)
+		public static void SeedDashboard(UserManager<AppUser> userManager, IUnitOfWork unitOfWork)
 		{
 			var dashboard = new Dashboard
 			{

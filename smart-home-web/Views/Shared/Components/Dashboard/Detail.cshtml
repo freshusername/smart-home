@@ -1,0 +1,22 @@
+﻿@using smart_home_web.Models.Dashboard;
+@model DashboardViewModel;
+
+<head>
+    <link href="~/lib/gridstack.js/gridstack.css" rel="stylesheet" />
+    <script src="~/lib/gridstack.js/gridstack.js"></script>
+</head>
+
+<div class="grid-stack">
+    @foreach (var report in Model.ReportElements)
+    {<div class="grid-stack-item" data-gs-x="4" data-gs-y="0" data-gs-width="4" data-gs-height="4">
+            <div class="grid-stack-item-content">
+               @report.Id
+            </div>
+        </div>
+    }
+
+</div>
+
+<script type="text/javascript">
+    $('.grid-stack').gridstack();
+</script>
