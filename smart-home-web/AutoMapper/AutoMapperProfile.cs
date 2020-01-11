@@ -17,6 +17,7 @@ using System.IO;
 using Infrastructure.Business.DTOs.Notification;
 using smart_home_web.Models.Notification;
 using Infrastructure.Business.DTOs.ReportElements;
+using smart_home_web.Models.WordCloud;
 
 namespace smart_home_web.AutoMapper
 {
@@ -69,6 +70,12 @@ namespace smart_home_web.AutoMapper
                .ForMember(gd => gd.MeasurementName, map => map.MapFrom(s => s.SensorType.MeasurementName))
                .ForMember(gd => gd.MeasurementType, map => map.MapFrom(s => s.SensorType.MeasurementType));
             CreateMap<WordCloudDTO, WordCloudViewModel>();
+
+            CreateMap<ReportElement, EditWordCloudViewModel>()
+                .ForMember(ewc => ewc.DashboardName, map => map.MapFrom(re => re.Dashboard.Name))
+                .ForMember(ewc => ewc.SensorName, map => map.MapFrom(re => re.Sensor.Name));
+
+            CreateMap<EditWordCloudViewModel, ReportElement>();
 
             CreateMap<SensorTypeDto, SensorType>();
             CreateMap<SensorTypeViewModel, SensorTypeDto>().ReverseMap();

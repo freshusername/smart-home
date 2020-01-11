@@ -1,11 +1,14 @@
-﻿@model WordCloudViewModel;
+﻿@model smart_home_web.Models.WordCloud.WordCloudViewModel;
 @using Domain.Core.Model.Enums
 
 <link rel="stylesheet" href="~/css/WordCloud.css">
 
+<a asp-controller="ReportElement" asp-action="EditWordCloud" class="btn btn-success" asp-route-id="@Model.Id"><i class="fas fa-cog"></i></a>
+
 <figure class="highcharts-figure">
-    <div id=@(Model.Id.ToString())></div>
+    <div id=@("wordcloud_container_"+Model.Id.ToString())></div>
 </figure>
+
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/wordcloud.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
@@ -57,7 +60,7 @@
             return arr;
             }, []);
 
-    Highcharts.chart(JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
+    Highcharts.chart('wordcloud_container_'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
         title: {
             text: 'Word cloud for ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))') + ' for ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.DashboardName))')
         },

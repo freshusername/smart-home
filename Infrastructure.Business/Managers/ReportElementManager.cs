@@ -18,6 +18,12 @@ namespace Infrastructure.Business.Managers
 
         }
 
+        public async Task<ReportElement> GetById(int id)
+        {
+            ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(id);
+            return reportElement;
+        }
+        #region WordCloud
         public async Task<WordCloudDTO> GetWordCloudBySensorId(int ReportElementId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
@@ -66,5 +72,12 @@ namespace Infrastructure.Business.Managers
             }
             return wordCloud;
         }
+
+        public void EditWordCloud(ReportElement reportElement)
+        {
+            unitOfWork.ReportElementRepo.Update(reportElement);
+            unitOfWork.Save();
+        }
+        #endregion
     }
 }

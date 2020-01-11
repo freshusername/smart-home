@@ -1,12 +1,8 @@
 ﻿using AutoMapper;
-using Infrastructure.Business.DTOs;
 using Infrastructure.Business.DTOs.ReportElements;
 using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Mvc;
-using smart_home_web.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using smart_home_web.Models.WordCloud;
 using System.Threading.Tasks;
 
 namespace smart_home_web.Components

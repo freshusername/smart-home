@@ -1,4 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
+@await Component.InvokeAsync("WordCloud", new { reportElementId = 1 })
+@await Component.InvokeAsync("WordCloud", new { reportElementId = 2 })
 @await Component.InvokeAsync("Dashboard")

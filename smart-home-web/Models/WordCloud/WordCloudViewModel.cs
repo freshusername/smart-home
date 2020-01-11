@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace smart_home_web.Models
+namespace smart_home_web.Models.WordCloud
 {
     public class WordCloudViewModel
     {
@@ -17,7 +17,7 @@ namespace smart_home_web.Models
 
         public MeasurementType MeasurementType { get; set; }
         public string MeasurementName { get; set; }
-       
+
         public List<string> StringValues { get; set; }
         public List<int> IntValues { get; set; }
         public List<double> DoubleValues { get; set; }

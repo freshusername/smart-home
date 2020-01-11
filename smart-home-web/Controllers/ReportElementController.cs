@@ -2,24 +2,45 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Domain.Core.Model;
+using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using smart_home_web.Models;
+using smart_home_web.Models.WordCloud;
 
 namespace smart_home_web.Controllers
 {
     public class ReportElementController : Controller
     {
-        [HttpGet]
-        public IActionResult Wordcloud()
+        private readonly IReportElementManager _reportElementManager;
+        private readonly IMapper _mapper;
+
+        public ReportElementController(IReportElementManager reportElementManager, IMapper mapper)
         {
-            return View();
+            _reportElementManager = reportElementManager;
+            _mapper = mapper;
+        }
+        [HttpGet]
+        public async Task<IActionResult> EditWordCloud(int id)
+        {
+            ReportElement reportElement = await _reportElementManager.GetById(id);
+            if (reportElement == null)
+                return NotFound();
+            EditWordCloudViewModel wordCloud = _mapper.Map<ReportElement, EditWordCloudViewModel>(reportElement);
+            return View(wordCloud);
         }
 
         [HttpPost]
-        public IActionResult Wordcloud(GraphViewModel model)
+        public IActionResult EditWordCloud(EditWordCloudViewModel model)
         {
-            return View();
+            if (!ModelState.IsValid)
+                return View(model);
+            ReportElement reportElement = _mapper.Map<EditWordCloudViewModel, ReportElement>(model);
+            _reportElementManager.EditWordCloud(reportElement);
+            return RedirectToAction("Index","Home");
+            //return RedirectToAction("Index","Home", new { DashboardId = reportElement.DashboardId});
         }
     }
 }
