@@ -27,12 +27,15 @@ namespace Infrastructure.Business.Managers
         {
             _env = env;
 
-            try {
+            try
+            {
                 if (!Directory.Exists(UploadPath))
                 {
                     Directory.CreateDirectory(UploadPath);
-                }   
-            } catch (Exception ex) {
+                }
+            }
+            catch (Exception ex)
+            {
                 // TODO: add logs
             }
         }
