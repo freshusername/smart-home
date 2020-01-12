@@ -19,5 +19,6 @@ namespace Domain.Core.Model
         public SensorType SensorType { get; set; }
         public Icon Icon { get; set; }
         public virtual ICollection<History> Histories { get; set; }
+        public virtual ICollection<ReportElement> ReportElements { get; set; }
     }
 }

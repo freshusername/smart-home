@@ -7,6 +7,6 @@ namespace Domain.Core.Model
 {
     public class AppUser : IdentityUser
 	{
-
+        public ICollection<Dashboard> Dashboards { get; set; }
     }
 }
