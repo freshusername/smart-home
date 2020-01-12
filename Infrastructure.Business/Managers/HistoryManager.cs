@@ -56,7 +56,16 @@ namespace Infrastructure.Business.Managers
 			return result;
 		}
 
-		public async Task<GraphDTO> GetGraphBySensorId(int SensorId, int days)
+        public async Task<double?> GetMinValueAfterDate(int sensorId, DateTimeOffset dateTime)
+        {
+            return await unitOfWork.HistoryRepo.GetMinValueAfterDate(sensorId, dateTime);
+        }
+        public async Task<double?> GetMaxValueAfterDate(int sensorId, DateTimeOffset dateTime)
+        {
+            return await unitOfWork.HistoryRepo.GetMaxValueAfterDate(sensorId, dateTime);;
+        }
+
+        public async Task<GraphDTO> GetGraphBySensorId(int SensorId, int days)
         {
             IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorId(SensorId);
             if (!histories.Any())
