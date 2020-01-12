@@ -2,6 +2,7 @@
 @using Domain.Core.Model.Enums
 
 <link rel="stylesheet" href="~/css/WordCloud.css">
+<link rel="stylesheet" href="~/css/SettingsButton.css">
 
 <a asp-controller="ReportElement" asp-action="EditWordCloud" class="btn btn-success" asp-route-id="@Model.Id"><i class="fas fa-cog"></i></a>
 
@@ -60,7 +61,26 @@
             return arr;
             }, []);
 
+
     Highcharts.chart('wordcloud_container_'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
+        chart: {
+            events: {
+                load: function() {
+
+                    var chart = this,
+                    renderer = chart.renderer;
+                    var pattern = renderer.createElement('pattern').add(renderer.defs).attr({
+                        width: 1,
+                        height: 1,
+                        id: "image",
+                        patternContentUnits: 'userSpaceOnUse'
+                    });
+
+                    renderer.image('../images/SettingsButton.svg', 0, 0, 18, 16).add(pattern);
+
+                }
+            }
+        },
         title: {
             text: 'Word cloud for ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))') + ' for ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.DashboardName))')
         },
@@ -83,6 +103,20 @@
             type: 'wordcloud',
             data: data,
             name: 'Periodicity',
-        }]
+        }],
+        exporting: {
+            buttons: {
+                Link: {
+                    height: 24,
+                    width: 24,
+                    y: 3,
+                    x: -22,
+                    className : 'highcharts-button-box-settings',
+                    onclick: function () {
+                        window.location.href = '/ReportElement/EditWordCloud/'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))')
+                    },
+                }
+            }
+        },
     });
 </script>
