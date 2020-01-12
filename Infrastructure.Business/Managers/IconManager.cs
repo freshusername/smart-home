@@ -15,7 +15,7 @@ namespace Infrastructure.Business.Managers
 {
     public class IconManager : BaseManager, IIconManager
     {
-        private readonly string _uploadPath = Path.Combine("images", "Icons"); // "\\images\\Icons\\ ";
+        private readonly string _uploadPath = Path.Combine("images", "Icons");
         private readonly string _dbPath = @"/images/Icons/";
         private readonly IHostingEnvironment _env;
         public string UploadPath
