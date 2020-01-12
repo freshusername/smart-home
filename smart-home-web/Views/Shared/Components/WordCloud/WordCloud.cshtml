@@ -4,8 +4,6 @@
 <link rel="stylesheet" href="~/css/WordCloud.css">
 <link rel="stylesheet" href="~/css/SettingsButton.css">
 
-<a asp-controller="ReportElement" asp-action="EditWordCloud" class="btn btn-success" asp-route-id="@Model.Id"><i class="fas fa-cog"></i></a>
-
 <figure class="highcharts-figure">
     <div id=@("wordcloud_container_"+Model.Id.ToString())></div>
 </figure>
