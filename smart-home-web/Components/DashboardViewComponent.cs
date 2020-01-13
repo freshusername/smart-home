@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Infrastructure.Business.DTOs.Dashboard;
+using Infrastructure.Business.Infrastructure;
 using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Mvc;
 using smart_home_web.Models.Dashboard;
@@ -24,5 +25,13 @@ namespace smart_home_web.Components
 
 			return View("Detail", result);
         }
+
+		public async Task<OperationDetails> SaveOptionsAsync()
+        {
+			var dashboard = await _dashboardOptionsManager.SaveOptionsAsync();
+
+			return new OperationDetails(true, "Dashboard options has been saved", "");
+        }
+
     }
 }

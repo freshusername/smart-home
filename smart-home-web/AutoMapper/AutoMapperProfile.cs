@@ -14,6 +14,11 @@ using Infrastructure.Business.DTOs.Notification;
 using smart_home_web.Models.Notification;
 using Infrastructure.Business.DTOs.Dashboard;
 using smart_home_web.Models.Dashboard;
+using Domain.Core.JoinModel;
+using Infrastructure.Business.DTOs.DashboardOptions;
+using smart_home_web.Models.DashboardOptions;
+using Infrastructure.Business.DTOs.Options;
+using smart_home_web.Models.Options;
 
 namespace smart_home_web.AutoMapper
 {
@@ -67,9 +72,14 @@ namespace smart_home_web.AutoMapper
             CreateMap<SensorType, SensorTypeDto>()
                 .ForMember(dto => dto.IconPath, map => map.MapFrom(st => st.Icon.Path));
 
-
 			CreateMap<Dashboard, DashboardDto>().ReverseMap();
 			CreateMap<DashboardDto, DashboardViewModel>();
+
+			CreateMap<DashboardOptions, DashboardOptionsDto>().ReverseMap();
+			CreateMap<DashboardOptionsDto, DashboardOptionsViewModel>();
+
+			CreateMap<Options, OptionsDto>().ReverseMap();
+			CreateMap<OptionsDto, OptionsViewModel>();
 		}
     }
 }

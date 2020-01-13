@@ -9,14 +9,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationsDbContext))]
-    [Migration("20200109150535_ReportElementType")]
-    partial class ReportElementType
+    [Migration("20200113135605_DashboardOptions")]
+    partial class DashboardOptions
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.14-servicing-32113")
+                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Domain.Core.Model.AppUser", b =>
@@ -144,6 +144,28 @@ namespace Infrastructure.Data.Migrations
                     b.ToTable("Messages");
                 });
 
+            modelBuilder.Entity("Domain.Core.Model.Options", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("DashboardOptionsId");
+
+                    b.Property<int>("Height");
+
+                    b.Property<int>("Weight");
+
+                    b.Property<int>("X");
+
+                    b.Property<int>("Y");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DashboardOptionsId");
+
+                    b.ToTable("Options");
+                });
+
             modelBuilder.Entity("Domain.Core.Model.ReportElement", b =>
                 {
                     b.Property<int>("Id")
@@ -212,6 +234,22 @@ namespace Infrastructure.Data.Migrations
                     b.HasIndex("IconId");
 
                     b.ToTable("SensorTypes");
+                });
+
+            modelBuilder.Entity("Infrastructure.Data.Model.DashboardOptions", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("DashboardId");
+
+                    b.Property<int>("OptionsId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DashboardId");
+
+                    b.ToTable("DashboardOptions");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -324,7 +362,7 @@ namespace Infrastructure.Data.Migrations
             modelBuilder.Entity("Domain.Core.Model.Dashboard", b =>
                 {
                     b.HasOne("Domain.Core.Model.AppUser", "AppUser")
-                        .WithMany()
+                        .WithMany("Dashboards")
                         .HasForeignKey("AppUserId");
                 });
 
@@ -348,6 +386,13 @@ namespace Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("Domain.Core.Model.Options", b =>
+                {
+                    b.HasOne("Infrastructure.Data.Model.DashboardOptions")
+                        .WithMany("Options")
+                        .HasForeignKey("DashboardOptionsId");
+                });
+
             modelBuilder.Entity("Domain.Core.Model.ReportElement", b =>
                 {
                     b.HasOne("Domain.Core.Model.Dashboard", "Dashboard")
@@ -356,7 +401,7 @@ namespace Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Domain.Core.Model.Sensor", "Sensor")
-                        .WithMany()
+                        .WithMany("ReportElements")
                         .HasForeignKey("SensorId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -377,6 +422,14 @@ namespace Infrastructure.Data.Migrations
                     b.HasOne("Domain.Core.Model.Icon", "Icon")
                         .WithMany()
                         .HasForeignKey("IconId");
+                });
+
+            modelBuilder.Entity("Infrastructure.Data.Model.DashboardOptions", b =>
+                {
+                    b.HasOne("Domain.Core.Model.Dashboard", "Dashboard")
+                        .WithMany()
+                        .HasForeignKey("DashboardId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

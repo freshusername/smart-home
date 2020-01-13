@@ -7,6 +7,7 @@ using Domain.Core.Model;
 using Domain.Interfaces;
 using Infrastructure.Business.DTOs;
 using Infrastructure.Business.DTOs.Dashboard;
+using Infrastructure.Business.Infrastructure;
 
 namespace Infrastructure.Business.Managers
 {

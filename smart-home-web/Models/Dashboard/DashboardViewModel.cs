@@ -1,4 +1,5 @@
-﻿using Domain.Core.Model;
+﻿using Domain.Core.JoinModel;
+using Domain.Core.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace smart_home_web.Models.Dashboard
 		public int Id { get; set; }
 		public string Name { get; set; }
 		
+		public ICollection<DashboardOptions> DashboardOptions { get; set; }
 		public ICollection<ReportElement> ReportElements { get; set; }
 	}
 }
