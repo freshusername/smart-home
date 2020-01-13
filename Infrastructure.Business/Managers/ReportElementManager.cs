@@ -26,18 +26,24 @@ namespace Infrastructure.Business.Managers
             return reportElement;
         }
 
-        #region WordCloud
-        public async Task<WordCloudDTO> GetWordCloudById(int ReportElementId)
+        public void EditReportElement(ReportElementDTO reportElementDTO)
+        {
+            ReportElement reportElement = mapper.Map<ReportElementDTO, ReportElement>(reportElementDTO);
+            unitOfWork.ReportElementRepo.Update(reportElement);
+            unitOfWork.Save();
+        }
+
+        public async Task<ReportElementDTO> GetWordCloudById(int ReportElementId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
             Dashboard dashboard = await unitOfWork.DashboardRepo.GetById(reportElement.DashboardId);
 
-            DateTime date = DateTime.Now.AddDays(-reportElement.Days);
+            DateTime date = DateTime.Now.AddHours(-reportElement.Hours);
 
             IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
 
             Sensor sensor = histories.FirstOrDefault().Sensor;
-            WordCloudDTO wordCloud = mapper.Map<Sensor, WordCloudDTO>(sensor);
+            ReportElementDTO wordCloud = mapper.Map<Sensor, ReportElementDTO>(sensor);
 
             wordCloud.DashboardName = dashboard.Name;
 
@@ -75,30 +81,7 @@ namespace Infrastructure.Business.Managers
             }
             return wordCloud;
         }
-
-        public async Task<ColumnRangeDTO> GetColumnRangeById(int ReportElementId)
-        {
-            ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
-            Dashboard dashboard = await unitOfWork.DashboardRepo.GetById(reportElement.DashboardId);
-
-            DateTime date = DateTime.Now.AddDays(-reportElement.Days);
-
-            IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
-
-            Sensor sensor = histories.FirstOrDefault().Sensor;
-
-            return null;
-
-        }
-
-        public void EditWordCloud(WordCloudDTO wordCloud)
-        {
-            ReportElement reportElement = mapper.Map<WordCloudDTO, ReportElement>(wordCloud);
-            unitOfWork.ReportElementRepo.Update(reportElement);
-            unitOfWork.Save();
-        }
-        #endregion
-
+        
         public void CreateGauge(int dashboardId, int sensorId)
         {
             throw new NotImplementedException();
@@ -119,6 +102,15 @@ namespace Infrastructure.Business.Managers
             return gaugeDto;
         }
 
-        
+        public async Task<ColumnRangeDTO> GetColumnRangeById(int ReportElementId)
+        {
+            ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
+            ColumnRangeDTO columnRangeDTO = new ColumnRangeDTO();
+            if (reportElement.Sensor.SensorType.MeasurementName != "°C")
+                columnRangeDTO.IsCorrect = false;
+
+
+            return null;
+        }
     }
 }

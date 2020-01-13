@@ -1,10 +1,10 @@
-﻿@model smart_home_web.Models.WordCloud.WordCloudViewModel;
+﻿@model smart_home_web.Models.ReportElements.ReportElementViewModel;
 @using Domain.Core.Model.Enums
 
 <link rel="stylesheet" href="~/css/WordCloud.css">
 <link rel="stylesheet" href="~/css/SettingsButton.css">
 
-<figure class="highcharts-figure">
+<figure class="highcharts-figure-wordcloud">
     <div id=@("wordcloud_container_"+Model.Id.ToString())></div>
 </figure>
 

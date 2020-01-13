@@ -1,19 +1,20 @@
 ﻿using Domain.Core.Model.Enums;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
-namespace smart_home_web.Models.WordCloud
+namespace Infrastructure.Business.DTOs.ReportElements
 {
-    public class WordCloudViewModel
+    public class ReportElementDTO
     {
         public int Id { get; set; }
         public int DashboardId { get; set; }
         public string DashboardName { get; set; }
         public int SensorId { get; set; }
         public string SensorName { get; set; }
-        public int Days { get; set; }
+        public int Hours { get; set; }
+        public ReportElementType Type { get; set; }
+
 
         public MeasurementType MeasurementType { get; set; }
         public string MeasurementName { get; set; }
@@ -24,4 +25,3 @@ namespace smart_home_web.Models.WordCloud
         public List<bool> BoolValues { get; set; }
     }
 }
-

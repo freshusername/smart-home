@@ -2,7 +2,7 @@
     height: 400px;
 }
 
-.highcharts-figure, .highcharts-data-table table {
+.highcharts-figure-clock, .highcharts-data-table table {
     min-width: 300px;
     max-width: 500px;
     margin: 1em auto;

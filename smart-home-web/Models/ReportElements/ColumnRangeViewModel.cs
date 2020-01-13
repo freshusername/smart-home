@@ -15,9 +15,6 @@ namespace smart_home_web.Models.ReportElements
         public int Days { get; set; }
         public string DashboardName { get; set; }
 
-        public MeasurementType MeasurementType { get; set; }
-        public string MeasurementName { get; set; }
-
         public List<long> longDates { get; set; }
         public List<int> MaxValues { get; set; }
         public List<int> MinValues { get; set; }
