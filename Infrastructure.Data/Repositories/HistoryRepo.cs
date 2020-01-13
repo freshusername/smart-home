@@ -13,8 +13,6 @@ namespace Infrastructure.Data.Repositories
 {
 	public class HistoryRepo : BaseRepository<History>, IHistoryRepo
 	{
-
-
 		public HistoryRepo(ApplicationsDbContext context) : base(context)
 		{
 
@@ -68,6 +66,32 @@ namespace Infrastructure.Data.Repositories
 				 .Take(count);
 
 			return await res.ToListAsync();
+		}
+
+		public async Task<double?> GetMinValueAfterDate(int SensorId, DateTimeOffset dateTime)
+		{
+			var histories = await GetHistoriesBySensorId(SensorId);
+			double? minvalue = null;
+			if (histories.Any())
+			{
+				minvalue = histories
+								//.Where(h => h.Date > dateTime)
+								.Min(h => (double)(h.DoubleValue.HasValue ? h.DoubleValue : h.IntValue));
+			}
+			return minvalue;
+		}
+
+		public async Task<double?> GetMaxValueAfterDate(int SensorId, DateTimeOffset dateTime)
+		{
+			var histories = await GetHistoriesBySensorId(SensorId);
+			double? maxvalue = null;
+			if (histories.Any())
+			{
+				maxvalue = histories
+								//.Where(h => h.Date > dateTime)
+								.Max(h => (double)(h.DoubleValue.HasValue ? h.DoubleValue : h.IntValue));
+			}
+			return maxvalue;
 		}
 	}
 }

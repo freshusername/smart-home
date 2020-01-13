@@ -13,5 +13,7 @@ namespace Domain.Interfaces
 		Task<IEnumerable<History>> GetHistoriesBySensorId(int SensorId);
 		Task<IEnumerable<History>> GetByPage(int count, int page, SortState sortState, int sensorId = 0);
 		Task<int> GetAmountAsync();
-	}
+        Task<double?> GetMinValueAfterDate(int SensorId, DateTimeOffset dateTime);
+        Task<double?> GetMaxValueAfterDate(int SensorId, DateTimeOffset dateTime);
+    }
 }

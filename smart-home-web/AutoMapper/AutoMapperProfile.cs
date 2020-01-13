@@ -12,6 +12,8 @@ using Infrastructure.Business.DTOs.Icon;
 using System.IO;
 using Infrastructure.Business.DTOs.Notification;
 using smart_home_web.Models.Notification;
+using Infrastructure.Business.DTOs.ReportElements;
+using smart_home_web.Models.ReportElements;
 using Infrastructure.Business.DTOs.Dashboard;
 using smart_home_web.Models.Dashboard;
 
@@ -70,6 +72,9 @@ namespace smart_home_web.AutoMapper
 
 			CreateMap<Dashboard, DashboardDto>().ReverseMap();
 			CreateMap<DashboardDto, DashboardViewModel>();
-		}
+
+            CreateMap<ReportElement, GaugeDto>().ReverseMap();
+            CreateMap<GaugeDto, GaugeViewModel>().ReverseMap();
+        }
     }
 }

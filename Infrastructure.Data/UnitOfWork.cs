@@ -20,6 +20,7 @@ namespace Infrastructure.Data
         private IIconRepo _iconRepo;
         private IHistoryRepo _historyRepo;
         private INotificationRepository _notificationRepository;
+        private IReportElementRepo _reportElementRepository;
 		private IDashboardRepo _dashboardRepo;
 
         public UnitOfWork(
@@ -65,6 +66,15 @@ namespace Infrastructure.Data
             {
                 if (_iconRepo == null) _iconRepo = new IconRepo(context);
                 return _iconRepo;
+            }
+        }
+
+        public IReportElementRepo ReportElementRepo
+        {
+            get
+            {
+                if (_reportElementRepository == null) _reportElementRepository = new ReportElementRepo(context);
+                return _reportElementRepository;
             }
         }
 
