@@ -20,6 +20,7 @@ namespace Infrastructure.Data
         private IIconRepo _iconRepo;
         private IHistoryRepo _historyRepo;
         private INotificationRepository _notificationRepository;
+		private IDashboardRepo _dashboardRepo;
 
         public UnitOfWork(
             ApplicationsDbContext dbContext,
@@ -75,7 +76,17 @@ namespace Infrastructure.Data
                 return _notificationRepository;
             }
         }
-        public int Save()
+
+		public IDashboardRepo DashboardRepo
+		{
+			get
+			{
+				if (_dashboardRepo == null) _dashboardRepo = new DashboardRepo(context);
+				return _dashboardRepo;
+			}
+		}
+
+		public int Save()
         {
             return context.SaveChanges();
         }
