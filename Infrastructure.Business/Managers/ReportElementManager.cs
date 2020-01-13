@@ -13,9 +13,11 @@ namespace Infrastructure.Business.Managers
 {
     public class ReportElementManager : BaseManager, IReportElementManager
     {
-        public ReportElementManager(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
-        {
+        protected readonly IHistoryManager historyManager;
 
+        public ReportElementManager(IHistoryManager historyManager, IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
+        {
+            this.historyManager = historyManager;
         }
 
         public async Task<ReportElement> GetById(int id)
@@ -39,6 +41,9 @@ namespace Infrastructure.Business.Managers
             DateTime date = DateTime.Now.AddHours(-reportElement.Hours);
 
             IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
+
+            if (!histories.Any())
+                return new ReportElementDTO { Id=ReportElementId ,IsCorrect = false };
 
             Sensor sensor = histories.FirstOrDefault().Sensor;
             ReportElementDTO wordCloud = mapper.Map<Sensor, ReportElementDTO>(sensor);
@@ -77,7 +82,29 @@ namespace Infrastructure.Business.Managers
                         break;
                 }
             }
+            if(wordCloud.IntValues.Count == 0 && wordCloud.DoubleValues.Count == 0 && wordCloud.BoolValues.Count == 0 && wordCloud.StringValues.Count == 0)
+                return new ReportElementDTO { IsCorrect = false };
             return wordCloud;
+        }
+        
+        public void CreateGauge(int dashboardId, int sensorId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<GaugeDto> GetGaugeById(int gaugeId)
+        {
+            ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(gaugeId);
+            GaugeDto gaugeDto = mapper.Map<ReportElement, GaugeDto>(reportElement);
+            gaugeDto.Min = await historyManager.GetMinValueAfterDate(reportElement.SensorId, DateTimeOffset.Now - new TimeSpan(14, 0, 0, 0));
+            gaugeDto.Max = await historyManager.GetMaxValueAfterDate(reportElement.SensorId, DateTimeOffset.Now - new TimeSpan(14, 0, 0, 0));
+            if (gaugeDto.Min.HasValue && gaugeDto.Max.HasValue && gaugeDto.Min != gaugeDto.Max)
+            {
+                gaugeDto.SensorName = reportElement.Sensor.Name;
+                gaugeDto.MeasurementName = reportElement.Sensor.SensorType.MeasurementName;
+                gaugeDto.IsValid = true;
+            }
+            return gaugeDto;
         }
     }
 }

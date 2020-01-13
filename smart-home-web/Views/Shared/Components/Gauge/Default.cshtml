@@ -1,4 +1,8 @@
-﻿<div>
+﻿@using smart_home_web.Models.ReportElements;
+@model GaugeViewModel;
+@if (Model.IsValid)
+{
+<div>
     <link href="~/css/gauge.css" rel="stylesheet" />
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/highcharts-more.js"></script>
@@ -10,7 +14,7 @@
 <div>
     <h2>Gauge component</h2>
     <figure class="highcharts-figure">
-        <div id="container-speed" class="chart-container"></div>
+        <div id="container" class="chart-container"></div>
     </figure>
 </div>
 
@@ -74,13 +78,12 @@
         }
     };
 
-    // The speed gauge
-    var chartSpeed = Highcharts.chart('container-speed', Highcharts.merge(gaugeOptions, {
+    var gaugeChart = Highcharts.chart('container', Highcharts.merge(gaugeOptions, {
         yAxis: {
-            min: 0,
-            max: 200,
+            min: @Model.Min,
+            max: @Model.Max,
             title: {
-                text: 'Speed'
+                text: '@Model.SensorName'
             }
         },
 
@@ -89,17 +92,17 @@
         },
 
         series: [{
-            name: 'Speed',
-            data: [80],
+            name: '@Model.SensorName',
+            data: [@Model.Min],
             dataLabels: {
                 format:
                     '<div style="text-align:center">' +
                     '<span style="font-size:25px">{y}</span><br/>' +
-                    '<span style="font-size:12px;opacity:0.4">km/h</span>' +
+                    '<span style="font-size:12px;opacity:0.4">@Model.MeasurementName</span>' +
                     '</div>'
             },
             tooltip: {
-                valueSuffix: ' km/h'
+                valueSuffix: ' @Model.MeasurementName'
             }
         }]
 
@@ -107,17 +110,16 @@
 
     // Bring life to the dials
     setInterval(function () {
-        // Speed
         var point,
             newVal,
             inc;
 
-        if (chartSpeed) {
-            point = chartSpeed.series[0].points[0];
-            inc = Math.round((Math.random() - 0.5) * 100);
+        if (gaugeChart) {
+            point = gaugeChart.series[0].points[0];
+            inc = Math.round((Math.random()-@Model.Min)*@Model.Max);
             newVal = point.y + inc;
 
-            if (newVal < 0 || newVal > 200) {
+            if (newVal < @Model.Min || newVal > @Model.Max) {
                 newVal = point.y - inc;
             }
 
@@ -127,3 +129,8 @@
     }, 2000);
 
 </script>
+}
+else
+{
+    <h1>Selected sensor does not have values to display in the selected time period.</h1>
+}

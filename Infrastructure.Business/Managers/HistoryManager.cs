@@ -9,8 +9,8 @@ using Domain.Core.Model.Enums;
 using Domain.Interfaces;
 using Infrastructure.Business.DTOs;
 using Infrastructure.Business.DTOs.History;
-using Infrastructure.Business.DTOs.ReportElements;
 using Infrastructure.Business.DTOs.Sensor;
+using Infrastructure.Business.Filters;
 using Infrastructure.Business.Infrastructure;
 using Infrastructure.Data.Repositories;
 
@@ -39,22 +39,31 @@ namespace Infrastructure.Business.Managers
             return result;
         }
 
-        public async Task<IEnumerable<HistoryDto>> GetHistoriesAsync(int count, int page, SortState sortState, int sensorId = 0)
+		public async Task<IEnumerable<HistoryDto>> GetHistoriesAsync(int count, int page, SortState sortState, bool isActivated = true, int sensorId = 0)
+		{
+			var histories = await unitOfWork.HistoryRepo.GetByPage(count, page, sortState, isActivated, sensorId);
+			
+			var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories);
+
+			return result;
+		}
+
+
+		public async Task<IEnumerable<HistoryDto>> GetHistoriesBySensorIdAsync(int sensorId)
+		{
+			var histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorId(sensorId);
+			var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories);
+
+			return result;
+		}
+
+        public async Task<double?> GetMinValueAfterDate(int sensorId, DateTimeOffset dateTime)
         {
-            var histories = await unitOfWork.HistoryRepo.GetByPage(count, page, sortState, sensorId);
-
-            var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories);
-
-            return result;
+            return await unitOfWork.HistoryRepo.GetMinValueAfterDate(sensorId, dateTime);
         }
-
-
-        public async Task<IEnumerable<HistoryDto>> GetHistoriesBySensorIdAsync(int sensorId)
+        public async Task<double?> GetMaxValueAfterDate(int sensorId, DateTimeOffset dateTime)
         {
-            var histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorId(sensorId);
-            var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories);
-
-            return result;
+            return await unitOfWork.HistoryRepo.GetMaxValueAfterDate(sensorId, dateTime);;
         }
 
         public async Task<GraphDTO> GetGraphBySensorId(int SensorId, int days)
@@ -124,32 +133,32 @@ namespace Infrastructure.Business.Managers
 
         public SensorDto GetSensorByToken(Guid token)
         {
-            var sensor = mapper.Map<Sensor, SensorDto>(unitOfWork.SensorRepo.GetByToken(token));
+            var sensor = mapper.Map<Sensor,SensorDto>(unitOfWork.SensorRepo.GetByToken(token));
 
             return sensor;
         }
 
-        public OperationDetails AddHistory(string value, int sensorId)
+        public OperationDetails AddHistory(string value , int sensorId)
         {
-
+           
             var history = new History
             {
                 Date = DateTimeOffset.Now,
                 SensorId = sensorId,
-
+                
             };
 
             var valuemMdel = ValueParser.Parse(value);
 
             if (valuemMdel is int)
                 history.IntValue = valuemMdel;
-            else
+             else
             if (valuemMdel is double)
                 history.DoubleValue = valuemMdel;
-            else
+             else
             if (valuemMdel is bool)
                 history.BoolValue = valuemMdel;
-            else
+             else
                 history.StringValue = valuemMdel;
 
             if (history == null)
@@ -158,12 +167,23 @@ namespace Infrastructure.Business.Managers
             unitOfWork.Save();
 
             return new OperationDetails(true, "Operation succeed", "");
-
+        
         }
 
-        public async Task<int> GetAmountAsync()
+		public async Task<int> GetAmountAsync(bool isActivated)
+		{
+			return await unitOfWork.HistoryRepo.GetAmountAsync(isActivated);
+		}
+
+        public async Task<IEnumerable<HistoryDto>> GetInvalidSensors(SortState sortState)
         {
-            return await unitOfWork.HistoryRepo.GetAmountAsync();
+            var histories = await unitOfWork.HistoryRepo.GetAll();
+
+            var historiesfilter = histories.Where(p => p.Sensor.IsActivated == true);
+
+            var historiesmapper = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(historiesfilter);
+
+            return SortValue.SortHistories(sortState, historiesmapper);
         }
     }
 }

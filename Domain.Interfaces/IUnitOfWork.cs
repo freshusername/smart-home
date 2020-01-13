@@ -13,8 +13,8 @@ namespace Domain.Interfaces
         ISensorRepo SensorRepo { get; }
         ISensorTypeRepo SensorTypeRepo { get; }
         IIconRepo IconRepo { get; }
-        IReportElementRepo ReportElementRepo { get; }
         IDashboardRepo DashboardRepo { get; }
+        IReportElementRepo ReportElementRepo { get; }
         UserManager<AppUser> UserManager { get; }
         RoleManager<IdentityRole> RoleManager { get; }
         SignInManager<AppUser> SignInManager { get; }

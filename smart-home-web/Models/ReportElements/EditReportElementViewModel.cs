@@ -16,8 +16,5 @@ namespace smart_home_web.Models.ReportElements
         public double Hours { get; set; }
 
         public ReportElementType Type { get; set; }
-
-        public MeasurementType MeasurementType { get; set; }
-        public string MeasurementName { get; set; }
     }
 }

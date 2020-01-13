@@ -5,6 +5,7 @@ using Infrastructure.Business.DTOs.Icon;
 using Infrastructure.Business.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,21 +16,29 @@ namespace Infrastructure.Business.Managers
 {
     public class IconManager : BaseManager, IIconManager
     {
-        private readonly string _path = @"\images\Icons\";
+        private readonly string _uploadPath = Path.Combine("images", "Icons");
+        private readonly string _dbPath = @"/images/Icons/";
         private readonly IHostingEnvironment _env;
-
         public string UploadPath
         {
-            get { return _env.WebRootPath + _path; }
+            get { return Path.Combine(_env.WebRootPath, _uploadPath); }
         }
 
         public IconManager(IUnitOfWork unitOfWork, IMapper mapper, IHostingEnvironment env) : base(unitOfWork, mapper)
         {
             _env = env;
 
-            if (!Directory.Exists(UploadPath))
+            try
             {
-                Directory.CreateDirectory(UploadPath);
+                if (!Directory.Exists(UploadPath))
+                {
+                    Directory.CreateDirectory(UploadPath);
+                }
+            }
+            catch (Exception ex)
+            {
+                // TODO: add logs
+                Console.WriteLine(ex.Message);//?
             }
         }
 
@@ -62,7 +71,7 @@ namespace Infrastructure.Business.Managers
 
             var iconDto = new IconDto()
             {
-                Path = _path + newFileName
+                Path = _dbPath + newFileName
             };
 
             Icon icon = mapper.Map<IconDto, Icon>(iconDto);

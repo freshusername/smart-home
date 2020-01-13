@@ -14,6 +14,7 @@ namespace smart_home_web.Models.ReportElements
         public int SensorId { get; set; }
         public string SensorName { get; set; }
         public int Hours { get; set; }
+        public bool IsCorrect { get; set; }
 
         public ReportElementType Type { get; set; }
         

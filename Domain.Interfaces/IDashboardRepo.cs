@@ -7,6 +7,6 @@ namespace Domain.Interfaces
 {
     public interface IDashboardRepo : IGenericRepository<Dashboard>
     {
-
+		
     }
 }

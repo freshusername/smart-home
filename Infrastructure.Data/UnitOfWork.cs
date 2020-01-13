@@ -69,15 +69,6 @@ namespace Infrastructure.Data
             }
         }
 
-        public INotificationRepository NotificationRepository
-        {
-            get
-            {
-                if (_notificationRepository == null) _notificationRepository = new NotificationRepository(context);
-                return _notificationRepository;
-            }
-        }
-
         public IReportElementRepo ReportElementRepo
         {
             get
@@ -87,15 +78,25 @@ namespace Infrastructure.Data
             }
         }
 
-        public IDashboardRepo DashboardRepo
+        public INotificationRepository NotificationRepository
         {
             get
             {
-                if (_dashboardRepo == null) _dashboardRepo = new DashboardRepo(context);
-                return _dashboardRepo;
+                if (_notificationRepository == null) _notificationRepository = new NotificationRepository(context);
+                return _notificationRepository;
             }
         }
-        public int Save()
+
+		public IDashboardRepo DashboardRepo
+		{
+			get
+			{
+				if (_dashboardRepo == null) _dashboardRepo = new DashboardRepo(context);
+				return _dashboardRepo;
+			}
+		}
+
+		public int Save()
         {
             return context.SaveChanges();
         }

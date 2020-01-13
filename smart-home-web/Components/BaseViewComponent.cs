@@ -9,6 +9,5 @@ namespace smart_home_web.Components
     public abstract class BaseViewComponent : ViewComponent
     {
         public int DashboardId { get; set; }
-        public int SensorId { get; set; }
     }
 }

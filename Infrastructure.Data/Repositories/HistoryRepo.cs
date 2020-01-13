@@ -13,8 +13,6 @@ namespace Infrastructure.Data.Repositories
 {
 	public class HistoryRepo : BaseRepository<History>, IHistoryRepo
 	{
-
-
 		public HistoryRepo(ApplicationsDbContext context) : base(context)
 		{
 
@@ -31,13 +29,13 @@ namespace Infrastructure.Data.Repositories
 
 		public override async Task<History> GetById(int id)
 		{
-			return context.Histories
-				.FirstOrDefault(s => s.Id == id);
+			return await context.Histories
+				.FirstOrDefaultAsync(s => s.Id == id);
 		}
 
-		public async Task<int> GetAmountAsync()
+		public async Task<int> GetAmountAsync(bool isActivated)
 		{
-			return await context.Histories.CountAsync();
+			return await context.Histories.Where(p => p.Sensor.IsActivated == isActivated).CountAsync();
 		}
 
 		public async Task<IEnumerable<History>> GetHistoriesBySensorId(int SensorId)
@@ -61,11 +59,14 @@ namespace Infrastructure.Data.Repositories
         }
 
 
-        public async Task<IEnumerable<History>> GetByPage(int count, int page, SortState sortState, int sensorId = 0)
-		{
+        public async Task<IEnumerable<History>> GetByPage(int count, int page, SortState sortState, bool isActivated = true, int sensorId = 0)
+        {
 			IQueryable<History> histories = context.Histories
 				.Include(h => h.Sensor)
 				.ThenInclude(s => s.SensorType);
+
+			if (!isActivated)
+				histories = histories.Where(p => p.Sensor.IsActivated == false);
 
 			if (sensorId != 0)
 			{
@@ -79,6 +80,32 @@ namespace Infrastructure.Data.Repositories
 				 .Take(count);
 
 			return await res.ToListAsync();
+		}
+
+		public async Task<double?> GetMinValueAfterDate(int SensorId, DateTimeOffset dateTime)
+		{
+			var histories = await GetHistoriesBySensorId(SensorId);
+			double? minvalue = null;
+			if (histories.Any())
+			{
+				minvalue = histories
+								//.Where(h => h.Date > dateTime)
+								.Min(h => (double)(h.DoubleValue.HasValue ? h.DoubleValue : h.IntValue));
+			}
+			return minvalue;
+		}
+
+		public async Task<double?> GetMaxValueAfterDate(int SensorId, DateTimeOffset dateTime)
+		{
+			var histories = await GetHistoriesBySensorId(SensorId);
+			double? maxvalue = null;
+			if (histories.Any())
+			{
+				maxvalue = histories
+								//.Where(h => h.Date > dateTime)
+								.Max(h => (double)(h.DoubleValue.HasValue ? h.DoubleValue : h.IntValue));
+			}
+			return maxvalue;
 		}
 	}
 }
