@@ -100,6 +100,8 @@ namespace Infrastructure.Business.Managers
             gaugeDto.Max = await historyManager.GetMaxValueAfterDate(reportElement.SensorId, DateTimeOffset.Now - new TimeSpan(14, 0, 0, 0));
             if (gaugeDto.Min.HasValue && gaugeDto.Max.HasValue && gaugeDto.Min != gaugeDto.Max)
             {
+                var value = historyManager.GetLastHistoryBySensorId(reportElement.SensorId);
+                gaugeDto.Value = value.DoubleValue.HasValue ? value.DoubleValue : value.IntValue;
                 gaugeDto.SensorName = reportElement.Sensor.Name;
                 gaugeDto.MeasurementName = reportElement.Sensor.SensorType.MeasurementName;
                 gaugeDto.IsValid = true;
