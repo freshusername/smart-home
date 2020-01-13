@@ -1,5 +1,6 @@
 ﻿using Domain.Core.Model;
 using Infrastructure.Business.DTOs.ReportElements;
+using Infrastructure.Business.DTOs.SensorType;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,5 +14,6 @@ namespace Infrastructure.Business.Managers
         Task<WordCloudDTO> GetWordCloudById(int ReportElementId);
         Task<GaugeDto> GetGaugeById(int gaugeId);
         void EditWordCloud(WordCloudDTO wordCloud);
+        ScheduleDto GetDataForSchedule(int id);
     }
 }

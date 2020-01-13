@@ -27,7 +27,16 @@ namespace Infrastructure.Data.Repositories
 			return res;
 		}
 
-		public override async Task<History> GetById(int id)
+        public IEnumerable<DateTimeOffset> GetHistoriesDatesBySensorId(int id)
+        {
+            var dates = context.Histories
+                .Include(h => h.Sensor)
+                .Where(e => e.SensorId == id)
+                .Select(e => e.Date).ToList();  
+            
+            return dates;
+        }
+        public override async Task<History> GetById(int id)
 		{
 			return await context.Histories
 				.FirstOrDefaultAsync(s => s.Id == id);

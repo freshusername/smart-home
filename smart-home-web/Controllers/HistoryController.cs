@@ -14,6 +14,7 @@ using smart_home_web.Models;
 using smart_home_web.Models.History;
 using Domain.Core.Model;
 using Infrastructure.Business.Services;
+using Infrastructure.Business.DTOs.SensorType;
 
 namespace smart_home_web.Controllers
 {
@@ -21,11 +22,13 @@ namespace smart_home_web.Controllers
     public class HistoryController : Controller
 	{
 		private readonly IHistoryManager _historyManager;
+		private readonly IReportElementManager _reportElementManager;
 		private readonly IMapper _mapper;
 
-		public HistoryController(IHistoryManager historyTestManager, IMapper mapper)
+		public HistoryController(IHistoryManager historyTestManager,IReportElementManager reportElementManager , IMapper mapper)
 		{
 			_historyManager = historyTestManager;
+            _reportElementManager = reportElementManager;
 			_mapper = mapper;
 		}
 
@@ -72,18 +75,9 @@ namespace smart_home_web.Controllers
         [HttpGet]
 		public async Task<IActionResult> Graph(int sensorId, int days = 30)
 		{
-			GraphDTO graph = await _historyManager.GetGraphBySensorId(sensorId, days);
-			GraphViewModel result = _mapper.Map<GraphDTO, GraphViewModel>(graph);
-			if (result.IsCorrect)
-			{
-				result.Days = days;
-				result.longDates = new List<long>();
-				foreach (DateTimeOffset date in graph.Dates)
-				{
-					DateTimeOffset unixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-					result.longDates.Add((long)date.Subtract(unixEpoch).TotalMilliseconds);
-				}
-			}
+			var schedule =  _reportElementManager.GetDataForSchedule(sensorId);
+			 var result = _mapper.Map<ScheduleDto, ScheduleViewModel>(schedule);
+														
 			return View(result);
 		}
 

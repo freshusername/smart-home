@@ -3,6 +3,7 @@ using Domain.Core.Model;
 using Domain.Core.Model.Enums;
 using Domain.Interfaces;
 using Infrastructure.Business.DTOs.ReportElements;
+using Infrastructure.Business.DTOs.SensorType;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -102,6 +103,37 @@ namespace Infrastructure.Business.Managers
                 gaugeDto.IsValid = true;
             }
             return gaugeDto;
+        }
+
+        public ScheduleDto GetDataForSchedule(int id)
+        {
+            var dates = unitOfWork.HistoryRepo.GetHistoriesDatesBySensorId(id).ToList();
+             var values = GetValues(id).ToList();
+
+            var schedule = new ScheduleDto { Dates = dates, Values = values };
+
+            return schedule;
+        }
+
+        public IEnumerable<dynamic> GetValues(int id)
+        {
+           var histories = unitOfWork.HistoryRepo.GetHistoriesBySensorId(id);
+            var sensor = unitOfWork.SensorRepo.GetSensorById(id);
+
+            foreach (var items in histories.Result)
+            {
+                if (sensor.SensorType.MeasurementType == MeasurementType.Int)
+                    yield return items.IntValue;
+                else
+                if (sensor.SensorType.MeasurementType == MeasurementType.Double)
+                    yield return items.DoubleValue;
+                else
+                 if (sensor.SensorType.MeasurementType == MeasurementType.Bool)
+                    yield return items.BoolValue;
+                else
+                    yield return items.StringValue;
+            }
+         
         }
     }
 }
