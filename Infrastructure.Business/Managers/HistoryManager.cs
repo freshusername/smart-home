@@ -10,6 +10,7 @@ using Domain.Interfaces;
 using Infrastructure.Business.DTOs;
 using Infrastructure.Business.DTOs.History;
 using Infrastructure.Business.DTOs.Sensor;
+using Infrastructure.Business.Filters;
 using Infrastructure.Business.Infrastructure;
 using Infrastructure.Data.Repositories;
 
@@ -38,9 +39,9 @@ namespace Infrastructure.Business.Managers
             return result;
         }
 
-		public async Task<IEnumerable<HistoryDto>> GetHistoriesAsync(int count, int page, SortState sortState, int sensorId = 0)
+		public async Task<IEnumerable<HistoryDto>> GetHistoriesAsync(int count, int page, SortState sortState, bool isActivated = true, int sensorId = 0)
 		{
-			var histories = await unitOfWork.HistoryRepo.GetByPage(count, page, sortState, sensorId);
+			var histories = await unitOfWork.HistoryRepo.GetByPage(count, page, sortState, isActivated, sensorId);
 			
 			var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories);
 
@@ -171,10 +172,21 @@ namespace Infrastructure.Business.Managers
         
         }
 
-		public async Task<int> GetAmountAsync()
+		public async Task<int> GetAmountAsync(bool isActivated)
 		{
-			return await unitOfWork.HistoryRepo.GetAmountAsync();
+			return await unitOfWork.HistoryRepo.GetAmountAsync(isActivated);
 		}
+
+        public async Task<IEnumerable<HistoryDto>> GetInvalidSensors(SortState sortState)
+        {
+            var histories = await unitOfWork.HistoryRepo.GetAll();
+
+            var historiesfilter = histories.Where(p => p.Sensor.IsActivated == true);
+
+            var historiesmapper = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(historiesfilter);
+
+            return SortValue.SortHistories(sortState, historiesmapper);
+        }
     }
 }
 

@@ -28,20 +28,21 @@ body {
     margin: 15px;
 }
 
-
-#invalidSensorTable td{
-    padding:0px;
+#invalidSensorTable tbody a{
+    color:black;
 }
 
-#invalidSensorTable a{
-    padding:8px;
-}
-
-#invalidSensorTable tbody a:hover {
+#invalidSensorTable a:hover {
+    color:blue;
     text-decoration: none;
 }
-#invalidSensorTable tbody tr:hover {
-    background-color: #d9edf7;
+
+a.disabledclass {
+    /* Make the disabled links grayish*/
+    color: gray;
+    /* And disable the pointer events */
+    pointer-events: none;
+    cursor:not-allowed;
 }
 
 /* Hide/rearrange for smaller screens */

@@ -79,51 +79,8 @@
 
         </table>
         <br />
-        <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-center">
-                @if (Model.FilterDTO != null)
-                {
-                    @if (Model.FilterDTO.HasPrevious)
-                    {
-                        <li class="page-item">
-                            @{
-                                var prev = (FilterDTO)Model.FilterDTO.Clone();
-                                prev.CurrentPage = Model.FilterDTO.CurrentPage - 1;
-                            }
+        @await Component.InvokeAsync("Pagination", new { action = "Index", controller = "History", filterDTO = Model.FilterDTO })
 
-                            @Html.ActionLink("prev", "Index", "History", null, null, null,
-                                      prev,
-                                      null)
-                        </li>
-                    }
-
-                    @for (var i = 1; i <= Model.FilterDTO.PagesCount; i++)
-                    {
-                        var page_i = (FilterDTO)Model.FilterDTO.Clone();
-                        page_i.CurrentPage = i;
-
-                        <li class="page-item @( i == Model.FilterDTO.CurrentPage ? "active" : "")">
-                            @Html.ActionLink(i.ToString(), "Index", "History", null, null, null,
-                                page_i,
-                                null)
-                        </li>
-                    }
-                    @if (Model.FilterDTO.HasNext)
-                    {
-                        <li class="page-item">
-                            @{
-                                var next = (FilterDTO)Model.FilterDTO.Clone();
-                                next.CurrentPage = Model.FilterDTO.CurrentPage + 1;
-                            }
-
-                            @Html.ActionLink("next", "Index", "History", null, null, null,
-                                      next,
-                                      null)
-                        </li>
-                    }
-                }
-            </ul>
-        </nav>
     </div>
 
 </body>
