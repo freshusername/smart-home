@@ -34,6 +34,13 @@ namespace Infrastructure.Data
             .HasConversion(
             v => v.ToString(),
             v => (MeasurementType)Enum.Parse(typeof(MeasurementType), v));
+
+            modelBuilder
+            .Entity<ReportElement>()
+            .Property(e => e.Type)
+            .HasConversion(
+            v => v.ToString(),
+            v => (ReportElementType)Enum.Parse(typeof(ReportElementType), v));
         }
     }
 }

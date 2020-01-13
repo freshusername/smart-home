@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Domain.Core.Model.Enums;
 using Infrastructure.Business.DTOs;
 using Infrastructure.Business.DTOs.History;
+using Infrastructure.Business.DTOs.ReportElements;
 using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.Infrastructure;
 

@@ -5,6 +5,7 @@ using Infrastructure.Business.DTOs.Icon;
 using Infrastructure.Business.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -37,6 +38,7 @@ namespace Infrastructure.Business.Managers
             catch (Exception ex)
             {
                 // TODO: add logs
+                Console.WriteLine(ex.Message);//?
             }
         }
 
