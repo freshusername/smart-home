@@ -36,57 +36,42 @@ namespace Infrastructure.Business.Managers
         public async Task<ReportElementDTO> GetWordCloudById(int ReportElementId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
-            Dashboard dashboard = await unitOfWork.DashboardRepo.GetById(reportElement.DashboardId);
 
             DateTime date = DateTime.Now.AddHours(-reportElement.Hours);
 
             IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
 
             if (!histories.Any())
-                return new ReportElementDTO { Id=ReportElementId ,IsCorrect = false };
+                return new ReportElementDTO { Id = ReportElementId, IsCorrect = false };
 
-            Sensor sensor = histories.FirstOrDefault().Sensor;
-            ReportElementDTO wordCloud = mapper.Map<Sensor, ReportElementDTO>(sensor);
+            ReportElementDTO wordCloud = mapper.Map<Sensor, ReportElementDTO>(reportElement.Sensor);
 
-            wordCloud.DashboardName = dashboard.Name;
-
-            wordCloud.IntValues = new List<int>();
-            wordCloud.DoubleValues = new List<double>();
-            wordCloud.BoolValues = new List<bool>();
-            wordCloud.StringValues = new List<string>();
+            wordCloud.DashboardName = reportElement.Dashboard.Name;
+            wordCloud.Values = new List<dynamic>();
 
             foreach (History history in histories)
             {
                 switch (wordCloud.MeasurementType)
                 {
-                    case MeasurementType.Int:
-                        if (history.IntValue.HasValue)
-                            wordCloud.IntValues.Add(history.IntValue.Value);
+                    case MeasurementType.Int when history.IntValue.HasValue:
+                        wordCloud.Values.Add(history.IntValue);
                         break;
-
-                    case MeasurementType.Double:
-                        if (history.DoubleValue.HasValue)
-                            wordCloud.DoubleValues.Add(history.DoubleValue.Value);
+                    case MeasurementType.Double when history.DoubleValue.HasValue:
+                        wordCloud.Values.Add(history.DoubleValue);
                         break;
-
-                    case MeasurementType.Bool:
-                        if (history.BoolValue.HasValue)
-                            wordCloud.BoolValues.Add(history.BoolValue.Value);
+                    case MeasurementType.Bool when history.BoolValue.HasValue:
+                        wordCloud.Values.Add(history.BoolValue);
                         break;
-
-                    case MeasurementType.String:
-                        if (!String.IsNullOrEmpty(history.StringValue))
-                            wordCloud.StringValues.Add(history.StringValue);
-                        break;
-                    default:
+                    case MeasurementType.String when !String.IsNullOrEmpty(history.StringValue):
+                        wordCloud.Values.Add(history.IntValue);
                         break;
                 }
             }
-            if(wordCloud.IntValues.Count == 0 && wordCloud.DoubleValues.Count == 0 && wordCloud.BoolValues.Count == 0 && wordCloud.StringValues.Count == 0)
+            if (wordCloud.Values.Count == 0)
                 return new ReportElementDTO { IsCorrect = false };
             return wordCloud;
         }
-        
+
         public void CreateGauge(int dashboardId, int sensorId)
         {
             throw new NotImplementedException();
