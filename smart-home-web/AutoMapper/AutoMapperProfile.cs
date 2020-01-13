@@ -77,6 +77,8 @@ namespace smart_home_web.AutoMapper
             CreateMap<EditWordCloudViewModel, WordCloudDTO>();
             CreateMap<WordCloudDTO, ReportElement>();
 
+            CreateMap<ColumnRangeDTO, ColumnRangeViewModel>().ReverseMap();
+
             CreateMap<SensorTypeDto, SensorType>();
             CreateMap<SensorTypeViewModel, SensorTypeDto>().ReverseMap();
             CreateMap<CreateSensorTypeViewModel, SensorTypeDto>().ReverseMap();

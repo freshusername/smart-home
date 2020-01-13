@@ -76,6 +76,21 @@ namespace Infrastructure.Business.Managers
             return wordCloud;
         }
 
+        public async Task<ColumnRangeDTO> GetColumnRangeById(int ReportElementId)
+        {
+            ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
+            Dashboard dashboard = await unitOfWork.DashboardRepo.GetById(reportElement.DashboardId);
+
+            DateTime date = DateTime.Now.AddDays(-reportElement.Days);
+
+            IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
+
+            Sensor sensor = histories.FirstOrDefault().Sensor;
+
+            return null;
+
+        }
+
         public void EditWordCloud(WordCloudDTO wordCloud)
         {
             ReportElement reportElement = mapper.Map<WordCloudDTO, ReportElement>(wordCloud);
@@ -103,5 +118,7 @@ namespace Infrastructure.Business.Managers
             }
             return gaugeDto;
         }
+
+        
     }
 }

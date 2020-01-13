@@ -11,23 +11,23 @@ namespace smart_home_web.Components
     public class ColumnRangeViewComponent : BaseViewComponent
     {
         private readonly IMapper _mapper;
-        private readonly IHistoryManager _historyManager;
+        private readonly IReportElementManager _reportElementManager;
 
-        public ColumnRangeViewComponent(IMapper mapper,IHistoryManager manager)
+        public ColumnRangeViewComponent(IMapper mapper, IReportElementManager manager)
         {
             _mapper = mapper;
-            _historyManager = manager;
+            _reportElementManager = manager;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(int dashboardId, int sensorId, int days)
         {
-            GraphDTO graphDTO = await _historyManager.GetGraphBySensorId(sensorId, days);
-            GraphViewModel result = _mapper.Map<GraphDTO, GraphViewModel>(graphDTO);
-            if (result.IsCorrect)
-            {
+            /* GraphDTO graphDTO = await _reportElementManager.get
+             GraphViewModel result = _mapper.Map<GraphDTO, GraphViewModel>(graphDTO);
+             if (result.IsCorrect)
+             {
 
-            }
-            return View(result);
+             }*/
+            return View();
         }
     }
 }

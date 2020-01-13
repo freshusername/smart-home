@@ -1,4 +1,4 @@
-﻿@model GraphViewModel;
+﻿@model smart_home_web.Models.ReportElements.ColumnRangeViewModel;
 @using Domain.Core.Model.Enums;
 
 <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -11,6 +11,11 @@
 </figure>
 
 <script>
+
+    minvalues = JSON.parse('@Html.Raw(Json.Serialize(@Model.MinValues))');
+    maxvalues = JSON.parse('@Html.Raw(Json.Serialize(@Model.MaxValues))');
+
+
     Highcharts.chart('columnrange_container', {
 
         chart: {
@@ -18,26 +23,22 @@
             inverted: true
         },
 
-        accessibility: {
-            description: 'A column range chart compares the monthly temperature variations'
-        },
-
         title: {
             text: 'Column range for ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))') + ' for dashboard' + JSON.parse('@Html.Raw(Json.Serialize(@Model.DashboardName))')
         },
 
-        subtitle: {
-            text: 'No specified'
-        },
-
         xAxis: {
-            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+            title: {
+                text: 'Temperature °C'
+            }
         },
 
         yAxis: {
-            title: {
-                text: 'Temperature ( °C )'
+            categories: JSON.parse('@Html.Raw(Json.Serialize(@Model.longDates))'),
+            labels: {
+                formatter: function () {
+                    return new Date(this.value).toLocaleString();
+                }
             }
         },
 
