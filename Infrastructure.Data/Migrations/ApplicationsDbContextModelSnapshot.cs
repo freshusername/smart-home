@@ -149,7 +149,7 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<int>("DashboardId");
 
-                    b.Property<int>("Days");
+                    b.Property<int>("Hours");
 
                     b.Property<int>("SensorId");
 

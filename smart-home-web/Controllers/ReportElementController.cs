@@ -9,7 +9,7 @@ using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using smart_home_web.Models;
-using smart_home_web.Models.WordCloud;
+using smart_home_web.Models.ReportElements;
 
 namespace smart_home_web.Controllers
 {
@@ -29,17 +29,17 @@ namespace smart_home_web.Controllers
             ReportElement reportElement = await _reportElementManager.GetById(id);
             if (reportElement == null)
                 return NotFound();
-            EditWordCloudViewModel wordCloud = _mapper.Map<ReportElement, EditWordCloudViewModel>(reportElement);
+            EditReportElementViewModel wordCloud = _mapper.Map<ReportElement, EditReportElementViewModel>(reportElement);
             return View(wordCloud);
         }
 
         [HttpPost]
-        public IActionResult EditWordCloud(EditWordCloudViewModel model)
+        public IActionResult EditWordCloud(EditReportElementViewModel model)
         {
             if (!ModelState.IsValid)
                 return View(model);
-            WordCloudDTO wordCloud = _mapper.Map<EditWordCloudViewModel, WordCloudDTO>(model);
-            _reportElementManager.EditWordCloud(wordCloud);
+            ReportElementDTO wordCloud = _mapper.Map<EditReportElementViewModel, ReportElementDTO>(model);
+            _reportElementManager.EditReportElement(wordCloud);
             return RedirectToAction("Index","Home");
             //return RedirectToAction("Index","Home", new { DashboardId = reportElement.DashboardId});
         }
