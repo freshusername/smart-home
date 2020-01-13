@@ -1,19 +1,18 @@
-﻿@model GraphViewModel;
+﻿@model smart_home_web.Models.WordCloud.WordCloudViewModel;
 @using Domain.Core.Model.Enums
+
+<link rel="stylesheet" href="~/css/WordCloud.css">
+<link rel="stylesheet" href="~/css/SettingsButton.css">
+
+<figure class="highcharts-figure">
+    <div id=@("wordcloud_container_"+Model.Id.ToString())></div>
+</figure>
+
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/wordcloud.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
-
-<link rel="stylesheet" href="~/css/WordCloud.css">
-
-
-<figure class="highcharts-figure">
-    <div id="wordcloud_container"></div>
-</figure>
-
-
 <script>
             @switch (Model.MeasurementType)
             {
@@ -58,12 +57,30 @@
                 arr.push(obj);
             }
             return arr;
-        }, []);
+            }, []);
 
-    Highcharts.chart('wordcloud_container', {
 
+    Highcharts.chart('wordcloud_container_'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
+        chart: {
+            events: {
+                load: function() {
+
+                    var chart = this,
+                    renderer = chart.renderer;
+                    var pattern = renderer.createElement('pattern').add(renderer.defs).attr({
+                        width: 1,
+                        height: 1,
+                        id: "image",
+                        patternContentUnits: 'userSpaceOnUse'
+                    });
+
+                    renderer.image('../images/SettingsButton.svg', 0, 0, 18, 16).add(pattern);
+
+                }
+            }
+        },
         title: {
-            text: 'Word cloud for ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))') + ' for dashboard' + JSON.parse('@Html.Raw(Json.Serialize(@Model.DashboardName))')
+            text: 'Word cloud for ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))') + ' for ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.DashboardName))')
         },
         tooltip: {
             useHTML: true,
@@ -84,6 +101,20 @@
             type: 'wordcloud',
             data: data,
             name: 'Periodicity',
-        }]
+        }],
+        exporting: {
+            buttons: {
+                Link: {
+                    height: 24,
+                    width: 24,
+                    y: 3,
+                    x: -20,
+                    className : 'highcharts-button-box-settings',
+                    onclick: function () {
+                        window.location.href = '/ReportElement/EditWordCloud/'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))')
+                    },
+                }
+            }
+        },
     });
 </script>

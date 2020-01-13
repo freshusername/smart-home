@@ -9,6 +9,7 @@ namespace Domain.Core.Model
     {
         public int Id { get; set; }
         public ReportElementType Type { get; set; }
+        public int Days { get; set; }
 
         public int DashboardId { get; set; }
         public Dashboard Dashboard { get; set; }

@@ -1,5 +1,4 @@
 ﻿@using Domain.Core.Model.Enums
-@using System.Collections.Generic
 @model smart_home_web.Models.GraphViewModel
 
 <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
@@ -81,6 +80,10 @@
 @section Scripts {
     <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/wordcloud.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
     <script src="~/lib/nice-select/dist/js/jquery.nice-select.min.js"></script>
     <script>
         $(document).ready(function () {
