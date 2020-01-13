@@ -176,17 +176,6 @@ namespace Infrastructure.Business.Managers
 		{
 			return await unitOfWork.HistoryRepo.GetAmountAsync(isActivated);
 		}
-
-        public async Task<IEnumerable<HistoryDto>> GetInvalidSensors(SortState sortState)
-        {
-            var histories = await unitOfWork.HistoryRepo.GetAll();
-
-            var historiesfilter = histories.Where(p => p.Sensor.IsActivated == true);
-
-            var historiesmapper = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(historiesfilter);
-
-            return SortValue.SortHistories(sortState, historiesmapper);
-        }
     }
 }
 

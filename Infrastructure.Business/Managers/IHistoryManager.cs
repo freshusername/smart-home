@@ -28,7 +28,6 @@ namespace Infrastructure.Business.Managers
 
 		Task<GraphDTO> GetGraphBySensorId(int SensorId, int days);
 		Task<int> GetAmountAsync(bool isActivated);
-        Task<IEnumerable<HistoryDto>> GetInvalidSensors(SortState sortState);
 
     }
 }
