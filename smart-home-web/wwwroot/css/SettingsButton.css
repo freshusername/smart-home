@@ -1,9 +1,5 @@
 ﻿@import 'https://code.highcharts.com/css/highcharts.css';
 
-.highcharts-button-symbol-settings {
-    display: none
-}
-
 .highcharts-button-box-settings {
     fill: url(#image);
     cursor : pointer;

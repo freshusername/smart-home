@@ -19,7 +19,7 @@ namespace smart_home_web.Components
 
         public async Task<IViewComponentResult> InvokeAsync(int reportElementId)
         {
-            WordCloudDTO wordCloud = await _reportElementManager.GetWordCloudBySensorId(reportElementId);
+            WordCloudDTO wordCloud = await _reportElementManager.GetWordCloudById(reportElementId);
             WordCloudViewModel result = _mapper.Map<WordCloudDTO, WordCloudViewModel>(wordCloud);
             return View("WordCloud", result);
         }

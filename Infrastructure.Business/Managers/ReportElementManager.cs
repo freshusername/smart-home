@@ -23,8 +23,9 @@ namespace Infrastructure.Business.Managers
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(id);
             return reportElement;
         }
+
         #region WordCloud
-        public async Task<WordCloudDTO> GetWordCloudBySensorId(int ReportElementId)
+        public async Task<WordCloudDTO> GetWordCloudById(int ReportElementId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
             Dashboard dashboard = await unitOfWork.DashboardRepo.GetById(reportElement.DashboardId);
@@ -73,8 +74,9 @@ namespace Infrastructure.Business.Managers
             return wordCloud;
         }
 
-        public void EditWordCloud(ReportElement reportElement)
+        public void EditWordCloud(WordCloudDTO wordCloud)
         {
+            ReportElement reportElement = mapper.Map<WordCloudDTO, ReportElement>(wordCloud);
             unitOfWork.ReportElementRepo.Update(reportElement);
             unitOfWork.Save();
         }

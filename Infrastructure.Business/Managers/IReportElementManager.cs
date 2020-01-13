@@ -10,7 +10,7 @@ namespace Infrastructure.Business.Managers
     public interface IReportElementManager
     {
         Task<ReportElement> GetById(int id);
-        Task<WordCloudDTO> GetWordCloudBySensorId(int ReportElementId);
-        void EditWordCloud(ReportElement reportElement);
+        Task<WordCloudDTO> GetWordCloudById(int ReportElementId);
+        void EditWordCloud(WordCloudDTO wordCloud);
     }
 }

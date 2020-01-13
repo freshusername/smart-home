@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Domain.Core.Model;
+using Infrastructure.Business.DTOs.ReportElements;
 using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -37,8 +38,8 @@ namespace smart_home_web.Controllers
         {
             if (!ModelState.IsValid)
                 return View(model);
-            ReportElement reportElement = _mapper.Map<EditWordCloudViewModel, ReportElement>(model);
-            _reportElementManager.EditWordCloud(reportElement);
+            WordCloudDTO wordCloud = _mapper.Map<EditWordCloudViewModel, WordCloudDTO>(model);
+            _reportElementManager.EditWordCloud(wordCloud);
             return RedirectToAction("Index","Home");
             //return RedirectToAction("Index","Home", new { DashboardId = reportElement.DashboardId});
         }
