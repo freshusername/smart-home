@@ -14,7 +14,7 @@ namespace Infrastructure.Business.DTOs.ReportElements
         public string SensorName { get; set; }
         public int Hours { get; set; }
         public ReportElementType Type { get; set; }
-
+        public bool IsCorrect { get; set; } = true;
 
         public MeasurementType MeasurementType { get; set; }
         public string MeasurementName { get; set; }

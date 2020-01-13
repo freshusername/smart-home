@@ -42,6 +42,9 @@ namespace Infrastructure.Business.Managers
 
             IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
 
+            if (!histories.Any())
+                return new ReportElementDTO { Id=ReportElementId ,IsCorrect = false };
+
             Sensor sensor = histories.FirstOrDefault().Sensor;
             ReportElementDTO wordCloud = mapper.Map<Sensor, ReportElementDTO>(sensor);
 
@@ -79,6 +82,8 @@ namespace Infrastructure.Business.Managers
                         break;
                 }
             }
+            if(wordCloud.IntValues.Count == 0 && wordCloud.DoubleValues.Count == 0 && wordCloud.BoolValues.Count == 0 && wordCloud.StringValues.Count == 0)
+                return new ReportElementDTO { IsCorrect = false };
             return wordCloud;
         }
         
