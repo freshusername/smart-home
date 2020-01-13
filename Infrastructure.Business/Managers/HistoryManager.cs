@@ -46,6 +46,14 @@ namespace Infrastructure.Business.Managers
             return result;
         }
 
+        public HistoryDto GetLastHistoryBySensorId(int sensorId)
+        {
+            var history = unitOfWork.HistoryRepo.GetLastHistoryBySensorId(sensorId);
+            var result = mapper.Map<History, HistoryDto>(history);
+
+            return result;
+        }
+
         public double? GetMinValueAfterDate(int sensorId, DateTimeOffset dateTime)
         {
             return unitOfWork.HistoryRepo.GetMinValueAfterDate(sensorId, dateTime);

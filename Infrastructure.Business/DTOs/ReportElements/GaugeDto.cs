@@ -13,6 +13,7 @@ namespace Infrastructure.Business.DTOs.ReportElements
 
         public string SensorName { get; set; }
         public string MeasurementName { get; set; }
+        public double? Value { get; set; }
         public double? Min { get; set; }
         public double? Max { get; set; }
     }
