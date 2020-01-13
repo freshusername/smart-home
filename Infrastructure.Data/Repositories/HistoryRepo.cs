@@ -29,13 +29,13 @@ namespace Infrastructure.Data.Repositories
 
 		public override async Task<History> GetById(int id)
 		{
-			return context.Histories
-				.FirstOrDefault(s => s.Id == id);
+			return await context.Histories
+				.FirstOrDefaultAsync(s => s.Id == id);
 		}
 
-		public async Task<int> GetAmountAsync()
+		public async Task<int> GetAmountAsync(bool isActivated)
 		{
-			return await context.Histories.CountAsync();
+			return await context.Histories.Where(p => p.Sensor.IsActivated == isActivated).CountAsync();
 		}
 
 		public async Task<IEnumerable<History>> GetHistoriesBySensorId(int SensorId)
@@ -48,11 +48,25 @@ namespace Infrastructure.Data.Repositories
 			return await histories.ToListAsync();
 		}
 
-		public async Task<IEnumerable<History>> GetByPage(int count, int page, SortState sortState, int sensorId = 0)
-		{
+        public async Task<IEnumerable<History>> GetHistoriesBySensorIdAndDate(int SensorId, DateTime date)
+        {
+            var histories = context.Histories.Include(h => h.Sensor)
+                .ThenInclude(st => st.SensorType)
+                .Select(h => h)
+                .Where(h => h.Sensor.Id == SensorId && h.Date > date);
+
+            return await histories.ToListAsync();
+        }
+
+
+        public async Task<IEnumerable<History>> GetByPage(int count, int page, SortState sortState, bool isActivated = true, int sensorId = 0)
+        {
 			IQueryable<History> histories = context.Histories
 				.Include(h => h.Sensor)
 				.ThenInclude(s => s.SensorType);
+
+			if (!isActivated)
+				histories = histories.Where(p => p.Sensor.IsActivated == false);
 
 			if (sensorId != 0)
 			{

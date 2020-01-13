@@ -16,6 +16,7 @@ using Infrastructure.Business.DTOs.ReportElements;
 using smart_home_web.Models.ReportElements;
 using Infrastructure.Business.DTOs.Dashboard;
 using smart_home_web.Models.Dashboard;
+using smart_home_web.Models.WordCloud;
 
 namespace smart_home_web.AutoMapper
 {
@@ -61,6 +62,20 @@ namespace smart_home_web.AutoMapper
                .ForMember(gd => gd.MeasurementName, map => map.MapFrom(s => s.SensorType.MeasurementName))
                .ForMember(gd => gd.MeasurementType, map => map.MapFrom(s => s.SensorType.MeasurementType));
             CreateMap<GraphDTO, GraphViewModel>();
+
+            CreateMap<Sensor, WordCloudDTO>()
+               .ForMember(gd => gd.SensorId, map => map.MapFrom(s => s.Id))
+               .ForMember(gd => gd.SensorName, map => map.MapFrom(s => s.Name))
+               .ForMember(gd => gd.MeasurementName, map => map.MapFrom(s => s.SensorType.MeasurementName))
+               .ForMember(gd => gd.MeasurementType, map => map.MapFrom(s => s.SensorType.MeasurementType));
+            CreateMap<WordCloudDTO, WordCloudViewModel>();
+
+            CreateMap<ReportElement, EditWordCloudViewModel>()
+                .ForMember(ewc => ewc.DashboardName, map => map.MapFrom(re => re.Dashboard.Name))
+                .ForMember(ewc => ewc.SensorName, map => map.MapFrom(re => re.Sensor.Name));
+
+            CreateMap<EditWordCloudViewModel, WordCloudDTO>();
+            CreateMap<WordCloudDTO, ReportElement>();
 
             CreateMap<SensorTypeDto, SensorType>();
             CreateMap<SensorTypeViewModel, SensorTypeDto>().ReverseMap();

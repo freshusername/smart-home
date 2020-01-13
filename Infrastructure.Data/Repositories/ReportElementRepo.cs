@@ -11,15 +11,17 @@ namespace Infrastructure.Data.Repositories
     class ReportElementRepo : BaseRepository<ReportElement>, IReportElementRepo
     {
         public ReportElementRepo(ApplicationsDbContext context) : base(context)
-        { }
+        {
+
+        }
 
         public override async Task<ReportElement> GetById(int id)
         {
             var reportElement =  await context.ReportElements
-                                .Include(re => re.Sensor)
-                                    .ThenInclude(s => s.SensorType)
-                                .Include(re => re.Dashboard)
-                                .FirstOrDefaultAsync(re => re.Id == id);
+                .Include(re => re.Sensor)
+                    .ThenInclude(s => s.SensorType)
+                .Include(re => re.Dashboard)
+                .FirstOrDefaultAsync(re => re.Id == id);
 
             return reportElement;
         }

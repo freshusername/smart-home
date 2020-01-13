@@ -1,0 +1,45 @@
+﻿@using Infrastructure.Business.DTOs;
+@model smart_home_web.Models.PaginationViewModel;
+
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        @if (Model.filterDTO != null)
+        {
+
+            <li class="page-item">
+                @{
+                    var prev = (FilterDTO)Model.filterDTO.Clone();
+                    prev.CurrentPage = Model.filterDTO.CurrentPage - 1;
+                }
+
+                <a asp-controller="@Model.controller" asp-action="@Model.action"
+                   asp-route-filterDTO="@prev" class="page-link @( !Model.filterDTO.HasPrevious ? "btn btn-info disabled" : "" )">
+                    &lt;&lt;
+                </a>
+            </li>
+
+            @for (var i = 1; i <= Model.filterDTO.PagesCount; i++)
+            {
+                var page_i = (FilterDTO)Model.filterDTO.Clone();
+                page_i.CurrentPage = i;
+
+                <li class="page-item @( i == Model.filterDTO.CurrentPage ? "active" : "")">
+                    @Html.ActionLink(i.ToString(), Model.action, Model.controller, page_i)
+                </li>
+            }
+
+            <li class="page-item">
+                @{
+                    var next = (FilterDTO)Model.filterDTO.Clone();
+                    next.CurrentPage = Model.filterDTO.CurrentPage + 1;
+                }
+
+                <a asp-controller="@Model.controller" asp-action="@Model.action"
+                   asp-route-filterDTO="@next" class="page-link @( !Model.filterDTO.HasNext ? "btn btn-info disabled" : "" )">
+                    &gt;&gt;
+                </a>
+            </li>
+        }
+    </ul>
+</nav>
