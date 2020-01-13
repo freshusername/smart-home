@@ -2,7 +2,7 @@
 using Infrastructure.Business.DTOs.ReportElements;
 using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Mvc;
-using smart_home_web.Models.WordCloud;
+using smart_home_web.Models.ReportElements;
 using System.Threading.Tasks;
 
 namespace smart_home_web.Components
@@ -19,8 +19,8 @@ namespace smart_home_web.Components
 
         public async Task<IViewComponentResult> InvokeAsync(int reportElementId)
         {
-            WordCloudDTO wordCloud = await _reportElementManager.GetWordCloudById(reportElementId);
-            WordCloudViewModel result = _mapper.Map<WordCloudDTO, WordCloudViewModel>(wordCloud);
+            ReportElementDTO wordCloud = await _reportElementManager.GetWordCloudById(reportElementId);
+            ReportElementViewModel result = _mapper.Map<ReportElementDTO, ReportElementViewModel>(wordCloud);
             return View("WordCloud", result);
         }
     }
