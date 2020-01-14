@@ -1,6 +1,7 @@
 ﻿@import 'https://code.highcharts.com/css/highcharts.css';
 
 .highcharts-button-box-settings {
-    fill: url(#image);
-    cursor : pointer;
+    fill: url(#settings_image);
+    cursor: pointer;
 }
+
