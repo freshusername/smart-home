@@ -87,49 +87,30 @@ namespace Infrastructure.Business.Managers
             GraphDTO graph = mapper.Map<Sensor, GraphDTO>(sensor);
 
             graph.Dates = new List<DateTimeOffset>();
-
-            graph.IntValues = new List<int>();
-            graph.DoubleValues = new List<double>();
-            graph.BoolValues = new List<bool>();
-            graph.StringValues = new List<string>();
+            graph.Values = new List<dynamic>();
 
             foreach (History history in histories)
             {
                 switch (graph.MeasurementType)
                 {
-                    case MeasurementType.Int:
-                        if (history.IntValue.HasValue)
-                        {
+                    case MeasurementType.Int when history.IntValue.HasValue:
                             graph.Dates.Add(history.Date);
-                            graph.IntValues.Add(history.IntValue.Value);
-                        }
+                            graph.Values.Add(history.IntValue.Value);
                         break;
 
-                    case MeasurementType.Double:
-                        if (history.DoubleValue.HasValue)
-                        {
+                    case MeasurementType.Double when history.DoubleValue.HasValue:
                             graph.Dates.Add(history.Date);
-                            graph.DoubleValues.Add(history.DoubleValue.Value);
-                        }
+                            graph.Values.Add(history.DoubleValue.Value);
                         break;
 
-                    case MeasurementType.Bool:
-                        if (history.BoolValue.HasValue)
-                        {
+                    case MeasurementType.Bool when history.BoolValue.HasValue:
                             graph.Dates.Add(history.Date);
-                            graph.BoolValues.Add(history.BoolValue.Value);
-                            graph.IntValues.Add(history.BoolValue.Value ? 1 : 0);
-                        }
+                            graph.Values.Add(history.BoolValue.Value ? 1 : 0);
                         break;
 
-                    case MeasurementType.String:
-                        if (!String.IsNullOrEmpty(history.StringValue))
-                        {
+                    case MeasurementType.String when !String.IsNullOrEmpty(history.StringValue):
                             graph.Dates.Add(history.Date);
-                            graph.StringValues.Add(history.StringValue);
-                        }
-                        break;
-                    default:
+                            graph.Values.Add(history.StringValue);
                         break;
                 }
             }
