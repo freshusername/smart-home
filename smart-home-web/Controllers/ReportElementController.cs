@@ -24,22 +24,22 @@ namespace smart_home_web.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        public async Task<IActionResult> EditWordCloud(int id)
+        public async Task<IActionResult> EditReportElement(int id)
         {
             ReportElement reportElement = await _reportElementManager.GetById(id);
             if (reportElement == null)
                 return NotFound();
-            EditReportElementViewModel wordCloud = _mapper.Map<ReportElement, EditReportElementViewModel>(reportElement);
-            return View(wordCloud);
+            EditReportElementViewModel model = _mapper.Map<ReportElement, EditReportElementViewModel>(reportElement);
+            return View(model);
         }
 
         [HttpPost]
-        public IActionResult EditWordCloud(EditReportElementViewModel model)
+        public IActionResult EditReportElement(EditReportElementViewModel model)
         {
             if (!ModelState.IsValid)
                 return View(model);
-            ReportElementDTO wordCloud = _mapper.Map<EditReportElementViewModel, ReportElementDTO>(model);
-            _reportElementManager.EditReportElement(wordCloud);
+            ReportElementDto reportElement = _mapper.Map<EditReportElementViewModel, ReportElementDto>(model);
+            _reportElementManager.EditReportElement(reportElement);
             return RedirectToAction("Index","Home");
             //return RedirectToAction("Index","Home", new { DashboardId = reportElement.DashboardId});
         }

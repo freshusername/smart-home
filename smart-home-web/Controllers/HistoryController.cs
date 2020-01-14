@@ -28,7 +28,7 @@ namespace smart_home_web.Controllers
 			_mapper = mapper;
 		}
 
-		public async Task<IActionResult> Index(FilterDTO FilterDTO, bool isActivated=true)
+		public async Task<IActionResult> Index(FilterDto FilterDTO, bool isActivated=true)
 		{
 			var histories = await _historyManager.GetHistoriesAsync(FilterDTO.PageSize, FilterDTO.CurrentPage, FilterDTO.sortState, isActivated);
 			
@@ -39,14 +39,14 @@ namespace smart_home_web.Controllers
 			AllHistoriesViewModel model = new AllHistoriesViewModel
 			{
 				Histories = historiesViewModel,
-				FilterDTO = FilterDTO
+				FilterDto = FilterDTO
 			};
 
 
 			return View(!isActivated ? "InvalidSensors" : "Index", model);
 		}
 
-		public async Task<IActionResult> Detail(FilterDTO FilterDTO)
+		public async Task<IActionResult> Detail(FilterDto FilterDTO)
 		{
 			var histories = await _historyManager.GetHistoriesAsync(FilterDTO.PageSize, FilterDTO.CurrentPage, FilterDTO.sortState, true, FilterDTO.sensorId);
 			
@@ -55,13 +55,13 @@ namespace smart_home_web.Controllers
 			return View(new AllHistoriesViewModel
 			{
 				Histories = result,
-				FilterDTO = FilterDTO
+				FilterDto = FilterDTO
 			});
 		}
 
 		#region InvalidSensors
 
-		public async Task<IActionResult> InvalidSensors(FilterDTO filterDTO)
+		public async Task<IActionResult> InvalidSensors(FilterDto filterDTO)
 		{
 			return await Index(filterDTO, false);
         }
@@ -71,8 +71,8 @@ namespace smart_home_web.Controllers
         [HttpGet]
 		public async Task<IActionResult> Graph(int sensorId, int days = 30)
 		{
-			GraphDTO graph = await _historyManager.GetGraphBySensorId(sensorId, days);
-			GraphViewModel result = _mapper.Map<GraphDTO, GraphViewModel>(graph);
+			GraphDto graph = await _historyManager.GetGraphBySensorId(sensorId, days);
+			GraphViewModel result = _mapper.Map<GraphDto, GraphViewModel>(graph);
 			if (result.IsCorrect)
 			{
 				result.Days = days;

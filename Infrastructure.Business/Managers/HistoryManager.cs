@@ -73,17 +73,17 @@ namespace Infrastructure.Business.Managers
             return await unitOfWork.HistoryRepo.GetMaxValueAfterDate(sensorId, dateTime);;
         }
 
-        public async Task<GraphDTO> GetGraphBySensorId(int SensorId, int days)
+        public async Task<GraphDto> GetGraphBySensorId(int SensorId, int days)
         {
             DateTime date = DateTime.Now.AddDays(-days);
 
             IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(SensorId, date);
 
             if (!histories.Any())
-                return new GraphDTO { IsCorrect = false };
+                return new GraphDto { IsCorrect = false };
 
             Sensor sensor = histories.FirstOrDefault().Sensor;
-            GraphDTO graph = mapper.Map<Sensor, GraphDTO>(sensor);
+            GraphDto graph = mapper.Map<Sensor, GraphDto>(sensor);
 
             graph.Dates = new List<DateTimeOffset>();
             graph.Values = new List<dynamic>();

@@ -19,8 +19,8 @@ namespace smart_home_web.Components
 
         public async Task<IViewComponentResult> InvokeAsync(int reportElementId)
         {
-            ReportElementDTO columnRangeDTO = await _reportElementManager.GetColumnRangeById(reportElementId);
-            ReportElementViewModel model = _mapper.Map<ReportElementDTO, ReportElementViewModel>(columnRangeDTO);
+            ReportElementDto columnRangeDTO = await _reportElementManager.GetColumnRangeById(reportElementId);
+            ReportElementViewModel model = _mapper.Map<ReportElementDto, ReportElementViewModel>(columnRangeDTO);
             return View(model);
         }
     }

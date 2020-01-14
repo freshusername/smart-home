@@ -26,14 +26,14 @@ namespace Infrastructure.Business.Managers
             return reportElement;
         }
 
-        public void EditReportElement(ReportElementDTO reportElementDTO)
+        public void EditReportElement(ReportElementDto reportElementDTO)
         {
-            ReportElement reportElement = mapper.Map<ReportElementDTO, ReportElement>(reportElementDTO);
+            ReportElement reportElement = mapper.Map<ReportElementDto, ReportElement>(reportElementDTO);
             unitOfWork.ReportElementRepo.Update(reportElement);
             unitOfWork.Save();
         }
 
-        public async Task<ReportElementDTO> GetWordCloudById(int ReportElementId)
+        public async Task<ReportElementDto> GetWordCloudById(int ReportElementId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
 
@@ -42,9 +42,9 @@ namespace Infrastructure.Business.Managers
             IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
 
             if (!histories.Any())
-                return new ReportElementDTO { Id = ReportElementId, IsCorrect = false };
+                return new ReportElementDto { Id = ReportElementId, IsCorrect = false };
 
-            ReportElementDTO wordCloud = mapper.Map<Sensor, ReportElementDTO>(reportElement.Sensor);
+            ReportElementDto wordCloud = mapper.Map<Sensor, ReportElementDto>(reportElement.Sensor);
 
             wordCloud.DashboardName = reportElement.Dashboard.Name;
             wordCloud.Values = new List<dynamic>();
@@ -68,7 +68,7 @@ namespace Infrastructure.Business.Managers
                 }
             }
             if (!wordCloud.Values.Any())
-                return new ReportElementDTO { IsCorrect = false };
+                return new ReportElementDto { IsCorrect = false };
             return wordCloud;
         }
 
@@ -94,18 +94,18 @@ namespace Infrastructure.Business.Managers
             return gaugeDto;
         }
 
-        public async Task<ReportElementDTO> GetColumnRangeById(int ReportElementId)
+        public async Task<ReportElementDto> GetColumnRangeById(int ReportElementId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
             if (reportElement == null)
-                return new ReportElementDTO { IsCorrect = false, Message = "Invalid report element" };
+                return new ReportElementDto { IsCorrect = false, Message = "Invalid report element" };
 
             DateTime date = DateTime.Now.AddHours(-reportElement.Hours);
             IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
             if (!histories.Any())
-                return new ReportElementDTO { Id = ReportElementId, IsCorrect = false, Message="No histories in this report element" };
+                return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message="No histories in this report element" };
 
-            ReportElementDTO columnRange = mapper.Map<Sensor, ReportElementDTO>(reportElement.Sensor);
+            ReportElementDto columnRange = mapper.Map<Sensor, ReportElementDto>(reportElement.Sensor);
 
             columnRange.DashboardName = reportElement.Dashboard.Name;
             columnRange.Dates = new List<string>();
@@ -147,11 +147,11 @@ namespace Infrastructure.Business.Managers
                     }
                     break;
                 case MeasurementType.Bool:
-                    return new ReportElementDTO { Id = ReportElementId, IsCorrect = false, Message="Invalid sensor type" };
+                    return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message="Invalid sensor type" };
                 case MeasurementType.String:
-                    return new ReportElementDTO { Id = ReportElementId, IsCorrect = false, Message = "Invalid sensor type" };
+                    return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "Invalid sensor type" };
                 default:
-                    return new ReportElementDTO { Id = ReportElementId, IsCorrect = false, Message = "Invalid sensor type" };
+                    return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "Invalid sensor type" };
             }
             return columnRange;
         }

@@ -3,7 +3,7 @@ using Domain.Core.Model.Enums;
 
 namespace Infrastructure.Business.DTOs
 {
-    public class FilterDTO : ICloneable
+    public class FilterDto : ICloneable
     {
 
         public SortState sortState { get; set; } = SortState.None;

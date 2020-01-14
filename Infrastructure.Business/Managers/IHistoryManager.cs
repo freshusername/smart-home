@@ -29,7 +29,7 @@ namespace Infrastructure.Business.Managers
 
         Task<double?> GetMaxValueAfterDate(int sensorId, DateTimeOffset dateTime);
 
-		Task<GraphDTO> GetGraphBySensorId(int SensorId, int days);
+		Task<GraphDto> GetGraphBySensorId(int SensorId, int days);
 		Task<int> GetAmountAsync(bool isActivated);
 
     }
