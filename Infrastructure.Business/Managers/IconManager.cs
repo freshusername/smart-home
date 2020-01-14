@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Domain.Core.Model;
 using Domain.Interfaces;
+using Domain.Interfaces.Repositories;
 using Infrastructure.Business.DTOs.Icon;
 using Infrastructure.Business.Infrastructure;
+using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;

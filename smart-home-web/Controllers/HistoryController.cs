@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Domain.Core.Model.Enums;
 using Infrastructure.Business.DTOs;
 using Infrastructure.Business.DTOs.History;
 using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Migrations;
 using smart_home_web.Models;
 using smart_home_web.Models.History;
-using Domain.Core.Model;
-using Infrastructure.Business.Services;
+
 
 namespace smart_home_web.Controllers
 {
