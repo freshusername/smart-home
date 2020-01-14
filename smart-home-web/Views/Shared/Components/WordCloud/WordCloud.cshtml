@@ -21,50 +21,23 @@ else
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 <script>
-            @switch (Model.MeasurementType)
-            {
-                    case MeasurementType.Int:
-                        <text>
-                        values = JSON.parse('@Html.Raw(Json.Serialize(@Model.IntValues))')
-                        </text>
-                        break;
 
-                    case MeasurementType.Double:
-                        <text>
-                        values = JSON.parse('@Html.Raw(Json.Serialize(@Model.DoubleValues))')
-                        </text>
-                        break;
-
-                    case MeasurementType.Bool:
-                        <text>
-                        values = JSON.parse('@Html.Raw(Json.Serialize(@Model.BoolValues))')
-                        </text>
-                        break;
-
-                    case MeasurementType.String:
-                        <text>
-                        values = JSON.parse('@Html.Raw(Json.Serialize(@Model.StringValues))')
-                        </text>
-                        break;
-
-                    default:
-                        break;
-             }
-            data = Highcharts.reduce(values, function (arr, word) {
-            var obj = Highcharts.find(arr, function (obj) {
-                return obj.name === word;
-            });
-            if (obj) {
-                obj.weight += 1;
-            } else {
-                obj = {
-                    name: word,
-                    weight: 1
-                };
-                arr.push(obj);
-            }
-            return arr;
-            }, []);
+    values = JSON.parse('@Html.Raw(Json.Serialize(@Model.Values))')            
+    data = Highcharts.reduce(values, function (arr, word) {
+    var obj = Highcharts.find(arr, function (obj) {
+        return obj.name === word;
+    });
+    if (obj) {
+        obj.weight += 1;
+    } else {
+        obj = {
+            name: word,
+            weight: 1
+        };
+    arr.push(obj);
+    }
+    return arr;
+    }, []);
 
 
     Highcharts.chart('wordcloud_container_'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
