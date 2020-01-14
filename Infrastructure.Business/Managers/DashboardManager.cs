@@ -8,9 +8,9 @@ using Domain.Interfaces;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Business.DTOs;
 using Infrastructure.Business.DTOs.Dashboard;
-using Infrastructure.Business.Managers;
+using Infrastructure.Business.Interfaces;
 
-namespace Infrastructure.Business.Managers
+namespace Infrastructure.Business.Interfaces
 {
 	public class DashboardManager : BaseManager, IDashboardManager
 	{

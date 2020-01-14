@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Infrastructure.Business.DTOs.SensorType;
-using Infrastructure.Business.Managers;
+using Infrastructure.Business.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using smart_home_web.Models.SensorType;

@@ -3,7 +3,7 @@ using Domain.Core.Model;
 using Infrastructure.Business.DTOs.Icon;
 using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.DTOs.SensorType;
-using Infrastructure.Business.Managers;
+using Infrastructure.Business.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

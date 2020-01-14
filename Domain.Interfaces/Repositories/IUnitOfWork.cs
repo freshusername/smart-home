@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Domain.Core.Model;
+﻿using Domain.Core.Model;
 using Microsoft.AspNetCore.Identity;
 
 namespace Domain.Interfaces.Repositories

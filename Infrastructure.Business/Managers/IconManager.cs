@@ -13,7 +13,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Business.Managers
+namespace Infrastructure.Business.Interfaces
 {
     public class IconManager : BaseManager, IIconManager
     {

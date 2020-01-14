@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Domain.Core.Model;
 using Infrastructure.Business.DTOs.ReportElements;
-using Infrastructure.Business.Managers;
+using Infrastructure.Business.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using smart_home_web.Models;

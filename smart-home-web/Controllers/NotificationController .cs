@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Infrastructure.Business.DTOs.Notification;
-using Infrastructure.Business.Managers;
+using Infrastructure.Business.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Migrations;
 using smart_home_web.Models.Notification;

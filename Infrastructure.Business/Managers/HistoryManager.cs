@@ -14,7 +14,7 @@ using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.Infrastructure;
 using Infrastructure.Data.Repositories;
 
-namespace Infrastructure.Business.Managers
+namespace Infrastructure.Business.Interfaces
 {
     public class HistoryManager : BaseManager, IHistoryManager
     {

@@ -1,8 +1,7 @@
-﻿using Infrastructure.Business.DTOs;
-using Infrastructure.Business.DTOs.Dashboard;
+﻿using Infrastructure.Business.DTOs.Dashboard;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Business.Managers
+namespace Infrastructure.Business.Interfaces
 {
     public interface IDashboardManager
     {

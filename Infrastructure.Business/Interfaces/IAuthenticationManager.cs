@@ -1,11 +1,8 @@
 ﻿using Infrastructure.Business.DTOs;
 using Infrastructure.Business.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Business.Managers
+namespace Infrastructure.Business.Interfaces
 {
     public interface IAuthenticationManager
     {
