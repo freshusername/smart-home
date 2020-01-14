@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using smart_home_web.Models;
 using smart_home_web.Models.History;
 using Domain.Core.Model;
-using Infrastructure.Business.Services;
+using Infrastructure.Business.Managers;
 
 namespace smart_home_web.Controllers
 {

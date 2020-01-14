@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Infrastructure.Business.DTOs.SensorType;
+using Domain.Interfaces.Repositories;
 
 namespace Infrastructure.Business.Managers
 {

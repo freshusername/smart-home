@@ -2,6 +2,7 @@
 using Domain.Core.Model;
 using Domain.Core.Model.Enums;
 using Domain.Interfaces;
+using Domain.Interfaces.Repositories;
 using Infrastructure.Business.DTOs.ReportElements;
 using System;
 using System.Collections.Generic;

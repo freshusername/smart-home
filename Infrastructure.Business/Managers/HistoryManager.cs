@@ -7,6 +7,7 @@ using AutoMapper;
 using Domain.Core.Model;
 using Domain.Core.Model.Enums;
 using Domain.Interfaces;
+using Domain.Interfaces.Repositories;
 using Infrastructure.Business.DTOs;
 using Infrastructure.Business.DTOs.History;
 using Infrastructure.Business.DTOs.Sensor;

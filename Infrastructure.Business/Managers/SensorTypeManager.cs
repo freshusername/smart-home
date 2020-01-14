@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Core.Model;
 using Domain.Interfaces;
+using Domain.Interfaces.Repositories;
 using Infrastructure.Business.DTOs.SensorType;
 using Infrastructure.Business.Infrastructure;
 using System;
