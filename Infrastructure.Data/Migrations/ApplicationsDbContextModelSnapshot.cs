@@ -171,9 +171,12 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<int>("DashboardId");
 
+                    b.Property<int>("Hours");
+
                     b.Property<int>("SensorId");
 
-                    b.Property<int>("Type");
+                    b.Property<string>("Type")
+                        .IsRequired();
 
                     b.HasKey("Id");
 

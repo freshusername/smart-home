@@ -2,3 +2,5 @@
     ViewData["Title"] = "Home Page";
 }
 @await Component.InvokeAsync("Dashboard")
+@await Component.InvokeAsync("WordCloud", new { reportElementId = 1 })
+@await Component.InvokeAsync("Clock")

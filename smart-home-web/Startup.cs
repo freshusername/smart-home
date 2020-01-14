@@ -96,10 +96,10 @@ namespace smart_home_web
             services.AddTransient<ISensorTypeManager, SensorTypeManager>();
             services.AddTransient<IGenericRepository<Message>, BaseRepository<Message>>();
             services.AddTransient<INotificationManager, NotificationManager>();
-            services.AddTransient<IInvalidSensorManager, InvalidSensorManager>();
             services.AddTransient<IDashboardManager, DashboardManager>();
             services.AddTransient<IDashboardOptionsManager, DashboardOptionsManager>();
             services.AddTransient<IOptionsManager, OptionsManager>();
+            services.AddTransient<IReportElementManager, ReportElementManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

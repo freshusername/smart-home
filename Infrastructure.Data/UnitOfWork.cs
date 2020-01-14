@@ -25,6 +25,9 @@ namespace Infrastructure.Data
 		private IOptionsRepo _optionsRepo;
 		
 
+        private IReportElementRepo _reportElementRepo;
+        private IDashboardRepo _dashboardRepo;
+
         public UnitOfWork(
             ApplicationsDbContext dbContext,
             UserManager<AppUser> userManager,
@@ -68,6 +71,15 @@ namespace Infrastructure.Data
             {
                 if (_iconRepo == null) _iconRepo = new IconRepo(context);
                 return _iconRepo;
+            }
+        }
+
+        public IReportElementRepo ReportElementRepo
+        {
+            get
+            {
+                if (_reportElementRepo == null) _reportElementRepo = new ReportElementRepo(context);
+                return _reportElementRepo;
             }
         }
 

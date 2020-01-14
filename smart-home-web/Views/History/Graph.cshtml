@@ -1,5 +1,4 @@
 ﻿@using Domain.Core.Model.Enums
-@using System.Collections.Generic
 @model smart_home_web.Models.GraphViewModel
 
 <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
@@ -25,10 +24,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @for (int i = 0; i < Model.StringValues.Count; i++)
+                            @for (int i = 0; i < Model.Values.Count; i++)
                             {
                                 <tr>
-                                    <th scope="row">@Model.StringValues[i]</th>
+                                    <th scope="row">@Model.Values[i]</th>
                                     <td scope="col">@(((new DateTime(1970, 1, 1)).AddMilliseconds(Model.longDates[i])).ToLocalTime())</td>
 
                                 </tr>
@@ -74,12 +73,17 @@
                 </div>
             </form>
         </div>
+        
     </div>
 </body>
 
 @section Scripts {
     <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/wordcloud.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
     <script src="~/lib/nice-select/dist/js/jquery.nice-select.min.js"></script>
     <script>
         $(document).ready(function () {
@@ -113,13 +117,13 @@
             },
             tooltip: {
                 formatter: function () {
+                    var date = new Date(this.x).toLocaleString();
                     @switch (Model.MeasurementType)
                     {
                         case MeasurementType.Int:
                         case MeasurementType.Double:
 
                             <text>
-                            var date = new Date(this.x).toLocaleString();
                             var result = '<b>' + date + '</b><br>' + this.series.name + ': <b>' + this.y + ' '
                             + JSON.parse('@Html.Raw(Json.Serialize(@Model.MeasurementName))') + '</b><br>'
                             return result;
@@ -129,9 +133,9 @@
                         case MeasurementType.Bool:
 
                             <text>
-                            var date = new Date(this.x).toLocaleString();
-                            var boolValues = JSON.parse('@Html.Raw(Json.Serialize(@Model.BoolValues))')
-                            var result = '<b>' + date + '</b><br>' + this.series.name + ': <b>' + boolValues[this.point.index] + '</b><br>'
+                            var values = JSON.parse('@Html.Raw(Json.Serialize(@Model.Values))')
+                            var value = values[this.point.index] ? 'true':'false'
+                            var result = '<b>' + date + '</b><br>' + this.series.name + ': <b>' + value + '</b><br>'
                             return result;
                             </text>
                             break;
@@ -149,24 +153,7 @@
             },
             series: [{
                 name: JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorType))'),
-                @switch (Model.MeasurementType)
-                {
-                    case MeasurementType.Int:
-                    case MeasurementType.Bool:
-                        <text>
-                        data: JSON.parse('@Html.Raw(Json.Serialize(@Model.IntValues))')
-                        </text>
-                        break;
-
-                    case MeasurementType.Double:
-                        <text>
-                        data: JSON.parse('@Html.Raw(Json.Serialize(@Model.DoubleValues))')
-                        </text>
-                        break;
-
-                    default:
-                        break;
-                }
+                data: JSON.parse('@Html.Raw(Json.Serialize(@Model.Values))'),
             }]
         });
     </script>

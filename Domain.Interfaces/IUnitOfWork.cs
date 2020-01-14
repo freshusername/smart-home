@@ -16,6 +16,7 @@ namespace Domain.Interfaces
         IDashboardRepo DashboardRepo { get; }
         IDashboardOptionsRepo DashboardOptionsRepo { get; }
         IOptionsRepo OptionsRepo { get; }
+        IReportElementRepo ReportElementRepo { get; }
         UserManager<AppUser> UserManager { get; }
         RoleManager<IdentityRole> RoleManager { get; }
         SignInManager<AppUser> SignInManager { get; }

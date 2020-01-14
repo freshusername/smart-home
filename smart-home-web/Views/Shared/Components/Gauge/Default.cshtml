@@ -1,4 +1,8 @@
-﻿<div>
+﻿@using smart_home_web.Models.ReportElements;
+@model GaugeViewModel;
+@if (Model.IsValid)
+{
+<div>
     <link href="~/css/gauge.css" rel="stylesheet" />
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/highcharts-more.js"></script>
@@ -10,7 +14,7 @@
 <div>
     <h2>Gauge component</h2>
     <figure class="highcharts-figure">
-        <div id="container-speed" class="chart-container"></div>
+        <div id="container" class="chart-container"></div>
     </figure>
 </div>
 
@@ -54,6 +58,7 @@
             lineWidth: 0,
             tickWidth: 0,
             minorTickInterval: null,
+            startOnTick: false,
             tickAmount: 2,
             title: {
                 y: -70
@@ -74,13 +79,13 @@
         }
     };
 
-    // The speed gauge
-    var chartSpeed = Highcharts.chart('container-speed', Highcharts.merge(gaugeOptions, {
+    var gaugeChart = Highcharts.chart('container', Highcharts.merge(gaugeOptions, {
         yAxis: {
-            min: 0,
-            max: 200,
+            min: @Model.Min,
+            max: @Model.Max,
+            tickPositions: [@Model.Min, @Model.Max],
             title: {
-                text: 'Speed'
+                text: '@Model.SensorName'
             }
         },
 
@@ -89,17 +94,17 @@
         },
 
         series: [{
-            name: 'Speed',
-            data: [80],
+            name: '@Model.SensorName',
+            data: [@Model.Value],
             dataLabels: {
                 format:
                     '<div style="text-align:center">' +
                     '<span style="font-size:25px">{y}</span><br/>' +
-                    '<span style="font-size:12px;opacity:0.4">km/h</span>' +
+                    '<span style="font-size:12px;opacity:0.4">@Model.MeasurementName</span>' +
                     '</div>'
             },
             tooltip: {
-                valueSuffix: ' km/h'
+                valueSuffix: ' @Model.MeasurementName'
             }
         }]
 
@@ -107,23 +112,42 @@
 
     // Bring life to the dials
     setInterval(function () {
-        // Speed
         var point,
             newVal,
             inc;
 
-        if (chartSpeed) {
-            point = chartSpeed.series[0].points[0];
-            inc = Math.round((Math.random() - 0.5) * 100);
-            newVal = point.y + inc;
+        $.ajax({
+        type: "GET",
+        url: "/api/Gauge/GetGauge/@Model.Id",
+        contentType: "application/json; charset=utf-8",
 
-            if (newVal < 0 || newVal > 200) {
-                newVal = point.y - inc;
+            success: function (res) {
+                if (gaugeChart) {
+                    point = gaugeChart.series[0].points[0];
+                    point.update(res.value);
+                    gaugeChart.yAxis[0].update({
+                        min: res.min,
+                        max: res.max
+                    }); 
+                    gaugeChart.yAxis[0].tickPositions = [res.min, res.max];
+                    gaugeChart.yAxis[0].update({
+                      tickPositions: gaugeChart.yAxis[0].tickPositions
+                    });
+                }
+                //console.log(res);
+                //alert(res);
+            },
+
+            error: function (res) {
+                console.log(res);
+                alert(res);
             }
-
-            point.update(newVal);
-        }
-
+        });
     }, 2000);
 
 </script>
+}
+else
+{
+    <h1>Selected sensor does not have values to display in the selected time period.</h1>
+}
