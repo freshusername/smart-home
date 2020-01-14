@@ -8,6 +8,7 @@ using Domain.Core.Model;
 using Domain.Interfaces;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Business.Infrastructure;
+using Infrastructure.Business.Managers;
 using Infrastructure.Business.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Data.Repositories;
