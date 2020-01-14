@@ -9,7 +9,6 @@ using Domain.Interfaces;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Business.Infrastructure;
 using Infrastructure.Business.Managers;
-using Infrastructure.Business.Managers;
 using Infrastructure.Data;
 using Infrastructure.Data.Repositories;
 using Microsoft.AspNetCore.Authentication;
