@@ -24,7 +24,7 @@ namespace smart_home_web.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        public async Task<IActionResult> EditWordCloud(int id)
+        public async Task<IActionResult> EditReportElement(int id)
         {
             ReportElement reportElement = await _reportElementManager.GetById(id);
             if (reportElement == null)
@@ -34,7 +34,7 @@ namespace smart_home_web.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditWordCloud(EditReportElementViewModel model)
+        public IActionResult EditReportElement(EditReportElementViewModel model)
         {
             if (!ModelState.IsValid)
                 return View(model);

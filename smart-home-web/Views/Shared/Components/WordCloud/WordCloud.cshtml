@@ -12,7 +12,7 @@
 }
 else
 {
-    <label class="control-label graph-label">There is no history measurement for such sensor for that period of time. <a class="btn btn-success text-center" asp-controller="ReportElement" asp-action="EditWordCloud" asp-route-id="@Model.Id"><i class="fas fa-cog"></i></a></label>
+    <label class="control-label graph-label">There is no history measurement for such sensor for that period of time. <a class="btn btn-success text-center" asp-controller="ReportElement" asp-action="EditReportElement" asp-route-id="@Model.Id"><i class="fas fa-cog"></i></a></label>
 }
 
 <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -91,7 +91,7 @@ else
                     x: -20,
                     className : 'highcharts-button-box-settings',
                     onclick: function () {
-                        window.location.href = '/ReportElement/EditWordCloud/'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))')
+                        window.location.href = '/ReportElement/EditReportElement/'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))')
                     },
                 }
             }

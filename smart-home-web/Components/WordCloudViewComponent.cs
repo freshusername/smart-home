@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace smart_home_web.Components
 {
-    public class WordCloudViewComponent : BaseViewComponent
+    public class WordcloudViewComponent : BaseViewComponent
     {
         private readonly IReportElementManager _reportElementManager;
         private readonly IMapper _mapper;
-        public WordCloudViewComponent(IReportElementManager reportElementManager, IMapper mapper)
+        public WordcloudViewComponent(IReportElementManager reportElementManager, IMapper mapper)
         {
             _reportElementManager = reportElementManager;
             _mapper = mapper;
@@ -21,7 +21,7 @@ namespace smart_home_web.Components
         {
             ReportElementDTO wordCloud = await _reportElementManager.GetWordCloudById(reportElementId);
             ReportElementViewModel result = _mapper.Map<ReportElementDTO, ReportElementViewModel>(wordCloud);
-            return View("WordCloud", result);
+            return View("Wordcloud", result);
         }
     }
 }
