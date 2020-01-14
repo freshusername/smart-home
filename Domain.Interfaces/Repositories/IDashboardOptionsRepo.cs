@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Interfaces
+namespace Domain.Interfaces.Repositories
 {
     public interface IDashboardOptionsRepo : IGenericRepository<DashboardOptions>
     {
