@@ -22,6 +22,11 @@ namespace smart_home_web.Models.ReportElements
         public string MeasurementName { get; set; }
 
         public List<dynamic> Values { get; set; }
-    }
+
+		public int X { get; set; }
+		public int Y { get; set; }
+		public int Weight { get; set; }
+		public int Height { get; set; }
+	}
 }
 

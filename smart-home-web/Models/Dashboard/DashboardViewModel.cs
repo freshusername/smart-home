@@ -1,10 +1,10 @@
-﻿using Domain.Core.JoinModel;
+﻿
 using Domain.Core.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Domain.Core.JoinModel;
+using Infrastructure.Business.DTOs.ReportElements;
 
 namespace smart_home_web.Models.Dashboard
 {
@@ -13,7 +13,6 @@ namespace smart_home_web.Models.Dashboard
 		public int Id { get; set; }
 		public string Name { get; set; }
 		
-		public ICollection<Domain.Core.JoinModel.DashboardOptions> DashboardOptions { get; set; }
-		public ICollection<ReportElement> ReportElements { get; set; }
+		public ICollection<ReportElementDTO> ReportElements { get; set; }
 	}
 }

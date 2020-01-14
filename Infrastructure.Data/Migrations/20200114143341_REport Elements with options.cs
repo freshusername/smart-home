@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Infrastructure.Data.Migrations
 {
-    public partial class DaysranemaedtoHours : Migration
+    public partial class REportElementswithoptions : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -210,26 +210,6 @@ namespace Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DashboardOptions",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    DashboardId = table.Column<int>(nullable: false),
-                    OptionsId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DashboardOptions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_DashboardOptions_Dashboards_DashboardId",
-                        column: x => x.DashboardId,
-                        principalTable: "Dashboards",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Sensors",
                 columns: table => new
                 {
@@ -258,29 +238,6 @@ namespace Infrastructure.Data.Migrations
                         principalTable: "SensorTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Options",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    X = table.Column<int>(nullable: false),
-                    Y = table.Column<int>(nullable: false),
-                    Weight = table.Column<int>(nullable: false),
-                    Height = table.Column<int>(nullable: false),
-                    DashboardOptionsId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Options", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Options_DashboardOptions_DashboardOptionsId",
-                        column: x => x.DashboardOptionsId,
-                        principalTable: "DashboardOptions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -316,7 +273,11 @@ namespace Infrastructure.Data.Migrations
                     Type = table.Column<string>(nullable: false),
                     Hours = table.Column<int>(nullable: false),
                     DashboardId = table.Column<int>(nullable: false),
-                    SensorId = table.Column<int>(nullable: false)
+                    SensorId = table.Column<int>(nullable: false),
+                    X = table.Column<int>(nullable: false),
+                    Y = table.Column<int>(nullable: false),
+                    Weight = table.Column<int>(nullable: false),
+                    Height = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -401,11 +362,6 @@ namespace Infrastructure.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_DashboardOptions_DashboardId",
-                table: "DashboardOptions",
-                column: "DashboardId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Dashboards_AppUserId",
                 table: "Dashboards",
                 column: "AppUserId");
@@ -425,11 +381,6 @@ namespace Infrastructure.Data.Migrations
                 table: "Messages",
                 column: "HistoryId",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Options_DashboardOptionsId",
-                table: "Options",
-                column: "DashboardOptionsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ReportElements_DashboardId",
@@ -478,9 +429,6 @@ namespace Infrastructure.Data.Migrations
                 name: "Messages");
 
             migrationBuilder.DropTable(
-                name: "Options");
-
-            migrationBuilder.DropTable(
                 name: "ReportElements");
 
             migrationBuilder.DropTable(
@@ -490,19 +438,16 @@ namespace Infrastructure.Data.Migrations
                 name: "Histories");
 
             migrationBuilder.DropTable(
-                name: "DashboardOptions");
+                name: "Dashboards");
 
             migrationBuilder.DropTable(
                 name: "Sensors");
 
             migrationBuilder.DropTable(
-                name: "Dashboards");
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "SensorTypes");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Icons");

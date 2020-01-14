@@ -1,8 +1,6 @@
 ﻿@using smart_home_web.Models.Dashboard;
 @using smart_home_web.Components;
 @model DashboardViewModel;
-@*<link href="~/lib/gridstack.js/gridstack.css" rel="stylesheet" />
-    <script src="~/lib/gridstack.js/gridstack.js"></script>*@
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@0.6.0/dist/gridstack.min.css" />
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -11,10 +9,11 @@
 
 <h1>Dash</h1>
 
-<div class="grid-stack">
+<div class="grid-stack" data-save-url="@Url.Action("UpdateOptions", "DashboardOptions")">
     @foreach (var report in Model.ReportElements)
-    {<div id="@report.Id" class="grid-stack-item shadow-standart" data-gs-x="4" data-gs-y="0" data-gs-width="4" data-gs-height="4">
+    {<div id="@report.Id" class="grid-stack-item shadow-standart" style=" border-style: solid; border-width: 1px" data-gs-x="4" data-gs-y="4" data-gs-width="4" data-gs-height="4">
             <div class="grid-stack-item-content">
+                @*<<div>@await Component.InvokeAsync(report.Type.ToString(), new { reportElementId = report.Id })</div>*@
                 <div>@report.Id</div>
             </div>
         </div>
@@ -22,16 +21,32 @@
 </div>
 
 <script type="text/javascript">
+
+    let arrToJson = arr => {
+        let obj = {}
+        for (const i in arr) {
+            obj[i] = arr[i]
+        }
+        return obj
+    }
+
     $('.grid-stack').gridstack();
     $('body').on('change', '.grid-stack', function (event, items) {
         var options = [];
         options = items.map(i => {
             return { id: i.el[0].id, x: i.x, y: i.y, width: i.width, height: i.height }
         });
-        console.log(options);     
+        console.log(JSON.stringify(arrToJson(options)));
+        console.log(options);
+
+        $.ajax({
+            type: "POST",
+            url: $(".grid-stack").data("save-url"),
+            data: { options: JSON.stringify(arrToJson(options))}
+        });
     });
 </script>
 
 @*box-shadow: -6px 4px 10px 5px rgba(0, 0, 0, 0.18)*@
 
- @*style=" border-style: solid; border-width: 1px"*@
+@*style=" border-style: solid; border-width: 1px"*@

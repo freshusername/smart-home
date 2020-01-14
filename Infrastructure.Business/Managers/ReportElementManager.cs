@@ -3,6 +3,7 @@ using Domain.Core.Model;
 using Domain.Core.Model.Enums;
 using Domain.Interfaces;
 using Infrastructure.Business.DTOs.ReportElements;
+using Infrastructure.Business.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -93,5 +94,12 @@ namespace Infrastructure.Business.Managers
             }
             return gaugeDto;
         }
-    }
+
+		//TODO: Check if we can make this method async
+		public void Update(ReportElementDTO reportElementDto)
+		{
+			ReportElement reportElement = mapper.Map<ReportElementDTO, ReportElement>(reportElementDto);
+			unitOfWork.ReportElementRepo.Update(reportElement);
+		}
+	}
 }

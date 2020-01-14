@@ -17,22 +17,6 @@ namespace Infrastructure.Data.Migrations
                 .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("Domain.Core.JoinModel.DashboardOptions", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("DashboardId");
-
-                    b.Property<int>("OptionsId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DashboardId");
-
-                    b.ToTable("DashboardOptions");
-                });
-
             modelBuilder.Entity("Domain.Core.Model.AppUser", b =>
                 {
                     b.Property<string>("Id")
@@ -158,28 +142,6 @@ namespace Infrastructure.Data.Migrations
                     b.ToTable("Messages");
                 });
 
-            modelBuilder.Entity("Domain.Core.Model.Options", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("DashboardOptionsId");
-
-                    b.Property<int>("Height");
-
-                    b.Property<int>("Weight");
-
-                    b.Property<int>("X");
-
-                    b.Property<int>("Y");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DashboardOptionsId");
-
-                    b.ToTable("Options");
-                });
-
             modelBuilder.Entity("Domain.Core.Model.ReportElement", b =>
                 {
                     b.Property<int>("Id")
@@ -187,12 +149,20 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<int>("DashboardId");
 
+                    b.Property<int>("Height");
+
                     b.Property<int>("Hours");
 
                     b.Property<int>("SensorId");
 
                     b.Property<string>("Type")
                         .IsRequired();
+
+                    b.Property<int>("Weight");
+
+                    b.Property<int>("X");
+
+                    b.Property<int>("Y");
 
                     b.HasKey("Id");
 
@@ -360,14 +330,6 @@ namespace Infrastructure.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Domain.Core.JoinModel.DashboardOptions", b =>
-                {
-                    b.HasOne("Domain.Core.Model.Dashboard", "Dashboard")
-                        .WithMany()
-                        .HasForeignKey("DashboardId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("Domain.Core.Model.Dashboard", b =>
                 {
                     b.HasOne("Domain.Core.Model.AppUser", "AppUser")
@@ -392,14 +354,6 @@ namespace Infrastructure.Data.Migrations
                     b.HasOne("Domain.Core.Model.History", "History")
                         .WithOne("Message")
                         .HasForeignKey("Domain.Core.Model.Message", "HistoryId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Domain.Core.Model.Options", b =>
-                {
-                    b.HasOne("Domain.Core.JoinModel.DashboardOptions")
-                        .WithMany("Options")
-                        .HasForeignKey("DashboardOptionsId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

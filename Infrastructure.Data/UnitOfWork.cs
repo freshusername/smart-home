@@ -21,8 +21,6 @@ namespace Infrastructure.Data
         private IHistoryRepo _historyRepo;
         private INotificationRepository _notificationRepository;
 		private IDashboardRepo _dashboardRepo;
-		private IDashboardOptionsRepo _dashboardOptionsRepo;
-		private IOptionsRepo _optionsRepo;
         private IReportElementRepo _reportElementRepo;
 
         public UnitOfWork(
@@ -95,24 +93,6 @@ namespace Infrastructure.Data
 			{
 				if (_dashboardRepo == null) _dashboardRepo = new DashboardRepo(context);
 				return _dashboardRepo;
-			}
-		}
-
-		public IDashboardOptionsRepo DashboardOptionsRepo
-		{
-			get
-			{
-				if (_dashboardOptionsRepo == null) _dashboardOptionsRepo = new DashboardOptionsRepo(context);
-				return _dashboardOptionsRepo;
-			}
-		}
-
-		public IOptionsRepo OptionsRepo
-		{
-			get
-			{
-				if (_optionsRepo == null) _optionsRepo = new OptionsRepo(context);
-				return _optionsRepo;
 			}
 		}
 

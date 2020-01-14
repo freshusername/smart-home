@@ -13,7 +13,7 @@ using smart_home_web.Models.ReportElements;
 
 namespace smart_home_web.Controllers
 {
-    public class ReportElementController : Controller
+	public class ReportElementController : Controller
     {
         private readonly IReportElementManager _reportElementManager;
         private readonly IMapper _mapper;
@@ -43,5 +43,5 @@ namespace smart_home_web.Controllers
             return RedirectToAction("Index","Home");
             //return RedirectToAction("Index","Home", new { DashboardId = reportElement.DashboardId});
         }
-    }
+	}
 }
