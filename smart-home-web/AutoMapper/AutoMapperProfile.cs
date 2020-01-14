@@ -97,7 +97,7 @@ namespace smart_home_web.AutoMapper
                 .ForMember(gu => gu.Max, map => map.MapFrom(gd => (int)Math.Ceiling(gd.Max.Value)));
 
             CreateMap<ReportElement, ClockDto>().ReverseMap();
-        }
+        
 			CreateMap<Dashboard, DashboardDto>().ReverseMap();
 			CreateMap<DashboardDto, DashboardViewModel>();
 

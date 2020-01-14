@@ -23,10 +23,7 @@ namespace Infrastructure.Data
 		private IDashboardRepo _dashboardRepo;
 		private IDashboardOptionsRepo _dashboardOptionsRepo;
 		private IOptionsRepo _optionsRepo;
-		
-
         private IReportElementRepo _reportElementRepo;
-        private IDashboardRepo _dashboardRepo;
 
         public UnitOfWork(
             ApplicationsDbContext dbContext,

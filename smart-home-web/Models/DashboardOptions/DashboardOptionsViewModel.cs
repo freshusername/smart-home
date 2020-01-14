@@ -1,4 +1,5 @@
-﻿using System;
+﻿using smart_home_web.Models.Options;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,6 +10,6 @@ namespace smart_home_web.Models.DashboardOptions
 	{
 		public int Id { get; set; }
 		public int DashboardId { get; set; }
-		public int OptionsId { get; set; }
+		public List<OptionsViewModel> OptionsId { get; set; }
 	}
 }

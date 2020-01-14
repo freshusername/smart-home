@@ -20,26 +20,33 @@ using System.Threading.Tasks;
 namespace smart_home_web.Controllers
 {
     [Route("[controller]/[action]")]
-    public class DashboardOptionsController : Controller
+    public class DashboardController : Controller
     {
         private readonly IMapper _mapper;
         private IHostingEnvironment _env;
 		private IDashboardOptionsManager _dashboardOptionsManager;
+		private IDashboardManager _dashboardManager;
 
-		public DashboardOptionsController(IMapper mapper, IHostingEnvironment env, IDashboardOptionsManager dashboardOptionsManager)
+		public DashboardController(
+			IMapper mapper, 
+			IHostingEnvironment env, 
+			IDashboardOptionsManager dashboardOptionsManager, 
+			IDashboardManager dashboardManager)
 		{
 			_mapper = mapper;
 			_env = env;
 			_dashboardOptionsManager = dashboardOptionsManager;
+			_dashboardManager = dashboardManager;
 		}
 
-		//[HttpPost]
-  //      public async Task<ActionResult> AddDashboardOptions(DashboardOptionsViewModel dashboardOptionsViewModel)
-  //      {
-		//	DashboardOptionsDto dashboardOptionsDto = _mapper.Map<DashboardOptionsViewModel, DashboardOptionsDto>(dashboardOptionsViewModel);
+		[HttpPost]
+		public async Task<ActionResult> AddDashboardOptions(DashboardOptionsViewModel dashboardOptionsViewModel)
+		{
+			DashboardOptionsDto dashboardOptionsDto = _mapper.Map<DashboardOptionsViewModel, DashboardOptionsDto>(dashboardOptionsViewModel);
 
-  //          await _dashboardOptionsManager.
-  //          return RedirectToAction("Index", "Sensor");
-  //      }
-    }
+
+
+			return RedirectToAction("Index", "Sensor");
+		}
+	}
 }

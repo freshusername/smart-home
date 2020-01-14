@@ -13,7 +13,5 @@ namespace smart_home_web.Models.Options
 		public int Y { get; set; }
 		public int Weight { get; set; }
 		public int Height { get; set; }
-
-		public int DashboardOptionsId { get; set; }
 	}
 }
