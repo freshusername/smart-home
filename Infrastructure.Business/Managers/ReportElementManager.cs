@@ -67,7 +67,7 @@ namespace Infrastructure.Business.Managers
                         break;
                 }
             }
-            if (wordCloud.Values.Count == 0)
+            if (!wordCloud.Values.Any())
                 return new ReportElementDTO { IsCorrect = false };
             return wordCloud;
         }
