@@ -19,10 +19,10 @@ namespace Infrastructure.Data.Repositories
 
 		public override async Task<Dashboard> GetById(int id)
 		{
-			return context.Dashboards
+			return await context.Dashboards
 				.Include(d => d.AppUser)
 				.Include(d => d.ReportElements)
-				.FirstOrDefault(s => s.Id == id);
+				.FirstOrDefaultAsync(s => s.Id == id);
 		}
 	}
 }

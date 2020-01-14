@@ -18,7 +18,7 @@
                 <tr>
                     <th scope="col" class=" text-center">
                         @{
-                            var sensor = (FilterDTO)Model.FilterDTO.Clone();
+                            var sensor = (FilterDto)Model.FilterDto.Clone();
                             sensor.sortState = (sensor.sortState == SortState.HistoryAsc) ? SortState.HistoryDesc : SortState.HistoryAsc;
                         }
                         <a href="@Url.Action("Index", "History",
@@ -30,7 +30,7 @@
                     <th class="text-center">SensorName</th>
                     <th scope="col" class=" text-center">
                         @{
-                            var date = (FilterDTO)Model.FilterDTO.Clone();
+                            var date = (FilterDto)Model.FilterDto.Clone();
                             date.sortState = (date.sortState == SortState.DateAsc) ? SortState.DateDesc : SortState.DateAsc;
                         }
                         <a href="@Url.Action("Index", "History",
@@ -53,7 +53,7 @@
                                 @history.SensorName
                             </a>
                         </td>
-                        <td>@history.Date</td>
+                        <td>@history.Date.DateTime.ToString("dd/MM/yyyy HH:mm:ss")</td>
 
                         @{
                             if (history.Value.ToString() == "False")
@@ -79,7 +79,7 @@
 
         </table>
         <br />
-        @await Component.InvokeAsync("Pagination", new { action = "Index", controller = "History", filterDTO = Model.FilterDTO })
+        @await Component.InvokeAsync("Pagination", new { action = "Index", controller = "History", filterDto = Model.FilterDto })
 
     </div>
 

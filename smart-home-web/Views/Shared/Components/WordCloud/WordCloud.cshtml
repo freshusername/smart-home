@@ -12,7 +12,7 @@
 }
 else
 {
-    <label class="control-label graph-label">There is no history measurement for such sensor for that period of time. <a class="btn btn-success text-center" asp-controller="ReportElement" asp-action="EditWordCloud" asp-route-id="@Model.Id"><i class="fas fa-cog"></i></a></label>
+    <label class="control-label graph-label">There is no history measurement for such sensor for that period of time. <a class="btn btn-success text-center" asp-controller="ReportElement" asp-action="EditReportElement" asp-route-id="@Model.Id"><i class="fas fa-cog"></i></a></label>
 }
 
 <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -50,7 +50,7 @@ else
                     var pattern = renderer.createElement('pattern').add(renderer.defs).attr({
                         width: 1,
                         height: 1,
-                        id: "image",
+                        id: "settings_image",
                         patternContentUnits: 'userSpaceOnUse'
                     });
 
@@ -84,14 +84,14 @@ else
         }],
         exporting: {
             buttons: {
-                Link: {
+                Edit: {
                     height: 24,
                     width: 24,
                     y: 3,
                     x: -20,
                     className : 'highcharts-button-box-settings',
                     onclick: function () {
-                        window.location.href = '/ReportElement/EditWordCloud/'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))')
+                        window.location.href = '/ReportElement/EditReportElement/'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))')
                     },
                 }
             }

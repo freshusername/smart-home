@@ -8,7 +8,7 @@ namespace smart_home_web.Models
 {
     public class PaginationViewModel
     {
-        public FilterDTO filterDTO { get; set; }
+        public FilterDto filterDto { get; set; }
         public string action { get; set; }
         public string controller { get; set; }
     }

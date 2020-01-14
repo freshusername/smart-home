@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Infrastructure.Business.DTOs.ReportElements
 {
-    public class ReportElementDTO
+    public class ReportElementDto
     {
         public int Id { get; set; }
         public int DashboardId { get; set; }

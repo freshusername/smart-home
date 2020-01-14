@@ -15,7 +15,7 @@
                 <tr>
                     <th scope="col" class=" text-center">
                         @{
-                            var sensor = (FilterDTO)Model.FilterDTO.Clone();
+                            var sensor = (FilterDto)Model.FilterDto.Clone();
                             sensor.sortState = (sensor.sortState == SortState.SensorAsc) ? SortState.SensorDesc : SortState.SensorAsc;
                         }
                         <a href="@Url.Action("InvalidSensors", sensor)">
@@ -26,7 +26,7 @@
 
                     <th scope="col" class=" text-center">
                         @{
-                            var date = (FilterDTO)Model.FilterDTO.Clone();
+                            var date = (FilterDto)Model.FilterDto.Clone();
                             date.sortState = (date.sortState == SortState.DateAsc) ? SortState.DateDesc : SortState.DateAsc;
                         }
                         <a href="@Url.Action("InvalidSensors", date)">
@@ -45,7 +45,7 @@
                         <td scope="row">
                             <a asp-controller="History" asp-action="Detail"
                                asp-route-sensorId="@history.SensorId"
-                               asp-route-page="@Model.FilterDTO.CurrentPage"
+                               asp-route-page="@Model.FilterDto.CurrentPage"
                                style="display: block;">
                                 @history.SensorId
                             </a>
@@ -90,7 +90,7 @@
             </tbody>
         </table>
         <br />
-        @await  Component.InvokeAsync("Pagination",new {action="InvalidSensors", controller="History", filterDTO=Model.FilterDTO })
+        @await  Component.InvokeAsync("Pagination",new {action="InvalidSensors", controller="History", filterDto=Model.FilterDto })
     </div>
 
 </body>
