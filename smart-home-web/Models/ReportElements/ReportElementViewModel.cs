@@ -14,10 +14,10 @@ namespace smart_home_web.Models.ReportElements
         public int SensorId { get; set; }
         public string SensorName { get; set; }
         public int Hours { get; set; }
-        public bool IsCorrect { get; set; }
-
+        public string Message { get; set; }
         public ReportElementType Type { get; set; }
-        
+        public bool IsCorrect { get; set; } = true;
+
         public MeasurementType MeasurementType { get; set; }
         public string MeasurementName { get; set; }
 

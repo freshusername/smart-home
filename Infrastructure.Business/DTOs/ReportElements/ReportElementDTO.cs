@@ -13,6 +13,7 @@ namespace Infrastructure.Business.DTOs.ReportElements
         public int SensorId { get; set; }
         public string SensorName { get; set; }
         public int Hours { get; set; }
+        public string Message { get; set; }
         public ReportElementType Type { get; set; }
         public bool IsCorrect { get; set; } = true;
 

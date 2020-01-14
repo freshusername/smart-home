@@ -97,10 +97,13 @@ namespace Infrastructure.Business.Managers
         public async Task<ReportElementDTO> GetColumnRangeById(int ReportElementId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
+            if (reportElement == null)
+                return new ReportElementDTO { IsCorrect = false, Message = "Invalid report element" };
+
             DateTime date = DateTime.Now.AddHours(-reportElement.Hours);
             IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
             if (!histories.Any())
-                return new ReportElementDTO { Id = ReportElementId, IsCorrect = false };
+                return new ReportElementDTO { Id = ReportElementId, IsCorrect = false, Message="No histories in this report element" };
 
             ReportElementDTO columnRange = mapper.Map<Sensor, ReportElementDTO>(reportElement.Sensor);
 
@@ -119,9 +122,6 @@ namespace Infrastructure.Business.Managers
                         Date = p.Key
                     }).ToList();
 
-                    if (!intValues.Any())
-                        return new ReportElementDTO { IsCorrect = false };
-
                     foreach (var t in intValues)
                     {
                         columnRange.Dates.Add(t.Date.DateTime.ToShortDateString());
@@ -129,6 +129,8 @@ namespace Infrastructure.Business.Managers
                         columnRange.MaxValues.Add(t.Max);
                     }
                     break;
+
+
                 case MeasurementType.Double:
                     var doubleValues = histories.GroupBy(p => p.Date).Select(p => new
                     {
@@ -137,22 +139,19 @@ namespace Infrastructure.Business.Managers
                         Date = p.Key
                     }).ToList();
 
-                    if (!doubleValues.Any())
-                        return new ReportElementDTO { IsCorrect = false };
-
                     foreach (var t in doubleValues)
                     {
-                        columnRange.Dates.Add(t.Date.ToString());
+                        columnRange.Dates.Add(t.Date.DateTime.ToShortDateString());
                         columnRange.MinValues.Add(t.Min);
                         columnRange.MaxValues.Add(t.Max);
                     }
                     break;
                 case MeasurementType.Bool:
-                    return new ReportElementDTO { Id = ReportElementId, IsCorrect = false };
+                    return new ReportElementDTO { Id = ReportElementId, IsCorrect = false, Message="Invalid sensor type" };
                 case MeasurementType.String:
-                    return new ReportElementDTO { Id = ReportElementId, IsCorrect = false };
+                    return new ReportElementDTO { Id = ReportElementId, IsCorrect = false, Message = "Invalid sensor type" };
                 default:
-                    return new ReportElementDTO { Id = ReportElementId, IsCorrect = false };
+                    return new ReportElementDTO { Id = ReportElementId, IsCorrect = false, Message = "Invalid sensor type" };
             }
             return columnRange;
         }

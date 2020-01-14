@@ -7,7 +7,8 @@
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
-
+<link rel="stylesheet" href="~/css/ColumnRange.css">
+<link rel="stylesheet" href="~/css/SettingsButton.css">
 
 @if (Model.IsCorrect)
 {
@@ -17,7 +18,7 @@
 }
 else
 {
-    <label class="control-label graph-label">There is no history measurement for such sensor for that period of time.</label>
+    <label class="control-label graph-label center-block">@Model.Message</label>
 }
 
 <script>
@@ -27,11 +28,11 @@ else
     dates = JSON.parse('@Html.Raw(Json.Serialize(@Model.Dates))');
 
     let temperatures = [];
-
     for (let i = 0; i < dates.length;i++) {
         temperatures.push([minvalues[i],maxvalues[i]])
     }
     Highcharts.chart('columnrange_container', {
+
         chart: {
             events: {
                 load: function () {
@@ -48,38 +49,44 @@ else
                     renderer.image('../images/SettingsButton.svg', 0, 0, 18, 16).add(pattern);
 
                 }
-            }
-        },
-        chart: {
+            },
             type: 'columnrange',
-            inverted: true
+            inverted: true,
         },
-
         title: {
             text: 'Column range for ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))') + ' for dashboard ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.DashboardName))')
         },
 
         xAxis: {
-            categories: dates
+            title: {
+                text: 'Dates'
+            },
+            categories: dates,
+            resize: {
+                enabled: true
+            }
         },
 
         yAxis: {
+            minorTickInterval: 'auto',
             title: {
-                text: 'Temperature ( °C )'
+                style: {
+                    textTransform: 'uppercase'
+                },
+                text: 'Values'
+            },
+            labels: {
+                style: {
+                    fontSize: '12px'
+                }
             }
         },
-
-        tooltip: {
-            valueSuffix: '°C'
-        },
-
         plotOptions: {
             columnrange: {
                 dataLabels: {
-                    enabled: true,
-                    format: '{y}°C'
+                    enabled: true
                 }
-            }
+            },
         },
 
         legend: {
