@@ -3,4 +3,5 @@
 }
 @await Component.InvokeAsync("Dashboard")
 @await Component.InvokeAsync("WordCloud", new { reportElementId = 1 })
+@await Component.InvokeAsync("ColumnRange", new { reportElementId = 1 })
 @await Component.InvokeAsync("Clock")

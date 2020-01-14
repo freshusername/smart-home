@@ -82,6 +82,17 @@ namespace Infrastructure.Data.Repositories
 			return await res.ToListAsync();
 		}
 
+		public History GetLastHistoryBySensorId(int SensorId)
+		{
+			var histories = context.Histories.Include(h => h.Sensor)
+												.ThenInclude(st => st.SensorType)
+											.Select(h => h)
+											.Where(h => h.Sensor.Id == SensorId)
+											.OrderBy(h => h.Date)
+											.Last();
+			return histories;
+		}
+
 		public async Task<double?> GetMinValueAfterDate(int SensorId, DateTimeOffset dateTime)
 		{
 			var histories = await GetHistoriesBySensorId(SensorId);
@@ -90,7 +101,7 @@ namespace Infrastructure.Data.Repositories
 			{
 				minvalue = histories
 								//.Where(h => h.Date > dateTime)
-								.Min(h => (double)(h.DoubleValue.HasValue ? h.DoubleValue : h.IntValue));
+								.Min(h => (h.DoubleValue.HasValue ? h.DoubleValue : h.IntValue));
 			}
 			return minvalue;
 		}
@@ -103,7 +114,7 @@ namespace Infrastructure.Data.Repositories
 			{
 				maxvalue = histories
 								//.Where(h => h.Date > dateTime)
-								.Max(h => (double)(h.DoubleValue.HasValue ? h.DoubleValue : h.IntValue));
+								.Max(h => (h.DoubleValue.HasValue ? h.DoubleValue : h.IntValue));
 			}
 			return maxvalue;
 		}

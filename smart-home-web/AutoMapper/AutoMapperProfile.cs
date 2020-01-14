@@ -16,6 +16,7 @@ using Infrastructure.Business.DTOs.ReportElements;
 using smart_home_web.Models.ReportElements;
 using Infrastructure.Business.DTOs.Dashboard;
 using smart_home_web.Models.Dashboard;
+using System;
 
 namespace smart_home_web.AutoMapper
 {
@@ -76,7 +77,6 @@ namespace smart_home_web.AutoMapper
             CreateMap<EditReportElementViewModel, ReportElementDTO>();
             CreateMap<ReportElementDTO, ReportElement>();
 
-            CreateMap<ColumnRangeDTO, ColumnRangeViewModel>().ReverseMap();
 
             CreateMap<SensorTypeDto, SensorType>();
             CreateMap<SensorTypeViewModel, SensorTypeDto>().ReverseMap();
@@ -91,6 +91,9 @@ namespace smart_home_web.AutoMapper
 
             CreateMap<ReportElement, GaugeDto>().ReverseMap();
             CreateMap<GaugeDto, GaugeViewModel>().ReverseMap();
+            CreateMap<GaugeDto, GaugeUpdateViewModel>()
+                .ForMember(gu => gu.Min, map => map.MapFrom(gd => (int)Math.Floor(gd.Min.Value)))
+                .ForMember(gu => gu.Max, map => map.MapFrom(gd => (int)Math.Ceiling(gd.Max.Value)));
 
             CreateMap<ReportElement, ClockDto>().ReverseMap();
         }

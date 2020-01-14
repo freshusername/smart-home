@@ -13,6 +13,8 @@ using smart_home_web.Models.ReportElements;
 
 namespace smart_home_web.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class ReportElementController : Controller
     {
         private readonly IReportElementManager _reportElementManager;
@@ -42,6 +44,15 @@ namespace smart_home_web.Controllers
             _reportElementManager.EditReportElement(wordCloud);
             return RedirectToAction("Index","Home");
             //return RedirectToAction("Index","Home", new { DashboardId = reportElement.DashboardId});
+        }
+
+        [HttpGet("GetGauge/{id}")]
+        public async Task<IActionResult> Get(int id)
+        {
+            GaugeDto gaugeDto = await _reportElementManager.GetGaugeById(id);
+            GaugeUpdateViewModel result = _mapper.Map<GaugeDto, GaugeUpdateViewModel>(gaugeDto);
+
+            return Ok(result);
         }
     }
 }

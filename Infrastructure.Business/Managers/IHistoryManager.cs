@@ -18,7 +18,9 @@ namespace Infrastructure.Business.Managers
 		Task<IEnumerable<HistoryDto>> GetAllHistoriesAsync();
 		Task<IEnumerable<HistoryDto>> GetHistoriesAsync(int count, int page, SortState sortState, bool IsActivated = true, int sensorId = 0);
 
-		SensorDto GetSensorByToken(Guid token);
+        HistoryDto GetLastHistoryBySensorId(int sensorId);
+
+        SensorDto GetSensorByToken(Guid token);
 
         OperationDetails AddHistory(string value, int sensorId);
 		Task<IEnumerable<HistoryDto>> GetHistoriesBySensorIdAsync(int sensorId);

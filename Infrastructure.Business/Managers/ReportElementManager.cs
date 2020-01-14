@@ -36,52 +36,42 @@ namespace Infrastructure.Business.Managers
         public async Task<ReportElementDTO> GetWordCloudById(int ReportElementId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
-            Dashboard dashboard = await unitOfWork.DashboardRepo.GetById(reportElement.DashboardId);
 
             DateTime date = DateTime.Now.AddHours(-reportElement.Hours);
 
             IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
 
-            Sensor sensor = histories.FirstOrDefault().Sensor;
-            ReportElementDTO wordCloud = mapper.Map<Sensor, ReportElementDTO>(sensor);
+            if (!histories.Any())
+                return new ReportElementDTO { Id = ReportElementId, IsCorrect = false };
 
-            wordCloud.DashboardName = dashboard.Name;
+            ReportElementDTO wordCloud = mapper.Map<Sensor, ReportElementDTO>(reportElement.Sensor);
 
-            wordCloud.IntValues = new List<int>();
-            wordCloud.DoubleValues = new List<double>();
-            wordCloud.BoolValues = new List<bool>();
-            wordCloud.StringValues = new List<string>();
+            wordCloud.DashboardName = reportElement.Dashboard.Name;
+            wordCloud.Values = new List<dynamic>();
 
             foreach (History history in histories)
             {
                 switch (wordCloud.MeasurementType)
                 {
-                    case MeasurementType.Int:
-                        if (history.IntValue.HasValue)
-                            wordCloud.IntValues.Add(history.IntValue.Value);
+                    case MeasurementType.Int when history.IntValue.HasValue:
+                        wordCloud.Values.Add(history.IntValue);
                         break;
-
-                    case MeasurementType.Double:
-                        if (history.DoubleValue.HasValue)
-                            wordCloud.DoubleValues.Add(history.DoubleValue.Value);
+                    case MeasurementType.Double when history.DoubleValue.HasValue:
+                        wordCloud.Values.Add(history.DoubleValue);
                         break;
-
-                    case MeasurementType.Bool:
-                        if (history.BoolValue.HasValue)
-                            wordCloud.BoolValues.Add(history.BoolValue.Value);
+                    case MeasurementType.Bool when history.BoolValue.HasValue:
+                        wordCloud.Values.Add(history.BoolValue);
                         break;
-
-                    case MeasurementType.String:
-                        if (!String.IsNullOrEmpty(history.StringValue))
-                            wordCloud.StringValues.Add(history.StringValue);
-                        break;
-                    default:
+                    case MeasurementType.String when !String.IsNullOrEmpty(history.StringValue):
+                        wordCloud.Values.Add(history.IntValue);
                         break;
                 }
             }
+            if (!wordCloud.Values.Any())
+                return new ReportElementDTO { IsCorrect = false };
             return wordCloud;
         }
-        
+
         public void CreateGauge(int dashboardId, int sensorId)
         {
             throw new NotImplementedException();
@@ -95,6 +85,8 @@ namespace Infrastructure.Business.Managers
             gaugeDto.Max = await historyManager.GetMaxValueAfterDate(reportElement.SensorId, DateTimeOffset.Now - new TimeSpan(14, 0, 0, 0));
             if (gaugeDto.Min.HasValue && gaugeDto.Max.HasValue && gaugeDto.Min != gaugeDto.Max)
             {
+                var value = historyManager.GetLastHistoryBySensorId(reportElement.SensorId);
+                gaugeDto.Value = value.DoubleValue.HasValue ? value.DoubleValue : value.IntValue;
                 gaugeDto.SensorName = reportElement.Sensor.Name;
                 gaugeDto.MeasurementName = reportElement.Sensor.SensorType.MeasurementName;
                 gaugeDto.IsValid = true;
@@ -102,45 +94,67 @@ namespace Infrastructure.Business.Managers
             return gaugeDto;
         }
 
-        public async Task<ColumnRangeDTO> GetColumnRangeById(int ReportElementId)
+        public async Task<ReportElementDTO> GetColumnRangeById(int ReportElementId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
-            if (reportElement.Sensor.SensorType.MeasurementName != "°C")
-            {
-                columnRangeDTO.IsCorrect = false;
-                return null;
-            }
-                
-            Dashboard dashboard = await unitOfWork.DashboardRepo.GetById(reportElement.DashboardId);
             DateTime date = DateTime.Now.AddHours(-reportElement.Hours);
             IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
-            var values = histories.GroupBy(p => p.Date).Select(p => new
-            {
-                Min = p.Min(g => g.IntValue),
-                Max = p.Max(g => g.IntValue),
-                Date = p.Key
-            }).ToList();
+            if (!histories.Any())
+                return new ReportElementDTO { Id = ReportElementId, IsCorrect = false };
 
-            ColumnRangeDTO columnRangeDTO = new ColumnRangeDTO
+            ReportElementDTO columnRange = mapper.Map<Sensor, ReportElementDTO>(reportElement.Sensor);
+
+            columnRange.DashboardName = reportElement.Dashboard.Name;
+            columnRange.Dates = new List<string>();
+            columnRange.MinValues = new List<int?>();
+            columnRange.MaxValues = new List<int?>();
+
+            switch (columnRange.MeasurementType)
             {
-                DashboardName = dashboard.Name,
-                Hours = reportElement.Hours,
-                Dates = new List<DateTimeOffset>(),
-                MinValues = new List<int?>(),
-                MaxValues = new List<int?>(),
-                SensorName=reportElement.Sensor.Name
-            };
-            foreach (var t in values)
-            {
-                columnRangeDTO.Dates.Add(t.Date);
-                columnRangeDTO.MinValues.Add(t.Min);
-                columnRangeDTO.MaxValues.Add(t.Max);
+                case MeasurementType.Int:
+                    var intValues = histories.GroupBy(p => p.Date).Select(p => new
+                    {
+                        Min = p.Min(g => g.IntValue),
+                        Max = p.Max(g => g.IntValue),
+                        Date = p.Key
+                    }).ToList();
+
+                    if (!intValues.Any())
+                        return new ReportElementDTO { IsCorrect = false };
+
+                    foreach (var t in intValues)
+                    {
+                        columnRange.Dates.Add(t.Date.DateTime.ToShortDateString());
+                        columnRange.MinValues.Add(t.Min);
+                        columnRange.MaxValues.Add(t.Max);
+                    }
+                    break;
+                case MeasurementType.Double:
+                    var doubleValues = histories.GroupBy(p => p.Date).Select(p => new
+                    {
+                        Min = p.Min(g => g.IntValue),
+                        Max = p.Max(g => g.IntValue),
+                        Date = p.Key
+                    }).ToList();
+
+                    if (!doubleValues.Any())
+                        return new ReportElementDTO { IsCorrect = false };
+
+                    foreach (var t in doubleValues)
+                    {
+                        columnRange.Dates.Add(t.Date.ToString());
+                        columnRange.MinValues.Add(t.Min);
+                        columnRange.MaxValues.Add(t.Max);
+                    }
+                    break;
+                case MeasurementType.Bool:
+                    return new ReportElementDTO { Id = ReportElementId, IsCorrect = false };
+                case MeasurementType.String:
+                    return new ReportElementDTO { Id = ReportElementId, IsCorrect = false };
+                default:
+                    return new ReportElementDTO { Id = ReportElementId, IsCorrect = false };
             }
-            
-
-
-
-            return columnRangeDTO;
+            return columnRange;
         }
     }
 }
