@@ -105,12 +105,42 @@ namespace Infrastructure.Business.Managers
         public async Task<ColumnRangeDTO> GetColumnRangeById(int ReportElementId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
-            ColumnRangeDTO columnRangeDTO = new ColumnRangeDTO();
             if (reportElement.Sensor.SensorType.MeasurementName != "°C")
+            {
                 columnRangeDTO.IsCorrect = false;
+                return null;
+            }
+                
+            Dashboard dashboard = await unitOfWork.DashboardRepo.GetById(reportElement.DashboardId);
+            DateTime date = DateTime.Now.AddHours(-reportElement.Hours);
+            IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
+            var values = histories.GroupBy(p => p.Date).Select(p => new
+            {
+                Min = p.Min(g => g.IntValue),
+                Max = p.Max(g => g.IntValue),
+                Date = p.Key
+            }).ToList();
+
+            ColumnRangeDTO columnRangeDTO = new ColumnRangeDTO
+            {
+                DashboardName = dashboard.Name,
+                Hours = reportElement.Hours,
+                Dates = new List<DateTimeOffset>(),
+                MinValues = new List<int?>(),
+                MaxValues = new List<int?>(),
+                SensorName=reportElement.Sensor.Name
+            };
+            foreach (var t in values)
+            {
+                columnRangeDTO.Dates.Add(t.Date);
+                columnRangeDTO.MinValues.Add(t.Min);
+                columnRangeDTO.MaxValues.Add(t.Max);
+            }
+            
 
 
-            return null;
+
+            return columnRangeDTO;
         }
     }
 }
