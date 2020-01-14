@@ -31,9 +31,9 @@ namespace Infrastructure.Data.Repositories
             return await context.Sensors.FindAsync(id);
         }
 
-        public Sensor GetSensorById(int id)
+        public async Task<Sensor> GetSensorById(int id)
         {
-            var sensors = context.Sensors.Include(s => s.SensorType).FirstOrDefault(e => e.Id == id);
+            var sensors = await context.Sensors.Include(s => s.SensorType).FirstOrDefaultAsync(e => e.Id == id);
                                  
             return sensors;
         }

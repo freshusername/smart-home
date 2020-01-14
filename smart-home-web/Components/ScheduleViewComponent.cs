@@ -1,5 +1,9 @@
-﻿using Infrastructure.Business.Managers;
+﻿using AutoMapper;
+using Infrastructure.Business.DTOs.ReportElements;
+using Infrastructure.Business.DTOs.SensorType;
+using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Mvc;
+using smart_home_web.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,17 +14,21 @@ namespace smart_home_web.Components
     public class ScheduleViewComponent : ViewComponent
     {
         private readonly IReportElementManager _reportElementManager;
+        private readonly IMapper _mapper;
 
-        public ScheduleViewComponent(IReportElementManager reportElementManager)
+        public ScheduleViewComponent(IReportElementManager reportElementManager,IMapper mapper)
         {
             _reportElementManager = reportElementManager;
+            _mapper = mapper;
         }
 
-        public IViewComponentResult Invoke(int id)
+        public async Task<IViewComponentResult> InvokeAsync(int id , int days = 30)
         {
-          var  data =  _reportElementManager.GetDataForSchedule(id);
+          var  data = await _reportElementManager.GetDataForSchedule(id , days);
+            var result = _mapper.Map<ReportElementDto,ReportElementViewModel>(data);
+              if(result != null) return View(result);
 
-           return View(data);
+            return View();           
         }
     }
 }

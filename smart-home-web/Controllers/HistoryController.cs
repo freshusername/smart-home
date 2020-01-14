@@ -72,14 +72,14 @@ namespace smart_home_web.Controllers
 
         #endregion
 
-        [HttpGet]
-		public async Task<IActionResult> Graph(int sensorId, int days = 30)
-		{
-			var schedule =  _reportElementManager.GetDataForSchedule(sensorId);
-			 var result = _mapper.Map<ScheduleDto, ScheduleViewModel>(schedule);
+  //      [HttpGet]
+		//public async Task<IActionResult> Graph(int sensorId, int days = 30)
+		//{
+		//	var schedule =  _reportElementManager.GetDataForSchedule(sensorId);
+		//	 var result = _mapper.Map<ScheduleDto, ScheduleViewModel>(schedule);
 														
-			return View(result);
-		}
+		//	return View(result);
+		//}
 
 		[HttpPost]
 		public IActionResult Graph(GraphViewModel model)

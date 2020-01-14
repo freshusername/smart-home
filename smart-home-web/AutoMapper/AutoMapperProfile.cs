@@ -90,6 +90,9 @@ namespace smart_home_web.AutoMapper
 
             CreateMap<ReportElement, GaugeDto>().ReverseMap();
             CreateMap<GaugeDto, GaugeViewModel>().ReverseMap();
+
+            CreateMap<ReportElementDto, ReportElementViewModel>().ReverseMap();
+            CreateMap<Sensor, ReportElementDto>();
         }
     }
 }

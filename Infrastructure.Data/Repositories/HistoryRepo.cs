@@ -26,16 +26,7 @@ namespace Infrastructure.Data.Repositories
 
 			return res;
 		}
-
-        public IEnumerable<DateTimeOffset> GetHistoriesDatesBySensorId(int id)
-        {
-            var dates = context.Histories
-                .Include(h => h.Sensor)
-                .Where(e => e.SensorId == id)
-                .Select(e => e.Date).ToList();  
-            
-            return dates;
-        }
+      
         public override async Task<History> GetById(int id)
 		{
 			return await context.Histories
@@ -57,7 +48,7 @@ namespace Infrastructure.Data.Repositories
 			return await histories.ToListAsync();
 		}
 
-        public async Task<IEnumerable<History>> GetHistoriesBySensorIdAndDate(int SensorId, DateTime date)
+        public async Task<IEnumerable<History>> GetHistoriesBySensorIdAndDate(int SensorId, DateTimeOffset date)
         {
             var histories = context.Histories.Include(h => h.Sensor)
                 .ThenInclude(st => st.SensorType)

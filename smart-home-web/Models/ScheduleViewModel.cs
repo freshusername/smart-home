@@ -5,9 +5,16 @@ using System.Threading.Tasks;
 
 namespace smart_home_web.Models
 {
-    public class ScheduleViewModel
+    public class ReportElementViewModel
     {
-        public List<DateTimeOffset> Dates { get; set; }
-        public List<dynamic> Values { get; set; }
+        public int Id { get; set; }
+        public int DashboardId { get; set; }
+        public string DashboardName { get; set; }
+        public int SensorId { get; set; }
+        public string SensorName { get; set; }
+        public int Days { get; set; }
+
+        public IEnumerable<DateTimeOffset> Dates { get; set; }
+        public IEnumerable<dynamic> Values { get; set; }
     }
 }

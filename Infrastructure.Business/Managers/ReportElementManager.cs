@@ -105,35 +105,45 @@ namespace Infrastructure.Business.Managers
             return gaugeDto;
         }
 
-        public ScheduleDto GetDataForSchedule(int id)
+        public async Task<ReportElementDto> GetDataForSchedule(int id , int days)
         {
-            var dates = unitOfWork.HistoryRepo.GetHistoriesDatesBySensorId(id).ToList();
-             var values = GetValues(id).ToList();
+            DateTimeOffset date = DateTimeOffset.Now.AddDays(-days);
+            var histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(id, date);
+             
+             var dates = GetDates(histories);
+              var values = GetValues(histories);
 
-            var schedule = new ScheduleDto { Dates = dates, Values = values };
+            ReportElementDto schedule = mapper.Map<Sensor,ReportElementDto>(histories.First().Sensor);
+             schedule.Dates = dates;
+              schedule.Values = values;
 
             return schedule;
         }
 
-        public IEnumerable<dynamic> GetValues(int id)
+        private IEnumerable<dynamic> GetValues(IEnumerable<History> histories)
         {
-           var histories = unitOfWork.HistoryRepo.GetHistoriesBySensorId(id);
-            var sensor = unitOfWork.SensorRepo.GetSensorById(id);
-
-            foreach (var items in histories.Result)
+                      
+            foreach (var items in histories)
             {
-                if (sensor.SensorType.MeasurementType == MeasurementType.Int)
+                if (items.Sensor.SensorType.MeasurementType == MeasurementType.Int)
                     yield return items.IntValue;
                 else
-                if (sensor.SensorType.MeasurementType == MeasurementType.Double)
+                if (items.Sensor.SensorType.MeasurementType == MeasurementType.Double)
                     yield return items.DoubleValue;
                 else
-                 if (sensor.SensorType.MeasurementType == MeasurementType.Bool)
+                 if (items.Sensor.SensorType.MeasurementType == MeasurementType.Bool)
                     yield return items.BoolValue;
                 else
                     yield return items.StringValue;
-            }
-         
+            }        
+        }
+
+        private IEnumerable<DateTimeOffset> GetDates(IEnumerable<History> histories)
+        {                      
+            foreach (var items in histories)
+            {
+                yield return items.Date;
+            }      
         }
     }
 }
