@@ -21,7 +21,7 @@
                 <tr>
                     <th scope="col" class=" text-center">
                         @{
-                            var sensor = (FilterDTO)Model.FilterDTO.Clone();
+                            var sensor = (FilterDto)Model.FilterDto.Clone();
                             sensor.sortState = (sensor.sortState == SortState.HistoryAsc) ? SortState.HistoryDesc : SortState.HistoryAsc;
                             sensor.sensorId = Model.Histories.FirstOrDefault().SensorId;
                         }
@@ -34,7 +34,7 @@
 
                     <th scope="col" class=" text-center">
                         @{
-                            var date = (FilterDTO)Model.FilterDTO.Clone();
+                            var date = (FilterDto)Model.FilterDto.Clone();
                             date.sortState = (date.sortState == SortState.DateAsc) ? SortState.DateDesc : SortState.DateAsc;
                             date.sensorId = Model.Histories.FirstOrDefault().SensorId;
                         }

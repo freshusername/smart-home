@@ -26,14 +26,14 @@ namespace Infrastructure.Business.Managers
             return reportElement;
         }
 
-        public void EditReportElement(ReportElementDTO reportElementDTO)
+        public void EditReportElement(ReportElementDto reportElementDTO)
         {
-            ReportElement reportElement = mapper.Map<ReportElementDTO, ReportElement>(reportElementDTO);
+            ReportElement reportElement = mapper.Map<ReportElementDto, ReportElement>(reportElementDTO);
             unitOfWork.ReportElementRepo.Update(reportElement);
             unitOfWork.Save();
         }
 
-        public async Task<ReportElementDTO> GetWordCloudById(int ReportElementId)
+        public async Task<ReportElementDto> GetWordCloudById(int ReportElementId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
 
@@ -42,9 +42,9 @@ namespace Infrastructure.Business.Managers
             IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
 
             if (!histories.Any())
-                return new ReportElementDTO { Id = ReportElementId, IsCorrect = false };
+                return new ReportElementDto { Id = ReportElementId, IsCorrect = false };
 
-            ReportElementDTO wordCloud = mapper.Map<Sensor, ReportElementDTO>(reportElement.Sensor);
+            ReportElementDto wordCloud = mapper.Map<Sensor, ReportElementDto>(reportElement.Sensor);
 
             wordCloud.DashboardName = reportElement.Dashboard.Name;
             wordCloud.Values = new List<dynamic>();
@@ -68,7 +68,7 @@ namespace Infrastructure.Business.Managers
                 }
             }
             if (!wordCloud.Values.Any())
-                return new ReportElementDTO { IsCorrect = false };
+                return new ReportElementDto { IsCorrect = false };
             return wordCloud;
         }
 

@@ -11,13 +11,13 @@ namespace smart_home_web.Components
 {
     public class PaginationViewComponent:ViewComponent
     {
-        public IViewComponentResult Invoke(string controller,string action,FilterDTO filterDTO)
+        public IViewComponentResult Invoke(string controller,string action,FilterDto filterDTO)
         {
             PaginationViewModel model = new PaginationViewModel
             {
                 controller = controller,
                 action = action,
-                filterDTO = filterDTO
+                filterDto = filterDTO
             };
             return View(model);
         }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Infrastructure.Business.DTOs
 {
-    public class GraphDTO
+    public class GraphDto
     {
         public int SensorId { get; set; }
         public string SensorName { get; set; }

@@ -9,6 +9,6 @@ namespace smart_home_web.Models.History
 	public class AllHistoriesViewModel
 	{
 		public IEnumerable<HistoryViewModel> Histories { get; set; }
-        public FilterDTO FilterDTO { get; set; }
+        public FilterDto FilterDto { get; set; }
     }
 }

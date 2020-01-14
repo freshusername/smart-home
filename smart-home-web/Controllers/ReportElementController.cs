@@ -38,7 +38,7 @@ namespace smart_home_web.Controllers
         {
             if (!ModelState.IsValid)
                 return View(model);
-            ReportElementDTO wordCloud = _mapper.Map<EditReportElementViewModel, ReportElementDTO>(model);
+            ReportElementDto wordCloud = _mapper.Map<EditReportElementViewModel, ReportElementDto>(model);
             _reportElementManager.EditReportElement(wordCloud);
             return RedirectToAction("Index","Home");
             //return RedirectToAction("Index","Home", new { DashboardId = reportElement.DashboardId});
