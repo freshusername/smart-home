@@ -10,6 +10,6 @@ namespace smart_home_web.Models.DashboardOptions
 	{
 		public int Id { get; set; }
 		public int DashboardId { get; set; }
-		public List<OptionsViewModel> OptionsId { get; set; }
+		public List<OptionsViewModel> Options { get; set; }
 	}
 }

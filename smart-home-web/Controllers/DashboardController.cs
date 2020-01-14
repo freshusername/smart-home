@@ -44,7 +44,7 @@ namespace smart_home_web.Controllers
 		{
 			DashboardOptionsDto dashboardOptionsDto = _mapper.Map<DashboardOptionsViewModel, DashboardOptionsDto>(dashboardOptionsViewModel);
 
-
+			//_dashboardOptionsManager.Create(dashboardOptionsDto);
 
 			return RedirectToAction("Index", "Sensor");
 		}

@@ -9,6 +9,6 @@ namespace Infrastructure.Business.DTOs.DashboardOptions
 	{
 		public int Id { get; set; }
 		public int DashboardId { get; set; }
-		public List<OptionsDto> OptionsId { get; set; }
+		public List<OptionsDto> Options { get; set; }
 	}
 }

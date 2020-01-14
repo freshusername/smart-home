@@ -25,5 +25,18 @@ namespace Infrastructure.Business.Managers
 
 			return result;
 		}
+
+		public async Task<OperationDetails> Create(DashboardDto dashboardDto)
+		{
+			var dashboard = mapper.Map<DashboardDto, Dashboard> (dashboardDto);
+			await unitOfWork.DashboardRepo.Insert(dashboard);
+			var res = unitOfWork.Save();
+
+			if (res > 0)
+			{
+				return new OperationDetails(true, "Saved successfully", "");
+			}
+			return new OperationDetails(true, "Something is wrong", "");
+		}
 	}
 }
