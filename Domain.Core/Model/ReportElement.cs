@@ -15,7 +15,5 @@ namespace Domain.Core.Model
 
         public int SensorId { get; set; }
         public Sensor Sensor { get; set; }
-
-
     }
 }

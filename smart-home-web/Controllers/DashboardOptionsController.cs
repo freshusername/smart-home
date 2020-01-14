@@ -33,13 +33,13 @@ namespace smart_home_web.Controllers
 			_dashboardOptionsManager = dashboardOptionsManager;
 		}
 
-		[HttpPost]
-        public async Task<ActionResult> AddDashboardOptions(DashboardOptionsViewModel dashboardOptionsViewModel)
-        {
-			DashboardOptionsDto dashboardOptionsDto = _mapper.Map<DashboardOptionsViewModel, DashboardOptionsDto>(dashboardOptionsViewModel);
+		//[HttpPost]
+  //      public async Task<ActionResult> AddDashboardOptions(DashboardOptionsViewModel dashboardOptionsViewModel)
+  //      {
+		//	DashboardOptionsDto dashboardOptionsDto = _mapper.Map<DashboardOptionsViewModel, DashboardOptionsDto>(dashboardOptionsViewModel);
 
-            await _dashboardOptionsManager.
-            return RedirectToAction("Index", "Sensor");
-        }
+  //          await _dashboardOptionsManager.
+  //          return RedirectToAction("Index", "Sensor");
+  //      }
     }
 }

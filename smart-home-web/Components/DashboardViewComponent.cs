@@ -12,6 +12,7 @@ namespace smart_home_web.Components
     {
 		private readonly IDashboardManager _dashboardManager;
 		private readonly IMapper _mapper;
+		private readonly IDashboardOptionsManager _dashboardOptionsManager;
 		public DashboardViewComponent(IDashboardManager dashboardManager, IMapper mapper)
 		{
 			_dashboardManager = dashboardManager;
@@ -26,12 +27,12 @@ namespace smart_home_web.Components
 			return View("Detail", result);
         }
 
-		public async Task<OperationDetails> SaveOptionsAsync()
-        {
-			var dashboard = await _dashboardOptionsManager.SaveOptionsAsync();
+		//public async Task<OperationDetails> SaveOptionsAsync()
+  //      {
+		//	var dashboard = await _dashboardOptionsManager.SaveOptionsAsync();
 
-			return new OperationDetails(true, "Dashboard options has been saved", "");
-        }
+		//	return new OperationDetails(true, "Dashboard options has been saved", "");
+  //      }
 
     }
 }

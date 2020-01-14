@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Domain.Core.Model;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Domain.Core.Model.Enums;
-using Infrastructure.Data.Model;
 using Domain.Core.JoinModel;
 
 namespace Infrastructure.Data
@@ -32,12 +31,19 @@ namespace Infrastructure.Data
 
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder
-            .Entity<SensorType>()
-            .Property(e => e.MeasurementType)
-            .HasConversion(
-            v => v.ToString(),
-            v => (MeasurementType)Enum.Parse(typeof(MeasurementType), v));
-        }
+			modelBuilder
+			.Entity<SensorType>()
+			.Property(e => e.MeasurementType)
+			.HasConversion(
+			v => v.ToString(),
+			v => (MeasurementType)Enum.Parse(typeof(MeasurementType), v));
+
+			modelBuilder
+			.Entity<ReportElement>()
+			.Property(e => e.Type)
+			.HasConversion(
+			v => v.ToString(),
+			v => (ReportElementType)Enum.Parse(typeof(ReportElementType), v));
+		}
     }
 }

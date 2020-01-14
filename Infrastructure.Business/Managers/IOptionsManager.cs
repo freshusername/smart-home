@@ -1,11 +1,15 @@
-﻿using Infrastructure.Business.DTOs;
+﻿using Domain.Core.Model;
+using Infrastructure.Business.DTOs;
 using Infrastructure.Business.DTOs.Dashboard;
+using Infrastructure.Business.DTOs.Options;
+using Infrastructure.Business.Infrastructure;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Business.Managers
 {
-    public interface IDashboardManager
+    public interface IOptionsManager
     {
-        Task<DashboardDto> GetById(int id);
+        Task<OptionsDto> GetById(int id);
+		Task<OperationDetails> Create(Options options);
     }
 }
