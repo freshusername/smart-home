@@ -166,5 +166,53 @@ namespace Infrastructure.Business.Managers
             }
             return columnRange;
         }
+
+        public async Task<ReportElementDto> GetDataForSchedule(int id , int hours)
+        {
+            var reportElement = await unitOfWork.ReportElementRepo.GetById(id);
+             if (reportElement == null) return null;
+
+            var dashboard = await unitOfWork.DashboardRepo.GetById(reportElement.DashboardId);
+
+            DateTimeOffset date = DateTimeOffset.Now.AddHours(-hours);
+             var histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
+             
+             var dates = GetDates(histories);
+              var values = GetValues(histories);
+
+            ReportElementDto schedule = mapper.Map<Sensor,ReportElementDto>(histories.First().Sensor);
+             schedule.Dates = dates;
+              schedule.Values = values;
+            schedule.DashboardName = dashboard.Name;
+
+            return schedule;
+        }
+
+        private IEnumerable<dynamic> GetValues(IEnumerable<History> histories)
+        {
+                      
+            foreach (var items in histories)
+            {
+                if (items.Sensor.SensorType.MeasurementType == MeasurementType.Int)
+                    yield return items.IntValue;
+                else
+                if (items.Sensor.SensorType.MeasurementType == MeasurementType.Double)
+                    yield return items.DoubleValue;
+                else
+                 if (items.Sensor.SensorType.MeasurementType == MeasurementType.Bool)
+                    yield return items.BoolValue;
+                else
+                    yield return items.StringValue;
+            }        
+        }
+
+        private IEnumerable<long> GetDates(IEnumerable<History> histories)
+        {                      
+            foreach (var items in histories)
+            {
+                yield return items.Date.ToUnixTimeMilliseconds();
+                 
+            }      
+        }
     }
 }
