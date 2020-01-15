@@ -171,12 +171,16 @@ namespace Infrastructure.Business.Managers
         {
             var reportElement = await unitOfWork.ReportElementRepo.GetById(id);
              if (reportElement == null) return null;
-
-            var dashboard = await unitOfWork.DashboardRepo.GetById(reportElement.DashboardId);
-
-            DateTimeOffset date = DateTimeOffset.Now.AddHours(-(int)hours);
-             var histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
+            
+            DateTimeOffset date;
+            if (hours == 0)
+              date = new DateTimeOffset(1970, 1, 1, 0, 0, 0, new TimeSpan(0, 0, 0));
              
+            date = DateTimeOffset.Now.AddHours(-(int)hours);     
+            
+             var histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
+              var dashboard = await unitOfWork.DashboardRepo.GetById(reportElement.DashboardId);
+
              var milliseconds = GetMilliseconds(histories).ToList();
               var values = GetValues(histories).ToList();
 
