@@ -14,7 +14,10 @@ namespace Infrastructure.Business.DTOs.ReportElements
         public string SensorName { get; set; }
         public int Days { get; set; }
 
-        public IEnumerable<DateTimeOffset> Dates { get; set; }
+        public MeasurementType MeasurementType { get; set; }
+        public string MeasurementName { get; set; }
+
+        public IEnumerable<long> Dates { get; set; }
         public IEnumerable<dynamic> Values { get; set; }
     }
 }

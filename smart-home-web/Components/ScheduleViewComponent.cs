@@ -24,11 +24,12 @@ namespace smart_home_web.Components
 
         public async Task<IViewComponentResult> InvokeAsync(int id , int days = 30)
         {
-          var  data = await _reportElementManager.GetDataForSchedule(id , days);
-            var result = _mapper.Map<ReportElementDto,ReportElementViewModel>(data);
-              if(result != null) return View(result);
+            var data = await _reportElementManager.GetDataForSchedule(id , days);
+             if (data == null) ModelState.AddModelError("" , " Theare is no measurement data");
 
-            return View();           
+            var result = _mapper.Map<ReportElementDto,ReportElementViewModel>(data);
+            
+            return View(result);           
         }
     }
 }

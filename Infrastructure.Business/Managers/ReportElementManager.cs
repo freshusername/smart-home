@@ -105,10 +105,15 @@ namespace Infrastructure.Business.Managers
             return gaugeDto;
         }
 
-        public async Task<ReportElementDto> GetDataForSchedule(int id , int days)
+        public async Task<ReportElementDto> GetDataForSchedule(int id , int hours)
         {
-            DateTimeOffset date = DateTimeOffset.Now.AddDays(-days);
-            var histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(id, date);
+            var reportElement = await unitOfWork.ReportElementRepo.GetById(id);
+             if (reportElement == null) return null;
+
+            var dashboard = await unitOfWork.DashboardRepo.GetById(reportElement.DashboardId);
+
+            DateTimeOffset date = DateTimeOffset.Now.AddHours(-hours);
+             var histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
              
              var dates = GetDates(histories);
               var values = GetValues(histories);
@@ -116,6 +121,7 @@ namespace Infrastructure.Business.Managers
             ReportElementDto schedule = mapper.Map<Sensor,ReportElementDto>(histories.First().Sensor);
              schedule.Dates = dates;
               schedule.Values = values;
+            schedule.DashboardName = dashboard.Name;
 
             return schedule;
         }
@@ -138,11 +144,12 @@ namespace Infrastructure.Business.Managers
             }        
         }
 
-        private IEnumerable<DateTimeOffset> GetDates(IEnumerable<History> histories)
+        private IEnumerable<long> GetDates(IEnumerable<History> histories)
         {                      
             foreach (var items in histories)
             {
-                yield return items.Date;
+                yield return items.Date.ToUnixTimeMilliseconds();
+                 
             }      
         }
     }

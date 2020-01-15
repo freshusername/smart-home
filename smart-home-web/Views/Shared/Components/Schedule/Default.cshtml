@@ -1,11 +1,13 @@
-﻿@model smart_home_web.Models.ReportElementViewModel;
+﻿@using smart_home_web.Models.ReportElements
+﻿@using Domain.Core.Model.Enums
+@model ReportElementViewModel
 
+<link href="~/css/schedule.css" rel="stylesheet" />
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/data.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
-<link href="~/css/schedule.css" rel="stylesheet" />
 
 <figure class="highcharts-figure">
     <div id="container"></div>
@@ -20,21 +22,54 @@
                     zoomType: 'x'
                 },
                 title: {
-                    text: 'USD to EUR exchange rate over time'
+                    text:  JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))')
                 },
                 subtitle: {
                     text: document.ontouchstart === undefined ?
                         'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
                 },
                 xAxis: {
-                    type: 'datetime', 
-                    categories: JSON.parse('@Html.Raw(Json.Serialize(@Model.Dates))')
+                    type: 'datetime',
+                    categories: JSON.parse('@Html.Raw(Json.Serialize(@Model.Dates))'),
+                labels: {
+                    formatter: function () {
+                        return new Date(this.value).toLocaleString();
+                    }
+                }
+
                 },
                 yAxis: {
                     title: {
-                        text: 'Exchange rate'
+                        text: JSON.parse('@Html.Raw(Json.Serialize(@Model.DashboardName))')
                     }
                 },
+                 tooltip: {
+                formatter: function () {
+                    var date = new Date(this.x).toLocaleString();
+                    @switch (Model.MeasurementType)
+                     {
+
+                        case MeasurementType.Bool:
+
+                            <text>
+                            var values = JSON.parse('@Html.Raw(Json.Serialize(@Model.Values))')
+                            var value = values[this.point.index] ? 'true':'false'
+                            var result = '<b>' + date + '</b><br>' + this.series.name + ': <b>' + value + '</b><br>'
+                            return result;
+                            </text>
+                            break;
+
+                        default:
+                            <text>
+                            var result = '<b>' + date + '</b><br>' + this.series.name + ': <b>' + this.y + ' '
+                            + JSON.parse('@Html.Raw(Json.Serialize(@Model.MeasurementName))') + '</b><br>'
+                            return result;
+                            </text>
+                            break;
+                     }
+                 }
+                },
+
                 legend: {
                     enabled: false
                 },
@@ -67,8 +102,9 @@
 
                 series: [{
                     type: 'area',
-                    name: 'USD to EUR',
+                    name: JSON.parse('@Html.Raw(Json.Serialize(@Model.MeasurementName))'),
                     data: JSON.parse('@Html.Raw(Json.Serialize(@Model.Values))')
+
                 }]
             });
         }
