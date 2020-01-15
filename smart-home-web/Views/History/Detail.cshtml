@@ -10,6 +10,8 @@
     ViewData["Title"] = "Detail";
 }
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 <h2><b>@Model.Histories.First().SensorName</b> Detail <a class="btn btn-success text-center" asp-action="Graph" asp-route-sensorId="@Model.Histories.First().SensorId" asp-route-days="99999"><i class="fa fa-bar-chart"></i></a></h2>
 
 <body>
@@ -19,7 +21,7 @@
                 <tr>
                     <th scope="col" class=" text-center">
                         @{
-                            var sensor = (FilterDTO)Model.FilterDTO.Clone();
+                            var sensor = (FilterDto)Model.FilterDto.Clone();
                             sensor.sortState = (sensor.sortState == SortState.HistoryAsc) ? SortState.HistoryDesc : SortState.HistoryAsc;
                             sensor.sensorId = Model.Histories.FirstOrDefault().SensorId;
                         }
@@ -32,7 +34,7 @@
 
                     <th scope="col" class=" text-center">
                         @{
-                            var date = (FilterDTO)Model.FilterDTO.Clone();
+                            var date = (FilterDto)Model.FilterDto.Clone();
                             date.sortState = (date.sortState == SortState.DateAsc) ? SortState.DateDesc : SortState.DateAsc;
                             date.sensorId = Model.Histories.FirstOrDefault().SensorId;
                         }
@@ -74,5 +76,7 @@
             </tbody>
         </table>
         <br />
+        <a class="btn btn-success text-center" asp-action="Graph" asp-route-sensorId="@Model.Histories.First().SensorId" asp-route-days="99999">Graph</a>
+        <a class="btn btn-primary" asp-action="BackToList" asp-route-sensorId="@Model.Histories.First().SensorId"><em class="glyphicon glyphicon-arrow-left"></em> Back to list</a>
     </div>
 </body>

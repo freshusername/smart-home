@@ -6,8 +6,11 @@
     ViewData["Title"] = "Sensors";
 }
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
 <h2>Sensors List</h2>
-@if (!User.Identity.IsAuthenticated)
+@if (User.Identity.IsAuthenticated)
 {
     <div class="button-center">
         <a asp-action="Create" class="btn btn-success">Add new sensor</a>
@@ -17,12 +20,8 @@
     <thead>
         <tr>
             <th scope="col">Id</th>
-            <th scope="col">Name</th>
-            <th scope="col">Comment</th>
-            <th scope="col">Created on</th>
-            <th scope="col">Sensor Type</th>
-            <th scope="col">Activated</th>
             <th scope="col">Icon</th>
+            <th scope="col">Sensor</th>
             <th scope="col">Actions</th>
         </tr>
     </thead>
@@ -31,11 +30,6 @@
         {
             <tr>
                 <th scope="row">@sensor.Id</th>
-                <td>@sensor.Name</td>
-                <td>@sensor.Comment</td>
-                <td>@sensor.CreatedOn</td>
-                <td>@sensor.SensorTypeName</td>
-                <td>@sensor.IsActivated</td>
                 <td>
                     @if (sensor.IconPath != null)
                     {
@@ -46,8 +40,33 @@
                         <p>No image was added</p>
                     }
                 </td>
+                <td>
+                    <div id="sensor-details">
+                        <h5>Name: @sensor.Name</h5>
+                        <h5>Type: @sensor.SensorTypeName</h5>
+                    </div>
+                    <i class="fa fa-thumbs-up" onclick="toggleAdditionalInfo(this);" style="cursor: help;"></i>
+                    <div class="sensor-details-additional" style="display: none;">
+                        <h5>Created: @sensor.CreatedOn</h5>
+                        <h5>Comment: @sensor.Comment</h5>
+                        <h5>Activated: @sensor.IsActivated</h5>
+                        <h5>Token: @sensor.Token</h5>
+                    </div>
+                </td>
+
                 <td><a class="btn btn-success text-center" asp-controller="History" asp-action="Graph" asp-route-sensorId="@sensor.Id" asp-route-days="99999"><i class="fa fa-bar-chart"></i></a></td>
             </tr>
         }
     </tbody>
 </table>
+<script>
+    function toggleAdditionalInfo(e) {
+        var subRow = e.nextElementSibling;
+        subRow.style.display = subRow.style.display === 'none' ? 'inherit' : 'none';
+    }
+
+    $('.fa-thumbs-up').click(function () {
+        $(this).toggleClass('fa fa-thumbs-down');
+        $(this).toggleClass('fa fa-thumbs-up');
+    });
+</script>

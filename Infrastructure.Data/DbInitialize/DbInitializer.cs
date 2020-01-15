@@ -1,20 +1,21 @@
 ﻿using Domain.Core.Model;
+using Domain.Interfaces;
+using Domain.Interfaces.Repositories;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Data.DbInitialize
 {
     public static class DbInitializer
     {
 
-        public static void SeedData(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
+        public static void SeedData(
+			UserManager<AppUser> userManager, 
+			RoleManager<IdentityRole> roleManager,
+			IUnitOfWork unitOfWork)
         {
             SeedRoles(roleManager);
             SeedUsers(userManager);
-
+			//SeedDashboard(userManager, unitOfWork);
         }
 
         public static void SeedRoles(RoleManager<IdentityRole> roleManager)
@@ -67,5 +68,29 @@ namespace Infrastructure.Data.DbInitialize
             }
         }
 
-    }
+		//public static void SeedDashboard(UserManager<AppUser> userManager, IUnitOfWork unitOfWork)
+		//{
+		//	//var dashboard = new Dashboard
+		//	//{
+		//	//	Name = "Test1",
+		//	//	AppUserId = userManager.FindByNameAsync("user@user.com").Result.Id,
+		//	//	ReportElements = new List<ReportElement>
+		//	//	{
+		//	//		new ReportElement
+		//	//		{
+		//	//			SensorId = 4,
+		//	//			Type = Domain.Core.Model.Enums.ReportElementType.Clock
+		//	//		},
+		//	//		new ReportElement
+		//	//		{
+		//	//			SensorId = 5,
+		//	//			Type = Domain.Core.Model.Enums.ReportElementType.Clock
+		//	//		}
+		//	//	}
+		//	//};
+
+		//	//unitOfWork.DashboardRepo.Insert(dashboard);
+		//	//unitOfWork.Save();
+		//}
+	}
 }

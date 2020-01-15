@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Domain.Core.Model;
 using Domain.Interfaces;
+using Domain.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data.Repositories
@@ -28,7 +29,7 @@ namespace Infrastructure.Data.Repositories
 
 		public override async Task<Message> GetById(int id)
 		{
-			return await _context.Messages.Include(h => h.Id).FirstOrDefaultAsync(s => s.Id == id);
+			return await _context.Messages.FirstOrDefaultAsync(s => s.Id == id);
 		}
 
 		public IEnumerable<Message> GetNotificationByHistoryId(int HistoryId)

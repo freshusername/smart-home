@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Domain.Core.Model;
 using Domain.Interfaces;
+using Domain.Interfaces.Repositories;
 using Infrastructure.Data.Repositories;
 using Microsoft.AspNetCore.Identity;
 
@@ -20,6 +21,10 @@ namespace Infrastructure.Data
         private IIconRepo _iconRepo;
         private IHistoryRepo _historyRepo;
         private INotificationRepository _notificationRepository;
+		private IDashboardRepo _dashboardRepo;
+		private IDashboardOptionsRepo _dashboardOptionsRepo;
+		private IOptionsRepo _optionsRepo;
+        private IReportElementRepo _reportElementRepo;
 
         public UnitOfWork(
             ApplicationsDbContext dbContext,
@@ -67,6 +72,15 @@ namespace Infrastructure.Data
             }
         }
 
+        public IReportElementRepo ReportElementRepo
+        {
+            get
+            {
+                if (_reportElementRepo == null) _reportElementRepo = new ReportElementRepo(context);
+                return _reportElementRepo;
+            }
+        }
+
         public INotificationRepository NotificationRepository
         {
             get
@@ -75,7 +89,35 @@ namespace Infrastructure.Data
                 return _notificationRepository;
             }
         }
-        public int Save()
+
+		public IDashboardRepo DashboardRepo
+		{
+			get
+			{
+				if (_dashboardRepo == null) _dashboardRepo = new DashboardRepo(context);
+				return _dashboardRepo;
+			}
+		}
+
+		public IDashboardOptionsRepo DashboardOptionsRepo
+		{
+			get
+			{
+				if (_dashboardOptionsRepo == null) _dashboardOptionsRepo = new DashboardOptionsRepo(context);
+				return _dashboardOptionsRepo;
+			}
+		}
+
+		public IOptionsRepo OptionsRepo
+		{
+			get
+			{
+				if (_optionsRepo == null) _optionsRepo = new OptionsRepo(context);
+				return _optionsRepo;
+			}
+		}
+
+		public int Save()
         {
             return context.SaveChanges();
         }

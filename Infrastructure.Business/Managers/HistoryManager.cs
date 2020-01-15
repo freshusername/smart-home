@@ -7,6 +7,7 @@ using AutoMapper;
 using Domain.Core.Model;
 using Domain.Core.Model.Enums;
 using Domain.Interfaces;
+using Domain.Interfaces.Repositories;
 using Infrastructure.Business.DTOs;
 using Infrastructure.Business.DTOs.History;
 using Infrastructure.Business.DTOs.Sensor;
@@ -38,65 +39,86 @@ namespace Infrastructure.Business.Managers
             return result;
         }
 
-        public async Task<IEnumerable<HistoryDto>> GetHistoriesBySensorIdAsync(int sensorId)
+		public async Task<IEnumerable<HistoryDto>> GetHistoriesAsync(int count, int page, SortState sortState, bool isActivated = true, int sensorId = 0)
+		{
+			var histories = await unitOfWork.HistoryRepo.GetByPage(count, page, sortState, isActivated, sensorId);
+			
+			var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories);
+
+			return result;
+		}
+
+
+		public async Task<IEnumerable<HistoryDto>> GetHistoriesBySensorIdAsync(int sensorId)
+		{
+			var histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorId(sensorId);
+			var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories);
+
+			return result;
+		}
+
+        public HistoryDto GetLastHistoryBySensorId(int sensorId)
         {
-            var histories = unitOfWork.HistoryRepo.GetHistoriesBySensorId(sensorId);
-            var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories);
+            var history = unitOfWork.HistoryRepo.GetLastHistoryBySensorId(sensorId);
+            var result = mapper.Map<History, HistoryDto>(history);
 
             return result;
         }
 
-        public GraphDTO GetGraphBySensorId(int SensorId, int days)
+        public double? GetMinValueForPeriod(int sensorId, int? hours)
         {
-            IEnumerable<History> histories = unitOfWork.HistoryRepo.GetHistoriesBySensorId(SensorId);
+            return unitOfWork.HistoryRepo.GetMinValueForPeriod(sensorId, hours);
+        }
+        public double? GetMaxValueForPeriod(int sensorId, int? hours)
+        {
+            return unitOfWork.HistoryRepo.GetMaxValueForPeriod(sensorId, hours);;
+        }
+
+        public async Task<GraphDto> GetGraphBySensorId(int SensorId, int days)
+        {
+            DateTime date = DateTime.Now.AddDays(-days);
+
+            IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(SensorId, date);
+
             if (!histories.Any())
-                return new GraphDTO { IsCorrect = false };
+                return new GraphDto { IsCorrect = false };
 
             Sensor sensor = histories.FirstOrDefault().Sensor;
-            GraphDTO graph = mapper.Map<Sensor, GraphDTO>(sensor);
-            
-            graph.Dates = new List<DateTimeOffset>();
-            
-            DateTimeOffset date = DateTimeOffset.Now.AddDays(-days);
+            GraphDto graph = mapper.Map<Sensor, GraphDto>(sensor);
 
-            graph.IntValues = new List<int>();
-            graph.DoubleValues = new List<double>();
-            graph.BoolValues = new List<bool>();
-            graph.StringValues = new List<string>();
+            graph.Dates = new List<DateTimeOffset>();
+            graph.Values = new List<dynamic>();
 
             foreach (History history in histories)
             {
-                if (history.Date > date)
+                switch (graph.MeasurementType)
                 {
-                    graph.Dates.Add(history.Date);
-                    switch (graph.MeasurementType)
-                    {
-                        case MeasurementType.Int:
-                            graph.IntValues.Add(history.IntValue.Value);
-                            break;
+                    case MeasurementType.Int when history.IntValue.HasValue:
+                            graph.Dates.Add(history.Date);
+                            graph.Values.Add(history.IntValue.Value);
+                        break;
 
-                        case MeasurementType.Double:
-                            graph.DoubleValues.Add(history.DoubleValue.Value);
-                            break;
+                    case MeasurementType.Double when history.DoubleValue.HasValue:
+                            graph.Dates.Add(history.Date);
+                            graph.Values.Add(history.DoubleValue.Value);
+                        break;
 
-                        case MeasurementType.Bool:
-                            graph.BoolValues.Add(history.BoolValue.Value);
-                            graph.IntValues.Add(history.BoolValue.Value ? 1 : 0);
-                            break;
+                    case MeasurementType.Bool when history.BoolValue.HasValue:
+                            graph.Dates.Add(history.Date);
+                            graph.Values.Add(history.BoolValue.Value ? 1 : 0);
+                        break;
 
-                        case MeasurementType.String:
-                            graph.StringValues.Add(history.StringValue);
-                            break;
-                        default:
-                            break;
-                    }
+                    case MeasurementType.String when !String.IsNullOrEmpty(history.StringValue):
+                            graph.Dates.Add(history.Date);
+                            graph.Values.Add(history.StringValue);
+                        break;
                 }
             }
             if (!graph.Dates.Any())
                 graph.IsCorrect = false;
             return graph;
         }
-    
+
 
         public SensorDto GetSensorByToken(Guid token)
         {
@@ -136,6 +158,11 @@ namespace Infrastructure.Business.Managers
             return new OperationDetails(true, "Operation succeed", "");
         
         }
+
+		public async Task<int> GetAmountAsync(bool isActivated)
+		{
+			return await unitOfWork.HistoryRepo.GetAmountAsync(isActivated);
+		}
     }
 }
 

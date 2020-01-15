@@ -31,7 +31,7 @@
                         <p>@messages.Date</p>
                         @if (messages.IsRead.ToString() == "False" && messages.UserName == User.Identity.Name)
                         {
-                            <a asp-controller="Notification" asp-action="Index">
+                            <a href="@Url.Action("ChangeStatus", "Notification", new { id = messages.Id, page = "All"}, null)">
                                 <div class="right">
                                     <span class="glyphicon glyphicon-remove-circle" style="font-size:20px" title="Mark as unread"></span>
                                 </div>
@@ -39,7 +39,7 @@
                         }
                         @if (messages.IsRead.ToString() == "True" && messages.UserName == User.Identity.Name)
                         {
-                            <a asp-controller="Notification" asp-action="Index">
+                            <a href="@Url.Action("ChangeStatus", "Notification", new { id = messages.Id, page = "All"}, null)">
                                 <div class="right">
                                     <span class="glyphicon glyphicon-ok-circle" style="font-size:20px" title="Mark as read"></span>
                                 </div>

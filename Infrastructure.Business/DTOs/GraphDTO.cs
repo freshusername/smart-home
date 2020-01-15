@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Infrastructure.Business.DTOs
 {
-    public class GraphDTO
+    public class GraphDto
     {
         public int SensorId { get; set; }
         public string SensorName { get; set; }
@@ -17,9 +17,6 @@ namespace Infrastructure.Business.DTOs
 
         public List<DateTimeOffset> Dates { get; set; }
 
-        public List<string> StringValues { get; set; }
-        public List<int> IntValues { get; set; }
-        public List<double> DoubleValues { get; set; }
-        public List<bool> BoolValues { get; set; }
+        public List<dynamic> Values { get; set; }
     }
 }

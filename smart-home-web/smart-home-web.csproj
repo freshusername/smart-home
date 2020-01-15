@@ -7,9 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\Shared\Components\ColumnRang\**" />
     <Compile Remove="wwwroot\images\SensorTypeIcons\**" />
+    <Content Remove="Views\Shared\Components\ColumnRang\**" />
     <Content Remove="wwwroot\images\SensorTypeIcons\**" />
+    <EmbeddedResource Remove="Views\Shared\Components\ColumnRang\**" />
     <EmbeddedResource Remove="wwwroot\images\SensorTypeIcons\**" />
+    <None Remove="Views\Shared\Components\ColumnRang\**" />
     <None Remove="wwwroot\images\SensorTypeIcons\**" />
   </ItemGroup>
 

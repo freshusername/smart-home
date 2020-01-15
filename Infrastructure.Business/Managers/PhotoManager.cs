@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Interfaces;
+using Domain.Interfaces.Repositories;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;

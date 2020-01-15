@@ -19,7 +19,6 @@ namespace Infrastructure.Business.DTOs.History
 		public string MeasurementName { get; set; }
 		public string MeasurementType { get; set; }
 
-
 		public string GetStringValue()
 		{
 			if (BoolValue != null) return BoolValue.ToString();

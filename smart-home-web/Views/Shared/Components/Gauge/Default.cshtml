@@ -1,0 +1,209 @@
+﻿@using smart_home_web.Models.ReportElements;
+@using Domain.Core.Model.Enums;
+@model GaugeViewModel;
+@if (Model.IsValid)
+{
+    <div>
+        <link href="~/css/gauge.css" rel="stylesheet" />
+        <link href="~/lib/nice-select/dist/css/nice-select.css" rel="stylesheet" />
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
+        </script>
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="https://code.highcharts.com/highcharts-more.js"></script>
+        <script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
+        <script src="https://code.highcharts.com/modules/exporting.js"></script>
+        <script src="https://code.highcharts.com/modules/export-data.js"></script>
+        <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    </div>
+<div>
+    <h2>Gauge component</h2>
+    <form id="form1" method="post" >
+        <div class="form-group">
+            <label class="control-label" style="margin-top:20px;">
+                Select period:
+            </label>
+            <div style="margin-bottom:50px">
+                <select id="hours" asp-for="Hours" asp-items="@Html.GetEnumSelectList<ReportElementHours>()" class="nice-select col-lg-4 col-md-5 col-sm-6 col-xs-12"></select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <input id="id" type="hidden" asp-for="Id" value="@Model.Id" />
+        </div>
+        <div class="form-group">
+            <input id="submit" type="submit" value="Choose" class="btn btn-success text-center" style="width:15%" />
+        </div>
+    </form>
+    <figure class="highcharts-figure">
+        <div id="container" class="chart-container"></div>
+    </figure>
+</div>
+<script type="text/javascript">
+    
+    $(function () {  
+        $("form").on("submit", function (e) {
+            e.preventDefault(); 
+            var gaugeViewModel = new Object();  
+            gaugeViewModel.Id = $('#id').val();  
+            gaugeViewModel.Hours = $('#hours').val();   
+            if (gaugeViewModel != null) {  
+                $.ajax({
+                    type: "PUT",  
+                    url: '@Url.Action("UpdateGaugeHours", "Gauge")',  
+                    data: JSON.stringify(gaugeViewModel),  
+                    contentType: "application/json; charset=utf-8",  
+                    dataType: "json",  
+                    success: function(response) {  
+                        if (response != null) {
+                            alert(response.responseText);  
+                        } else {  
+                            alert("Something went wrong");  
+                        }  
+                    },  
+                    failure: function(response) {  
+                        alert(response.responseText);  
+                    },  
+                    error: function(response) {  
+                        alert(response.responseText);  
+                    }  
+                });  
+            }  
+        });  
+    });
+
+</script>
+
+<script>
+    var gaugeOptions = {
+        chart: {
+            type: 'solidgauge'
+        },
+
+        title: null,
+
+        pane: {
+            center: ['50%', '85%'],
+            size: '140%',
+            startAngle: -90,
+            endAngle: 90,
+            background: {
+                backgroundColor:
+                    Highcharts.defaultOptions.legend.backgroundColor || '#EEE',
+                innerRadius: '60%',
+                outerRadius: '100%',
+                shape: 'arc'
+            }
+        },
+
+        exporting: {
+            enabled: false
+        },
+
+        tooltip: {
+            enabled: false
+        },
+
+        // the value axis
+        yAxis: {
+            stops: [
+                [0.1, '#55BF3B'], // green
+                [0.5, '#DDDF0D'], // yellow
+                [0.9, '#DF5353'] // red
+            ],
+            lineWidth: 0,
+            tickWidth: 0,
+            minorTickInterval: null,
+            startOnTick: false,
+            tickAmount: 2,
+            title: {
+                y: -70
+            },
+            labels: {
+                y: 16
+            }
+        },
+
+        plotOptions: {
+            solidgauge: {
+                dataLabels: {
+                    y: 5,
+                    borderWidth: 0,
+                    useHTML: true
+                }
+            }
+        }
+    };
+
+    var gaugeChart = Highcharts.chart('container', Highcharts.merge(gaugeOptions, {
+        yAxis: {
+            min: @Model.Min,
+            max: @Model.Max,
+            tickPositions: [@Model.Min, @Model.Max],
+            title: {
+                text: '@Model.SensorName'
+            }
+        },
+
+        credits: {
+            enabled: false
+        },
+
+        series: [{
+            name: '@Model.SensorName',
+            data: [@Model.Value],
+            dataLabels: {
+                format:
+                    '<div style="text-align:center">' +
+                    '<span style="font-size:25px">{y}</span><br/>' +
+                    '<span style="font-size:12px;opacity:0.4">@Model.MeasurementName</span>' +
+                    '</div>'
+            },
+            tooltip: {
+                valueSuffix: ' @Model.MeasurementName'
+            }
+        }]
+
+    }));
+
+    // Bring life to the dials
+    setInterval(function () {
+        var point,
+            newVal,
+            inc;
+        $.ajax({
+        type: "GET",
+        url: "/api/Gauge/GetGauge/@Model.Id",
+        contentType: "application/json; charset=utf-8",
+
+            success: function (res) {
+                if (gaugeChart) {
+                    point = gaugeChart.series[0].points[0];
+                    point.update(res.value);
+                    gaugeChart.yAxis[0].update({
+                        min: res.min,
+                        max: res.max
+                    }); 
+                    gaugeChart.yAxis[0].tickPositions = [res.min, res.max];
+                    gaugeChart.yAxis[0].update({
+                      tickPositions: gaugeChart.yAxis[0].tickPositions
+                    });
+                }
+            },
+
+            error: function (res) {
+                console.log(res);
+                alert(res);
+            }
+        });
+    }, 2000);
+
+</script>
+}
+else
+{
+    <h1>Selected sensor does not have values to display in the selected time period.</h1>
+}

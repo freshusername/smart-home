@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Domain.Core.Model;
 using Domain.Interfaces;
+using Domain.Interfaces.Repositories;
 using Infrastructure.Business.DTOs.Notification;
 using Infrastructure.Data;
 
@@ -35,6 +36,13 @@ namespace Infrastructure.Business.Managers
 			var result = mapper.Map<IEnumerable<Message>, IEnumerable<NotificationDto>>(notifications);
 
 			return result;
+		}
+
+		public async Task ChangeStatusAsync(int id)
+		{
+			var notification = await unitOfWork.NotificationRepository.GetById(id);
+			notification.IsRead = notification.IsRead ? false : true;
+			unitOfWork.Save();
 		}
 	}
 }

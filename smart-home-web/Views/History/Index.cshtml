@@ -10,18 +10,15 @@
     ViewData["Title"] = "Histories";
 }
 
-<h2>Histories List</h2>
-
 <body class="body-content">
     <div class="row text-center">
         <h2 style="color:blue;">Sensor`s Histories</h2>
         <table class="table table-hover table-responsive">
-            <caption>List of sensor`s histories</caption>
             <thead class="text-center">
                 <tr>
                     <th scope="col" class=" text-center">
                         @{
-                            var sensor = (FilterDTO)Model.FilterDTO.Clone();
+                            var sensor = (FilterDto)Model.FilterDto.Clone();
                             sensor.sortState = (sensor.sortState == SortState.HistoryAsc) ? SortState.HistoryDesc : SortState.HistoryAsc;
                         }
                         <a href="@Url.Action("Index", "History",
@@ -33,7 +30,7 @@
                     <th class="text-center">SensorName</th>
                     <th scope="col" class=" text-center">
                         @{
-                            var date = (FilterDTO)Model.FilterDTO.Clone();
+                            var date = (FilterDto)Model.FilterDto.Clone();
                             date.sortState = (date.sortState == SortState.DateAsc) ? SortState.DateDesc : SortState.DateAsc;
                         }
                         <a href="@Url.Action("Index", "History",
@@ -56,7 +53,7 @@
                                 @history.SensorName
                             </a>
                         </td>
-                        <td>@history.Date</td>
+                        <td>@history.Date.DateTime.ToString("dd/MM/yyyy HH:mm:ss")</td>
 
                         @{
                             if (history.Value.ToString() == "False")
@@ -82,51 +79,7 @@
 
         </table>
         <br />
-        <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-center">
-                @if (Model.FilterDTO != null)
-                {
-                    @if (Model.FilterDTO.HasPrevious)
-                    {
-                        <li class="page-item">
-                            @{
-                                var prev = (FilterDTO)Model.FilterDTO.Clone();
-                                prev.CurrentPage = Model.FilterDTO.CurrentPage - 1;
-                            }
-
-                            @Html.ActionLink("prev", "Index", "History", null, null, null,
-                                      prev,
-                                      null)
-                        </li>
-                    }
-
-                    @for (var i = 1; i <= Model.FilterDTO.PagesCount; i++)
-                    {
-                        var page_i = (FilterDTO)Model.FilterDTO.Clone();
-                        page_i.CurrentPage = i;
-
-                        <li class="page-item @( i == Model.FilterDTO.CurrentPage ? "active" : "")">
-                            @Html.ActionLink(i.ToString(), "Index", "History", null, null, null,
-                                page_i,
-                                null)
-                        </li>
-                    }
-                    @if (Model.FilterDTO.HasNext)
-                    {
-                        <li class="page-item">
-                            @{
-                                var next = (FilterDTO)Model.FilterDTO.Clone();
-                                next.CurrentPage = Model.FilterDTO.CurrentPage + 1;
-                            }
-
-                            @Html.ActionLink("next", "Index", "History", null, null, null,
-                                      next,
-                                      null)
-                        </li>
-                    }
-                }
-            </ul>
-        </nav>
+        @await Component.InvokeAsync("Pagination", new { action = "Index", controller = "History", filterDto = Model.FilterDto })
 
     </div>
 

@@ -17,6 +17,22 @@ namespace Infrastructure.Data.Migrations
                 .HasAnnotation("ProductVersion", "2.1.14-servicing-32113")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            modelBuilder.Entity("Domain.Core.JoinModel.DashboardOptions", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("DashboardId");
+
+                    b.Property<int>("OptionsId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DashboardId");
+
+                    b.ToTable("DashboardOptions");
+                });
+
             modelBuilder.Entity("Domain.Core.Model.AppUser", b =>
                 {
                     b.Property<string>("Id")
@@ -67,6 +83,22 @@ namespace Infrastructure.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("Domain.Core.Model.Dashboard", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AppUserId");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.ToTable("Dashboards");
+                });
+
             modelBuilder.Entity("Domain.Core.Model.History", b =>
                 {
                     b.Property<int>("Id")
@@ -96,7 +128,7 @@ namespace Infrastructure.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Path");
 
                     b.HasKey("Id");
 
@@ -126,6 +158,51 @@ namespace Infrastructure.Data.Migrations
                     b.ToTable("Messages");
                 });
 
+            modelBuilder.Entity("Domain.Core.Model.Options", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("DashboardOptionsId");
+
+                    b.Property<int>("Height");
+
+                    b.Property<int>("Weight");
+
+                    b.Property<int>("X");
+
+                    b.Property<int>("Y");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DashboardOptionsId");
+
+                    b.ToTable("Options");
+                });
+
+            modelBuilder.Entity("Domain.Core.Model.ReportElement", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("DashboardId");
+
+                    b.Property<int>("Hours");
+
+                    b.Property<int>("SensorId");
+
+                    b.Property<string>("Type")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DashboardId");
+
+                    b.HasIndex("SensorId");
+
+                    b.ToTable("ReportElements");
+                });
+
             modelBuilder.Entity("Domain.Core.Model.Sensor", b =>
                 {
                     b.Property<int>("Id")
@@ -135,13 +212,13 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<DateTimeOffset?>("CreatedOn");
 
-                    b.Property<int>("IconId");
+                    b.Property<int?>("IconId");
 
                     b.Property<bool>("IsActivated");
 
                     b.Property<string>("Name");
 
-                    b.Property<int>("SensorTypeId");
+                    b.Property<int?>("SensorTypeId");
 
                     b.Property<Guid>("Token");
 
@@ -161,12 +238,11 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<string>("Comment");
 
-                    b.Property<int>("IconId");
+                    b.Property<int?>("IconId");
 
                     b.Property<string>("MeasurementName");
 
-                    b.Property<string>("MeasurementType")
-                        .IsRequired();
+                    b.Property<string>("MeasurementType");
 
                     b.Property<string>("Name");
 
@@ -284,6 +360,21 @@ namespace Infrastructure.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Domain.Core.JoinModel.DashboardOptions", b =>
+                {
+                    b.HasOne("Domain.Core.Model.Dashboard", "Dashboard")
+                        .WithMany()
+                        .HasForeignKey("DashboardId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Domain.Core.Model.Dashboard", b =>
+                {
+                    b.HasOne("Domain.Core.Model.AppUser", "AppUser")
+                        .WithMany("Dashboards")
+                        .HasForeignKey("AppUserId");
+                });
+
             modelBuilder.Entity("Domain.Core.Model.History", b =>
                 {
                     b.HasOne("Domain.Core.Model.Sensor", "Sensor")
@@ -304,25 +395,43 @@ namespace Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("Domain.Core.Model.Options", b =>
+                {
+                    b.HasOne("Domain.Core.JoinModel.DashboardOptions")
+                        .WithMany("Options")
+                        .HasForeignKey("DashboardOptionsId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Domain.Core.Model.ReportElement", b =>
+                {
+                    b.HasOne("Domain.Core.Model.Dashboard", "Dashboard")
+                        .WithMany("ReportElements")
+                        .HasForeignKey("DashboardId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Domain.Core.Model.Sensor", "Sensor")
+                        .WithMany("ReportElements")
+                        .HasForeignKey("SensorId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("Domain.Core.Model.Sensor", b =>
                 {
                     b.HasOne("Domain.Core.Model.Icon", "Icon")
                         .WithMany()
-                        .HasForeignKey("IconId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("IconId");
 
                     b.HasOne("Domain.Core.Model.SensorType", "SensorType")
                         .WithMany("Sensor")
-                        .HasForeignKey("SensorTypeId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("SensorTypeId");
                 });
 
             modelBuilder.Entity("Domain.Core.Model.SensorType", b =>
                 {
                     b.HasOne("Domain.Core.Model.Icon", "Icon")
                         .WithMany()
-                        .HasForeignKey("IconId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("IconId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
