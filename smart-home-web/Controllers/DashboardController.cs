@@ -53,13 +53,5 @@ namespace smart_home_web.Controllers
             return RedirectToAction("Index", "Sensor");
         }
 
-
-        [HttpGet]
-        public async Task<IActionResult> GetSensorsByReportElementType(ReportElementType type, int dashboardId)
-        {
-            var list = await _sensorManager.GetSensorsByReportElementType(type, dashboardId);
-            List<SensorDto> res = list.ToList();
-            return Ok(res);
-        }
     }
 }

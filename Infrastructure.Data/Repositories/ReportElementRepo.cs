@@ -26,5 +26,15 @@ namespace Infrastructure.Data.Repositories
 
             return reportElement;
         }
+
+        public async Task<bool> ReportElementExist(ReportElement reportElement)
+        {
+            var res = await context.ReportElements
+                .FirstOrDefaultAsync(re => re.SensorId == reportElement.SensorId && re.DashboardId==reportElement.DashboardId 
+                                     && re.Type == reportElement.Type && re.Hours==reportElement.Hours);
+            if (res != null)
+                return true;
+            return false;
+        }
     }
 }

@@ -35,10 +35,16 @@ namespace smart_home_web.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateReportElement(CreateReportElementViewModel model)
+        public async Task<IActionResult> CreateReportElement(CreateReportElementViewModel model)
         {
             if (!ModelState.IsValid)
                 return View(model);
+            ReportElementDto reportElement = _mapper.Map<CreateReportElementViewModel, ReportElementDto>(model);
+            var res  = await _reportElementManager.CreateReportElement(reportElement);
+            if(res.Succeeded)
+                return RedirectToAction("Index", "Home");
+            else
+                ModelState.AddModelError(res.Property, res.Message);
             return View(model);
         }
 

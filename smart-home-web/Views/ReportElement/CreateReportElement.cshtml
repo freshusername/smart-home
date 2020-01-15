@@ -7,7 +7,7 @@
 <link href="~/lib/nice-select/dist/css/nice-select.css" rel="stylesheet" />
 
 <body>
-    <div class="row" data-save-url="@Url.Action("GetSensorsByReportElementType", "Dashboard")">
+    <div class="row" data-save-url="@Url.Action("GetSensorsByReportElementType", "Sensor")">
 
         <div class="col-lg-8 col-lg-offset-2 col-md-6 col-md-offset-3 col-sm-12">
             <div class="text-center">
@@ -46,20 +46,10 @@
                         Select measurement period:
                     </label>
                     <div style="margin-bottom:50px">
-                        <select asp-for="Hours" class="nice-select col-lg-4 col-md-5 col-sm-6 col-xs-12">
+                        <select asp-for="Hours" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.ReportElementHours>()" class="nice-select col-lg-4 col-md-5 col-sm-6 col-xs-12">
                             <option value="none" selected disabled hidden>
                                 Select an Option
                             </option>
-                            <option value="1">1 hour</option>
-                            <option value="3">3 hours</option>
-                            <option value="6">6 hours</option>
-                            <option value="12">12 hours</option>
-                            <option value="24">1 day</option>
-                            <option value="168">7 days</option>
-                            <option value="336">14 days</option>
-                            <option value="720">30 days</option>
-                            <option value="2160">90 days</option>
-                            <option value="2399976">For all time</option>
                         </select>
                     </div>
                 </div>
@@ -78,14 +68,12 @@
     <script src="~/lib/nice-select/dist/js/jquery.nice-select.min.js"></script>
     <script>
         $(document).ready(function () {
-            $('select').niceSelect();
-            get();
-
-            function get() {
-                $.ajax({
+        $('select').niceSelect();
+        function get() {
+            $.ajax({
                     type: "Get",
                     url: $(".row").data("save-url"),
-                    data: { type: $(this).children("option:selected").val(), dashboardId: @(Model.DashboardId)},
+                    data: { type: $("select#type-select").children("option:selected").val(), dashboardId: @(Model.DashboardId)},
                     success: function (res) {
                         $('#sensor-select').empty()
                         $.each(res, function (key, value) {
@@ -101,10 +89,10 @@
                     }
                 });
             }
-            
-            $("select#type-select").change(function () {
-                get();
-            });
+        get();
+        $("select#type-select").change(function () {
+            get();
+        });
         });
     </script>
 

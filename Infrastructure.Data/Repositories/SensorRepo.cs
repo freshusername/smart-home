@@ -33,6 +33,13 @@ namespace Infrastructure.Data.Repositories
             return await context.Sensors.FindAsync(id);
         }
 
+        public async Task<Sensor> GetSensorById(int id)
+        {
+            var sensors = await context.Sensors.Include(s => s.SensorType).FirstOrDefaultAsync(e => e.Id == id);
+                                 
+            return sensors;
+        }
+
         public Sensor GetByToken(Guid token)
         {
             var sensor = context.Sensors.FirstOrDefault(e => e.Token == token);

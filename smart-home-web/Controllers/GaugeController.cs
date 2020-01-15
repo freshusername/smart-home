@@ -33,5 +33,20 @@ namespace smart_home_web.Controllers
             return Ok(result);
         }
 
+        [HttpPut]
+        public async Task<IActionResult>  UpdateGaugeHours(GaugeViewModel gaugeViewModel)
+        {
+            try
+            {
+                await _reportElementManager.UpdateReportElementHours(gaugeViewModel.Id, (int)gaugeViewModel.Hours);
+                
+                return Ok("Sucessfully updated hours");
+            }
+            catch(Exception ex)
+            {
+                return Ok(ex.Message);
+            }
+        }
+
     }
 }

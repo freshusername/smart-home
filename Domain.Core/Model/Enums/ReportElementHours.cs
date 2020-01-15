@@ -8,7 +8,7 @@ namespace Domain.Core.Model.Enums
 {
     public enum ReportElementHours
     {
-        [Display(Name = "All time")]
+        [Display(Name  ="All time")]
         AllTime = 0,
 
         [Display(Name = "1 hour")]
@@ -36,9 +36,6 @@ namespace Domain.Core.Model.Enums
         Hour720 = 720,
 
         [Display(Name = "90 days")]
-        Hour2160 = 2160,
-
-        [Display(Name = "For all time")]
-        Hour2399976 = 2399976
+        Hour2160 = 2160
     }
 }

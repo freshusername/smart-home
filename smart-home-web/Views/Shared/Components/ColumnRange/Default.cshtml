@@ -13,12 +13,12 @@
 @if (Model.IsCorrect)
 {
     <figure class="highcharts-figure">
-        <div id="columnrange_container"></div>
+        <div id="@("columnrange_container_"+Model.Id.ToString())"></div>
     </figure>
 }
 else
 {
-    <label class="control-label graph-label center-block">@Model.Message</label>
+    <label class="control-label graph-label">@Model.Message <a class="btn btn-success text-center" asp-controller="ReportElement" asp-action="EditReportElement" asp-route-id="@Model.Id"><i class="fas fa-cog"></i></a></label>
 }
 
 <script>
@@ -31,7 +31,7 @@ else
     for (let i = 0; i < dates.length;i++) {
         temperatures.push([minvalues[i],maxvalues[i]])
     }
-    Highcharts.chart('columnrange_container', {
+    Highcharts.chart('columnrange_container_'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
 
         chart: {
             events: {
@@ -59,12 +59,12 @@ else
 
         xAxis: {
             title: {
+                style: {
+                    textTransform: 'uppercase'
+                },
                 text: 'Dates'
             },
-            categories: dates,
-            resize: {
-                enabled: true
-            }
+            categories: dates
         },
 
         yAxis: {
@@ -106,9 +106,10 @@ else
                     x: -20,
                     className : 'highcharts-button-box-settings',
                     onclick: function () {
-                        window.location.href = '/ReportElement/EditWordCloud/'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))')
+                        window.location.href = '/ReportElement/EditReportElement/'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))')
                     },
                 }
+
             }
         },
 
