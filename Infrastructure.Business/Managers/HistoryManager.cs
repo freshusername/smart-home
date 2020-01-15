@@ -7,10 +7,10 @@ using AutoMapper;
 using Domain.Core.Model;
 using Domain.Core.Model.Enums;
 using Domain.Interfaces;
+using Domain.Interfaces.Repositories;
 using Infrastructure.Business.DTOs;
 using Infrastructure.Business.DTOs.History;
 using Infrastructure.Business.DTOs.Sensor;
-using Infrastructure.Business.Filters;
 using Infrastructure.Business.Infrastructure;
 using Infrastructure.Data.Repositories;
 
@@ -74,17 +74,17 @@ namespace Infrastructure.Business.Managers
             return await unitOfWork.HistoryRepo.GetMaxValueAfterDate(sensorId, dateTime);;
         }
 
-        public async Task<GraphDTO> GetGraphBySensorId(int SensorId, int days)
+        public async Task<GraphDto> GetGraphBySensorId(int SensorId, int days)
         {
             DateTime date = DateTime.Now.AddDays(-days);
 
             IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(SensorId, date);
 
             if (!histories.Any())
-                return new GraphDTO { IsCorrect = false };
+                return new GraphDto { IsCorrect = false };
 
             Sensor sensor = histories.FirstOrDefault().Sensor;
-            GraphDTO graph = mapper.Map<Sensor, GraphDTO>(sensor);
+            GraphDto graph = mapper.Map<Sensor, GraphDto>(sensor);
 
             graph.Dates = new List<DateTimeOffset>();
             graph.Values = new List<dynamic>();
@@ -163,17 +163,6 @@ namespace Infrastructure.Business.Managers
 		{
 			return await unitOfWork.HistoryRepo.GetAmountAsync(isActivated);
 		}
-
-        public async Task<IEnumerable<HistoryDto>> GetInvalidSensors(SortState sortState)
-        {
-            var histories = await unitOfWork.HistoryRepo.GetAll();
-
-            var historiesfilter = histories.Where(p => p.Sensor.IsActivated == true);
-
-            var historiesmapper = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(historiesfilter);
-
-            return SortValue.SortHistories(sortState, historiesmapper);
-        }
     }
 }
 

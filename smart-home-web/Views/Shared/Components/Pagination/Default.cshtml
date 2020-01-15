@@ -4,39 +4,39 @@
 
 <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
-        @if (Model.filterDTO != null)
+        @if (Model.filterDto != null)
         {
 
             <li class="page-item">
                 @{
-                    var prev = (FilterDTO)Model.filterDTO.Clone();
-                    prev.CurrentPage = Model.filterDTO.CurrentPage - 1;
+                    var prev = (FilterDto)Model.filterDto.Clone();
+                    prev.CurrentPage = Model.filterDto.CurrentPage - 1;
                 }
 
                 <a asp-controller="@Model.controller" asp-action="@Model.action"
-                   asp-route-filterDTO="@prev" class="page-link @( !Model.filterDTO.HasPrevious ? "btn btn-info disabled" : "" )">
+                   asp-route-filterDTO="@prev" class="page-link @( !Model.filterDto.HasPrevious ? "btn btn-info disabled" : "" )">
                     &lt;&lt;
                 </a>
             </li>
 
-            @for (var i = 1; i <= Model.filterDTO.PagesCount; i++)
+            @for (var i = 1; i <= Model.filterDto.PagesCount; i++)
             {
-                var page_i = (FilterDTO)Model.filterDTO.Clone();
+                var page_i = (FilterDto)Model.filterDto.Clone();
                 page_i.CurrentPage = i;
 
-                <li class="page-item @( i == Model.filterDTO.CurrentPage ? "active" : "")">
+                <li class="page-item @( i == Model.filterDto.CurrentPage ? "active" : "")">
                     @Html.ActionLink(i.ToString(), Model.action, Model.controller, page_i)
                 </li>
             }
 
             <li class="page-item">
                 @{
-                    var next = (FilterDTO)Model.filterDTO.Clone();
-                    next.CurrentPage = Model.filterDTO.CurrentPage + 1;
+                    var next = (FilterDto)Model.filterDto.Clone();
+                    next.CurrentPage = Model.filterDto.CurrentPage + 1;
                 }
 
                 <a asp-controller="@Model.controller" asp-action="@Model.action"
-                   asp-route-filterDTO="@next" class="page-link @( !Model.filterDTO.HasNext ? "btn btn-info disabled" : "" )">
+                   asp-route-filterDTO="@next" class="page-link @( !Model.filterDto.HasNext ? "btn btn-info disabled" : "" )">
                     &gt;&gt;
                 </a>
             </li>

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Domain.Core.Model.Enums;
 using Infrastructure.Business.DTOs;
 using Infrastructure.Business.DTOs.History;
-using Infrastructure.Business.DTOs.ReportElements;
 using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.Infrastructure;
 
@@ -29,9 +27,8 @@ namespace Infrastructure.Business.Managers
 
         Task<double?> GetMaxValueAfterDate(int sensorId, DateTimeOffset dateTime);
 
-		Task<GraphDTO> GetGraphBySensorId(int SensorId, int days);
+		Task<GraphDto> GetGraphBySensorId(int SensorId, int days);
 		Task<int> GetAmountAsync(bool isActivated);
-        Task<IEnumerable<HistoryDto>> GetInvalidSensors(SortState sortState);
 
     }
 }

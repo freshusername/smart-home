@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Infrastructure.Business.DTOs.ReportElements
 {
-    public class ReportElementDTO
+    public class ReportElementDto
     {
         public int Id { get; set; }
 
@@ -16,6 +16,7 @@ namespace Infrastructure.Business.DTOs.ReportElements
         public string SensorName { get; set; }
 
         public int Hours { get; set; }
+        public string Message { get; set; }
         public ReportElementType Type { get; set; }
         public bool IsCorrect { get; set; } = true;
 
@@ -23,6 +24,11 @@ namespace Infrastructure.Business.DTOs.ReportElements
         public string MeasurementName { get; set; }
 
         public List<dynamic> Values { get; set; }
+
+        public List<string> Dates { get; set; }
+        public List<int?> MinValues { get; set; }
+        public List<int?> MaxValues { get; set; }
+    }
 
 		public int X { get; set; }
 		public int Y { get; set; }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Domain.Core.Model;
 using Domain.Interfaces;
+using Domain.Interfaces.Repositories;
 using Infrastructure.Data.Repositories;
 using Microsoft.AspNetCore.Identity;
 

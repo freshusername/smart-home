@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace smart_home_web.Components
 {
-    public class WordcloudViewComponent : BaseViewComponent
+    public class ColumnRangeViewComponent : BaseViewComponent
     {
         private readonly IReportElementManager _reportElementManager;
         private readonly IMapper _mapper;
-        public WordcloudViewComponent(IReportElementManager reportElementManager, IMapper mapper)
+        public ColumnRangeViewComponent(IReportElementManager reportElementManager, IMapper mapper)
         {
             _reportElementManager = reportElementManager;
             _mapper = mapper;
@@ -19,9 +19,9 @@ namespace smart_home_web.Components
 
         public async Task<IViewComponentResult> InvokeAsync(int reportElementId)
         {
-            ReportElementDto wordCloud = await _reportElementManager.GetWordCloudById(reportElementId);
-            ReportElementViewModel result = _mapper.Map<ReportElementDto, ReportElementViewModel>(wordCloud);
-            return View("Wordcloud", result);
+            ReportElementDto columnRangeDTO = await _reportElementManager.GetColumnRangeById(reportElementId);
+            ReportElementViewModel model = _mapper.Map<ReportElementDto, ReportElementViewModel>(columnRangeDTO);
+            return View(model);
         }
     }
 }

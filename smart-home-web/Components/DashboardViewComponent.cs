@@ -2,6 +2,7 @@
 using Infrastructure.Business.DTOs.Dashboard;
 using Infrastructure.Business.Infrastructure;
 using Infrastructure.Business.Managers;
+using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Mvc;
 using smart_home_web.Models.Dashboard;
 using System.Threading.Tasks;
