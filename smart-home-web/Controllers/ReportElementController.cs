@@ -23,6 +23,25 @@ namespace smart_home_web.Controllers
             _reportElementManager = reportElementManager;
             _mapper = mapper;
         }
+
+        [HttpGet]
+        public IActionResult CreateReportElement(int dashboardId)
+        {
+            CreateReportElementViewModel model = new CreateReportElementViewModel
+            {
+                DashboardId = dashboardId
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult CreateReportElement(CreateReportElementViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+            return View(model);
+        }
+
         [HttpGet]
         public async Task<IActionResult> EditReportElement(int id)
         {
