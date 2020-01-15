@@ -104,14 +104,15 @@ namespace Infrastructure.Business.Managers
             DateTime date = DateTime.Now.AddHours(-reportElement.Hours);
             IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
             if (!histories.Any())
-                return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message="No histories in this report element" };
+                return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message="No histories in this element for these hours" };
 
             ReportElementDto columnRange = mapper.Map<Sensor, ReportElementDto>(reportElement.Sensor);
 
+            columnRange.Type = ReportElementType.Columnrange;
             columnRange.DashboardName = reportElement.Dashboard.Name;
             columnRange.Dates = new List<string>();
-            columnRange.MinValues = new List<int?>();
-            columnRange.MaxValues = new List<int?>();
+            columnRange.MinValues = new List<dynamic>();
+            columnRange.MaxValues = new List<dynamic>();
 
             switch (columnRange.MeasurementType)
             {
@@ -126,8 +127,8 @@ namespace Infrastructure.Business.Managers
                     foreach (var t in intValues)
                     {
                         columnRange.Dates.Add(t.Date.DateTime.ToShortDateString());
-                        columnRange.MinValues.Add(t.Min);
-                        columnRange.MaxValues.Add(t.Max);
+                        columnRange.MinValues.Add(t.Min.GetValueOrDefault());
+                        columnRange.MaxValues.Add(t.Max.GetValueOrDefault());
                     }
                     break;
 
@@ -135,24 +136,24 @@ namespace Infrastructure.Business.Managers
                 case MeasurementType.Double:
                     var doubleValues = histories.GroupBy(p => p.Date).Select(p => new
                     {
-                        Min = p.Min(g => g.IntValue),
-                        Max = p.Max(g => g.IntValue),
+                        Min = p.Min(g => g.DoubleValue),
+                        Max = p.Max(g => g.DoubleValue),
                         Date = p.Key
                     }).ToList();
 
                     foreach (var t in doubleValues)
                     {
                         columnRange.Dates.Add(t.Date.DateTime.ToShortDateString());
-                        columnRange.MinValues.Add(t.Min);
-                        columnRange.MaxValues.Add(t.Max);
+                        columnRange.MinValues.Add(Math.Round(t.Min.GetValueOrDefault(),2));
+                        columnRange.MaxValues.Add(Math.Round(t.Max.GetValueOrDefault(), 2));
                     }
                     break;
                 case MeasurementType.Bool:
-                    return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message="Invalid sensor type" };
+                    return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message="Invalid sensor type for this element" };
                 case MeasurementType.String:
-                    return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "Invalid sensor type" };
+                    return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "Invalid sensor type for this element" };
                 default:
-                    return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "Invalid sensor type" };
+                    return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "Invalid sensor type for this element" };
             }
             return columnRange;
         }

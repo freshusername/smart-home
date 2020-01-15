@@ -23,7 +23,7 @@ namespace Infrastructure.Business.DTOs.ReportElements
         public List<dynamic> Values { get; set; }
 
         public List<string> Dates { get; set; }
-        public List<int?> MinValues { get; set; }
-        public List<int?> MaxValues { get; set; }
+        public List<dynamic> MinValues { get; set; }
+        public List<dynamic> MaxValues { get; set; }
     }
 }
