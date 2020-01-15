@@ -18,7 +18,7 @@
 }
 else
 {
-    <label class="control-label graph-label center-block">@Model.Message <a class="btn btn-success text-center" asp-controller="ReportElement" asp-action="EditReportElement" asp-route-id="@Model.Id"><i class="fas fa-cog"></i></a></label>
+    <label class="control-label graph-label">@Model.Message <a class="btn btn-success text-center" asp-controller="ReportElement" asp-action="EditReportElement" asp-route-id="@Model.Id"><i class="fas fa-cog"></i></a></label>
 }
 
 <script>
@@ -64,10 +64,7 @@ else
                 },
                 text: 'Dates'
             },
-            categories: dates,
-            resize: {
-                enabled: true
-            }
+            categories: dates
         },
 
         yAxis: {
@@ -112,6 +109,7 @@ else
                         window.location.href = '/ReportElement/EditReportElement/'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))')
                     },
                 }
+
             }
         },
 
