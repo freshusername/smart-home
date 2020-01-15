@@ -4,6 +4,7 @@ using Domain.Core.Model.Enums;
 using Domain.Interfaces;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Business.DTOs.ReportElements;
+using Infrastructure.Business.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,12 +35,17 @@ namespace Infrastructure.Business.Managers
             unitOfWork.Save();
         }
 
+        public async Task<OperationDetails> CreateReportElement(ReportElementDto reportElementDto)
+        {
+            return new OperationDetails(false, "", "Name");
+        }
+
         public async Task<ReportElementDto> GetWordCloudById(int ReportElementId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
-
-            DateTime date = DateTime.Now.AddHours(-reportElement.Hours);
-
+            DateTime date = new DateTime(1970, 1, 1, 0, 0, 0);
+            if (reportElement.Hours != 0)
+                date = DateTime.Now.AddHours(-(int)reportElement.Hours);
             IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
 
             if (!histories.Any())
@@ -101,10 +107,10 @@ namespace Infrastructure.Business.Managers
             if (reportElement == null)
                 return new ReportElementDto { IsCorrect = false, Message = "Invalid report element" };
 
-            DateTime date = DateTime.Now.AddHours(-reportElement.Hours);
+            DateTime date = DateTime.Now.AddHours(-(int)reportElement.Hours);
             IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
             if (!histories.Any())
-                return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message="No histories in this report element" };
+                return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "No histories in this report element" };
 
             ReportElementDto columnRange = mapper.Map<Sensor, ReportElementDto>(reportElement.Sensor);
 
@@ -148,7 +154,7 @@ namespace Infrastructure.Business.Managers
                     }
                     break;
                 case MeasurementType.Bool:
-                    return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message="Invalid sensor type" };
+                    return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "Invalid sensor type" };
                 case MeasurementType.String:
                     return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "Invalid sensor type" };
                 default:

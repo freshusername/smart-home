@@ -27,17 +27,20 @@ namespace smart_home_web.Controllers
         private IHostingEnvironment _env;
         private IDashboardOptionsManager _dashboardOptionsManager;
         private IDashboardManager _dashboardManager;
+        private ISensorManager _sensorManager;
 
         public DashboardController(
             IMapper mapper,
             IHostingEnvironment env,
             IDashboardOptionsManager dashboardOptionsManager,
-            IDashboardManager dashboardManager)
+            IDashboardManager dashboardManager,
+            ISensorManager sensorManager)
         {
             _mapper = mapper;
             _env = env;
             _dashboardOptionsManager = dashboardOptionsManager;
             _dashboardManager = dashboardManager;
+            _sensorManager = sensorManager;
         }
 
         [HttpPost]
@@ -52,13 +55,11 @@ namespace smart_home_web.Controllers
 
 
         [HttpGet]
-        public IActionResult GetSensorsByReportElementType(ReportElementType type, int dashboardId)
+        public async Task<IActionResult> GetSensorsByReportElementType(ReportElementType type, int dashboardId)
         {
-            List<int> list = new List<int>
-            {
-                5,4,3,2,1
-            };
-            return Ok(list);
+            var list = await _sensorManager.GetSensorsByReportElementType(type, dashboardId);
+            List<SensorDto> res = list.ToList();
+            return Ok(res);
         }
     }
 }

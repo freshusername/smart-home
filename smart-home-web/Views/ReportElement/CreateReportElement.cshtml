@@ -7,7 +7,7 @@
 <link href="~/lib/nice-select/dist/css/nice-select.css" rel="stylesheet" />
 
 <body>
-    <div class="row" data-save-url="@Url.Action("Test", "Dashboard")">
+    <div class="row" data-save-url="@Url.Action("GetSensorsByReportElementType", "Dashboard")">
 
         <div class="col-lg-8 col-lg-offset-2 col-md-6 col-md-offset-3 col-sm-12">
             <div class="text-center">
@@ -22,8 +22,8 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label">Select report element type:</label>
-                    <div style="margin-bottom:70px">
-                        <select id="type-select" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.ReportElementType>()" class="col-lg-4 col-md-5 col-sm-6 col-xs-12">
+                    <div style="margin-bottom:50px">
+                        <select id="type-select" asp-for="Type" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.ReportElementType>()" class="col-lg-4 col-md-5 col-sm-6 col-xs-12">
                             <option value="none" selected disabled hidden>
                                 Select an Option
                             </option>
@@ -32,14 +32,38 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label">Select report element type:</label>
-                    <div style="margin-bottom:70px">
-                        <select id="sensor-select" class="col-lg-4 col-md-5 col-sm-6 col-xs-12">
+                    <div style="margin-bottom:50px">
+                        <select id="sensor-select" asp-for="SensorId" class="col-lg-4 col-md-5 col-sm-6 col-xs-12">
                             <option value="none" selected disabled hidden>
                                 Select an Option
                             </option>
                         </select>
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label class="control-label">
+                        Select measurement period:
+                    </label>
+                    <div style="margin-bottom:50px">
+                        <select asp-for="Hours" class="nice-select col-lg-4 col-md-5 col-sm-6 col-xs-12">
+                            <option value="none" selected disabled hidden>
+                                Select an Option
+                            </option>
+                            <option value="1">1 hour</option>
+                            <option value="3">3 hours</option>
+                            <option value="6">6 hours</option>
+                            <option value="12">12 hours</option>
+                            <option value="24">1 day</option>
+                            <option value="168">7 days</option>
+                            <option value="336">14 days</option>
+                            <option value="720">30 days</option>
+                            <option value="2160">90 days</option>
+                            <option value="2399976">For all time</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="form-group text-center col-lg-6 col-lg-offset-3" style="margin-top:30px">
                     <input type="submit" value="Save" class="btn btn-success text-center" style="width:20%" />
                 </div>
@@ -55,32 +79,34 @@
     <script>
         $(document).ready(function () {
             $('select').niceSelect();
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            $("select#type-select").change(function () {
+            get();
+
+            function get() {
                 $.ajax({
                     type: "Get",
                     url: $(".row").data("save-url"),
                     data: { type: $(this).children("option:selected").val(), dashboardId: @(Model.DashboardId)},
                     success: function (res) {
                         $('#sensor-select').empty()
-                        $.each(res, function(key, value) {
+                        $.each(res, function (key, value) {
                             $('#sensor-select')
                                 .append($("<option></option>")
-                                    .attr("value",key)
-                                    .text(value));
+                                    .attr("value", value.id)
+                                    .text(value.name));
                         });
                         $('select').niceSelect('update');
                     },
-                    error: function () {
-                        console.log('error');
+                    error: function (res) {
+                        console.log(res);
                     }
                 });
+            }
+            
+            $("select#type-select").change(function () {
+                get();
             });
         });
     </script>
-    
+
     @await Html.PartialAsync("_ValidationScriptsPartial")
 }

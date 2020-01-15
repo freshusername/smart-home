@@ -1,4 +1,5 @@
 ﻿using Domain.Core.Model;
+using Domain.Core.Model.Enums;
 using Domain.Interfaces;
 using Domain.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +38,15 @@ namespace Infrastructure.Data.Repositories
             var sensor = context.Sensors.FirstOrDefault(e => e.Token == token);
 
             return sensor;
+        }
+
+        public async Task<IEnumerable<Sensor>> GetSensorsByMeasurementTypeAndUserId(MeasurementType type, string UserId)
+        {
+            var sensors = await context.Sensors
+                .Where(s => s.SensorType.MeasurementType == type && s.AppUserId == UserId)
+                .ToListAsync();
+
+            return sensors;
         }
 
     }

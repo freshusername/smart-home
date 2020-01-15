@@ -9,14 +9,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationsDbContext))]
-    [Migration("20200114120651_Days ranemaed to Hours")]
-    partial class DaysranemaedtoHours
+    [Migration("20200115121428_AddXYWidthHeightInReportElement")]
+    partial class AddXYWidthHeightInReportElement
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
+                .HasAnnotation("ProductVersion", "2.1.8-servicing-32085")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Domain.Core.JoinModel.DashboardOptions", b =>
@@ -189,12 +189,20 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<int>("DashboardId");
 
+                    b.Property<int>("Height");
+
                     b.Property<int>("Hours");
 
                     b.Property<int>("SensorId");
 
                     b.Property<string>("Type")
                         .IsRequired();
+
+                    b.Property<int>("Width");
+
+                    b.Property<int>("X");
+
+                    b.Property<int>("Y");
 
                     b.HasKey("Id");
 
@@ -209,6 +217,8 @@ namespace Infrastructure.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AppUserId");
 
                     b.Property<string>("Comment");
 
@@ -225,6 +235,8 @@ namespace Infrastructure.Data.Migrations
                     b.Property<Guid>("Token");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
 
                     b.HasIndex("IconId");
 
@@ -420,6 +432,10 @@ namespace Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Domain.Core.Model.Sensor", b =>
                 {
+                    b.HasOne("Domain.Core.Model.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("AppUserId");
+
                     b.HasOne("Domain.Core.Model.Icon", "Icon")
                         .WithMany()
                         .HasForeignKey("IconId");
