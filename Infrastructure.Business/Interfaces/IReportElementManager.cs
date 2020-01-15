@@ -14,6 +14,6 @@ namespace Infrastructure.Business.Managers
         Task<ReportElementDto> GetColumnRangeById(int ReportElementId);
         Task<GaugeDto> GetGaugeById(int gaugeId);
         void EditReportElement(ReportElementDto wordCloud);
-		void Update(ReportElementDto reportElement);
+		Task Update(ReportElement reportElement);
 	}
 }

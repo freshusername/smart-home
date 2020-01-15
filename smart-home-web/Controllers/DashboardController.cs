@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Core.Model;
 using Domain.Core.Model.Enums;
-using Infrastructure.Business.DTOs.DashboardOptions;
 using Infrastructure.Business.DTOs.Icon;
 using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.DTOs.SensorType;
@@ -24,31 +23,17 @@ namespace smart_home_web.Controllers
     {
         private readonly IMapper _mapper;
         private IHostingEnvironment _env;
-        private IDashboardOptionsManager _dashboardOptionsManager;
         private IDashboardManager _dashboardManager;
 
 		public DashboardController(
 			IMapper mapper, 
 			IHostingEnvironment env, 
-			IDashboardOptionsManager dashboardOptionsManager, 
 			IDashboardManager dashboardManager)
 		{
 			_mapper = mapper;
 			_env = env;
-			_dashboardOptionsManager = dashboardOptionsManager;
 			_dashboardManager = dashboardManager;
 		}
-
-		//[HttpPost]
-		//public async Task<ActionResult> AddDashboardOptions(DashboardOptionsViewModel dashboardOptionsViewModel)
-		//{
-		//	DashboardOptionsDto dashboardOptionsDto = _mapper.Map<DashboardOptionsViewModel, DashboardOptionsDto>(dashboardOptionsViewModel);
-
-		//	//_dashboardOptionsManager.Create(dashboardOptionsDto);
-
-            return RedirectToAction("Index", "Sensor");
-        }
-
 
         [HttpGet]
         public IActionResult GetSensorsByReportElementType(ReportElementType type, int dashboardId)

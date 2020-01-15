@@ -7,7 +7,9 @@ using Infrastructure.Business.DTOs.ReportElements;
 using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using smart_home_web.Models.ReportElements;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Domain.Core.Model;
 
 namespace smart_home_web.Controllers
 {
@@ -34,12 +36,12 @@ namespace smart_home_web.Controllers
         //}
 
 		[HttpPost]
-		public IActionResult UpdateOptions(string options)
+		public async Task UpdateOptions(IEnumerable<ReportElement> options)
 		{
-			//ReportElementDTO reportElement = _mapper.Map<UpdateReportElementOptionsViewModel, ReportElementDTO>(model);
-			//_reportElementManager.Update(reportElement);
-
-			return Ok();
+			foreach(ReportElement reportElement in options)
+			{ 
+				await _reportElementManager.Update(reportElement);
+			}
 		}
 	}
 }

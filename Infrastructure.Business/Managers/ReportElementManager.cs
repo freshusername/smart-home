@@ -158,10 +158,17 @@ namespace Infrastructure.Business.Managers
         }
 
 		//TODO: Check if we can make this method async
-		public void Update(ReportElementDto reportElementDto)
+		public async Task Update(ReportElement reportElement)
 		{
-			ReportElement reportElement = mapper.Map<ReportElementDto, ReportElement>(reportElementDto);
-			unitOfWork.ReportElementRepo.Update(reportElement);
+			ReportElement result = await unitOfWork.ReportElementRepo.GetById(reportElement.Id);
+			result.X = reportElement.X;
+			result.Y = reportElement.Y;
+			result.Width = reportElement.Width;
+			result.Height = reportElement.Height;
+			reportElement.Id = 0;
+			//unitOfWork.ReportElementRepo.Attach(reportElement);
+			unitOfWork.ReportElementRepo.Update(result);
+			unitOfWork.Save();
 		}
 	}
 }
