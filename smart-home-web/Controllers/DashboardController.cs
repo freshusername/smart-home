@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Core.Model;
+using Domain.Core.Model.Enums;
 using Infrastructure.Business.DTOs.DashboardOptions;
 using Infrastructure.Business.DTOs.Icon;
 using Infrastructure.Business.DTOs.Sensor;
@@ -24,29 +25,41 @@ namespace smart_home_web.Controllers
     {
         private readonly IMapper _mapper;
         private IHostingEnvironment _env;
-		private IDashboardOptionsManager _dashboardOptionsManager;
-		private IDashboardManager _dashboardManager;
+        private IDashboardOptionsManager _dashboardOptionsManager;
+        private IDashboardManager _dashboardManager;
+        private ISensorManager _sensorManager;
 
-		public DashboardController(
-			IMapper mapper, 
-			IHostingEnvironment env, 
-			IDashboardOptionsManager dashboardOptionsManager, 
-			IDashboardManager dashboardManager)
-		{
-			_mapper = mapper;
-			_env = env;
-			_dashboardOptionsManager = dashboardOptionsManager;
-			_dashboardManager = dashboardManager;
-		}
+        public DashboardController(
+            IMapper mapper,
+            IHostingEnvironment env,
+            IDashboardOptionsManager dashboardOptionsManager,
+            IDashboardManager dashboardManager,
+            ISensorManager sensorManager)
+        {
+            _mapper = mapper;
+            _env = env;
+            _dashboardOptionsManager = dashboardOptionsManager;
+            _dashboardManager = dashboardManager;
+            _sensorManager = sensorManager;
+        }
 
-		[HttpPost]
-		public async Task<ActionResult> AddDashboardOptions(DashboardOptionsViewModel dashboardOptionsViewModel)
-		{
-			DashboardOptionsDto dashboardOptionsDto = _mapper.Map<DashboardOptionsViewModel, DashboardOptionsDto>(dashboardOptionsViewModel);
+        [HttpPost]
+        public async Task<ActionResult> AddDashboardOptions(DashboardOptionsViewModel dashboardOptionsViewModel)
+        {
+            DashboardOptionsDto dashboardOptionsDto = _mapper.Map<DashboardOptionsViewModel, DashboardOptionsDto>(dashboardOptionsViewModel);
 
-			//_dashboardOptionsManager.Create(dashboardOptionsDto);
+            //_dashboardOptionsManager.Create(dashboardOptionsDto);
 
-			return RedirectToAction("Index", "Sensor");
-		}
-	}
+            return RedirectToAction("Index", "Sensor");
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetSensorsByReportElementType(ReportElementType type, int dashboardId)
+        {
+            var list = await _sensorManager.GetSensorsByReportElementType(type, dashboardId);
+            List<SensorDto> res = list.ToList();
+            return Ok(res);
+        }
+    }
 }

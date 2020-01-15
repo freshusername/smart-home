@@ -1,4 +1,5 @@
 ﻿using Domain.Core.Model;
+using Domain.Core.Model.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,5 +11,6 @@ namespace Domain.Interfaces.Repositories
     {
         Sensor GetByToken(Guid token);
         Task<Sensor> GetSensorById(int id);
+        Task<IEnumerable<Sensor>> GetSensorsByMeasurementTypeAndUserId(MeasurementType type, string UserId);
     }
 }

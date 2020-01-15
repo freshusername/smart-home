@@ -53,7 +53,7 @@ namespace Infrastructure.Data.Repositories
             var histories = context.Histories.Include(h => h.Sensor)
                 .ThenInclude(st => st.SensorType)
                 .Where(h => h.Sensor.Id == SensorId && h.Date > date);
-
+            
             return await histories.ToListAsync();
         }
 

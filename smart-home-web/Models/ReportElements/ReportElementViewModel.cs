@@ -13,7 +13,7 @@ namespace smart_home_web.Models.ReportElements
         public string DashboardName { get; set; }
         public int SensorId { get; set; }
         public string SensorName { get; set; }
-        public int Hours { get; set; }
+        public ReportElementHours Hours { get; set; }
         public string Message { get; set; }
         public ReportElementType Type { get; set; }
         public bool IsCorrect { get; set; } = true;

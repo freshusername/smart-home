@@ -4,6 +4,7 @@ using Domain.Core.Model.Enums;
 using Domain.Interfaces;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Business.DTOs.ReportElements;
+using Infrastructure.Business.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,12 +35,17 @@ namespace Infrastructure.Business.Managers
             unitOfWork.Save();
         }
 
+        public async Task<OperationDetails> CreateReportElement(ReportElementDto reportElementDto)
+        {
+            return new OperationDetails(false, "", "Name");
+        }
+
         public async Task<ReportElementDto> GetWordCloudById(int ReportElementId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
-
-            DateTime date = DateTime.Now.AddHours(-(int)reportElement.Hours);
-
+            DateTime date = new DateTime(1970, 1, 1, 0, 0, 0);
+            if (reportElement.Hours != 0)
+                date = DateTime.Now.AddHours(-(int)reportElement.Hours);
             IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
 
             if (!histories.Any())
@@ -47,6 +53,7 @@ namespace Infrastructure.Business.Managers
 
             ReportElementDto wordCloud = mapper.Map<Sensor, ReportElementDto>(reportElement.Sensor);
 
+            wordCloud.Id = reportElement.Id;
             wordCloud.DashboardName = reportElement.Dashboard.Name;
             wordCloud.Values = new List<dynamic>();
 
@@ -69,9 +76,8 @@ namespace Infrastructure.Business.Managers
                 }
             }
             if (!wordCloud.Values.Any())
-                return new ReportElementDto { IsCorrect = false };
+                return new ReportElementDto { Id = ReportElementId, IsCorrect = false };
             return wordCloud;
-
         }
 
         public async Task<GaugeDto> GetGaugeById(int gaugeId)

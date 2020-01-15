@@ -97,14 +97,23 @@ namespace smart_home_web.AutoMapper
 
             CreateMap<ReportElement, GaugeDto>().ReverseMap();
             CreateMap<GaugeDto, GaugeViewModel>().ReverseMap();
-           
+
             CreateMap<Sensor, ReportElementDto>()
-              .ForMember(gd => gd.SensorId, map => map.MapFrom(s => s.Id))
-              .ForMember(gd => gd.SensorName, map => map.MapFrom(s => s.Name))
-              .ForMember(gd => gd.MeasurementName, map => map.MapFrom(s => s.SensorType.MeasurementName))
-              .ForMember(gd => gd.MeasurementType, map => map.MapFrom(s => s.SensorType.MeasurementType));
-        
-			CreateMap<DashboardOptions, DashboardOptionsDto>().ReverseMap();
+                .ForMember(gd => gd.SensorId, map => map.MapFrom(s => s.Id))
+                .ForMember(gd => gd.SensorName, map => map.MapFrom(s => s.Name))
+                .ForMember(gd => gd.MeasurementName, map => map.MapFrom(s => s.SensorType.MeasurementName))
+                .ForMember(gd => gd.MeasurementType, map => map.MapFrom(s => s.SensorType.MeasurementType));
+            CreateMap<ReportElementDto, ReportElementViewModel>();
+
+            CreateMap<ReportElement, EditReportElementViewModel>()
+                .ForMember(ewc => ewc.DashboardName, map => map.MapFrom(re => re.Dashboard.Name))
+                .ForMember(ewc => ewc.SensorName, map => map.MapFrom(re => re.Sensor.Name));
+
+            CreateMap<EditReportElementViewModel, ReportElementDto>();
+            CreateMap<ReportElementDto, ReportElement>();
+
+
+            CreateMap<DashboardOptions, DashboardOptionsDto>().ReverseMap();
 			CreateMap<DashboardOptionsDto, DashboardOptionsViewModel>();
 
 			CreateMap<Options, OptionsDto>().ReverseMap();
