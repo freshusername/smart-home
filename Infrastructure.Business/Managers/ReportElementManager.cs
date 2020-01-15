@@ -113,11 +113,10 @@ namespace Infrastructure.Business.Managers
             DateTime date = DateTime.Now.AddHours(-(int)reportElement.Hours);
             IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
             if (!histories.Any())
-                return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message="No histories in this element for these hours" };
+                return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message= "No histories for that period of time" };
 
             ReportElementDto columnRange = mapper.Map<Sensor, ReportElementDto>(reportElement.Sensor);
 
-            columnRange.Type = ReportElementType.Columnrange;
             columnRange.DashboardName = reportElement.Dashboard.Name;
             columnRange.Dates = new List<string>();
             columnRange.MinValues = new List<dynamic>();
@@ -153,16 +152,16 @@ namespace Infrastructure.Business.Managers
                     foreach (var t in doubleValues)
                     {
                         columnRange.Dates.Add(t.Date.DateTime.ToShortDateString());
-                        columnRange.MinValues.Add(Math.Round(t.Min.GetValueOrDefault(),2));
+                        columnRange.MinValues.Add(Math.Round(t.Min.GetValueOrDefault(), 2));
                         columnRange.MaxValues.Add(Math.Round(t.Max.GetValueOrDefault(), 2));
                     }
                     break;
                 case MeasurementType.Bool:
-                    return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message="Invalid sensor type for this element" };
+                    return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message="Incorrect sensor type for this element" };
                 case MeasurementType.String:
-                    return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "Invalid sensor type for this element" };
+                    return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "Incorrect sensor type for this element" };
                 default:
-                    return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "Invalid sensor type for this element" };
+                    return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "Incorrect sensor type for this element" };
             }
             return columnRange;
         }
