@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 using smart_home_web.Models;
 using smart_home_web.Models.History;
 using Domain.Core.Model;
-using Infrastructure.Business.Services;
 using Infrastructure.Business.DTOs.SensorType;
 
 

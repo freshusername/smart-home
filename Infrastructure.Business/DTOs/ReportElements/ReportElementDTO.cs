@@ -12,6 +12,7 @@ namespace Infrastructure.Business.DTOs.ReportElements
         public string DashboardName { get; set; }
         public int SensorId { get; set; }
         public string SensorName { get; set; }
+        public int Days { get; set; }
         public int Hours { get; set; }
         public string Message { get; set; }
         public ReportElementType Type { get; set; }
@@ -20,6 +21,7 @@ namespace Infrastructure.Business.DTOs.ReportElements
         public MeasurementType MeasurementType { get; set; }
         public string MeasurementName { get; set; }
 
+        public List<long> Milliseconds { get; set; }
         public List<dynamic> Values { get; set; }
 
         public List<string> Dates { get; set; }

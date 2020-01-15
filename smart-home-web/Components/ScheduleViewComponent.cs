@@ -4,6 +4,7 @@ using Infrastructure.Business.DTOs.SensorType;
 using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Mvc;
 using smart_home_web.Models;
+using smart_home_web.Models.ReportElements;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -71,6 +71,7 @@ namespace Infrastructure.Business.Managers
             if (!wordCloud.Values.Any())
                 return new ReportElementDto { IsCorrect = false };
             return wordCloud;
+
         }
 
         public async Task<GaugeDto> GetGaugeById(int gaugeId)
@@ -177,11 +178,11 @@ namespace Infrastructure.Business.Managers
             DateTimeOffset date = DateTimeOffset.Now.AddHours(-hours);
              var histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
              
-             var dates = GetDates(histories);
-              var values = GetValues(histories);
+             var milliseconds = GetMilliseconds(histories).ToList();
+              var values = GetValues(histories).ToList();
 
             ReportElementDto schedule = mapper.Map<Sensor,ReportElementDto>(histories.First().Sensor);
-             schedule.Dates = dates;
+             schedule.Milliseconds = milliseconds;
               schedule.Values = values;
             schedule.DashboardName = dashboard.Name;
 
@@ -206,7 +207,7 @@ namespace Infrastructure.Business.Managers
             }        
         }
 
-        private IEnumerable<long> GetDates(IEnumerable<History> histories)
+        private IEnumerable<long> GetMilliseconds(IEnumerable<History> histories)
         {                      
             foreach (var items in histories)
             {
