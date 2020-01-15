@@ -26,7 +26,6 @@ namespace smart_home_web.Models.ReportElements
         public List<string> Dates { get; set; }
         public List<int?> MinValues { get; set; }
         public List<int?> MaxValues { get; set; }
-    }
 
 		public int X { get; set; }
 		public int Y { get; set; }

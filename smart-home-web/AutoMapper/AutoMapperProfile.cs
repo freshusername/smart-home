@@ -75,8 +75,8 @@ namespace smart_home_web.AutoMapper
                 .ForMember(ewc => ewc.DashboardName, map => map.MapFrom(re => re.Dashboard.Name))
                 .ForMember(ewc => ewc.SensorName, map => map.MapFrom(re => re.Sensor.Name));
 
-            CreateMap<EditReportElementViewModel, ReportElementDTO>();
-            CreateMap<ReportElementDTO, ReportElement>().ReverseMap();
+            CreateMap<EditReportElementViewModel, ReportElementDto>();
+            CreateMap<ReportElementDto, ReportElement>().ReverseMap();
 
             CreateMap<SensorTypeDto, SensorType>();
             CreateMap<SensorTypeViewModel, SensorTypeDto>().ReverseMap();

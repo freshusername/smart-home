@@ -158,9 +158,9 @@ namespace Infrastructure.Business.Managers
         }
 
 		//TODO: Check if we can make this method async
-		public void Update(ReportElementDTO reportElementDto)
+		public void Update(ReportElementDto reportElementDto)
 		{
-			ReportElement reportElement = mapper.Map<ReportElementDTO, ReportElement>(reportElementDto);
+			ReportElement reportElement = mapper.Map<ReportElementDto, ReportElement>(reportElementDto);
 			unitOfWork.ReportElementRepo.Update(reportElement);
 		}
 	}

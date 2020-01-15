@@ -13,6 +13,6 @@ namespace smart_home_web.Models.Dashboard
 		public int Id { get; set; }
 		public string Name { get; set; }
 		
-		public ICollection<ReportElementDTO> ReportElements { get; set; }
+		public ICollection<ReportElementDto> ReportElements { get; set; }
 	}
 }
