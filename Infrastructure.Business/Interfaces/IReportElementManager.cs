@@ -1,4 +1,5 @@
 ﻿using Domain.Core.Model;
+using Domain.Core.Model.Enums;
 using Infrastructure.Business.DTOs.ReportElements;
 using Infrastructure.Business.DTOs.SensorType;
 using System;
@@ -16,6 +17,6 @@ namespace Infrastructure.Business.Managers
         Task<GaugeDto> GetGaugeById(int gaugeId);
         Task UpdateReportElementHours(int gaugeId, int hours);
         void EditReportElement(ReportElementDto wordCloud);
-        Task<ReportElementDto> GetDataForSchedule(int id, int days);
+        Task<ReportElementDto> GetDataForSchedule(int id, ReportElementHours hours);
     }
 }

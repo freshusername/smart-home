@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Domain.Core.Model.Enums;
 using Infrastructure.Business.DTOs.ReportElements;
 using Infrastructure.Business.DTOs.SensorType;
 using Infrastructure.Business.Managers;
@@ -23,9 +24,9 @@ namespace smart_home_web.Components
             _mapper = mapper;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(int id , int days = 30)
+        public async Task<IViewComponentResult> InvokeAsync(int id , ReportElementHours hours)
         {
-            var data = await _reportElementManager.GetDataForSchedule(id , days);
+            var data = await _reportElementManager.GetDataForSchedule(id , hours);
              if (data == null) ModelState.AddModelError("" , " Theare is no measurement data");
 
             var result = _mapper.Map<ReportElementDto,ReportElementViewModel>(data);

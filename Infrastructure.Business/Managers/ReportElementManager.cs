@@ -168,14 +168,14 @@ namespace Infrastructure.Business.Managers
             return columnRange;
         }
 
-        public async Task<ReportElementDto> GetDataForSchedule(int id , int hours)
+        public async Task<ReportElementDto> GetDataForSchedule(int id , ReportElementHours hours)
         {
             var reportElement = await unitOfWork.ReportElementRepo.GetById(id);
              if (reportElement == null) return null;
 
             var dashboard = await unitOfWork.DashboardRepo.GetById(reportElement.DashboardId);
 
-            DateTimeOffset date = DateTimeOffset.Now.AddHours(-hours);
+            DateTimeOffset date = DateTimeOffset.Now.AddHours(-(int)hours);
              var histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
              
              var milliseconds = GetMilliseconds(histories).ToList();
