@@ -156,8 +156,7 @@ namespace Infrastructure.Business.Managers
             }
             return columnRange;
         }
-
-		//TODO: Check if we can make this method async
+		
 		public async Task Update(ReportElement reportElement)
 		{
 			ReportElement result = await unitOfWork.ReportElementRepo.GetById(reportElement.Id);
@@ -165,8 +164,6 @@ namespace Infrastructure.Business.Managers
 			result.Y = reportElement.Y;
 			result.Width = reportElement.Width;
 			result.Height = reportElement.Height;
-			reportElement.Id = 0;
-			//unitOfWork.ReportElementRepo.Attach(reportElement);
 			unitOfWork.ReportElementRepo.Update(result);
 			unitOfWork.Save();
 		}

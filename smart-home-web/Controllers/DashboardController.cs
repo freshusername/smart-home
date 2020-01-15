@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Core.Model;
 using Domain.Core.Model.Enums;
+using Infrastructure.Business.DTOs.Dashboard;
 using Infrastructure.Business.DTOs.Icon;
 using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.DTOs.SensorType;
@@ -8,6 +9,7 @@ using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using smart_home_web.Models.Dashboard;
 using smart_home_web.Models.SensorType;
 using smart_home_web.Models.SensorViewModel;
 using System;
@@ -35,7 +37,27 @@ namespace smart_home_web.Controllers
 			_dashboardManager = dashboardManager;
 		}
 
-        [HttpGet]
+		public async Task<IActionResult> Detail(int id)
+		{
+			var dashboard = await _dashboardManager.GetById(id);
+			var result = _mapper.Map<DashboardDto, DashboardViewModel>(dashboard);
+
+			return View(result);
+		}
+
+		public async Task<IActionResult> Index(int id)
+		{
+			var dashboard = await _dashboardManager.GetAll();
+			var result = _mapper.Map<IEnumerable<DashboardDto>, IEnumerable<DashboardViewModel>>(dashboard);
+
+			return View(new DashboardIndexViewModel
+			{
+				Dashboards = result
+			}
+			);
+		}
+
+		[HttpGet]
         public IActionResult GetSensorsByReportElementType(ReportElementType type, int dashboardId)
         {
             List<int> list = new List<int>
