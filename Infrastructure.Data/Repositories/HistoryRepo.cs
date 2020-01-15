@@ -42,7 +42,6 @@ namespace Infrastructure.Data.Repositories
 		{
 			var histories = context.Histories.Include(h => h.Sensor)
 				.ThenInclude(st => st.SensorType)
-				.Select(h => h)
 				.Where(h => h.Sensor.Id == SensorId);
 
 			return await histories.ToListAsync();
@@ -52,7 +51,6 @@ namespace Infrastructure.Data.Repositories
         {
             var histories = context.Histories.Include(h => h.Sensor)
                 .ThenInclude(st => st.SensorType)
-                .Select(h => h)
                 .Where(h => h.Sensor.Id == SensorId && h.Date > date);
 
             return await histories.ToListAsync();
@@ -86,36 +84,66 @@ namespace Infrastructure.Data.Repositories
 		{
 			var histories = context.Histories.Include(h => h.Sensor)
 												.ThenInclude(st => st.SensorType)
-											.Select(h => h)
 											.Where(h => h.Sensor.Id == SensorId)
 											.OrderBy(h => h.Date)
 											.Last();
 			return histories;
 		}
 
-		public async Task<double?> GetMinValueAfterDate(int SensorId, DateTimeOffset dateTime)
+		//public async Task<double?> GetMinValueAfterDate(int SensorId, DateTimeOffset dateTime)
+		//{
+		//	var histories = await GetHistoriesBySensorId(SensorId);
+		//	double? minvalue = null;
+		//	if (histories.Any())
+		//	{
+		//		minvalue = histories
+		//						.Where(h => h.Date > dateTime)
+		//						.Min(h => (h.DoubleValue.HasValue ? h.DoubleValue : h.IntValue));
+		//	}
+		//	return minvalue;
+		//}
+
+		public double? GetMinValueForPeriod(int sensorId, int? hours)
 		{
-			var histories = await GetHistoriesBySensorId(SensorId);
-			double? minvalue = null;
-			if (histories.Any())
+			var items = context.Histories.Where(h => h.SensorId == sensorId);
+
+			if (hours.HasValue && hours != 0)
 			{
-				minvalue = histories
-								//.Where(h => h.Date > dateTime)
-								.Min(h => (h.DoubleValue.HasValue ? h.DoubleValue : h.IntValue));
+				items = items.Where(h => h.Date > (DateTimeOffset.Now - new TimeSpan(hours.Value, 0, 0)));
 			}
+
+			double? minvalue = null;
+			try
+			{
+				minvalue = items.Min(h => (h.DoubleValue.HasValue ? h.DoubleValue : h.IntValue));
+			}
+			catch
+			{
+
+			}
+
 			return minvalue;
 		}
 
-		public async Task<double?> GetMaxValueAfterDate(int SensorId, DateTimeOffset dateTime)
+		public double? GetMaxValueForPeriod(int sensorId, int? hours)
 		{
-			var histories = await GetHistoriesBySensorId(SensorId);
-			double? maxvalue = null;
-			if (histories.Any())
+			var items = context.Histories.Where(h => h.SensorId == sensorId);
+
+			if (hours.HasValue && hours != 0)
 			{
-				maxvalue = histories
-								//.Where(h => h.Date > dateTime)
-								.Max(h => (h.DoubleValue.HasValue ? h.DoubleValue : h.IntValue));
+				items = items.Where(h => h.Date > (DateTimeOffset.Now - new TimeSpan(hours.Value, 0, 0)));
 			}
+			
+			double? maxvalue = null;
+			try
+			{
+				maxvalue = items.Max(h => (h.DoubleValue.HasValue ? h.DoubleValue : h.IntValue));
+			}
+			catch
+			{
+
+			}
+
 			return maxvalue;
 		}
 	}

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Core.Model.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,6 +11,7 @@ namespace Infrastructure.Business.DTOs.ReportElements
         public int DashboardId { get; set; }
         public int SensorId { get; set; }
         public bool IsValid { get; set; } = false;
+        public ReportElementHours Hours { get; set; }
 
         public string SensorName { get; set; }
         public string MeasurementName { get; set; }

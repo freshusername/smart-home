@@ -12,6 +12,7 @@ namespace Infrastructure.Business.Managers
         Task<ReportElement> GetById(int id);
         Task<ReportElementDTO> GetWordCloudById(int ReportElementId);
         Task<GaugeDto> GetGaugeById(int gaugeId);
+        Task UpdateReportElementHours(int gaugeId, int hours);
         void EditReportElement(ReportElementDTO wordCloud);
     }
 }

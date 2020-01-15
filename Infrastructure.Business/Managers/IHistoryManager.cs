@@ -25,9 +25,8 @@ namespace Infrastructure.Business.Managers
         OperationDetails AddHistory(string value, int sensorId);
 		Task<IEnumerable<HistoryDto>> GetHistoriesBySensorIdAsync(int sensorId);
 
-        Task<double?> GetMinValueAfterDate(int sensorId, DateTimeOffset dateTime);
-
-        Task<double?> GetMaxValueAfterDate(int sensorId, DateTimeOffset dateTime);
+		double? GetMinValueForPeriod(int sensorId, int? hours);
+		double? GetMaxValueForPeriod(int sensorId, int? hours);
 
 		Task<GraphDTO> GetGraphBySensorId(int SensorId, int days);
 		Task<int> GetAmountAsync(bool isActivated);

@@ -65,13 +65,13 @@ namespace Infrastructure.Business.Managers
             return result;
         }
 
-        public async Task<double?> GetMinValueAfterDate(int sensorId, DateTimeOffset dateTime)
+        public double? GetMinValueForPeriod(int sensorId, int? hours)
         {
-            return await unitOfWork.HistoryRepo.GetMinValueAfterDate(sensorId, dateTime);
+            return unitOfWork.HistoryRepo.GetMinValueForPeriod(sensorId, hours);
         }
-        public async Task<double?> GetMaxValueAfterDate(int sensorId, DateTimeOffset dateTime)
+        public double? GetMaxValueForPeriod(int sensorId, int? hours)
         {
-            return await unitOfWork.HistoryRepo.GetMaxValueAfterDate(sensorId, dateTime);;
+            return unitOfWork.HistoryRepo.GetMaxValueForPeriod(sensorId, hours);;
         }
 
         public async Task<GraphDTO> GetGraphBySensorId(int SensorId, int days)

@@ -37,7 +37,7 @@ namespace Infrastructure.Business.Managers
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
 
-            DateTime date = DateTime.Now.AddHours(-reportElement.Hours);
+            DateTime date = DateTime.Now.AddHours(-(int)reportElement.Hours);
 
             IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
 
@@ -81,17 +81,31 @@ namespace Infrastructure.Business.Managers
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(gaugeId);
             GaugeDto gaugeDto = mapper.Map<ReportElement, GaugeDto>(reportElement);
-            gaugeDto.Min = await historyManager.GetMinValueAfterDate(reportElement.SensorId, DateTimeOffset.Now - new TimeSpan(14, 0, 0, 0));
-            gaugeDto.Max = await historyManager.GetMaxValueAfterDate(reportElement.SensorId, DateTimeOffset.Now - new TimeSpan(14, 0, 0, 0));
-            if (gaugeDto.Min.HasValue && gaugeDto.Max.HasValue && gaugeDto.Min != gaugeDto.Max)
+            
+            gaugeDto.Min = historyManager.GetMinValueForPeriod(reportElement.SensorId, (int)gaugeDto.Hours);
+            gaugeDto.Max = historyManager.GetMaxValueForPeriod(reportElement.SensorId, (int)gaugeDto.Hours);
+            if (gaugeDto.Min.HasValue && gaugeDto.Max.HasValue)
             {
                 var value = historyManager.GetLastHistoryBySensorId(reportElement.SensorId);
                 gaugeDto.Value = value.DoubleValue.HasValue ? value.DoubleValue : value.IntValue;
                 gaugeDto.SensorName = reportElement.Sensor.Name;
                 gaugeDto.MeasurementName = reportElement.Sensor.SensorType.MeasurementName;
+                if (gaugeDto.Min == gaugeDto.Max)
+                {
+                    gaugeDto.Min--;
+                }
                 gaugeDto.IsValid = true;
             }
+            
             return gaugeDto;
+        }
+
+        public async Task UpdateReportElementHours(int gaugeId, int hours)
+        {
+            ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(gaugeId);
+            reportElement.Hours = (ReportElementHours)hours;
+            unitOfWork.ReportElementRepo.Update(reportElement);
+            unitOfWork.Save();
         }
     }
 }
