@@ -1,4 +1,4 @@
-﻿using Domain.Core.Model.Enums;
+using Domain.Core.Model.Enums;
 using Infrastructure.Business.Infrastructure;
 using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Mvc;
@@ -42,6 +42,12 @@ namespace smart_home_web.Controllers
                 return Ok(histroyResult.Message);
 
             return BadRequest(histroyResult.Message);        
+        }
+
+        [HttpGet("getaction")]
+        public int GetAction(Guid token)
+        {
+            return (DateTime.Now.Second / 10) % 2;
         }
     }
 }
