@@ -23,13 +23,13 @@ else
 
 <script>
 
-    minvalues = JSON.parse('@Html.Raw(Json.Serialize(@Model.MinValues))');
-    maxvalues = JSON.parse('@Html.Raw(Json.Serialize(@Model.MaxValues))');
-    dates = JSON.parse('@Html.Raw(Json.Serialize(@Model.Dates))');
+    columnminvalues = JSON.parse('@Html.Raw(Json.Serialize(@Model.MinValues))');
+    columnmaxvalues = JSON.parse('@Html.Raw(Json.Serialize(@Model.MaxValues))');
+    columndates = JSON.parse('@Html.Raw(Json.Serialize(@Model.Dates))');
 
-    let temperatures = [];
-    for (let i = 0; i < dates.length;i++) {
-        temperatures.push([minvalues[i],maxvalues[i]])
+    let columntemperatures = [];
+    for (let i = 0; i < columndates.length;i++) {
+        columntemperatures.push([columnminvalues[i],columnmaxvalues[i]])
     }
     Highcharts.chart('columnrange_container_'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
 
@@ -62,9 +62,9 @@ else
                 style: {
                     textTransform: 'uppercase'
                 },
-                text: 'Dates'
+                text: 'dates'
             },
-            categories: dates
+            categories: columndates
         },
 
         yAxis: {
@@ -73,7 +73,7 @@ else
                 style: {
                     textTransform: 'uppercase'
                 },
-                text: 'Values'
+                text: 'values'
             },
             labels: {
                 style: {
@@ -95,7 +95,7 @@ else
 
         series: [{
             name: 'Temperatures',
-            data: temperatures
+            data: columntemperatures
         }],
         exporting: {
             buttons: {
