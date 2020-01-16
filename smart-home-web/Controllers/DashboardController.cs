@@ -68,3 +68,8 @@ namespace smart_home_web.Controllers
         }
     }
 }
+//TODO: Remove hover from register/login links
+
+//Add Authorize attrubute to Dashboard controller
+
+//Complete Alex`s task
