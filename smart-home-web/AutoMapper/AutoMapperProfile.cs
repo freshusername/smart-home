@@ -112,13 +112,6 @@ namespace smart_home_web.AutoMapper
 
             CreateMap<EditReportElementViewModel, ReportElementDto>();
             CreateMap<ReportElementDto, ReportElement>();
-
-
-            CreateMap<DashboardOptions, DashboardOptionsDto>().ReverseMap();
-			CreateMap<DashboardOptionsDto, DashboardOptionsViewModel>();
-
-			CreateMap<Options, OptionsDto>().ReverseMap();
-			CreateMap<OptionsDto, OptionsViewModel>();
 		}
     }
 }

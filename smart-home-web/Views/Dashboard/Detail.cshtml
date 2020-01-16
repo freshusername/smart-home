@@ -5,15 +5,15 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@0.6.0/dist/gridstack.min.css" />
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gridstack@0.6.0/dist/gridstack.all.js"></script>
-<script src="~/lib/GridItem/test.js"></script>
 
 <h1>Dash</h1>
 
 <div class="grid-stack" data-save-url="@Url.Action("UpdateOptions", "DashboardOptions")">
     @foreach (var report in Model.ReportElements)
-    {<div id="@report.Id" class="grid-stack-item shadow-standart" style=" border-style: solid; border-width: 1px" data-gs-x="@report.X" data-gs-y="@report.Y" data-gs-width="@report.Width" data-gs-height="@report.Height">
+    {<div id="@report.Id" class="grid-stack-item shadow-standart card" data-gs-x="@report.X" data-gs-y="@report.Y" data-gs-width="@report.Width" data-gs-height="@report.Height">
             <div class="grid-stack-item-content">
-                <div >@await Component.InvokeAsync(report.Type.ToString(), new { reportElementId = report.Id })</div>
+               <div >@await Component.InvokeAsync(report.Type.ToString(), new { reportElementId = 3 })</div>
+                @*<div>@report.Id</div>*@
             </div>
         </div>
     }

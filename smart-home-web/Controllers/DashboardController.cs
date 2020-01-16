@@ -65,3 +65,7 @@ namespace smart_home_web.Controllers
 //Add Authorize attrubute to Dashboard controller
 
 //Complete Alex`s task
+
+//Clock resize automatically, we can use it method
+
+//We are not able to add multiple clock to one dashboard

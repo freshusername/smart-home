@@ -28,7 +28,7 @@ namespace smart_home_web.Models.ReportElements
 		public int Y { get; set; }
 		public int Weight { get; set; }
 		public int Height { get; set; }
-	}
+	
         public List<dynamic> MinValues { get; set; }
         public List<dynamic> MaxValues { get; set; }
     }
