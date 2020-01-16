@@ -13,6 +13,7 @@ namespace Infrastructure.Business.Managers
     {
         Task<ReportElement> GetById(int id);
         Task<ReportElementDto> GetWordCloudById(int ReportElementId);
+        Task<HeatmapDto> GetHeatmapById(int ReportElementId);
         Task<ReportElementDto> GetColumnRangeById(int ReportElementId);
         Task<GaugeDto> GetGaugeById(int gaugeId);
         Task UpdateReportElementHours(int gaugeId, int hours);

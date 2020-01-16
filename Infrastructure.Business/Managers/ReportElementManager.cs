@@ -40,6 +40,48 @@ namespace Infrastructure.Business.Managers
             return new OperationDetails(false, "", "Name");
         }
 
+        public async Task<HeatmapDto> GetHeatmapById(int heatmapId)
+        {
+            ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(heatmapId);
+
+            DateTime dateFrom = new DateTime();
+            DateTime dateTo = DateTime.Now;
+
+            if (reportElement.Hours != 0)
+                dateFrom = DateTime.Now.AddHours(-(int)reportElement.Hours);
+
+            IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDatePeriod(reportElement.SensorId, dateFrom, dateTo);
+
+            if (!histories.Any())
+                return new HeatmapDto { Id = heatmapId, IsCorrect = false };
+
+            HeatmapDto heatmap = mapper.Map<Sensor, HeatmapDto>(reportElement.Sensor);
+
+            heatmap.Id = reportElement.Id;
+            heatmap.DashboardName = reportElement.Dashboard.Name;
+            heatmap.Values = new List<dynamic>();
+
+            foreach (History history in histories)
+            {
+                switch (heatmap.MeasurementType)
+                {
+                    case MeasurementType.Int when history.IntValue.HasValue:
+                        heatmap.Values.Add(history.IntValue);
+                        break;
+                    case MeasurementType.Double when history.DoubleValue.HasValue:
+                        heatmap.Values.Add(history.DoubleValue);
+                        break;
+                }
+            }
+            if (!heatmap.Values.Any())
+                return new HeatmapDto { Id = heatmapId, IsCorrect = false };
+
+
+            return heatmap;
+        }
+
+        //TODO: getheatmapByIdAndTimePeriod
+
         public async Task<ReportElementDto> GetWordCloudById(int ReportElementId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
@@ -120,7 +162,7 @@ namespace Infrastructure.Business.Managers
             DateTime date = DateTime.Now.AddHours(-(int)reportElement.Hours);
             IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
             if (!histories.Any())
-                return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message= "No histories for that period of time" };
+                return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "No histories for that period of time" };
 
             ReportElementDto columnRange = mapper.Map<Sensor, ReportElementDto>(reportElement.Sensor);
 
@@ -164,7 +206,7 @@ namespace Infrastructure.Business.Managers
                     }
                     break;
                 case MeasurementType.Bool:
-                    return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message="Incorrect sensor type for this element" };
+                    return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "Incorrect sensor type for this element" };
                 case MeasurementType.String:
                     return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "Incorrect sensor type for this element" };
                 default:
@@ -173,26 +215,26 @@ namespace Infrastructure.Business.Managers
             return columnRange;
         }
 
-        public async Task<ReportElementDto> GetDataForSchedule(int id , ReportElementHours hours)
+        public async Task<ReportElementDto> GetDataForSchedule(int id, ReportElementHours hours)
         {
             var reportElement = await unitOfWork.ReportElementRepo.GetById(id);
-             if (reportElement == null) return null;
-            
+            if (reportElement == null) return null;
+
             DateTimeOffset date;
             if (hours == 0)
-              date = new DateTimeOffset(1970, 1, 1, 0, 0, 0, new TimeSpan(0, 0, 0));
-             
-            date = DateTimeOffset.Now.AddHours(-(int)hours);     
-            
-             var histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
-              var dashboard = await unitOfWork.DashboardRepo.GetById(reportElement.DashboardId);
+                date = new DateTimeOffset(1970, 1, 1, 0, 0, 0, new TimeSpan(0, 0, 0));
 
-             var milliseconds = GetMilliseconds(histories).ToList();
-              var values = GetValues(histories).ToList();
+            date = DateTimeOffset.Now.AddHours(-(int)hours);
 
-            ReportElementDto schedule = mapper.Map<Sensor,ReportElementDto>(histories.First().Sensor);
-             schedule.Milliseconds = milliseconds;
-              schedule.Values = values;
+            var histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
+            var dashboard = await unitOfWork.DashboardRepo.GetById(reportElement.DashboardId);
+
+            var milliseconds = GetMilliseconds(histories).ToList();
+            var values = GetValues(histories).ToList();
+
+            ReportElementDto schedule = mapper.Map<Sensor, ReportElementDto>(histories.First().Sensor);
+            schedule.Milliseconds = milliseconds;
+            schedule.Values = values;
             schedule.DashboardName = dashboard.Name;
 
             return schedule;
@@ -200,7 +242,7 @@ namespace Infrastructure.Business.Managers
 
         private IEnumerable<dynamic> GetValues(IEnumerable<History> histories)
         {
-                      
+
             foreach (var items in histories)
             {
                 if (items.Sensor.SensorType.MeasurementType == MeasurementType.Int)
@@ -213,16 +255,16 @@ namespace Infrastructure.Business.Managers
                     yield return items.BoolValue;
                 else
                     yield return items.StringValue;
-            }        
+            }
         }
 
         private IEnumerable<long> GetMilliseconds(IEnumerable<History> histories)
-        {                      
+        {
             foreach (var items in histories)
             {
                 yield return items.Date.ToUnixTimeMilliseconds();
-                 
-            }      
+
+            }
         }
     }
 }
