@@ -16,7 +16,6 @@
     {<div id="@report.Id" class="grid-stack-item shadow-standart card" data-gs-x="@report.X" data-gs-y="@report.Y" data-gs-width="@report.Width" data-gs-height="@report.Height">
             <div class="grid-stack-item-content">
                <div >@await Component.InvokeAsync(report.Type.ToString(), new { reportElementId = report.Id })</div>
-                @*<div>@report.Id</div>*@
             </div>
         </div>
     }
