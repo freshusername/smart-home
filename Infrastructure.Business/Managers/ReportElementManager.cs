@@ -28,7 +28,8 @@ namespace Infrastructure.Business.Managers
             return reportElement;
         }
 
-        public void EditReportElement(ReportElementDto reportElementDTO)
+		//TODO: Check if we are able to update options with this method
+		public void EditReportElement(ReportElementDto reportElementDTO)
         {
             ReportElement reportElement = mapper.Map<ReportElementDto, ReportElement>(reportElementDTO);
             unitOfWork.ReportElementRepo.Update(reportElement);
@@ -117,69 +118,69 @@ namespace Infrastructure.Business.Managers
             unitOfWork.Save();
         }
 
-        public async Task<ReportElementDto> GetColumnRangeById(int ReportElementId)
-        {
-            ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
-            if (reportElement == null)
-                return new ReportElementDto { IsCorrect = false, Message = "Invalid report element" };
+		public async Task<ReportElementDto> GetColumnRangeById(int ReportElementId)
+		{
+			ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
+			if (reportElement == null)
+				return new ReportElementDto { IsCorrect = false, Message = "Invalid report element" };
 
-            DateTime date = DateTime.Now.AddHours(-(int)reportElement.Hours);
-            IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
-            if (!histories.Any())
-                return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "No histories for that period of time" };
+			DateTime date = DateTime.Now.AddHours(-(int)reportElement.Hours);
+			IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
+			if (!histories.Any())
+				return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "No histories in this report element" };
 
-            ReportElementDto columnRange = mapper.Map<Sensor, ReportElementDto>(reportElement.Sensor);
+			ReportElementDto columnRange = mapper.Map<Sensor, ReportElementDto>(reportElement.Sensor);
 
-            columnRange.DashboardName = reportElement.Dashboard.Name;
-            columnRange.Dates = new List<string>();
-            columnRange.MinValues = new List<dynamic>();
-            columnRange.MaxValues = new List<dynamic>();
+			columnRange.DashboardName = reportElement.Dashboard.Name;
+			columnRange.Dates = new List<string>();
+			columnRange.MinValues = new List<dynamic>();
+			columnRange.MaxValues = new List<dynamic>();
 
-            switch (columnRange.MeasurementType)
-            {
-                case MeasurementType.Int:
-                    var intValues = histories.GroupBy(p => p.Date).Select(p => new
-                    {
-                        Min = p.Min(g => g.IntValue),
-                        Max = p.Max(g => g.IntValue),
-                        Date = p.Key
-                    }).ToList();
+			switch (columnRange.MeasurementType)
+			{
+				case MeasurementType.Int:
+					var intValues = histories.GroupBy(p => p.Date).Select(p => new
+					{
+						Min = p.Min(g => g.IntValue),
+						Max = p.Max(g => g.IntValue),
+						Date = p.Key
+					}).ToList();
 
-                    foreach (var t in intValues)
-                    {
-                        columnRange.Dates.Add(t.Date.DateTime.ToShortDateString());
-                        columnRange.MinValues.Add(t.Min.GetValueOrDefault());
-                        columnRange.MaxValues.Add(t.Max.GetValueOrDefault());
-                    }
-                    break;
+					foreach (var t in intValues)
+					{
+						columnRange.Dates.Add(t.Date.DateTime.ToShortDateString());
+						columnRange.MinValues.Add(t.Min.GetValueOrDefault());
+						columnRange.MaxValues.Add(t.Max.GetValueOrDefault());
+					}
+					break;
 
 
-                case MeasurementType.Double:
-                    var doubleValues = histories.GroupBy(p => p.Date).Select(p => new
-                    {
-                        Min = p.Min(g => g.DoubleValue),
-                        Max = p.Max(g => g.DoubleValue),
-                        Date = p.Key
-                    }).ToList();
+				case MeasurementType.Double:
+					var doubleValues = histories.GroupBy(p => p.Date).Select(p => new
+					{
+						Min = p.Min(g => g.DoubleValue),
+						Max = p.Max(g => g.DoubleValue),
+						Date = p.Key
+					}).ToList();
 
-                    foreach (var t in doubleValues)
-                    {
-                        columnRange.Dates.Add(t.Date.DateTime.ToShortDateString());
-                        columnRange.MinValues.Add(Math.Round(t.Min.GetValueOrDefault(), 2));
-                        columnRange.MaxValues.Add(Math.Round(t.Max.GetValueOrDefault(), 2));
-                    }
-                    break;
-                case MeasurementType.Bool:
-                    return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "Incorrect sensor type for this element" };
-                case MeasurementType.String:
-                    return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "Incorrect sensor type for this element" };
-                default:
-                    return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "Incorrect sensor type for this element" };
-            }
-            return columnRange;
-        }
+					foreach (var t in doubleValues)
+					{
+						columnRange.Dates.Add(t.Date.DateTime.ToShortDateString());
+						columnRange.MinValues.Add(Math.Round(t.Min.GetValueOrDefault(), 2));
+						columnRange.MaxValues.Add(Math.Round(t.Max.GetValueOrDefault(), 2));
+					}
+					break;
+				case MeasurementType.Bool:
+					return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "Incorrect sensor type for this element" };
+				case MeasurementType.String:
+					return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "Incorrect sensor type for this element" };
+				default:
+					return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "Incorrect sensor type for this element" };
+			}
+			return columnRange;
+		}
 
-        public async Task<ReportElementDto> GetDataForSchedule(int id, ReportElementHours hours)
+        public async Task<ReportElementDto> GetDataForTimeSeries(int id, ReportElementHours hours)
         {
             var reportElement = await unitOfWork.ReportElementRepo.GetById(id);
             if (reportElement == null) return null;
@@ -230,5 +231,17 @@ namespace Infrastructure.Business.Managers
 
             }
         }
-    }
+
+		public async Task Update(ReportElement reportElement)
+		{
+			ReportElement result = await unitOfWork.ReportElementRepo.GetById(reportElement.Id);
+			result.X = reportElement.X;
+			result.Y = reportElement.Y;
+			result.Width = reportElement.Width;
+			result.Height = reportElement.Height;
+			unitOfWork.ReportElementRepo.Update(result);
+			unitOfWork.Save();
+		}
+
+	}
 }

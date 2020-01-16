@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace smart_home_web.Components
 {
-    public class ColumnRangeViewComponent : BaseViewComponent
+    public class ColumnrangeViewComponent : BaseViewComponent
     {
         private readonly IReportElementManager _reportElementManager;
         private readonly IMapper _mapper;
-        public ColumnRangeViewComponent(IReportElementManager reportElementManager, IMapper mapper)
+        public ColumnrangeViewComponent(IReportElementManager reportElementManager, IMapper mapper)
         {
             _reportElementManager = reportElementManager;
             _mapper = mapper;

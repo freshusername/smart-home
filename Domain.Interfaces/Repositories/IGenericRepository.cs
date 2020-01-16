@@ -10,5 +10,6 @@ namespace Domain.Interfaces.Repositories
         Task Insert(T item);
         void Update(T item);
         void Delete(T item);
+		void Attach(T item);
     }
 }
