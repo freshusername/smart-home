@@ -3,14 +3,14 @@
 @model ReportElementViewModel
 
 <figure class="highcharts-figure">
-    <div id="container"></div>
+    <div id=@("TimeSeries"+Model.Id.ToString())></div>
 </figure>
 <script>
     Highcharts.getJSON(
         'https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/usdeur.json',
         function (data) {
 
-            var chart = Highcharts.chart('container', {
+            Highcharts.chart('container', {
                 chart: {
                     zoomType: 'x'
                 },
@@ -104,6 +104,8 @@
     );
 
     $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
-        chart.setSize(ui.height, ui.width);
+        var type = 'TimeSeries';
+        var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
+        result.setSize(ui.height, ui.width);
     });
 </script>
