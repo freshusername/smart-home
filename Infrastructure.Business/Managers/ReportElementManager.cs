@@ -180,7 +180,7 @@ namespace Infrastructure.Business.Managers
 			return columnRange;
 		}
 
-        public async Task<ReportElementDto> GetDataForSchedule(int id, ReportElementHours hours)
+        public async Task<ReportElementDto> GetDataForTimeSeries(int id, ReportElementHours hours)
         {
             var reportElement = await unitOfWork.ReportElementRepo.GetById(id);
             if (reportElement == null) return null;

@@ -44,4 +44,8 @@
             data: { options: arrToJson(options) }
         });
     });
+
+    $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
+        ui.reflow();
+    });
 </script>
