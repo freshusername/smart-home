@@ -22,6 +22,8 @@ namespace Infrastructure.Business.DTOs.ReportElements
         public MeasurementType MeasurementType { get; set; }
         public string MeasurementName { get; set; }
 
+        public string SensorType { get; set; }
+
         public List<long> Milliseconds { get; set; }
         public List<dynamic> Values { get; set; }
 
