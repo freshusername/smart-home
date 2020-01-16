@@ -1,4 +1,7 @@
-﻿@using smart_home_web.Models.Dashboard;
+﻿@{
+    Layout = "_DashboardLayout";
+}
+@using smart_home_web.Models.Dashboard;
 @using smart_home_web.Components;
 @model DashboardViewModel;
 
@@ -6,14 +9,14 @@
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gridstack@0.6.0/dist/gridstack.all.js"></script>
 
-<h1>Dash</h1>
+<h1>@Model.Name Dashboard</h1>
 
 <div class="grid-stack" data-save-url="@Url.Action("UpdateOptions", "DashboardOptions")">
     @foreach (var report in Model.ReportElements)
-    {<div id="@report.Id" class="grid-stack-item shadow-standart card" data-gs-x="@report.X" data-gs-y="@report.Y" data-gs-width="@report.Width" data-gs-height="@report.Height">
+    {
+        <div id="@report.Id" class="grid-stack-item shadow-standart card" data-gs-x="@report.X" data-gs-y="@report.Y" data-gs-width="@report.Width" data-gs-height="@report.Height">
             <div class="grid-stack-item-content">
-               <div >@await Component.InvokeAsync(report.Type.ToString(), new { reportElementId = 3 })</div>
-                @*<div>@report.Id</div>*@
+                <div>@await Component.InvokeAsync(report.Type.ToString(), new { reportElementId = report.Id })</div>
             </div>
         </div>
     }
@@ -41,5 +44,10 @@
             url: $(".grid-stack").data("save-url"),
             data: { options: arrToJson(options)}
         });
+    });
+</script>
+<script>
+    $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
+        chart.setSize($('container').width(), 400);
     });
 </script>

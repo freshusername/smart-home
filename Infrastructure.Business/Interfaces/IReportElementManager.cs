@@ -13,7 +13,7 @@ namespace Infrastructure.Business.Managers
     public interface IReportElementManager
     {
         Task<ReportElement> GetById(int id);
-        Task<OperationDetails> CreateReportElement(ReportElementDto reportElementDto);
+        Task CreateReportElement(ReportElementDto reportElementDto);
         Task<ReportElementDto> GetWordCloudById(int ReportElementId);
         Task<ReportElementDto> GetColumnRangeById(int ReportElementId);
         Task<GaugeDto> GetGaugeById(int gaugeId);
