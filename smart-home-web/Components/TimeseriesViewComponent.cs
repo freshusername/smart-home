@@ -13,20 +13,20 @@ using System.Threading.Tasks;
 
 namespace smart_home_web.Components
 {
-    public class ScheduleViewComponent : ViewComponent
+    public class TimeseriesViewComponent : ViewComponent
     {
         private readonly IReportElementManager _reportElementManager;
         private readonly IMapper _mapper;
 
-        public ScheduleViewComponent(IReportElementManager reportElementManager,IMapper mapper)
+        public TimeseriesViewComponent(IReportElementManager reportElementManager,IMapper mapper)
         {
             _reportElementManager = reportElementManager;
             _mapper = mapper;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(int id , ReportElementHours hours)
+        public async Task<IViewComponentResult> InvokeAsync(int reportElementId, ReportElementHours hours)
         {
-            var data = await _reportElementManager.GetDataForSchedule(id , hours);
+            var data = await _reportElementManager.GetDataForSchedule(reportElementId, hours);
              if (data == null) ModelState.AddModelError("" , " Theare is no measurement data");
 
             var result = _mapper.Map<ReportElementDto,ReportElementViewModel>(data);

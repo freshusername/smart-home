@@ -19,9 +19,9 @@ namespace smart_home_web.Components
             _reportElementManager = reportElementManager;
             _mapper = mapper;
         }
-        public async Task<IViewComponentResult> InvokeAsync(int gaugeId)
+        public async Task<IViewComponentResult> InvokeAsync(int reportElementId)
         {
-            GaugeDto gaugeDto = await _reportElementManager.GetGaugeById(gaugeId);
+            GaugeDto gaugeDto = await _reportElementManager.GetGaugeById(reportElementId);
             GaugeViewModel result = _mapper.Map<GaugeDto, GaugeViewModel>(gaugeDto);
             return View(result);
         }

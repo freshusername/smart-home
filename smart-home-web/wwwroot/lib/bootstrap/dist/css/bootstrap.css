@@ -6831,4 +6831,8 @@ button.close {
     display: none !important;
   }
 }
+
+.nav-link {
+    hover: none;
+}
 /*# sourceMappingURL=bootstrap.css.map */
