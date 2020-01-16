@@ -10,7 +10,7 @@
         'https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/usdeur.json',
         function (data) {
 
-            Highcharts.chart('container', {
+            var chart = Highcharts.chart('container', {
                 chart: {
                     zoomType: 'x'
                 },
@@ -102,4 +102,8 @@
             });
         }
     );
+
+    $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
+        chart.setSize(ui.height, ui.width);
+    });
 </script>

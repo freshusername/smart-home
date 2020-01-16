@@ -187,4 +187,7 @@
         });
     }, 2000);
 
+    $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
+        gaugeChart.setSize(ui.height, ui.width);
+    });
 </script>
