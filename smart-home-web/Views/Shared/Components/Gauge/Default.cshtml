@@ -191,13 +191,13 @@
                     gaugeChart.yAxis[0].update({
                       tickPositions: gaugeChart.yAxis[0].tickPositions
                     });
-                    $('#alertMessage').css('display','none');
+                    //$('#alertMessage').css('display','none');
                 }
             },
 
             error: function (res) {
                 alert(res);
-                $('#gaugeFigure').css('display','none');
+                //$('#gaugeFigure').css('display','none');
             }
         });
     }, 2000);
