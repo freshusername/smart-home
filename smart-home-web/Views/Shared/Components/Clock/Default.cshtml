@@ -1,8 +1,5 @@
 ﻿<figure class="highcharts-figure-clock">
-    <div id="container"></div>
-    <p class="highcharts-description">
-        Current time
-    </p>
+    <div  id=@("clock_container") ></div>
 </figure>
 
 <script>
@@ -26,7 +23,7 @@
     var now = getNow();
 
     // Create the chart
-    var chart = Highcharts.chart('container', {
+    var chart = Highcharts.chart('clock_container', {
 
         chart: {
             type: 'gauge',
@@ -182,8 +179,8 @@
         return (7.5625 * (pos -= (2.625 / 2.75)) * pos + 0.984375);
     };
 
-    $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
-        chart.setSize(ui.height, ui.width);
-    });
+    //$('body').on('gsresizestop', '.grid-stack', function (event, ui) {
+    //    chart.setSize(ui.height, ui.width);
+    //});
 
 </script>

@@ -10,7 +10,7 @@
         'https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/usdeur.json',
         function (data) {
 
-            var chart = Highcharts.chart('container', {
+            var chart = Highcharts.chart('timeseries_container_'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
                 chart: {
                     zoomType: 'x'
                 },
@@ -102,8 +102,4 @@
             });
         }
     );
-
-    $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
-        chart.setSize(ui.height, ui.width);
-    });
 </script>
