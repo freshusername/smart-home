@@ -180,44 +180,44 @@ namespace Infrastructure.Business.Managers
 			return columnRange;
 		}
 
-        public async Task<ReportElementDto> GetDataForTimeSeries(int id, ReportElementHours hours)
+        public async Task<ReportElementDto> GetDataForTimeSeries(int reportElementId)
         {
-            var reportElement = await unitOfWork.ReportElementRepo.GetById(id);
-            if (reportElement == null) return null;
+            var reportElement = await unitOfWork.ReportElementRepo.GetById(reportElementId);
+              if (reportElement == null) return null;
 
-            DateTimeOffset date;
-            if (hours == 0)
-                date = new DateTimeOffset(1970, 1, 1, 0, 0, 0, new TimeSpan(0, 0, 0));
-
-            date = DateTimeOffset.Now.AddHours(-(int)hours);
-
+            DateTimeOffset date = new DateTimeOffset(1970, 1, 1, 0, 0, 0,
+              new TimeSpan(0, 0, 0));
+            if (reportElement.Hours != 0)
+              date = DateTimeOffset.Now.AddHours(-(int)reportElement.Hours);  
+                              
             var histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
-            var dashboard = await unitOfWork.DashboardRepo.GetById(reportElement.DashboardId);
+            if (histories.Count() == 0 || histories == null)
+                return new ReportElementDto {
+                    Id = reportElementId, SensorName = reportElement.Sensor.Name, IsCorrect = false
+                };
 
             var milliseconds = GetMilliseconds(histories).ToList();
-            var values = GetValues(histories).ToList();
+             var values = GetValues(histories).ToList();
 
-            ReportElementDto schedule = mapper.Map<Sensor, ReportElementDto>(histories.First().Sensor);
-            schedule.Milliseconds = milliseconds;
-            schedule.Values = values;
-            schedule.DashboardName = dashboard.Name;
+            ReportElementDto data = mapper.Map<ReportElement,ReportElementDto>(reportElement);
+             data.Milliseconds = milliseconds;
+            data.Values = values;
 
-            return schedule;
+            return data;
         }
 
         private IEnumerable<dynamic> GetValues(IEnumerable<History> histories)
         {
-
             foreach (var items in histories)
             {
                 if (items.Sensor.SensorType.MeasurementType == MeasurementType.Int)
-                    yield return items.IntValue;
+                    yield return items.IntValue.Value;
                 else
                 if (items.Sensor.SensorType.MeasurementType == MeasurementType.Double)
-                    yield return items.DoubleValue;
+                    yield return items.DoubleValue.Value;
                 else
                  if (items.Sensor.SensorType.MeasurementType == MeasurementType.Bool)
-                    yield return items.BoolValue;
+                    yield return items.BoolValue.Value ? 1 : 0;
                 else
                     yield return items.StringValue;
             }
@@ -228,7 +228,6 @@ namespace Infrastructure.Business.Managers
             foreach (var items in histories)
             {
                 yield return items.Date.ToUnixTimeMilliseconds();
-
             }
         }
 

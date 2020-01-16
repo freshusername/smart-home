@@ -24,14 +24,15 @@ namespace smart_home_web.Components
             _mapper = mapper;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(int reportElementId, ReportElementHours hours)
+        public async Task<IViewComponentResult> InvokeAsync(int reportElementId)
         {
-            var data = await _reportElementManager.GetDataForTimeSeries(reportElementId, hours);
-             if (data == null) ModelState.AddModelError("" , " Theare is no measurement data");
+            var data = await _reportElementManager.GetDataForTimeSeries(reportElementId);            
+             var result = _mapper.Map<ReportElementDto,ReportElementViewModel>(data);
 
-            var result = _mapper.Map<ReportElementDto,ReportElementViewModel>(data);
-            
-            return View(result);           
+            if (result == null || result.MeasurementType == MeasurementType.String)
+                return View(new ReportElementViewModel { IsCorrect = false });
+                      
+            return View(result);
         }
     }
 }

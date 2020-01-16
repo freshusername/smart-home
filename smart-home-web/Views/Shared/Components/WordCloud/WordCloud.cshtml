@@ -5,11 +5,11 @@
 <link rel="stylesheet" href="~/css/SettingsButton.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
 @if (Model.IsCorrect)
-{
+ {
     <figure class="highcharts-figure-wordcloud">
         <div id=@("wordcloud_container_"+Model.Id.ToString())></div>
     </figure>
-}
+ }
 else
 {
     <label class="control-label graph-label">There is no history measurement for such sensor for that period of time. <a class="btn btn-success text-center" asp-controller="ReportElement" asp-action="EditReportElement" asp-route-id="@Model.Id"><i class="fas fa-cog"></i></a></label>
@@ -22,7 +22,7 @@ else
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 <script>
 
-    values = JSON.parse('@Html.Raw(Json.Serialize(@Model.Values))')            
+    values = JSON.parse('@Html.Raw(Json.Serialize(@Model.Values))')
     data = Highcharts.reduce(values, function (arr, word) {
     var obj = Highcharts.find(arr, function (obj) {
         return obj.name === word;

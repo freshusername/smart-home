@@ -98,12 +98,16 @@ namespace smart_home_web.AutoMapper
                 .ForMember(gd => gd.SensorName, map => map.MapFrom(s => s.Name))
                 .ForMember(gd => gd.MeasurementName, map => map.MapFrom(s => s.SensorType.MeasurementName))
                 .ForMember(gd => gd.MeasurementType, map => map.MapFrom(s => s.SensorType.MeasurementType));
+
             CreateMap<ReportElement, ReportElementDto>()
                 .ForMember(gd => gd.DashboardName, map => map.MapFrom(re => re.Dashboard.Name))
                 .ForMember(gd => gd.SensorId, map => map.MapFrom(re => re.Sensor.Id))
                 .ForMember(gd => gd.SensorName, map => map.MapFrom(re => re.Sensor.Name))
                 .ForMember(gd => gd.MeasurementName, map => map.MapFrom(re => re.Sensor.SensorType.MeasurementName))
-                .ForMember(gd => gd.MeasurementType, map => map.MapFrom(re => re.Sensor.SensorType.MeasurementType));
+                .ForMember(gd => gd.MeasurementType, map => map.MapFrom(re => re.Sensor.SensorType.MeasurementType))
+                .ForMember(gd => gd.Type, map => map.MapFrom(re => re.Type))
+                .ForMember(gd => gd.SensorType, map => map.MapFrom(re => re.Sensor.SensorType.Name));
+
             CreateMap<ReportElementDto, ReportElementViewModel>();
             CreateMap<CreateReportElementViewModel, ReportElementDto>();
             CreateMap<ReportElement, EditReportElementViewModel>()

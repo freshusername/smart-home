@@ -20,6 +20,6 @@ namespace Infrastructure.Business.Managers
         Task UpdateReportElementHours(int gaugeId, int hours);
         void EditReportElement(ReportElementDto wordCloud);
 		Task Update(ReportElement reportElement);
-        Task<ReportElementDto> GetDataForTimeSeries(int id, ReportElementHours hours);
+        Task<ReportElementDto> GetDataForTimeSeries(int id);
     }
 }

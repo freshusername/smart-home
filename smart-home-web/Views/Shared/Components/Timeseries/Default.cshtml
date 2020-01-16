@@ -9,15 +9,22 @@
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
-<figure class="highcharts-figure">
-    <div id="container"></div>
-</figure>
+@if (!Model.IsCorrect)
+{
+<label class="control-label graph-label">There is no history measurement for @Model.SensorName.ToString() for that period of time. <a class="btn btn-success text-center" asp-controller="ReportElement" asp-action="EditReportElement" asp-route-id="@Model.Id"><i class="fas fa-cog"></i></a></label>
+}
+else
+{
+    <figure class="highcharts-figure">
+        <div id=@("time_series_"+Model.Id.ToString())></div>
+    </figure>
+}
 <script>
     Highcharts.getJSON(
         'https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/usdeur.json',
         function (data) {
 
-            Highcharts.chart('container', {
+          Highcharts.chart('time_series_'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
                 chart: {
                     zoomType: 'x'
                 },
@@ -29,18 +36,16 @@
                         'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
                 },
                 xAxis: {
-                    type: 'datetime',
-                    categories: JSON.parse('@Html.Raw(Json.Serialize(@Model.Dates))'),
+                categories: JSON.parse('@Html.Raw(Json.Serialize(@Model.Milliseconds))'),
                 labels: {
                     formatter: function () {
                         return new Date(this.value).toLocaleString();
                     }
                 }
-
                 },
                 yAxis: {
                     title: {
-                        text: JSON.parse('@Html.Raw(Json.Serialize(@Model.DashboardName))')
+                        text: JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorType))') + ' ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.MeasurementName))')
                     }
                 },
                  tooltip: {
@@ -48,7 +53,6 @@
                     var date = new Date(this.x).toLocaleString();
                     @switch (Model.MeasurementType)
                      {
-
                         case MeasurementType.Bool:
 
                             <text>
@@ -102,7 +106,7 @@
 
                 series: [{
                     type: 'area',
-                    name: JSON.parse('@Html.Raw(Json.Serialize(@Model.MeasurementName))'),
+                    name: JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorType))'),
                     data: JSON.parse('@Html.Raw(Json.Serialize(@Model.Values))')
 
                 }]
@@ -110,3 +114,4 @@
         }
     );
 </script>
+
