@@ -1,19 +1,13 @@
 ﻿@model smart_home_web.Models.ReportElements.ReportElementViewModel;
 @using Domain.Core.Model.Enums
 
+<script src="https://code.highcharts.com/modules/wordcloud.js"></script>
 @if (Model.IsCorrect)
  {
     <figure class="highcharts-figure-wordcloud">
-        <div id=@("wordcloud_container_"+Model.Id.ToString())></div>
+        <div id=@("Wordcloud"+Model.Id.ToString())></div>
     </figure>
- }
-else
-{
-    <label class="control-label graph-label">There is no history measurement for such sensor for that period of time. <a class="btn btn-success text-center" asp-controller="ReportElement" asp-action="EditReportElement" asp-route-id="@Model.Id"><i class="fas fa-cog"></i></a></label>
-}
-<script src="https://code.highcharts.com/modules/wordcloud.js"></script>
 <script>
-
     values = JSON.parse('@Html.Raw(Json.Serialize(@Model.Values))')
     data = Highcharts.reduce(values, function (arr, word) {
     var obj = Highcharts.find(arr, function (obj) {
@@ -31,8 +25,7 @@ else
     return arr;
     }, []);
 
-    var charts = [];
-    var chartWordcloud = Highcharts.chart('wordcloud_container_'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
+    var chart  = Highcharts.chart("Wordcloud"+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
         chart: {
             events: {
                 load: function() {
@@ -75,7 +68,7 @@ else
             name: 'Periodicity',
         }],
         exporting: {
-            
+
             buttons: {
                 contextButton: {
                     enabled: false,
@@ -93,9 +86,22 @@ else
             }
         },
     });
-    
+    </script>
+
+}
+else
+{
+    <label id=@("Wordcloud"+Model.Id.ToString()) class="control-label graph-label">There is no history measurement for such sensor for that period of time. <a class="btn btn-success text-center" asp-controller="ReportElement" asp-action="EditReportElement" asp-route-id="@Model.Id"><i class="fas fa-cog"></i></a></label>
+}
+<script>
     $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
-        chart.setSize(ui.height, ui.width);
-        console.log(ui.height);
+        var type = 'Wordcloud';
+        var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
+        if (typeof result !== 'undefined') {
+            result.setSize(ui.height, ui.width);
+        }
+        
     });
 </script>
+    
+

@@ -21,7 +21,7 @@
         </div>
     </form>
         <figure class="highcharts-figure">
-            <div id=@("gauge_container_"+Model.Id.ToString()) class="chart-container"></div>
+            <div id=@("Gauge"+Model.Id.ToString()) class="chart-container"></div>
         </figure>
         @*<h1>Selected sensor does not have values to display in the chosen time period.</h1>*@
 </div>
@@ -188,6 +188,11 @@
     }, 2000);
 
     $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
-        gaugeChart.setSize(ui.height, ui.width);
+        var type = 'Gauge';
+        var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
+        if (typeof result !== 'undefined') {
+            result.setSize(ui.height, ui.width);
+        }
+        
     });
 </script>

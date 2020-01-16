@@ -1,8 +1,5 @@
 ﻿<figure class="highcharts-figure-clock">
-    <div id="container"></div>
-    <p class="highcharts-description">
-        Current time
-    </p>
+    <div id="@("Clock"+Model.Id.ToString())"></div>
 </figure>
 
 <script>
@@ -183,7 +180,12 @@
     };
 
     $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
-        chart.setSize(ui.height, ui.width);
+        var type = 'Clock';
+        var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
+        if (typeof result !== 'undefined') {
+            result.setSize(ui.height, ui.width);
+        }
+        
     });
 
 </script>

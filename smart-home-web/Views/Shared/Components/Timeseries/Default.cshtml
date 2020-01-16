@@ -16,7 +16,7 @@
 else
 {
     <figure class="highcharts-figure">
-        <div id=@("time_series_"+Model.Id.ToString())></div>
+        <div id=@("TimeSeries"+Model.Id.ToString())></div>
     </figure>
 }
 <script>
@@ -24,7 +24,7 @@ else
         'https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/usdeur.json',
         function (data) {
 
-          Highcharts.chart('time_series_'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
+          Highcharts.chart('TimeSeries'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
                 chart: {
                     zoomType: 'x'
                 },
@@ -113,5 +113,13 @@ else
             });
         }
     );
-</script>
 
+    $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
+        var type = 'TimeSeries';
+        var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
+        if (typeof result !== 'undefined') {
+            result.setSize(ui.height, ui.width);
+        }
+        
+    });
+</script>

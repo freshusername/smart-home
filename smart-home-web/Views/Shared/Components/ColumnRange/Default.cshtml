@@ -4,7 +4,7 @@
 @if (Model.IsCorrect)
 {
     <figure class="highcharts-figure">
-        <div id="@("columnrange_container_"+Model.Id.ToString())"></div>
+        <div id="@("Columnrange"+Model.Id.ToString())"></div>
     </figure>
 }
 else
@@ -22,7 +22,7 @@ else
     for (let i = 0; i < dates.length;i++) {
         temperatures.push([minvalues[i],maxvalues[i]])
     }
-    var chart = Highcharts.chart('columnrange_container_'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
+    Highcharts.chart('columnrange_container_'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
 
         chart: {
             events: {
@@ -107,6 +107,11 @@ else
     });
 
     $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
-        chart.setSize(ui.height, ui.width);
+        var type = 'Columnrange';
+        var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
+        if (typeof result !== 'undefined') {
+            result.setSize(ui.height, ui.width);
+        }
+        
     });
 </script>
