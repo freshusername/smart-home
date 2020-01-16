@@ -5,6 +5,7 @@ using Infrastructure.Business.DTOs.Dashboard;
 using Infrastructure.Business.DTOs.Icon;
 using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.DTOs.SensorType;
+using Infrastructure.Business.Infrastructure;
 using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -46,6 +47,35 @@ namespace smart_home_web.Controllers
 			return View(result);
 		}
 
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Create(DashboardViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            DashboardDto dashboardDto = _mapper.Map<DashboardViewModel, DashboardDto>(model);
+            OperationDetails result = await _dashboardManager.Create(dashboardDto);
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                ModelState.AddModelError(result.Property, result.Message);
+                return View();
+            }
+        }
+
+
+
 		public async Task<IActionResult> Index(int id)
 		{
 			var dashboard = await _dashboardManager.GetAll();
@@ -57,6 +87,8 @@ namespace smart_home_web.Controllers
 			}
 			);
 		}
+
+
 
     }
 }

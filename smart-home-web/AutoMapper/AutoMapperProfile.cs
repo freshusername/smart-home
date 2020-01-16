@@ -88,7 +88,7 @@ namespace smart_home_web.AutoMapper
             CreateMap<ReportElement, ClockDto>().ReverseMap();
         
 			CreateMap<Dashboard, DashboardDto>().ReverseMap();
-			CreateMap<DashboardDto, DashboardViewModel>();
+            CreateMap<DashboardDto, DashboardViewModel>().ReverseMap();
 
             CreateMap<ReportElement, GaugeDto>().ReverseMap();
             CreateMap<GaugeDto, GaugeViewModel>().ReverseMap();
