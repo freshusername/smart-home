@@ -2,13 +2,6 @@
 ﻿@using Domain.Core.Model.Enums
 @model ReportElementViewModel
 
-<link href="~/css/schedule.css" rel="stylesheet" />
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/modules/data.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script src="https://code.highcharts.com/modules/export-data.js"></script>
-<script src="https://code.highcharts.com/modules/accessibility.js"></script>
-
 <figure class="highcharts-figure">
     <div id="container"></div>
 </figure>
@@ -17,7 +10,7 @@
         'https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/usdeur.json',
         function (data) {
 
-            Highcharts.chart('container', {
+            var chart = Highcharts.chart('container', {
                 chart: {
                     zoomType: 'x'
                 },
@@ -109,4 +102,8 @@
             });
         }
     );
+
+    $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
+        chart.setSize(ui.height, ui.width);
+    });
 </script>
