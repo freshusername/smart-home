@@ -30,9 +30,8 @@ else
     }
     return arr;
     }, []);
-
-    var charts = [];
-    var chartWordcloud = Highcharts.chart('wordcloud_container_'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
+    
+    Highcharts.chart('wordcloud_container_'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
         chart: {
             events: {
                 load: function() {
@@ -95,7 +94,9 @@ else
     });
     
     $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
-        chart.setSize(ui.height, ui.width);
-        console.log(ui.height);
+        //console.log(Highcharts.charts[0].renderTo());
+        //console.log($("#wordcloud_container_4").highcharts());
+        var result = Highcharts.charts.filter(chart => chart.renderTo.id == 'wordcloud_container_4');
+        //result.setSize(ui.height, ui.width);
     });
 </script>
