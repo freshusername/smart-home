@@ -12,14 +12,14 @@
 <h1>Dash</h1>
 
 <div class="grid-stack">
-    @foreach (var report in Model.ReportElements)
+    @*@foreach (var report in Model.ReportElements)
     {
         <div id="@report.Id" class="grid-stack-item shadow-standart" data-gs-x="4" data-gs-y="0" data-gs-width="8" data-gs-height="6">
             <div class="grid-stack-item-content">
                 <div>@await Component.InvokeAsync(report.Type.ToString(), new { reportElementId = report.Id })</div>
             </div>
         </div>
-    }
+    }*@
 </div>
 
 <script type="text/javascript">

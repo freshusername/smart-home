@@ -13,9 +13,11 @@ namespace Domain.Core.Model
         public DateTimeOffset? CreatedOn { get; set; }
         public bool IsActivated { get; set; }
 
+        public string AppUserId { get; set; }
         public int? SensorTypeId { get; set; }
         public int? IconId { get; set; }
 
+        public AppUser User { get; set; }
         public SensorType SensorType { get; set; }
         public Icon Icon { get; set; }
         public virtual ICollection<History> Histories { get; set; }

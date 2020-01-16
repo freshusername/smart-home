@@ -13,7 +13,7 @@ namespace smart_home_web.Models.ReportElements
         public string DashboardName { get; set; }
         public int SensorId { get; set; }
         public string SensorName { get; set; }
-        public int Hours { get; set; }
+        public ReportElementHours Hours { get; set; }
         public string Message { get; set; }
         public ReportElementType Type { get; set; }
         public bool IsCorrect { get; set; } = true;
@@ -24,8 +24,8 @@ namespace smart_home_web.Models.ReportElements
         public List<dynamic> Values { get; set; }
 
         public List<string> Dates { get; set; }
-        public List<int?> MinValues { get; set; }
-        public List<int?> MaxValues { get; set; }
+        public List<dynamic> MinValues { get; set; }
+        public List<dynamic> MaxValues { get; set; }
     }
 }
 

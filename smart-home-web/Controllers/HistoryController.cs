@@ -8,6 +8,8 @@ using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Mvc;
 using smart_home_web.Models;
 using smart_home_web.Models.History;
+using Domain.Core.Model;
+using Infrastructure.Business.DTOs.SensorType;
 
 
 namespace smart_home_web.Controllers
@@ -16,11 +18,13 @@ namespace smart_home_web.Controllers
     public class HistoryController : Controller
 	{
 		private readonly IHistoryManager _historyManager;
+		private readonly IReportElementManager _reportElementManager;
 		private readonly IMapper _mapper;
 
-		public HistoryController(IHistoryManager historyTestManager, IMapper mapper)
+		public HistoryController(IHistoryManager historyTestManager,IReportElementManager reportElementManager , IMapper mapper)
 		{
 			_historyManager = historyTestManager;
+            _reportElementManager = reportElementManager;
 			_mapper = mapper;
 		}
 

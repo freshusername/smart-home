@@ -15,7 +15,7 @@ namespace Domain.Interfaces.Repositories
         double? GetMinValueForPeriod(int sensorId, int? hours);
         double? GetMaxValueForPeriod(int sensorId, int? hours);
         Task<IEnumerable<History>> GetByPage(int count, int page, SortState sortState, bool isActivated = true, int sensorId = 0);
-        Task<IEnumerable<History>> GetHistoriesBySensorIdAndDate(int SensorId, DateTime date);
-        Task<int> GetAmountAsync(bool isActivated);
+        Task<IEnumerable<History>> GetHistoriesBySensorIdAndDate(int SensorId, DateTimeOffset date);
+        Task<int> GetAmountAsync(bool isActivated);       
     }
 }
