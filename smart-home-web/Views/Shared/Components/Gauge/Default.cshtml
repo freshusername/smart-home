@@ -3,27 +3,10 @@
 @model GaugeViewModel;
 
 <div>
-    <link href="~/css/gauge.css" rel="stylesheet" />
-    <link href="~/lib/nice-select/dist/css/nice-select.css" rel="stylesheet" />
-    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
-            asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
-            asp-fallback-test="window.jQuery"
-            crossorigin="anonymous"
-            integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
-    </script>
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/highcharts-more.js"></script>
-    <script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
-    <script src="https://code.highcharts.com/modules/exporting.js"></script>
-    <script src="https://code.highcharts.com/modules/export-data.js"></script>
-    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
-</div>
-<div>
-    <h2>Gauge component</h2>
     <form id="form1" method="post">
         <div class="form-group">
             <label class="control-label" style="margin-top:20px;">
-                Select period:
+                Select time period:
             </label>
             <div style="margin-bottom:50px">
                 <select id="hours" asp-for="Hours" asp-items="@Html.GetEnumSelectList<ReportElementHours>()" class="nice-select col-lg-4 col-md-5 col-sm-6 col-xs-12"></select>
@@ -37,11 +20,13 @@
             <input id="submit" type="submit" value="Choose" class="btn btn-success text-center" style="width:15%" />
         </div>
     </form>
-        <figure id="gaugeFigure" class="highcharts-figure">
-            <div id="container" class="chart-container"></div>
+        <figure class="highcharts-figure">
+            <div id=@("gauge_container_"+Model.Id.ToString()) class="chart-container"></div>
         </figure>
-        <h1 id="alertMessage" >Selected sensor does not have values to display in the selected time period.</h1>
+        @*<h1>Selected sensor does not have values to display in the chosen time period.</h1>*@
 </div>
+
+<script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
 <script type="text/javascript">
     
     $(function () {  
@@ -138,7 +123,7 @@
         }
     };
 
-    var gaugeChart = Highcharts.chart('container', Highcharts.merge(gaugeOptions, {
+    var gaugeChart = Highcharts.chart('gauge_container_'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), Highcharts.merge(gaugeOptions, {
         yAxis: {
             min: @Model.Min,
             max: @Model.Max,
@@ -196,7 +181,7 @@
             },
 
             error: function (res) {
-                alert(res);
+                //alert(res);
                 //$('#gaugeFigure').css('display','none');
             }
         });

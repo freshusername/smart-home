@@ -1,9 +1,6 @@
 ﻿@model smart_home_web.Models.ReportElements.ReportElementViewModel;
 @using Domain.Core.Model.Enums
 
-<link rel="stylesheet" href="~/css/WordCloud.css">
-<link rel="stylesheet" href="~/css/SettingsButton.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
 @if (Model.IsCorrect)
 {
     <figure class="highcharts-figure-wordcloud">
@@ -14,12 +11,7 @@ else
 {
     <label class="control-label graph-label">There is no history measurement for such sensor for that period of time. <a class="btn btn-success text-center" asp-controller="ReportElement" asp-action="EditReportElement" asp-route-id="@Model.Id"><i class="fas fa-cog"></i></a></label>
 }
-
-<script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/wordcloud.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script src="https://code.highcharts.com/modules/export-data.js"></script>
-<script src="https://code.highcharts.com/modules/accessibility.js"></script>
 <script>
 
     values = JSON.parse('@Html.Raw(Json.Serialize(@Model.Values))')            

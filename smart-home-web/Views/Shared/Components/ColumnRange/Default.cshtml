@@ -1,15 +1,6 @@
 ﻿@model smart_home_web.Models.ReportElements.ReportElementViewModel;
 @using Domain.Core.Model.Enums
 
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/highcharts-more.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script src="https://code.highcharts.com/modules/export-data.js"></script>
-<script src="https://code.highcharts.com/modules/accessibility.js"></script>
-
-<link rel="stylesheet" href="~/css/ColumnRange.css">
-<link rel="stylesheet" href="~/css/SettingsButton.css">
-
 @if (Model.IsCorrect)
 {
     <figure class="highcharts-figure">
