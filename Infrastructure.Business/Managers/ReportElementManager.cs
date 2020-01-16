@@ -80,8 +80,6 @@ namespace Infrastructure.Business.Managers
             return heatmap;
         }
 
-        //TODO: getheatmapByIdAndTimePeriod
-
         public async Task<ReportElementDto> GetWordCloudById(int ReportElementId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
