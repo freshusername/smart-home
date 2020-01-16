@@ -17,9 +17,6 @@ else
 
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/wordcloud.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script src="https://code.highcharts.com/modules/export-data.js"></script>
-<script src="https://code.highcharts.com/modules/accessibility.js"></script>
 <script>
 
     values = JSON.parse('@Html.Raw(Json.Serialize(@Model.Values))')            
@@ -39,8 +36,8 @@ else
     return arr;
     }, []);
 
-
-    Highcharts.chart('wordcloud_container_'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
+    var charts = [];
+    var chartWordcloud = Highcharts.chart('wordcloud_container_'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
         chart: {
             events: {
                 load: function() {
@@ -83,12 +80,16 @@ else
             name: 'Periodicity',
         }],
         exporting: {
+            
             buttons: {
+                contextButton: {
+                    enabled: false,
+                },
                 Edit: {
                     height: 24,
                     width: 24,
                     y: 3,
-                    x: -20,
+                    x: 4,
                     className : 'highcharts-button-box-settings',
                     onclick: function () {
                         window.location.href = '/ReportElement/EditReportElement/'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))')
@@ -96,5 +97,10 @@ else
                 }
             }
         },
+    });
+    
+    $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
+        chart.setSize(ui.height, ui.width);
+        console.log(ui.height);
     });
 </script>

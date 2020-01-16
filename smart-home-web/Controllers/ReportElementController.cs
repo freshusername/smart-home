@@ -13,7 +13,7 @@ using smart_home_web.Models.ReportElements;
 
 namespace smart_home_web.Controllers
 {
-    public class ReportElementController : Controller
+	public class ReportElementController : Controller
     {
         private readonly IReportElementManager _reportElementManager;
         private readonly IMapper _mapper;
@@ -40,12 +40,8 @@ namespace smart_home_web.Controllers
             if (!ModelState.IsValid)
                 return View(model);
             ReportElementDto reportElement = _mapper.Map<CreateReportElementViewModel, ReportElementDto>(model);
-            var res  = await _reportElementManager.CreateReportElement(reportElement);
-            if(res.Succeeded)
-                return RedirectToAction("Index", "Home");
-            else
-                ModelState.AddModelError(res.Property, res.Message);
-            return View(model);
+            await _reportElementManager.CreateReportElement(reportElement);
+            return RedirectToAction("Detail", "Dashboard", new { id = model.DashboardId});
         }
 
         [HttpGet]
@@ -65,8 +61,7 @@ namespace smart_home_web.Controllers
                 return View(model);
             ReportElementDto reportElement = _mapper.Map<EditReportElementViewModel, ReportElementDto>(model);
             _reportElementManager.EditReportElement(reportElement);
-            return RedirectToAction("Index","Home");
-            //return RedirectToAction("Index","Home", new { DashboardId = reportElement.DashboardId});
+            return RedirectToAction("Detail", "Dashboard", new { id = model.DashboardId });
         }
-    }
+	}
 }

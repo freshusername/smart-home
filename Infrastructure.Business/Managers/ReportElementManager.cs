@@ -28,6 +28,7 @@ namespace Infrastructure.Business.Managers
             return reportElement;
         }
 
+        //TODO: Check if we are able to update options with this method
         public void EditReportElement(ReportElementDto reportElementDTO)
         {
             ReportElement reportElement = mapper.Map<ReportElementDto, ReportElement>(reportElementDTO);
@@ -35,17 +36,11 @@ namespace Infrastructure.Business.Managers
             unitOfWork.Save();
         }
 
-        public async Task<OperationDetails> CreateReportElement(ReportElementDto reportElementDto)
+        public async Task CreateReportElement(ReportElementDto reportElementDto)
         {
             ReportElement reportElement = mapper.Map<ReportElementDto, ReportElement>(reportElementDto);
-            bool check = await unitOfWork.ReportElementRepo.ReportElementExist(reportElement);
-            if (!check)
-            {
-                await unitOfWork.ReportElementRepo.Insert(reportElement);
-                unitOfWork.Save();
-                return new OperationDetails(true, "", "");
-            }
-            return new OperationDetails(false, "Report element with same parameters already exist", "");
+            await unitOfWork.ReportElementRepo.Insert(reportElement);
+            unitOfWork.Save();
         }
 
         public async Task<ReportElementDto> GetWordCloudById(int ReportElementId)
@@ -126,7 +121,7 @@ namespace Infrastructure.Business.Managers
             DateTime date = DateTime.Now.AddHours(-(int)reportElement.Hours);
             IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
             if (!histories.Any())
-                return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "No histories for that period of time" };
+                return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "No histories in this report element" };
 
             ReportElementDto columnRange = mapper.Map<Sensor, ReportElementDto>(reportElement.Sensor);
 
@@ -179,7 +174,7 @@ namespace Infrastructure.Business.Managers
             return columnRange;
         }
 
-        public async Task<ReportElementDto> GetDataForSchedule(int id, ReportElementHours hours)
+        public async Task<ReportElementDto> GetDataForTimeSeries(int id, ReportElementHours hours)
         {
             var reportElement = await unitOfWork.ReportElementRepo.GetById(id);
             if (reportElement == null) return null;
@@ -230,5 +225,17 @@ namespace Infrastructure.Business.Managers
 
             }
         }
+
+        public async Task Update(ReportElement reportElement)
+        {
+            ReportElement result = await unitOfWork.ReportElementRepo.GetById(reportElement.Id);
+            result.X = reportElement.X;
+            result.Y = reportElement.Y;
+            result.Width = reportElement.Width;
+            result.Height = reportElement.Height;
+            unitOfWork.ReportElementRepo.Update(result);
+            unitOfWork.Save();
+        }
+
     }
 }

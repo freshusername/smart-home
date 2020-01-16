@@ -20,14 +20,6 @@ namespace Infrastructure.Business.Managers
 
 		}
 
-		public async Task<DashboardDto> GetById(int id)
-		{
-			var dashboard = await unitOfWork.DashboardRepo.GetById(id);
-			var result = mapper.Map<Dashboard, DashboardDto>(dashboard);
-
-			return result;
-		}
-
 		public async Task<OperationDetails> Create(DashboardDto dashboardDto)
 		{
 			var dashboard = mapper.Map<DashboardDto, Dashboard> (dashboardDto);
@@ -39,6 +31,20 @@ namespace Infrastructure.Business.Managers
 				return new OperationDetails(true, "Saved successfully", "");
 			}
 			return new OperationDetails(true, "Something is wrong", "");
+		}
+
+		public async Task<IEnumerable<DashboardDto>> GetAll()
+		{			
+			var dashboards = await unitOfWork.DashboardRepo.GetAll();
+			return mapper.Map<IEnumerable<Dashboard>, IEnumerable<DashboardDto>>(dashboards);
+		}
+		
+		public async Task<DashboardDto> GetById(int id)
+		{
+			var dashboard = await unitOfWork.DashboardRepo.GetById(id);
+			var result = mapper.Map<Dashboard, DashboardDto>(dashboard);
+
+			return result;
 		}
 	}
 }

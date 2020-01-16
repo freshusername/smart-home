@@ -45,5 +45,12 @@ namespace Infrastructure.Data.Repositories
         {
             dbSet.Update(item);
         }
-    }
+
+		public void Attach(T item)
+		{
+			context.Entry(item).State = EntityState.Modified;
+			//dbSet.Attach(item);
+			//item.En
+		}
+	}
 }
