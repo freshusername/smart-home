@@ -13,12 +13,12 @@ using System.Threading.Tasks;
 
 namespace smart_home_web.Components
 {
-    public class TimeseriesViewComponent : ViewComponent
+    public class TimeSeriesViewComponent : ViewComponent
     {
         private readonly IReportElementManager _reportElementManager;
         private readonly IMapper _mapper;
 
-        public TimeseriesViewComponent(IReportElementManager reportElementManager,IMapper mapper)
+        public TimeSeriesViewComponent(IReportElementManager reportElementManager,IMapper mapper)
         {
             _reportElementManager = reportElementManager;
             _mapper = mapper;
@@ -26,7 +26,7 @@ namespace smart_home_web.Components
 
         public async Task<IViewComponentResult> InvokeAsync(int reportElementId, ReportElementHours hours)
         {
-            var data = await _reportElementManager.GetDataForSchedule(reportElementId, hours);
+            var data = await _reportElementManager.GetDataForTimeSeries(reportElementId, hours);
              if (data == null) ModelState.AddModelError("" , " Theare is no measurement data");
 
             var result = _mapper.Map<ReportElementDto,ReportElementViewModel>(data);
