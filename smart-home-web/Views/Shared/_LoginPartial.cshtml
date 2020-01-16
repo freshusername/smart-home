@@ -8,21 +8,25 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-    <form >
-        <ul class="nav navbar-nav navbar-right">
-            <li>
-                <a asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+    <form>
+        <ul class="nav navbar-nav navbar-right" id="navbarColor01">
+            <li class="nav-item increase-padding">
+                <a class="nav-link" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
             </li>
-            <li>
-                <a asp-controller="Account" asp-action="Logout">Logout</a>
+            <li class="nav-item increase-padding">
+                <a class="nav-link" asp-controller="Account" asp-action="Logout">Logout</a>
             </li>
         </ul>
     </form>
 }
 else
 {
-    <ul class="nav navbar-nav navbar-right">
-        <li><a asp-controller="Account" asp-action="Register">Register</a></li>
-        <li><a asp-controller="Account" asp-action="Login">Login</a></li>
+    <ul class="nav navbar-nav navbar-collapse navbar-right" id="navbarColor01">
+        <li class="nav-item increase-padding">
+            <a class="nav-link" asp-controller="Account" asp-action="Register">Register</a>
+        </li>
+        <li class="nav-item increase-padding">
+            <a class="nav-link" asp-controller="Account" asp-action="Login">Login</a>
+        </li>
     </ul>
 }

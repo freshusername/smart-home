@@ -8,11 +8,8 @@ using Infrastructure.Business.DTOs.ReportElements;
 
 namespace smart_home_web.Models.Dashboard
 {
-	public class DashboardViewModel
+	public class DashboardIndexViewModel
 	{
-		public int Id { get; set; }
-		public string Name { get; set; }
-		
-		public ICollection<ReportElementDto> ReportElements { get; set; }
+		public IEnumerable<DashboardViewModel> Dashboards { get; set; }
 	}
 }

@@ -1,0 +1,21 @@
+﻿@using smart_home_web.Models.Dashboard;
+
+@model DashboardIndexViewModel;
+
+
+
+<div class="row" style="margin-top:40px;">
+    @foreach (var dashboard in Model.Dashboards)
+    {
+        <div class="col-lg-2">
+            <div class="card text-center" style="width: 18rem;">
+                <div class="card-body">
+                    <img class="card-img-top img" src="https://miro.medium.com/max/3440/0*8UNAgR_1_4SMV4BY.png" alt="Card image cap">
+                    <h3 class="card-title">@dashboard.Name</h3>
+                    <p class="card-text">@dashboard.ReportElements.Count() report elements</p>
+                    <a asp-controller="Dashboard" asp-action="Detail" asp-route-id="@dashboard.Id" class="btn btn-primary">OPEN</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

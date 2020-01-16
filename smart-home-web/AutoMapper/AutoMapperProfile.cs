@@ -16,10 +16,6 @@ using Infrastructure.Business.DTOs.ReportElements;
 using smart_home_web.Models.ReportElements;
 using Infrastructure.Business.DTOs.Dashboard;
 using smart_home_web.Models.Dashboard;
-using Domain.Core.JoinModel;
-using Infrastructure.Business.DTOs.DashboardOptions;
-using smart_home_web.Models.DashboardOptions;
-using Infrastructure.Business.DTOs.Options;
 using smart_home_web.Models.Options;
 using System;
 
@@ -73,8 +69,7 @@ namespace smart_home_web.AutoMapper
                 .ForMember(ewc => ewc.SensorName, map => map.MapFrom(re => re.Sensor.Name));
 
             CreateMap<EditReportElementViewModel, ReportElementDto>();
-            CreateMap<ReportElementDto, ReportElement>();
-
+            CreateMap<ReportElementDto, ReportElement>().ReverseMap();
 
             CreateMap<SensorTypeDto, SensorType>();
             CreateMap<SensorTypeViewModel, SensorTypeDto>().ReverseMap();
