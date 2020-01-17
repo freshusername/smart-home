@@ -62,6 +62,8 @@ namespace Infrastructure.Data.Repositories
 
             var histories = context.Histories.FromSql($"CALL SensorValuesForTimePeriod ({0}, '{1}', '{2}')", sensorId, d_from, d_to);
 
+            //TODO: return array of values(Date(Datetime), AverageValueForSensorAtThisDate(double))
+
             return await histories.ToListAsync();
         }
 
