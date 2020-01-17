@@ -11,18 +11,28 @@
 
 <h1>@Model.Name Dashboard</h1>
 
-<div class="grid-stack" data-save-url="@Url.Action("UpdateOptions", "DashboardOptions")">
+<div class="grid-stack grid-stack-animate" data-save-url="@Url.Action("UpdateOptions", "DashboardOptions")">
     @foreach (var report in Model.ReportElements)
     {
-        <div id="@report.Id" class="grid-stack-item shadow-standart card" data-gs-x="@report.X" data-gs-y="@report.Y" data-gs-width="@report.Width" data-gs-height="@report.Height">
+        <div id="@report.Id" class="grid-stack-item shadow-standart card d-flex flex-column" data-identifier="@report.Id" data-gs-x="@report.X" data-gs-y="@report.Y" data-gs-width="@report.Width" data-gs-height="@report.Height">
             <div class="grid-stack-item-content">
+                <div class="d-flex flex-row">
+                    <div id="trash-@report.Id" class="text-center btn-control-icon" onclick=remove(@report.Id)>
+                        <span><i class="fas fa-times"></i></span>
+                    </div>
+                    <div class="text-center btn-control-icon">
+                        <a asp-controller="ReportElement" asp-action="EditReportElement" asp-route-reportElementId="@report.Id"><i class="fas fa-cog"></i></a>
+                    </div>
+                </div>
                 <div>@await Component.InvokeAsync(report.Type.ToString(), new { reportElementId = report.Id })</div>
             </div>
         </div>
     }
 </div>
 
-<script type="text/javascript">
+
+
+<script>
 
     let arrToJson = arr => {
         let obj = {}
@@ -42,7 +52,43 @@
         $.ajax({
             type: "POST",
             url: $(".grid-stack").data("save-url"),
-            data: { options: arrToJson(options)}
+            data: { options: arrToJson(options) }
         });
     });
+</script>
+
+@*<script>
+        $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
+            chart.setSize($('container').width(), 400);
+        });
+    </script>*@
+<script>
+        $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
+            chart.setSize($('container').width(), 400);
+        });
+</script>
+<script>
+    $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
+        chart.setSize($('container').width(), 400);
+    });
+</script>
+<script>
+    $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
+        chart.setSize($('container').width(), 400);
+    });
+</script>
+<script>
+    let remove = (id) => {
+        if (confirm("Are you sure you wish to delete this widget?") == true) {
+            var $eGridstack = $(".grid-stack");
+            var item = $("#" + id)[0];
+            $eGridstack.data('gridstack').removeWidget(item);
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("DeleteReportElement", "ReportElement")",
+                data: { id : id }
+            });
+        }
+    }
 </script>

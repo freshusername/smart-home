@@ -29,10 +29,10 @@ namespace Infrastructure.Business.Managers
         }
 
         //TODO: Check if we are able to update options with this method
-        public void EditReportElement(ReportElementDto reportElementDTO)
+        public async Task EditReportElement(ReportElementDto reportElementDTO)
         {
             ReportElement reportElement = mapper.Map<ReportElementDto, ReportElement>(reportElementDTO);
-            unitOfWork.ReportElementRepo.Update(reportElement);
+            await unitOfWork.ReportElementRepo.Update(reportElement);
             unitOfWork.Save();
         }
 
@@ -225,16 +225,22 @@ namespace Infrastructure.Business.Managers
             }
         }
 
-        public async Task Update(ReportElement reportElement)
-        {
-            ReportElement result = await unitOfWork.ReportElementRepo.GetById(reportElement.Id);
-            result.X = reportElement.X;
-            result.Y = reportElement.Y;
-            result.Width = reportElement.Width;
-            result.Height = reportElement.Height;
-            unitOfWork.ReportElementRepo.Update(result);
-            unitOfWork.Save();
-        }
+		public async Task Update(ReportElement reportElement)
+		{
+			ReportElement result = await unitOfWork.ReportElementRepo.GetById(reportElement.Id);
+			result.X = reportElement.X;
+			result.Y = reportElement.Y;
+			result.Width = reportElement.Width;
+			result.Height = reportElement.Height;
+			unitOfWork.ReportElementRepo.Update(result);
+			unitOfWork.Save();
+		}
+
+		public async Task Delete(ReportElement reportElement)
+		{
+			await unitOfWork.ReportElementRepo.Delete(reportElement);
+			unitOfWork.Save();
+		}
 
     }
 }

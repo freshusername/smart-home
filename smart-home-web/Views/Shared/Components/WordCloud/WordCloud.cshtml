@@ -3,11 +3,12 @@
 
 <script src="https://code.highcharts.com/modules/wordcloud.js"></script>
 @if (Model.IsCorrect)
- {
-    <figure class="highcharts-figure-wordcloud">
-        <div id=@("Wordcloud"+Model.Id.ToString())></div>
+{
+    <figure class="highcharts-figure-wordcloud" width="100%" height="100%">
+        <div id=@("Wordcloud"+Model.Id.ToString()) width="100%" height="100%"></div>
     </figure>
 <script>
+
     values = JSON.parse('@Html.Raw(Json.Serialize(@Model.Values))')
     data = Highcharts.reduce(values, function (arr, word) {
     var obj = Highcharts.find(arr, function (obj) {
@@ -25,8 +26,9 @@
     return arr;
     }, []);
 
-    var chart  = Highcharts.chart("Wordcloud"+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
+    Highcharts.chart("Wordcloud"+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
         chart: {
+            reflow: true,
             events: {
                 load: function() {
 
@@ -103,5 +105,12 @@ else
         
     });
 </script>
-    
-
+<!--
+<style>
+    .highcharts-root,
+    .ui-draggable-handle,
+    .highcharts-container {
+        height: 100% !important;
+        width: 100% !important;
+    }
+    </style>-->

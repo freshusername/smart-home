@@ -57,6 +57,5 @@ namespace smart_home_web.Controllers
 			}
 			);
 		}
-
     }
 }
