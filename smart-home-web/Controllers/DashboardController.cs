@@ -59,6 +59,7 @@ namespace smart_home_web.Controllers
 			);
 		}
 
+        [HttpPost]
         public async Task<IActionResult> Create(DashboardViewModel model)
         {
             if (!ModelState.IsValid)
@@ -84,6 +85,12 @@ namespace smart_home_web.Controllers
         {
             return View();
         } 
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return PartialView();
+        }
 
     }
 }
