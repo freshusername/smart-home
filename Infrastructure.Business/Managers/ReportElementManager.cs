@@ -28,7 +28,6 @@ namespace Infrastructure.Business.Managers
             return reportElement;
         }
 
-        //TODO: Check if we are able to update options with this method
         public void EditReportElement(ReportElementDto reportElementDTO)
         {
             ReportElement reportElement = mapper.Map<ReportElementDto, ReportElement>(reportElementDTO);
@@ -39,6 +38,8 @@ namespace Infrastructure.Business.Managers
         public async Task CreateReportElement(ReportElementDto reportElementDto)
         {
             ReportElement reportElement = mapper.Map<ReportElementDto, ReportElement>(reportElementDto);
+            reportElement.Height = 6;
+            reportElement.Width = 4;
             await unitOfWork.ReportElementRepo.Insert(reportElement);
             unitOfWork.Save();
         }
@@ -117,14 +118,16 @@ namespace Infrastructure.Business.Managers
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
             if (reportElement == null)
                 return new ReportElementDto { IsCorrect = false, Message = "Invalid report element" };
-
-            DateTime date = DateTime.Now.AddHours(-(int)reportElement.Hours);
+            DateTime date = new DateTime(1970, 1, 1, 0, 0, 0);
+            if (reportElement.Hours != 0)
+                date = DateTime.Now.AddHours(-(int)reportElement.Hours);
             IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
             if (!histories.Any())
                 return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "No histories in this report element" };
 
             ReportElementDto columnRange = mapper.Map<Sensor, ReportElementDto>(reportElement.Sensor);
 
+            columnRange.Id = ReportElementId;
             columnRange.DashboardName = reportElement.Dashboard.Name;
             columnRange.Dates = new List<string>();
             columnRange.MinValues = new List<dynamic>();
@@ -160,8 +163,8 @@ namespace Infrastructure.Business.Managers
                     foreach (var t in doubleValues)
                     {
                         columnRange.Dates.Add(t.Date.DateTime.ToShortDateString());
-                        columnRange.MinValues.Add(Math.Round(t.Min.GetValueOrDefault(), 2));
-                        columnRange.MaxValues.Add(Math.Round(t.Max.GetValueOrDefault(), 2));
+                        columnRange.MinValues.Add(t.Min);
+                        columnRange.MaxValues.Add(t.Max);
                     }
                     break;
                 case MeasurementType.Bool:

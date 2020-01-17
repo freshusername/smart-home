@@ -25,7 +25,7 @@
     return arr;
     }, []);
 
-    var chart  = Highcharts.chart("Wordcloud"+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
+    Highcharts.chart("Wordcloud"+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
         chart: {
             events: {
                 load: function() {
@@ -68,7 +68,6 @@
             name: 'Periodicity',
         }],
         exporting: {
-
             buttons: {
                 contextButton: {
                     enabled: false,
@@ -100,7 +99,6 @@ else
         if (typeof result !== 'undefined') {
             result.setSize(ui.height, ui.width);
         }
-        
     });
 </script>
     
