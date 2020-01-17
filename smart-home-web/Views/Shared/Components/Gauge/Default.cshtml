@@ -187,12 +187,12 @@
         });
     }, 2000);
 
-    $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
-        var type = 'Gauge';
-        var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
-        if (typeof result !== 'undefined') {
-            result.setSize(ui.height, ui.width);
-        }
+    //$('body').on('gsresizestop', '.grid-stack', function (event, ui) {
+    //    var type = 'Gauge';
+    //    var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
+    //    if (typeof result !== 'undefined') {
+    //        result.setSize(ui.height, ui.width);
+    //    }
         
-    });
+    //});
 </script>

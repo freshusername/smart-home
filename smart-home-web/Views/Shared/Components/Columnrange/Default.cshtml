@@ -1,0 +1,117 @@
+﻿@model smart_home_web.Models.ReportElements.ReportElementViewModel;
+@using Domain.Core.Model.Enums
+
+@if (Model.IsCorrect)
+{
+    <figure class="highcharts-figure">
+        <div id="@("Columnrange"+Model.Id.ToString())"></div>
+    </figure>
+}
+else
+{
+    <label class="control-label graph-label">@Model.Message <a class="btn btn-success text-center" asp-controller="ReportElement" asp-action="EditReportElement" asp-route-id="@Model.Id"><i class="fas fa-cog"></i></a></label>
+}
+
+<script>
+
+    minvalues = JSON.parse('@Html.Raw(Json.Serialize(@Model.MinValues))');
+    maxvalues = JSON.parse('@Html.Raw(Json.Serialize(@Model.MaxValues))');
+    dates = JSON.parse('@Html.Raw(Json.Serialize(@Model.Dates))');
+
+    let temperatures = [];
+    for (let i = 0; i < dates.length;i++) {
+        temperatures.push([minvalues[i],maxvalues[i]])
+    }
+    Highcharts.chart('columnrange_container_'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
+
+        chart: {
+            events: {
+                load: function () {
+
+                    var chart = this,
+                        renderer = chart.renderer;
+                    var pattern = renderer.createElement('pattern').add(renderer.defs).attr({
+                        width: 1,
+                        height: 1,
+                        id: "image",
+                        patternContentUnits: 'userSpaceOnUse'
+                    });
+
+                    renderer.image('../images/SettingsButton.svg', 0, 0, 18, 16).add(pattern);
+
+                }
+            },
+            type: 'columnrange',
+            inverted: true,
+        },
+        title: {
+            text: 'Column range for ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))') + ' for dashboard ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.DashboardName))')
+        },
+
+        xAxis: {
+            title: {
+                style: {
+                    textTransform: 'uppercase'
+                },
+                text: 'Dates'
+            },
+            categories: dates
+        },
+
+        yAxis: {
+            minorTickInterval: 'auto',
+            title: {
+                style: {
+                    textTransform: 'uppercase'
+                },
+                text: 'Values'
+            },
+            labels: {
+                style: {
+                    fontSize: '12px'
+                }
+            }
+        },
+        plotOptions: {
+            columnrange: {
+                dataLabels: {
+                    enabled: true
+                }
+            },
+        },
+
+        legend: {
+            enabled: false
+        },
+
+        series: [{
+            name: 'Temperatures',
+            data: temperatures
+        }],
+        exporting: {
+            buttons: {
+                Link: {
+                    height: 24,
+                    width: 24,
+                    y: 3,
+                    x: -20,
+                    className : 'highcharts-button-box-settings',
+                    onclick: function () {
+                        window.location.href = '/ReportElement/EditReportElement/'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))')
+                    },
+                }
+
+            }
+        },
+
+    });
+
+    //$('body').on('gsresizestop', '.grid-stack', function (event, ui) {
+    //    var type = 'Columnrange';
+    //    var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
+    //    if (typeof result !== 'undefined') {
+    //        result.setSize(ui.height, ui.width);
+    //    }
+        
+    //});
+</script>
