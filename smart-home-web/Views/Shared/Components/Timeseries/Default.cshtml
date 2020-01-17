@@ -11,7 +11,7 @@
 
 @if (!Model.IsCorrect)
 {
-<label class="control-label graph-label">There is no history measurement for @Model.SensorName.ToString() for that period of time. <a class="btn btn-success text-center" asp-controller="ReportElement" asp-action="EditReportElement" asp-route-id="@Model.Id"><i class="fas fa-cog"></i></a></label>
+    <label class="control-label graph-label">There is no history measurement for @Model.SensorName.ToString() for that period of time. <a class="btn btn-success text-center" asp-controller="ReportElement" asp-action="EditReportElement" asp-route-id="@Model.Id"><i class="fas fa-cog"></i></a></label>
 }
 else
 {
@@ -25,7 +25,23 @@ else
         function (data) {
 
           Highcharts.chart('TimeSeries'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
-                chart: {
+              chart: {
+                  events: {
+                      load: function () {
+
+                          var chart = this,
+                              renderer = chart.renderer;
+                          var pattern = renderer.createElement('pattern').add(renderer.defs).attr({
+                              width: 1,
+                              height: 1,
+                              id: "settings_image",
+                              patternContentUnits: 'userSpaceOnUse'
+                          });
+
+                          renderer.image('../images/SettingsButton.svg', 0, 0, 18, 16).add(pattern);
+
+                      }
+                  },
                     zoomType: 'x'
                 },
                 title: {
@@ -109,7 +125,24 @@ else
                     name: JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorType))'),
                     data: JSON.parse('@Html.Raw(Json.Serialize(@Model.Values))')
 
-                }]
+              }],
+                exporting: {
+            buttons: {
+                contextButton: {
+                    enabled: false,
+                },
+                Edit: {
+                    height: 24,
+                    width: 24,
+                    y: 3,
+                    x: 4,
+                    className : 'highcharts-button-box-settings',
+                    onclick: function () {
+                        window.location.href = '/ReportElement/EditReportElement/'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))')
+                    },
+                }
+            }
+        },
             });
         }
     );
@@ -120,6 +153,6 @@ else
         if (typeof result !== 'undefined') {
             result.setSize(ui.height, ui.width);
         }
-        
+
     });
 </script>
