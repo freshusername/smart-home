@@ -6,9 +6,13 @@
 
 <h2>List of sensor types</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="button-center">
+        <a asp-action="Create" class="btn btn-success">Create New</a>
+    </div>
+}
+
 <table class="table">
     <thead>
         <tr>

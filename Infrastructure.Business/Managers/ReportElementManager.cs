@@ -102,6 +102,10 @@ namespace Infrastructure.Business.Managers
                 }
                 gaugeDto.IsValid = true;
             }
+            else
+            {
+                gaugeDto.IsValid = false;
+            }
 
             return gaugeDto;
         }
