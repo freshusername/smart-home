@@ -22,6 +22,7 @@ namespace smart_home_web.Models.ReportElements
         public string MeasurementName { get; set; }
 
         public List<dynamic> Values { get; set; }
+        public double[] AvgValuesArray { get; set; }
 
         public List<string> Dates { get; set; }
     }

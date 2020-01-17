@@ -77,7 +77,34 @@ namespace Infrastructure.Business.Managers
                 return new HeatmapDto { Id = heatmapId, IsCorrect = false };
 
 
+            List<double> vals = new List<double>();
+            foreach (var c in heatmap.Values)
+            {
+                vals.Add(c);
+            }
+            double[] valArray = vals.ToArray();
+            CalculateAvgValues(valArray);
+
+            //TODO: add AvgValuesArray to HeatmapDto
+
             return heatmap;
+        }
+
+        private double[] CalculateAvgValues(double[] values)
+        {
+            for (int i = 0; i < values.Length; i++)
+            {
+                for (int k = 0; k < values.Length; k++)
+                {
+                    if (values[i] != values[k])
+                    {
+
+                    }
+                }
+            }
+
+
+            return 0;
         }
 
         public async Task<ReportElementDto> GetWordCloudById(int ReportElementId)
