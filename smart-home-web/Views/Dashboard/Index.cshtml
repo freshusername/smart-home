@@ -3,8 +3,16 @@
 @model DashboardIndexViewModel;
 
 
+<div class="row dash_create justify-content-center">
+    <div class="">
+        <a asp-controller="Dashboard" asp-action="Create"
+           class="btn btn-success text-uppercase">
+            <span class="glyphicon glyphicon-plus-sign"></span> Add dashboard
+        </a>
+    </div>
+</div><br />
+<div class="row justify-content-center" style="margin-top:40px;">
 
-<div class="row" style="margin-top:40px;">
     @foreach (var dashboard in Model.Dashboards)
     {
         <div class="col-lg-2">
@@ -17,32 +25,31 @@
                     </a>
                     <br />
                     <img class="card-img-top img" src="https://miro.medium.com/max/3440/0*8UNAgR_1_4SMV4BY.png" alt="Card image cap">
-                    <br /><br />
-                    <h3 class="card-title d-inline">
-                        <span>@dashboard.Name</span>
-                    </h3>
-                    <a href="#" class="dash_edit d-inline"
-                       data-dash-id="@dashboard.Id.ToString()"
-                       data-dash-url="@Url.Action("Edit","Dashboard")">
-                        <span class="glyphicon glyphicon-pencil"></span>
-                    </a>
-                    <p class="card-text">@dashboard.ReportElements.Count() report element@(dashboard.ReportElements.Count() > 1 ? "s" : "")</p>
+                    <br />
+                    <br />
+                    <div>
+                        <div class="card-title d-inline">
+                            <input type="text" name="name" value="@dashboard.Name"
+                                   placeholder="Enter name" size="14" maxlength="40" 
+                                   title="@dashboard.Name"  pattern="[A-Za-z]"
+                                   required/>
+                        </div>
+                        <a href="#" class="dash_edit d-inline"
+                           data-dash-id="@dashboard.Id.ToString()"
+                           data-dash-url="@Url.Action("Edit","Dashboard")">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                    </div>
+                    <p class="card-text">@dashboard.ReportElements.Count() report element@(dashboard.ReportElements.Count() != 1 ? "s" : "")</p>
                     <a asp-controller="Dashboard" asp-action="Detail" asp-route-id="@dashboard.Id" class="btn btn-primary">OPEN</a>
                 </div>
             </div>
         </div>
     }
-
-    <div class="col-lg-2">
-        <div class="card-body">
-            <a asp-controller="Dashboard" asp-action="Create"
-             class="dash_create btn btn-success text-uppercase">
-                <span class="glyphicon glyphicon-plus-sign"></span> Add dashboard
-            </a>
-        </div>
-    </div>
 </div>
 
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
 <script>
     $(document).ready(function () {
         $(".dash_remove").click(function () {
@@ -51,14 +58,19 @@
                 alert(true);
                 $.ajax({
                     url: $(this).data("dash_url"),
-
+                    data: { id: id }
                 })
             }
         });
 
-        function dash_edit(id) {
+        $(".dash_edit").click(function () {
+            let id = $(this).data("dash-id");
             alert("edit " + id);
-        };
-    })
-        
+        });
+
+        $(".dash_create").click(function () {
+
+        });
+    });
+
 </script>
