@@ -6,7 +6,7 @@
         <figure class="highcharts-figure">
             <div id=@("Gauge"+Model.Id.ToString()) class="chart-container"></div>
         </figure>
-        @*<h1>Selected sensor does not have values to display in the chosen time period.</h1>*@
+        <strong id="alertMessage" class="d-none">Selected sensor does not have values to display in the chosen time period.</strong>
 </div>
 
 <script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
@@ -146,26 +146,27 @@
         type: "GET",
         url: "/api/Gauge/GetGauge/@Model.Id",
         contentType: "application/json; charset=utf-8",
-
             success: function (res) {
                 if (gaugeChart) {
-                    point = gaugeChart.series[0].points[0];
-                    point.update(res.value);
-                    gaugeChart.yAxis[0].update({
-                        min: res.min,
-                        max: res.max
-                    }); 
-                    gaugeChart.yAxis[0].tickPositions = [res.min, res.max];
-                    gaugeChart.yAxis[0].update({
-                      tickPositions: gaugeChart.yAxis[0].tickPositions
-                    });
-                    //$('#alertMessage').css('display','none');
+                    if (res.isValid === true) {
+                        point = gaugeChart.series[0].points[0];
+                        point.update(res.value);
+                        gaugeChart.yAxis[0].update({
+                            min: res.min,
+                            max: res.max
+                        });
+                        gaugeChart.yAxis[0].tickPositions = [res.min, res.max];
+                        gaugeChart.yAxis[0].update({
+                            tickPositions: gaugeChart.yAxis[0].tickPositions
+                        });
+                        $('#gauge_figure_'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))')).addClass("d-inline").removeClass("d-none");
+                        $('#alertMessage').addClass("d-none").removeClass("d-inline");
+                    }
+                    else {
+                        $('#gauge_figure_'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))')).addClass("d-none").removeClass("d-inline");
+                        $('#alertMessage').addClass("d-inline").removeClass("d-none");
+                    }
                 }
-            },
-
-            error: function (res) {
-                //alert(res);
-                //$('#gaugeFigure').css('display','none');
             }
         });
     }, 2000);
