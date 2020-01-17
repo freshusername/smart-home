@@ -21,6 +21,6 @@ namespace Infrastructure.Business.Managers
         Task EditReportElement(ReportElementDto wordCloud);
 		Task Update(ReportElement reportElement);
 		Task Delete(ReportElement reportElement);
-        Task<ReportElementDto> GetDataForTimeSeries(int id, ReportElementHours hours);
+        Task<ReportElementDto> GetDataForTimeSeries(int id);
     }
 }
