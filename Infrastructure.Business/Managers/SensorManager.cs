@@ -77,7 +77,7 @@ namespace Infrastructure.Business.Managers
                 sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.Int, dashboard.AppUserId));
                 sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.Double, dashboard.AppUserId));
             }
-            if (type == ReportElementType.TimeSeries || type == ReportElementType.Clock || type == ReportElementType.Wordcloud)
+            if (type == ReportElementType.TimeSeries || type == ReportElementType.Clock)
                 sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.Bool, dashboard.AppUserId));
             if(type == ReportElementType.Clock || type == ReportElementType.Wordcloud)
                 sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.String, dashboard.AppUserId));

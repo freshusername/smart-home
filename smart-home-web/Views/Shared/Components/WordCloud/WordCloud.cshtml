@@ -27,25 +27,6 @@
     }, []);
 
     Highcharts.chart("Wordcloud"+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
-        chart: {
-            reflow: true,
-            events: {
-                load: function() {
-
-                    var chart = this,
-                    renderer = chart.renderer;
-                    var pattern = renderer.createElement('pattern').add(renderer.defs).attr({
-                        width: 1,
-                        height: 1,
-                        id: "settings_image",
-                        patternContentUnits: 'userSpaceOnUse'
-                    });
-
-                    renderer.image('../images/SettingsButton.svg', 0, 0, 18, 16).add(pattern);
-
-                }
-            }
-        },
         title: {
             text: 'Word cloud for ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))') + ' for ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.DashboardName))')
         },
@@ -70,20 +51,9 @@
             name: 'Periodicity',
         }],
         exporting: {
-
             buttons: {
                 contextButton: {
                     enabled: false,
-                },
-                Edit: {
-                    height: 24,
-                    width: 24,
-                    y: 3,
-                    x: 4,
-                    className : 'highcharts-button-box-settings',
-                    onclick: function () {
-                        window.location.href = '/ReportElement/EditReportElement/'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))')
-                    },
                 }
             }
         },
@@ -102,7 +72,6 @@ else
         if (typeof result !== 'undefined') {
             result.setSize(ui.height, ui.width);
         }
-        
     });
 </script>
 

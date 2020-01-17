@@ -123,7 +123,7 @@
         }
     };
 
-    var gaugeChart = Highcharts.chart('gauge_container_'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), Highcharts.merge(gaugeOptions, {
+    var gaugeChart = Highcharts.chart('Gauge'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), Highcharts.merge(gaugeOptions, {
         yAxis: {
             min: @Model.Min,
             max: @Model.Max,
