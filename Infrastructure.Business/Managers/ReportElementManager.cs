@@ -45,10 +45,10 @@ namespace Infrastructure.Business.Managers
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(heatmapId);
 
             DateTime dateFrom = new DateTime();
-            DateTime dateTo = DateTime.Now;
+            DateTime dateTo = DateTime.Now.Date;
 
             if (reportElement.Hours != 0)
-                dateFrom = DateTime.Now.AddHours(-(int)reportElement.Hours);
+                dateFrom = DateTime.Now.AddHours(-(int)reportElement.Hours).Date;
 
             IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDatePeriod(reportElement.SensorId, dateFrom, dateTo);
 
@@ -103,8 +103,8 @@ namespace Infrastructure.Business.Managers
                 }
             }
 
-
-            return 0;
+            double[] s = new double[3];
+            return s;
         }
 
         public async Task<ReportElementDto> GetWordCloudById(int ReportElementId)

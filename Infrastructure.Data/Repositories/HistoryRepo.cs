@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using Domain.Core.Model.Enums;
 using Domain.Interfaces;
 using Domain.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
+using MySql.Data.MySqlClient;
 
 namespace Infrastructure.Data.Repositories
 {
@@ -49,14 +51,29 @@ namespace Infrastructure.Data.Repositories
         }
 
         public async Task<IEnumerable<History>> GetHistoriesBySensorIdAndDatePeriod
-            (int sensorId, DateTimeOffset dateFrom, DateTimeOffset dateTo)
+            (int sensorId, DateTime dateFrom, DateTime dateTo)
         {
-            var histories = context.Histories.Include(h => h.Sensor)
-                .ThenInclude(st => st.SensorType)
-                .Where(h => h.Sensor.Id == sensorId && h.Date > dateFrom && h.Date < dateTo);
+            //MySqlParameter p0 = new MySqlParameter("p0", sensorId);
+            //MySqlParameter p1 = new MySqlParameter("p1", dateFrom);
+            //MySqlParameter p2 = new MySqlParameter("p2", dateTo);
+
+            var d_from = dateFrom.ToString("yyyy-MM-dd HH:mm");
+            var d_to = dateTo.ToString("yyyy-MM-dd HH:mm");
+
+            var histories = context.Histories.FromSql($"CALL SensorValuesForTimePeriod ({0}, '{1}', '{2}')", sensorId, d_from, d_to);
 
             return await histories.ToListAsync();
         }
+
+        //public async Task<IEnumerable<History>> GetHistoriesBySensorIdAndDatePeriod
+        //    (int sensorId, DateTimeOffset dateFrom, DateTimeOffset dateTo)
+        //{
+        //    var histories = context.Histories.Include(h => h.Sensor)
+        //        .ThenInclude(st => st.SensorType)
+        //        .Where(h => h.Sensor.Id == sensorId && h.Date > dateFrom && h.Date < dateTo);
+
+        //    return await histories.ToListAsync();
+        //}
 
 
         public async Task<IEnumerable<History>> GetHistoriesBySensorIdAndDate(int SensorId, DateTimeOffset date)
