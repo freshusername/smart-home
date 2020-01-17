@@ -3,23 +3,6 @@
 @model GaugeViewModel;
 
 <div>
-    <form id="form1" method="post">
-        <div class="form-group">
-            <label class="control-label" style="margin-top:20px;">
-                Select time period:
-            </label>
-            <div style="margin-bottom:50px">
-                <select id="hours" asp-for="Hours" asp-items="@Html.GetEnumSelectList<ReportElementHours>()" class="nice-select col-lg-4 col-md-5 col-sm-6 col-xs-12"></select>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <input id="id" type="hidden" asp-for="Id" value="@Model.Id" />
-        </div>
-        <div class="form-group">
-            <input id="submit" type="submit" value="Choose" class="btn btn-success text-center" style="width:15%" />
-        </div>
-    </form>
         <figure class="highcharts-figure">
             <div id=@("Gauge"+Model.Id.ToString()) class="chart-container"></div>
         </figure>
@@ -187,12 +170,12 @@
         });
     }, 2000);
 
-    //$('body').on('gsresizestop', '.grid-stack', function (event, ui) {
-    //    var type = 'Gauge';
-    //    var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
-    //    if (typeof result !== 'undefined') {
-    //        result.setSize(ui.height, ui.width);
-    //    }
+    $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
+        var type = 'Gauge';
+        var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
+        if (typeof result !== 'undefined') {
+            result.setSize(ui.height, ui.width);
+        }
         
-    //});
+    });
 </script>

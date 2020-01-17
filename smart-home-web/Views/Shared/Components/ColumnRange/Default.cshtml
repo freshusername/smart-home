@@ -24,22 +24,6 @@ else
     Highcharts.chart('Columnrange'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
 
         chart: {
-            events: {
-                load: function () {
-
-                    var chart = this,
-                        renderer = chart.renderer;
-                    var pattern = renderer.createElement('pattern').add(renderer.defs).attr({
-                        width: 1,
-                        height: 1,
-                        id: "settings_image",
-                        patternContentUnits: 'userSpaceOnUse'
-                    });
-
-                    renderer.image('../images/SettingsButton.svg', 0, 0, 18, 16).add(pattern);
-
-                }
-            },
             type: 'columnrange',
             inverted: true,
         },
@@ -92,27 +76,16 @@ else
                 contextButton: {
                     enabled: false,
                 },
-                Edit: {
-                    height: 24,
-                    width: 24,
-                    y: 3,
-                    x: 4,
-                    className : 'highcharts-button-box-settings',
-                    onclick: function () {
-                        window.location.href = '/ReportElement/EditReportElement/'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))')
-                    },
-                }
             }
         },
 
     });
 
-    //$('body').on('gsresizestop', '.grid-stack', function (event, ui) {
-    //    var type = 'Columnrange';
-    //    var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
-    //    if (typeof result !== 'undefined') {
-    //        result.setSize(ui.height, ui.width);
-    //    }
-        
-    //});
+    $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
+        var type = 'Columnrange';
+        var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
+        if (typeof result !== 'undefined') {
+            result.setSize(ui.height, ui.width);
+        }
+    });
 </script>
