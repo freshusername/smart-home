@@ -9,18 +9,23 @@
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gridstack@0.6.0/dist/gridstack.all.js"></script>
 
+<script type="text/javascript">
+    $('.grid-stack').gridstack();
+</script>
+
+
 <h1>@Model.Name Dashboard</h1>
 
-<div class="grid-stack grid-stack-animate" data-save-url="@Url.Action("UpdateOptions", "DashboardOptions")">
+<div class="grid-stack" data-save-url="@Url.Action("UpdateOptions", "DashboardOptions")">
     @foreach (var report in Model.ReportElements)
     {
-        <div id="@report.Id" class="grid-stack-item shadow-standart card d-flex flex-column" data-identifier="@report.Id" data-gs-x="@report.X" data-gs-y="@report.Y" data-gs-width="@report.Width" data-gs-height="@report.Height">
-            <div class="grid-stack-item-content">
+        <div id="@report.Id" class="grid-stack-item d-flex flex-column" style="padding-left:20px" data-identifier="@report.Id" data-gs-x="@report.X" data-gs-y="@report.Y" data-gs-width="@report.Width" data-gs-height="@report.Height">
+            <div class="grid-stack-item-content card">
                 <div class="d-flex flex-row">
-                    <div id="trash-@report.Id" class="text-center btn-control-icon" onclick=remove(@report.Id)>
-                        <span><i class="fas fa-times report-button "></i></span>
+                    <div id="trash-@report.Id" class="text-center btn-control-icon report-button text-center" onclick=remove(@report.Id)>
+                        <span><i class="fas fa-times"></i></span>
                     </div>
-                    <div class="text-center btn-control-icon ">
+                    <div class="text-center btn-control-icon text-center">
                         <a asp-controller="ReportElement" asp-action="EditReportElement" asp-route-id="@report.Id"><i class="fas fa-cog report-button"></i></a>
                     </div>
                 </div>
