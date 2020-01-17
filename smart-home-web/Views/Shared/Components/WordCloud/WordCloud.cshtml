@@ -3,8 +3,8 @@
 
 @if (Model.IsCorrect)
 {
-    <figure class="highcharts-figure-wordcloud">
-        <div id=@("wordcloud_container_"+Model.Id.ToString())></div>
+    <figure class="highcharts-figure-wordcloud" width="100%" height="100%">
+        <div id=@("Wordcloud"+Model.Id.ToString()) width="100%" height="100%"></div>
     </figure>
 }
 else
@@ -14,7 +14,7 @@ else
 <script src="https://code.highcharts.com/modules/wordcloud.js"></script>
 <script>
 
-    values = JSON.parse('@Html.Raw(Json.Serialize(@Model.Values))')            
+    values = JSON.parse('@Html.Raw(Json.Serialize(@Model.Values))')
     data = Highcharts.reduce(values, function (arr, word) {
     var obj = Highcharts.find(arr, function (obj) {
         return obj.name === word;
@@ -32,8 +32,9 @@ else
     }, []);
 
     var charts = [];
-    var chartWordcloud = Highcharts.chart('wordcloud_container_'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
+    var chartWordcloud = Highcharts.chart('Wordcloud'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
         chart: {
+            reflow: true,
             events: {
                 load: function() {
 
@@ -75,7 +76,7 @@ else
             name: 'Periodicity',
         }],
         exporting: {
-            
+
             buttons: {
                 contextButton: {
                     enabled: false,
@@ -93,9 +94,25 @@ else
             }
         },
     });
-    
-    //$('body').on('gsresizestop', '.grid-stack', function (event, ui) {
-    //    chart.setSize(ui.height, ui.width);
-    //    console.log(ui.height);
-    //});
+
 </script>
+
+<script>
+    $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
+        var type = 'Wordcloud';
+        var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
+        if (typeof result !== 'undefined') {
+            result.setSize(ui.height, ui.width);
+        }
+
+    });
+</script>
+<!--
+<style>
+    .highcharts-root,
+    .ui-draggable-handle,
+    .highcharts-container {
+        height: 100% !important;
+        width: 100% !important;
+    }
+    </style>-->

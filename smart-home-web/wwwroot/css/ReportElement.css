@@ -43,6 +43,13 @@
     background: #f1f7ff;
 }
 
+.btn-control-icon {
+    margin: 5px;
+    width: 15px;
+    height: 15px;
+    z-index: 10;
+}
+
 @media (max-width: 600px) {
     .highcharts-figure, .highcharts-data-table table {
         width: 100%;
