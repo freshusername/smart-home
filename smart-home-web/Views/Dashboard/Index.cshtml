@@ -10,12 +10,55 @@
         <div class="col-lg-2">
             <div class="card text-center" style="width: 18rem;">
                 <div class="card-body">
+                    <a href="#" class="dash_remove d-flex justify-content-end"
+                       data-dash-id="@dashboard.Id.ToString()"
+                       data-dash-url="@Url.Action("Delete","Dashboard")">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </a>
+                    <br />
                     <img class="card-img-top img" src="https://miro.medium.com/max/3440/0*8UNAgR_1_4SMV4BY.png" alt="Card image cap">
-                    <h3 class="card-title">@dashboard.Name</h3>
-                    <p class="card-text">@dashboard.ReportElements.Count() report elements</p>
+                    <br /><br />
+                    <h3 class="card-title d-inline">
+                        <span>@dashboard.Name</span>
+                    </h3>
+                    <a href="#" class="dash_edit d-inline"
+                       data-dash-id="@dashboard.Id.ToString()"
+                       data-dash-url="@Url.Action("Edit","Dashboard")">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </a>
+                    <p class="card-text">@dashboard.ReportElements.Count() report element@(dashboard.ReportElements.Count() > 1 ? "s" : "")</p>
                     <a asp-controller="Dashboard" asp-action="Detail" asp-route-id="@dashboard.Id" class="btn btn-primary">OPEN</a>
                 </div>
             </div>
         </div>
     }
+
+    <div class="col-lg-2">
+        <div class="card-body">
+            <a asp-controller="Dashboard" asp-action="Create"
+             class="dash_create btn btn-success text-uppercase">
+                <span class="glyphicon glyphicon-plus-sign"></span> Add dashboard
+            </a>
+        </div>
+    </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $(".dash_remove").click(function () {
+            let id = $(this).data("dash-id");
+            if (confirm("Are you sure?" + id)) {
+                alert(true);
+                $.ajax({
+                    url: $(this).data("dash_url"),
+
+                })
+            }
+        });
+
+        function dash_edit(id) {
+            alert("edit " + id);
+        };
+    })
+        
+</script>
