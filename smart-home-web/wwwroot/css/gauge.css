@@ -1,11 +1,11 @@
 ﻿.highcharts-figure .chart-container {
     width: 100%;
-    height: 100%;
+    height: 200px;
     float: left;
 }
 
 .highcharts-figure, .highcharts-data-table table {
-    /*width: 800px;*/
+    width: 800px;
     margin: 0 auto;
 }
 
@@ -16,8 +16,7 @@
     margin: 10px auto;
     text-align: center;
     width: 100%;
-    height: 100%;
-    /*max-width: 500px;*/
+    max-width: 500px;
 }
 
 .highcharts-data-table caption {
@@ -46,13 +45,11 @@
 @media (max-width: 600px) {
     .highcharts-figure, .highcharts-data-table table {
         width: 100%;
-        height: 100%;
     }
 
-    .highcharts-figure .chart-container {
-        width: 100%;
-        height: 100%;
-        float: none;
-        margin: 0 auto;
-    }
+        .highcharts-figure .chart-container {
+            width: 100%;
+            float: none;
+            margin: 0 auto;
+        }
 }
