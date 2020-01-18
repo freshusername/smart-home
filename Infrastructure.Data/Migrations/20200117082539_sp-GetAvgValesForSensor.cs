@@ -6,16 +6,18 @@ namespace Infrastructure.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            var sp = @"CREATE PROCEDURE SensorValuesForTimePeriod
-            (IN sensorId INT,
-            IN dateFrom DateTime,
-            IN dateTo DateTime)
-            BEGIN
-	            SELECT Date,AVG(IntValue)
-		            FROM Histories
-		            WHERE Date BETWEEN dateFrom AND dateTo
-		            AND SensorId = sensorId;
-            END;";
+            var sp = @"CREATE PROCEDURE `GetAvgValuesForSensor`(
+				IN sensorId INT,
+                IN dateFrom DateTime,
+                IN dateTo DateTime)
+                BEGIN
+                
+	                SELECT Date,avg(IntValue)
+		                FROM Histories
+		                WHERE (Histories.Date BETWEEN dateFrom AND dateTo)
+						AND Histories.SensorId = sensorId
+                        GROUP BY Histories.Date;
+                END";
 
             migrationBuilder.Sql(sp);
         }
