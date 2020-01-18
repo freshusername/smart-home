@@ -69,3 +69,15 @@ a.disabledclass {
     padding-right: 1rem;
     padding-left: 1rem;
 }
+
+.report-button{
+    color: #111111;
+}
+
+    .report-button:hover {
+        color: dimgrey;
+        cursor: pointer;
+        -webkit-transform: scale(1.5);
+        -ms-transform: scale(1.5);
+        transform: scale(1.5);
+    }

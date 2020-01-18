@@ -2,7 +2,6 @@
 ﻿@using Domain.Core.Model.Enums
 @model ReportElementViewModel
 
-<link href="~/css/schedule.css" rel="stylesheet" />
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/data.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
@@ -11,7 +10,7 @@
 
 @if (!Model.IsCorrect)
 {
-<label class="control-label graph-label">There is no history measurement for @Model.SensorName.ToString() for that period of time. <a class="btn btn-success text-center" asp-controller="ReportElement" asp-action="EditReportElement" asp-route-id="@Model.Id"><i class="fas fa-cog"></i></a></label>
+    <label class="control-label graph-label">There is no history measurement for @Model.SensorName.ToString() for that period of time. <a class="btn btn-success text-center" asp-controller="ReportElement" asp-action="EditReportElement" asp-route-id="@Model.Id"><i class="fas fa-cog"></i></a></label>
 }
 else
 {
@@ -25,7 +24,7 @@ else
         function (data) {
 
           Highcharts.chart('TimeSeries'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
-                chart: {
+              chart: {
                     zoomType: 'x'
                 },
                 title: {
@@ -109,7 +108,14 @@ else
                     name: JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorType))'),
                     data: JSON.parse('@Html.Raw(Json.Serialize(@Model.Values))')
 
-                }]
+              }],
+                exporting: {
+            buttons: {
+                contextButton: {
+                    enabled: false,
+                },
+                }
+        },
             });
         }
     );

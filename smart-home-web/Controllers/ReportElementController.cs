@@ -55,13 +55,21 @@ namespace smart_home_web.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditReportElement(EditReportElementViewModel model)
+        public async Task<IActionResult> EditReportElement(EditReportElementViewModel model)
         {
             if (!ModelState.IsValid)
                 return View(model);
             ReportElementDto reportElement = _mapper.Map<EditReportElementViewModel, ReportElementDto>(model);
-            _reportElementManager.EditReportElement(reportElement);
+            await _reportElementManager.EditReportElement(reportElement);
             return RedirectToAction("Detail", "Dashboard", new { id = model.DashboardId });
         }
+
+		[HttpPost]
+		public async Task<IActionResult> DeleteReportElement(int id)
+		{
+			var reportElement = await _reportElementManager.GetById(id);
+			await _reportElementManager.Delete(reportElement);
+			return Ok();
+		}
 	}
 }

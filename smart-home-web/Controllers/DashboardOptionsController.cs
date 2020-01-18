@@ -26,20 +26,11 @@ namespace smart_home_web.Controllers
             _mapper = mapper;
         }
 
-        //[HttpGet("GetGauge/{id}")]
-        //public async Task<IActionResult> Get(int id)
-        //{
-        //    GaugeDto gaugeDto = await _reportElementManager.GetGaugeById(id);
-        //    GaugeUpdateViewModel result = _mapper.Map<GaugeDto, GaugeUpdateViewModel>(gaugeDto);
-
-        //    return Ok(result);
-        //}
-
 		[HttpPost]
 		public async Task UpdateOptions(IEnumerable<ReportElement> options)
 		{
-			foreach(ReportElement reportElement in options)
-			{ 
+			foreach (ReportElement reportElement in options)
+			{
 				await _reportElementManager.Update(reportElement);
 			}
 		}
