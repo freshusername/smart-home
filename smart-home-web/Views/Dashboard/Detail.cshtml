@@ -12,9 +12,7 @@
 <script type="text/javascript">
     $('.grid-stack').gridstack();
 </script>
-
-
-<h1>@Model.Name Dashboard</h1>
+<h1>@Model.Name Dashboard<a class="btn text-center" asp-controller="ReportElement" asp-action="CreateReportElement" asp-route-dashboardId="@Model.Id"><i style="font-size:16px" class="fa fa-plus-circle report-button" aria-hidden="true"></i></a></h1>
 
 <div class="grid-stack" data-save-url="@Url.Action("UpdateOptions", "DashboardOptions")">
     @foreach (var report in Model.ReportElements)

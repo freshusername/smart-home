@@ -3,6 +3,7 @@ using Infrastructure.Business.DTOs.Dashboard;
 using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Mvc;
 using smart_home_web.Models.Dashboard;
+using smart_home_web.Models.ReportElements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,10 +21,13 @@ namespace smart_home_web.Components
             _mapper = mapper;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync()
+        public async Task<IViewComponentResult> InvokeAsync(int reportElementId)
         {
-
-            return View("Default");
+            ReportElementViewModel model = new ReportElementViewModel
+            {
+                Id = reportElementId
+            };
+            return View("Default", model);
         }
     }
 }

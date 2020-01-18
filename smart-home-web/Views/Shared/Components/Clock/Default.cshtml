@@ -23,7 +23,7 @@
     var now = getNow();
 
     // Create the chart
-    var chart = Highcharts.chart('clock_container', {
+    var chart = Highcharts.chart('Clock'+@Model.Id.ToString(), {
 
         chart: {
             type: 'gauge',
@@ -39,7 +39,7 @@
         },
 
         title: {
-            text: 'Current time'
+            text: ''
         },
 
         pane: {
@@ -130,7 +130,14 @@
             dataLabels: {
                 enabled: false
             }
-        }]
+        }],
+        exporting: {
+                buttons: {
+                    contextButton: {
+                        enabled: false,
+                    }
+                }
+            },
     },
 
         // Move
@@ -179,13 +186,15 @@
         return (7.5625 * (pos -= (2.625 / 2.75)) * pos + 0.984375);
     };
 
-    //$('body').on('gsresizestop', '.grid-stack', function (event, ui) {
-    //    var type = 'Clock';
-    //    var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
-    //    if (typeof result !== 'undefined') {
-    //        result.setSize(ui.height, ui.width);
-    //    }
+
+
+    $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
+        var type = 'Clock';
+        var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
+        if (typeof result !== 'undefined') {
+            result.setSize(ui.height, ui.width);
+        }
         
-    //});
+    });
 
 </script>
