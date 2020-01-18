@@ -54,7 +54,7 @@ namespace smart_home_web.Controllers
 
 			return View(new DashboardIndexViewModel
 			{
-				Dashboards = result
+				Dashboards = result.Reverse()
 			}
 			);
 		}
@@ -90,6 +90,11 @@ namespace smart_home_web.Controllers
         public IActionResult Create()
         {
             return PartialView();
+        }
+
+        public IActionResult _DashboardPartial(DashboardViewModel model)
+        {
+            return PartialView(model);
         }
 
     }

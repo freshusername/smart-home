@@ -1,51 +1,42 @@
 ﻿@using smart_home_web.Models.Dashboard;
 
+
 @model DashboardIndexViewModel;
 
 
 <div class="row dash_create justify-content-center">
     <div>
-        <a class="btn btn-success text-uppercase" id="dash_create_button">
+        <a class="btn btn-success text-uppercase" data-toggle="collapse" data-target="#demo">
             <span class="glyphicon glyphicon-plus-sign"></span> Add dashboard
-        </a><br /><br />
-        <div class="card-title text-center" style="display:none;"  id="dash_create_input">
-            @Html.Partial("Create")
+        </a>
+        <br />
+        <br />
+        <div  id="demo" class="collapse">
+            <form action="/" method="post">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input name="name" value="Enter name" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <input type="submit" name="name" value="Add" />
+                </div>
+            </form>
         </div>
     </div>
-</div><br />
-<div class="row justify-content-center" style="margin-top:40px;">
-
-    @foreach (var dashboard in Model.Dashboards)
-    {
-        <div class="col-lg-2">
-            <div class="card text-center" style="width: 18rem;">
-                <div class="card-body">
-                    <a href="#" class="dash_remove d-flex justify-content-end"
-                       data-dash-id="@dashboard.Id.ToString()"
-                       data-dash-url="@Url.Action("Delete","Dashboard")">
-                        <span class="glyphicon glyphicon-remove"></span>
-                    </a>
-                    <br />
-                    <img class="card-img-top img" src="https://miro.medium.com/max/3440/0*8UNAgR_1_4SMV4BY.png" alt="Card image cap">
-                    <br />
-                    <br />
-
-                    <div>
-                        <h3 class="card-title d-inline">@dashboard.Name</h3>
-                        <a href="#" class="dash_edit d-inline"
-                           data-dash-id="@dashboard.Id.ToString()"
-                           data-dash-url="@Url.Action("Edit","Dashboard")">
-                            <span class="glyphicon glyphicon-pencil"></span>
-                        </a>
-                    </div>
-                    <p class="card-text">@dashboard.ReportElements.Count() report element@(dashboard.ReportElements.Count() != 1 ? "s" : "")</p>
-                    <a asp-controller="Dashboard" asp-action="Detail" asp-route-id="@dashboard.Id" class="btn btn-primary">OPEN</a>
-                </div>
-            </div>
-        </div>
-    }
 </div>
-
+<br />
+<h2 class="text-center">List of dashboards</h2>
+<div class="row justify-content-center" style="margin-top:40px;">
+    
+    <div class="d-flex justify-content-center flex-wrap aligh-content-center">
+        @foreach (var dashboard in Model.Dashboards)
+        {
+            <div class="border">
+                @await Component.InvokeAsync("Dashboard", new { model = dashboard });
+            </div>
+        }
+    </div>
+</div>
 
 <script src="~/lib/jquery/dist/jquery.js"></script>
 <script>
