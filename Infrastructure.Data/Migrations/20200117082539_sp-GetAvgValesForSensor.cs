@@ -12,7 +12,7 @@ namespace Infrastructure.Data.Migrations
                 IN dateTo DateTime)
                 BEGIN
                 
-	                SELECT Date,avg(IntValue)
+	                SELECT Date as WeekDay, CAST(avg(IntValue) as DOUBLE) as AvgValue
 		                FROM Histories
 		                WHERE (Histories.Date BETWEEN dateFrom AND dateTo)
 						AND Histories.SensorId = sensorId

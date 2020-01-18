@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Domain.Core.CalculateModel;
 using Domain.Core.Model;
 using Domain.Core.Model.Enums;
 using Domain.Interfaces;
@@ -50,40 +51,37 @@ namespace Infrastructure.Business.Managers
             if (reportElement.Hours != 0)
                 dateFrom = DateTime.Now.AddHours(-(int)reportElement.Hours).Date;
 
-            IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDatePeriod(reportElement.SensorId, dateFrom, dateTo);
+            IEnumerable<AvgSensorValuePerDay> avgSensorValuesPerDays = await
+                unitOfWork.HistoryRepo.GetAvgSensorsValuesPerDays(reportElement.SensorId, dateFrom, dateTo);
 
-            if (!histories.Any())
+            if (!avgSensorValuesPerDays.Any())
                 return new HeatmapDto { Id = heatmapId, IsCorrect = false };
 
             HeatmapDto heatmap = mapper.Map<Sensor, HeatmapDto>(reportElement.Sensor);
 
+
             heatmap.Id = reportElement.Id;
             heatmap.DashboardName = reportElement.Dashboard.Name;
             heatmap.Values = new List<dynamic>();
+            heatmap.AvgSensorValuesPerDays = avgSensorValuesPerDays.ToList();
 
-            foreach (History history in histories)
-            {
-                switch (heatmap.MeasurementType)
-                {
-                    case MeasurementType.Int when history.IntValue.HasValue:
-                        heatmap.Values.Add(history.IntValue);
-                        break;
-                    case MeasurementType.Double when history.DoubleValue.HasValue:
-                        heatmap.Values.Add(history.DoubleValue);
-                        break;
-                }
-            }
-            if (!heatmap.Values.Any())
-                return new HeatmapDto { Id = heatmapId, IsCorrect = false };
+            #region later work
+            //foreach (AvgSensorValuePerDay avgSensorValuePerDay in avgSensorValuesPerDays)
+            //{
+            //    switch (heatmap.MeasurementType)
+            //    {
+            //        case MeasurementType.Int when avgSensorValuePerDay.IntValue.HasValue:
+            //            heatmap.Values.Add(avgSensorValuePerDay.IntValue);
+            //            break;
+            //        case MeasurementType.Double when avgSensorValuePerDay.DoubleValue.HasValue:
+            //            heatmap.Values.Add(avgSensorValuePerDay.DoubleValue);
+            //            break;
+            //    }
+            //}
 
-
-            List<double> vals = new List<double>();
-            foreach (var c in heatmap.Values)
-            {
-                vals.Add(c);
-            }
-            double[] valArray = vals.ToArray();
-            CalculateAvgValues(valArray);
+            //if (!heatmap.Values.Any())
+            //    return new HeatmapDto { Id = heatmapId, IsCorrect = false };
+            #endregion
 
             //TODO: add AvgValuesArray to HeatmapDto
 

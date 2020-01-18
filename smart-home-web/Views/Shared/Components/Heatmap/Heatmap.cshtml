@@ -95,12 +95,15 @@
                 }
             },
             @{
-                List<int> vals = new List<int>();
-                foreach (var c in Model.Values)
+                List<double> vals = new List<double>();
+                List<DateTime> days = new List<DateTime>();
+
+                foreach (var c in Model.AvgSensorValuesPerDays)
                 {
-                    vals.Add(c);
+                    vals.Add(c.AvgValue);
+                    days.Add(c.WeekDay);
                 }
-                int[] valArray = vals.ToArray();
+                double[] valArray = vals.ToArray();
             }
             //HeatmapSeriesData
             series: [{
@@ -178,7 +181,7 @@
             }
 
         });
-    console.log("Hi!");
+
     console.log(@for (int i = 0; i < valArray.Length; i++)
                 {
                     <text>

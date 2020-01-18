@@ -22,6 +22,7 @@ using smart_home_web.Models.DashboardOptions;
 using Infrastructure.Business.DTOs.Options;
 using smart_home_web.Models.Options;
 using System;
+using Domain.Core.CalculateModel;
 
 namespace smart_home_web.AutoMapper
 {
@@ -109,6 +110,8 @@ namespace smart_home_web.AutoMapper
                 .ForAllOtherMembers(c => c.Ignore());
             CreateMap<HeatmapDto, HeatmapViewModel>().ReverseMap();
 
+            CreateMap<AvgSensorValuePerDay, AvgSensorValuePerDayDTO>();
+
 
             CreateMap<Sensor, ReportElementDto>()
                 .ForMember(gd => gd.SensorId, map => map.MapFrom(s => s.Id))
@@ -130,6 +133,7 @@ namespace smart_home_web.AutoMapper
 
             CreateMap<Options, OptionsDto>().ReverseMap();
             CreateMap<OptionsDto, OptionsViewModel>();
+
         }
     }
 }

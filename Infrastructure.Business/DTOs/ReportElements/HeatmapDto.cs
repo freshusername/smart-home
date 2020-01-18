@@ -1,4 +1,5 @@
-﻿using Domain.Core.Model.Enums;
+﻿using Domain.Core.CalculateModel;
+using Domain.Core.Model.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,5 +24,7 @@ namespace Infrastructure.Business.DTOs.ReportElements
         public List<dynamic> Values { get; set; }
 
         public List<string> Dates { get; set; }
+
+        public List<AvgSensorValuePerDay> AvgSensorValuesPerDays { get; set; }
     }
 }

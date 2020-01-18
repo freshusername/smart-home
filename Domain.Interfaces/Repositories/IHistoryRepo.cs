@@ -1,4 +1,5 @@
-﻿using Domain.Core.Model;
+﻿using Domain.Core.CalculateModel;
+using Domain.Core.Model;
 using Domain.Core.Model.Enums;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ namespace Domain.Interfaces.Repositories
         Task<IEnumerable<History>> GetByPage(int count, int page, SortState sortState, bool isActivated = true, int sensorId = 0);
         Task<IEnumerable<History>> GetHistoriesBySensorIdAndDate(int SensorId, DateTimeOffset date);
         Task<IEnumerable<History>> GetHistoriesBySensorIdAndDatePeriod(int SensorId, DateTime dateFrom, DateTime dateTo);
+        Task<IEnumerable<AvgSensorValuePerDay>> GetAvgSensorsValuesPerDays(int sensorId, DateTime dateFrom, DateTime dateTo);
         Task<int> GetAmountAsync(bool isActivated);
     }
 }
