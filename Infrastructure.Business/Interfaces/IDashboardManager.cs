@@ -12,5 +12,6 @@ namespace Infrastructure.Business.Managers
         Task<DashboardDto> GetById(int id);
         Task<IEnumerable<DashboardDto>> GetAll();
 		Task<OperationDetails> Create(DashboardDto dashboardDto);
+        Task<OperationDetails> DeleteById(int id);
     }
 }

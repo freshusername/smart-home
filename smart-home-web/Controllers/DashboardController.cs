@@ -47,7 +47,7 @@ namespace smart_home_web.Controllers
 			return View(result);
 		}
 
-		public async Task<IActionResult> Index(int id)
+		public async Task<IActionResult> Index()
 		{
 			var dashboard = await _dashboardManager.GetAll();
 			var result = _mapper.Map<IEnumerable<DashboardDto>, IEnumerable<DashboardViewModel>>(dashboard);
@@ -58,32 +58,34 @@ namespace smart_home_web.Controllers
 			}
 			);
 		}
-
-        [HttpPost]
-        public async Task<IActionResult> Create(DashboardViewModel model)
+        
+        /*[HttpPost]
+        public async Task<IActionResult> Create(string name)
         {
-            if (!ModelState.IsValid)
+            DashboardDto dashboardDto = new DashboardDto()
             {
-                return View();
-            }
-            var dashboard = _mapper.Map<DashboardViewModel, DashboardDto>(model);
-
-            OperationDetails result = await _dashboardManager.Create(dashboard);
+                Name = name
+            };
+            OperationDetails result = await _dashboardManager.Create(dashboardDto);
             if (result.Succeeded)
             {
-                return RedirectToAction("Index");
+                var dashboardDtos = await _dashboardManager.GetAll();
+                var dashboard = _mapper.Map<DashboardDto, DashboardViewModel>(dashboardDtos.Last());
+                return View(dashboard);
             }
             else
             {
                 ModelState.AddModelError(result.Property, result.Message);
-                return RedirectToAction("Index");
+                return View(model);
             }
-        }
+        }*/
 
 
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            return View();
+            await _dashboardManager.DeleteById(id);
+            return Ok();
+
         } 
 
         [HttpGet]
@@ -92,10 +94,6 @@ namespace smart_home_web.Controllers
             return PartialView();
         }
 
-        public IActionResult _DashboardPartial(DashboardViewModel model)
-        {
-            return PartialView(model);
-        }
 
     }
 }

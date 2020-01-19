@@ -172,10 +172,6 @@ namespace Infrastructure.Business.Managers
                         columnRange.MaxValues.Add(t.Max);
                     }
                     break;
-                case MeasurementType.Bool:
-                    return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "Incorrect sensor type for this element" };
-                case MeasurementType.String:
-                    return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "Incorrect sensor type for this element" };
                 default:
                     return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "Incorrect sensor type for this element" };
             }

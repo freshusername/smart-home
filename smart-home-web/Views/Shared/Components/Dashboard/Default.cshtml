@@ -1,43 +1,32 @@
 ﻿@model smart_home_web.Models.Dashboard.DashboardViewModel
 
 <div class="col-lg-3">
-    <div class="text-center card-body" style="width: 18rem;">
-        <table>
-            <tr>
-                <td rowspan="">
-                    <a href="#" class="dash_remove d-flex justify-content-end mb-2"
-                       data-dash-id="@Model.Id.ToString()"
-                       data-dash-url="@Url.Action("Delete","Dashboard")">
-                        <span class="glyphicon glyphicon-remove"></span>
-                    </a>
-                    <img class="card-img-top img" src="https://miro.medium.com/max/3440/0*8UNAgR_1_4SMV4BY.png" alt="Card image cap">
-                    <br />
-                </td>
-            </tr>
-            <tr>
-                <td rowspan="">
-                    <br />
+    <div class="text-center p-2" style="width: 18rem;">
+        <div>
+            <a href="#" class="dash_remove d-flex justify-content-end mb-1"
+               data-dash-url="@Url.Action("Delete","Dashboard")">
+                <span class="glyphicon glyphicon-remove"></span>
+            </a>
+            <img class="card-img-top img m-2" src="https://miro.medium.com/max/3440/0*8UNAgR_1_4SMV4BY.png" alt="Card image cap">
+        </div>
+        <div class="m-2">
+            <div class="dash_name mb-2">
+                <h3 class="card-title d-inline">@Model.Name </h3>
+                <a href="#" class="dash_edit d-inline"
+                   data-dash-url="@Url.Action("Edit","Dashboard")">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </a>
+                <br />
+            </div>
 
-                    <div>
-                        <h3 class="card-title d-inline">@Model.Name</h3>
-                        <a href="#" class="dash_edit d-inline"
-                           data-dash-id="@Model.Id.ToString()"
-                           data-dash-url="@Url.Action("Edit","Dashboard")">
-                            <span class="glyphicon glyphicon-pencil"></span>
-                        </a>
-                    </div>
-                    <p class="card-text">
-                        <span class="badge">@Model.ReportElements.Count()</span> report element@(Model.ReportElements.Count() != 1 ? "s" : "")
-                    </p>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <br />
-                    <a asp-controller="Dashboard" asp-action="Detail" asp-route-id="@Model.Id" class="btn btn-primary">OPEN</a>
-                </td>
-            </tr>
-            
-        </table>
+            <div>
+                <p>
+                    <span class="badge">@Model.ReportElements.Count()</span> report element@(Model.ReportElements.Count() != 1 ? "s" : "")
+                </p>
+            </div>
+        </div>
+        <div>
+            <a asp-controller="Dashboard" asp-action="Detail" asp-route-id="@Model.Id" class="btn btn-primary">OPEN</a>
+        </div>
     </div>
 </div>

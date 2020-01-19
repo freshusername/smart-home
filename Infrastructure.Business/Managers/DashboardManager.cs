@@ -46,5 +46,17 @@ namespace Infrastructure.Business.Managers
 
 			return result;
 		}
+
+		public async Task<OperationDetails> DeleteById(int id)
+		{
+			await unitOfWork.DashboardRepo.DeleteById(id);
+			var res = unitOfWork.Save();
+
+			if (res > 0)
+			{
+				return new OperationDetails(true, "Saved successfully", "");
+			}
+			return new OperationDetails(true, "Something is wrong", "");
+		}
 	}
 }
