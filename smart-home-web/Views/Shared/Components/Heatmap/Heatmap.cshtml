@@ -107,7 +107,7 @@
             }
             //HeatmapSeriesData
             series: [{
-                name: 'Sales per employee',
+                name: 'Average sensor values per weekday',
                 borderWidth: 1,
                 data: [
                 @for (int i = 0; i < valArray.Length; i++)
@@ -117,7 +117,7 @@
                         //if (valArray[i] != 0)
                         //{
                             <text>
-                                [@Html.Raw(Json.Serialize(i)), @Html.Raw(Json.Serialize(j)), @Html.Raw(Json.Serialize(valArray[i]))],
+                                [@Html.Raw(Json.Serialize(j)), @Html.Raw(Json.Serialize(i)), @Html.Raw(Json.Serialize(valArray[i]))],
                             </text>
 
                         //}
