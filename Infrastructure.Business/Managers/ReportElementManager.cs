@@ -65,44 +65,8 @@ namespace Infrastructure.Business.Managers
             heatmap.Values = new List<dynamic>();
             heatmap.AvgSensorValuesPerDays = avgSensorValuesPerDays.ToList();
 
-            #region later work
-            //foreach (AvgSensorValuePerDay avgSensorValuePerDay in avgSensorValuesPerDays)
-            //{
-            //    switch (heatmap.MeasurementType)
-            //    {
-            //        case MeasurementType.Int when avgSensorValuePerDay.IntValue.HasValue:
-            //            heatmap.Values.Add(avgSensorValuePerDay.IntValue);
-            //            break;
-            //        case MeasurementType.Double when avgSensorValuePerDay.DoubleValue.HasValue:
-            //            heatmap.Values.Add(avgSensorValuePerDay.DoubleValue);
-            //            break;
-            //    }
-            //}
-
-            //if (!heatmap.Values.Any())
-            //    return new HeatmapDto { Id = heatmapId, IsCorrect = false };
-            #endregion
-
-            //TODO: add AvgValuesArray to HeatmapDto
 
             return heatmap;
-        }
-
-        private double[] CalculateAvgValues(double[] values)
-        {
-            for (int i = 0; i < values.Length; i++)
-            {
-                for (int k = 0; k < values.Length; k++)
-                {
-                    if (values[i] != values[k])
-                    {
-
-                    }
-                }
-            }
-
-            double[] s = new double[3];
-            return s;
         }
 
         public async Task<ReportElementDto> GetWordCloudById(int ReportElementId)

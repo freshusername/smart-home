@@ -66,27 +66,6 @@ namespace Infrastructure.Data.Repositories
             return avgValues;
         }
 
-
-        //public async Task<IEnumerable<History>> GetHistoriesBySensorIdAndDatePeriod
-        //    (int sensorId, DateTime dateFrom, DateTime dateTo)
-        //{
-        //    //MySqlParameter p0 = new MySqlParameter("p0", sensorId);
-        //    //MySqlParameter p1 = new MySqlParameter("p1", dateFrom);
-        //    //MySqlParameter p2 = new MySqlParameter("p2", dateTo);
-
-        //    var d_from = dateFrom.ToString("yyyy-MM-dd HH:mm");
-        //    var d_to = dateTo.ToString("yyyy-MM-dd HH:mm");
-
-
-        //    var histories = context.Histories.FromSql($"CALL GetAvgValuesForSensor ({0}, '{1}', '{2}')", sensorId, d_from, d_to);
-
-        //    //TODO: return array of values(Date(Datetime), AverageValueForSensorAtThisDate(double))
-        //    double avg = histories.FirstOrDefault(n => n.);
-
-        //    return await histories.ToListAsync();
-        //}
-
-
         public Task<IEnumerable<History>> GetHistoriesBySensorIdAndDatePeriod(int SensorId, DateTime dateFrom, DateTime dateTo)
         {
             throw new NotImplementedException();
@@ -101,7 +80,6 @@ namespace Infrastructure.Data.Repositories
             return await histories.ToListAsync();
         }
 
-
         public async Task<IEnumerable<History>> GetHistoriesBySensorIdAndDate(int SensorId, DateTimeOffset date)
         {
             var histories = context.Histories.Include(h => h.Sensor)
@@ -110,7 +88,6 @@ namespace Infrastructure.Data.Repositories
 
             return await histories.ToListAsync();
         }
-
 
         public async Task<IEnumerable<History>> GetByPage(int count, int page, SortState sortState, bool isActivated = true, int sensorId = 0)
         {

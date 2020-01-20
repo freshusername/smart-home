@@ -95,7 +95,7 @@
                 }
             },
             @{
-                List<double> vals = new List<double>();
+                List<decimal> vals = new List<decimal>();
                 List<DateTime> days = new List<DateTime>();
 
                 foreach (var c in Model.AvgSensorValuesPerDays)
@@ -103,7 +103,7 @@
                     vals.Add(c.AvgValue);
                     days.Add(c.WeekDay);
                 }
-                double[] valArray = vals.ToArray();
+                decimal[] valArray = vals.ToArray();
             }
             //HeatmapSeriesData
             series: [{

@@ -7,6 +7,6 @@ namespace Domain.Core.CalculateModel
     public class AvgSensorValuePerDay
     {
         public DateTime WeekDay { get; set; }
-        public double AvgValue { get; set; }
+        public decimal AvgValue { get; set; }
     }
 }
