@@ -83,14 +83,7 @@ namespace smart_home_web.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(int id, string name)
         {
-            DashboardDto dashboardDto = new DashboardDto()
-            {
-                Name = name,
-                Id=id
-            };
-
             await _dashboardManager.Update(id, name);
-
             return Ok();
         }
 
@@ -100,13 +93,5 @@ namespace smart_home_web.Controllers
             return Ok();
 
         } 
-
-        [HttpGet]
-        public IActionResult Create()
-        {
-            return PartialView();
-        }
-
-
     }
 }

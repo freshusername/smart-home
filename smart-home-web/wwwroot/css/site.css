@@ -81,3 +81,29 @@ a.disabledclass {
         -ms-transform: scale(1.5);
         transform: scale(1.5);
     }
+
+#create_elem {
+    -webkit-transition: width 1.5s ease;
+    -moz-transition: width 1.5s ease;
+    -o-transition: width 1.5s ease;
+    transition: width 1.5s ease;
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    vertical-align: middle;
+    line-height: 30px;
+    height: 37px;
+    width: 0px;
+}
+
+#create_elem.in {
+    width: 320px;
+}
+
+.dash_edit {
+    background: none;
+    color: #337ab7;
+    border: none;
+    padding: 0;
+    outline: none;
+}

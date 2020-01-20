@@ -1,10 +1,15 @@
 ﻿@using smart_home_web.Models.Dashboard;
-
+@{
+    ViewData["Title"] = "Dashboards";
+}
 
 @model DashboardIndexViewModel;
 
+@*Not working*@
+@*<link href="~/css/site.css" rel="stylesheet" />*@
+
 <style>
-    #demo {
+    #create_elem {
         -webkit-transition: width 1.5s ease;
         -moz-transition: width 1.5s ease;
         -o-transition: width 1.5s ease;
@@ -14,27 +19,35 @@
         white-space: nowrap;
         vertical-align: middle;
         line-height: 30px;
-        height: 40px;
+        height: 37px;
         width: 0px;
     }
 
-        #demo.in {
+        #create_elem.in {
             width: 320px;
         }
+
+    .dash_edit {
+        background: none;
+        color: #337ab7;
+        border: none;
+        padding: 0;
+        outline: none;
+    }
 </style>
 
 <div class="row">
     <div class="col">
 
         <a class="btn btn-success text-light text-uppercase"
-           data-toggle="toggle" data-target="#demo" id="dash_create_button">
+           data-toggle="toggle" data-target="#create_elem" id="dash_create_button">
             <span class="glyphicon glyphicon-plus-sign"></span> Add dashboard
         </a>
 
-        <div id="demo" class="collapse mr-2">
+        <div id="create_elem" class="collapse mr-2">
             <form data-dash-url="@Url.Action("Create","Dashboard")" method="post" id="dash_create">
                 <p>
-                    <input id="form_dash_name" placeholder="Enter name" size="14" maxlength="40" required />
+                    <input id="form_dash_name" placeholder="Enter name" size="14" maxlength="35" required />
                     <input type="submit" value="Add" class="btn btn-primary" />
                 </p>
 
@@ -66,9 +79,17 @@
 <script>
 
     $(function () {
-        if ($("#dashboards").children(".dash_element").length == 0) {
-            $("#no_dashboards").show();
+
+        function no_dashboards_show() {
+            if ($("#dashboards").children(".dash_element").length == 0) {
+                $("#no_dashboards").show();
+            }
         }
+        no_dashboards_show();
+
+        $("#dash_create_button").click(function () {
+            $(this).children().toggleClass("glyphicon-plus-sign glyphicon-remove-circle");
+        });
 
         function create_edit_form() {
             let parent = $(this).closest(".dash_element");
@@ -77,6 +98,7 @@
         }
 
         function edit_dashboard() {
+            event.preventDefault();
             let parent = $(this).closest(".dash_element");
             let form = parent.find(".form_edit_name");
             let name_value = form.find(".form_dash_name").val();
@@ -97,14 +119,17 @@
             });
         }
 
+        function collapse_button() {
+            var selector = $(this).data("target");
+            $(selector).toggleClass('in');
+        }
+
         function delete_dashboard() {
             let parent = $(this).closest(".dash_element");
-            let id = parent.children().data("dash-id");
-            console.log(id);
-            if (confirm("Are you sure?" + id)) {
+            if (confirm("Are you sure?")) {
                 $.ajax({
                     url: $(this).data("dash-url"),
-                    data: { id: id },
+                    data: { id: parent.children().data("dash-id") },
                     beforeSend: function () {
                         parent.hide(500, function () {
                             parent.remove();
@@ -115,29 +140,22 @@
                         console.log(result);
                     },
                     success: function () {
-                        if ($("#no_dashboards").is(":hidden")){
-                            $("#no_dashboards").show();
-                        }
+                        no_dashboards_show();
                     }
                 });
             }
         }
 
-
-        $("[data-toggle='toggle']").click(function () {
-            var selector = $(this).data("target");
-            $(selector).toggleClass('in');
-        });
-
-        $("#dash_create").submit(function (event) {
+        function create_dashboard() {
             event.preventDefault();
             $.ajax({
                 url: $(this).data("dash-url"),
                 data: { name: $("#form_dash_name").val() },
                 success: function (data) {
                     let element = $("<div  class='border m-2 dash_element' >" + data + "</div>");
+                    element.hide();
                     $('#dashboards').prepend(element);
-
+                    element.show(500);
                     element.on("click", ".dash_remove", delete_dashboard);
                     element.on("click", ".dash_icon", create_edit_form);
                     element.on("click", ".dash_edit", edit_dashboard);
@@ -146,12 +164,16 @@
                         $("#no_dashboards").hide();
                     }
                     $("#form_dash_name").val("");
+                    var selector = $("[data-toggle='toggle']").data("target");
+                    $(selector).toggleClass('in');
                 },
                 type: "POST"
             });
 
-        });
+        }
 
+        $("[data-toggle='toggle']").click(collapse_button);
+        $("#dash_create").submit(create_dashboard);
         $(".dash_remove", ".dash_element").click(delete_dashboard);
         $(".dash_icon", ".dash_element").click(create_edit_form);
         $(".dash_edit", ".dash_element").click(edit_dashboard);

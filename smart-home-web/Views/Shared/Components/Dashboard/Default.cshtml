@@ -3,19 +3,20 @@
 <div class="col-lg-3 dash_id" data-dash-id="@Model.Id.ToString()">
     <div class="text-center p-2" style="width: 18rem;">
         <div>
-            <a href="#" class="dash_remove d-flex justify-content-end mb-1"
+            <a href="#" class="dash_remove float-right"
                data-dash-url="@Url.Action("Delete","Dashboard")">
                 <span class="glyphicon glyphicon-remove"></span>
+
             </a>
             <img class="card-img-top img m-2" src="https://miro.medium.com/max/3440/0*8UNAgR_1_4SMV4BY.png" alt="Card image cap">
         </div>
         <div class="m-2">
             <div class="dash_name_edit mb-2" style="display:none">
                 <form data-dash-url="@Url.Action("Edit","Dashboard")" method="post" class="form_edit_name">
-                    <input class="form_dash_name" placeholder="Enter name" size="14" maxlength="40" required value="@Model.Name" />
-                    <a href="#" class="dash_edit d-inline">
+                    <input class="form_dash_name" placeholder="Enter name" size="14" maxlength="35" required value="@Model.Name" />
+                    <button type="submit" class="dash_edit d-inline">
                         <span class="glyphicon glyphicon-ok dash_icon"></span>
-                    </a>
+                    </button>
                 </form>
 
             </div>
