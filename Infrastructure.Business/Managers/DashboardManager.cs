@@ -23,7 +23,9 @@ namespace Infrastructure.Business.Managers
 		public async Task<OperationDetails> Create(DashboardDto dashboardDto)
 		{
 			var dashboard = mapper.Map<DashboardDto, Dashboard> (dashboardDto);
-			await unitOfWork.DashboardRepo.Insert(dashboard);
+            if(String.IsNullOrEmpty(dashboard.Name))
+                return new OperationDetails(false, "Name is null", "Name");
+            await unitOfWork.DashboardRepo.Insert(dashboard);
 			var res = unitOfWork.Save();
 
 			if (res > 0)
@@ -58,5 +60,13 @@ namespace Infrastructure.Business.Managers
 			}
 			return new OperationDetails(true, "Something is wrong", "");
 		}
-	}
+
+        public async Task Update(int id, string name)
+        {
+            Dashboard dashboard = await unitOfWork.DashboardRepo.GetById(id);
+            dashboard.Name = name;
+            await unitOfWork.DashboardRepo.Update(dashboard);
+            unitOfWork.Save();
+        }
+    }
 }

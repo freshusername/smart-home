@@ -114,7 +114,7 @@ namespace Infrastructure.Business.Managers
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(gaugeId);
             reportElement.Hours = (ReportElementHours)hours;
-            unitOfWork.ReportElementRepo.Update(reportElement);
+            await unitOfWork.ReportElementRepo.Update(reportElement);
             unitOfWork.Save();
         }
 

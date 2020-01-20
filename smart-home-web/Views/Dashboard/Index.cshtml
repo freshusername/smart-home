@@ -3,47 +3,59 @@
 
 @model DashboardIndexViewModel;
 
+<style>
+    #demo {
+        -webkit-transition: width 1.5s ease;
+        -moz-transition: width 1.5s ease;
+        -o-transition: width 1.5s ease;
+        transition: width 1.5s ease;
+        display: inline-block;
+        overflow: hidden;
+        white-space: nowrap;
+        vertical-align: middle;
+        line-height: 30px;
+        height: 40px;
+        width: 0px;
+    }
 
-<div class="row justify-content-center">
-    <div>
-        <div>
-            <a class="btn btn-success text-light text-uppercase center-block"
-               data-toggle="collapse" data-target="#demo">
-                <span class="glyphicon glyphicon-plus-sign"></span> Add dashboard
-            </a>
-            
-        </div>
-        <div id="demo" class="collapse">
-            <br />
-            <form asp-action="Create" asp-controller="Dashboard" method="post" class="text-center">
-                <div class="form-group">
-                    <label>Dashboard name</label>
-                    <input name="name" value="Enter name" class="form-control" />
-                </div>
-                <div class="form-group">
-                    <input type="submit" name="name" value="Add" class="btn btn-primary dash_create" />
-                </div>
+        #demo.in {
+            width: 320px;
+        }
+</style>
+
+<div class="row">
+    <div class="col">
+
+        <a class="btn btn-success text-light text-uppercase"
+           data-toggle="toggle" data-target="#demo" id="dash_create_button">
+            <span class="glyphicon glyphicon-plus-sign"></span> Add dashboard
+        </a>
+
+        <div id="demo" class="collapse mr-2">
+            <form data-dash-url="@Url.Action("Create","Dashboard")" method="post" id="dash_create">
+                <p>
+                    <input id="form_dash_name" placeholder="Enter name" size="14" maxlength="40" required />
+                    <input type="submit" value="Add" class="btn btn-primary" />
+                </p>
+
             </form>
         </div>
+
     </div>
 </div>
-<h2 class="text-center">List of dashboards</h2>
 <div class="row justify-content-center" style="margin-top:40px;">
-    
+
     <div class="d-flex justify-content-center flex-wrap aligh-content-center" id="dashboards">
-        @if (!Model.Dashboards.Any())
-        {
-            <h2>No dashboards</h2>
-        }
-        else
-        {
+      
+
+
             @foreach (var dashboard in Model.Dashboards)
             {
-                <div class="border m-2 dash_element" data-dash-id="@dashboard.Id.ToString()">
-                    @await Component.InvokeAsync("Dashboard", new { model = dashboard });
+                <div class="border m-2 dash_element">
+                    @await Component.InvokeAsync("Dashboard", new { model = dashboard })
                 </div>
             }
-        }
+
 
     </div>
 </div>
@@ -52,10 +64,34 @@
 <script>
     $(function () {
 
+        $(".dash_name_edit").hide();
+
+        $("#no_dashboards").hide();
+        $("[data-toggle='toggle']").click(function () {
+            var selector = $(this).data("target");
+            $(selector).toggleClass('in');
+        });
+
+        $("#dash_create").submit(function (event) {
+            event.preventDefault();
+            let name_value = $("#form_dash_name").val();
+
+            $.ajax({
+                url: $(this).data("dash-url"),
+                data: { name: name_value },
+                success: function (data) {
+                    $('#dashboards').prepend("<div  class='border m-2 dash_element' >" + data + "</div>");
+                    $("#form_dash_name").val("");
+                },
+                type:"POST"
+            })
+
+        });
 
         $(".dash_remove", ".dash_element").click(function () {
             let parent = $(this).closest(".dash_element");
-            let id = parent.data("dash-id");
+            let id = parent.children().data("dash-id");
+            console.log(id);
             if (confirm("Are you sure?" + id)) {
                 $.ajax({
                     url: $(this).data("dash-url"),
@@ -70,22 +106,40 @@
                         console.log(result);
                     },
                     success: function () {
-                        if ($('#dashboards').children().length == 0) {
-                            $('#dashboards').append("<h2>No dashboards</h2>");
-                        }
+                        //alert($('#dashboards').children(".dash_element").length);
+
                     }
                 })
             }
         });
 
-        $(".dash_create", ".dash-element").submit(function () {
+        $(".dash_icon", ".dash_element").click(function () {
+            let parent = $(this).closest(".dash_element");
+            parent.find(".dash_name_edit").show();
+            parent.find(".dash_name").hide();
+        });
 
+        $(".dash_edit", ".dash_element").click(function () {
+            let parent = $(this).closest(".dash_element");
+            let form = parent.find(".form_edit_name");
+            let name_value = form.find(".form_dash_name").val();
+            let id_value = parent.find(".dash_id").data("dash - id");
 
+            $.ajax({
+                url: form.data("dash-url"),
+                data: { name: name_value, id: id_value },
+                beforeSend: function () {
+                    parent.find(".name_header").text(name_value);
+                    parent.find(".dash_name_edit").hide();
+                    parent.find(".dash_name").show();
+                },
+                error: function (res) {
+                    console.log(res);
+                },
+                type:"POST"
+            })
         })
 
-        $(".dash_edit",".dash_element").click(function () {
-            let id = $(this).closest(".dash_element").data("dash-id");
-            alert("edit " + id);
-        });
+
     });
 </script>

@@ -59,7 +59,7 @@ namespace smart_home_web.Controllers
 			);
 		}
         
-        /*[HttpPost]
+        [HttpPost]
         public async Task<IActionResult> Create(string name)
         {
             DashboardDto dashboardDto = new DashboardDto()
@@ -71,15 +71,28 @@ namespace smart_home_web.Controllers
             {
                 var dashboardDtos = await _dashboardManager.GetAll();
                 var dashboard = _mapper.Map<DashboardDto, DashboardViewModel>(dashboardDtos.Last());
-                return View(dashboard);
+                return ViewComponent("Dashboard", new { model = dashboard });
             }
             else
             {
                 ModelState.AddModelError(result.Property, result.Message);
-                return View(model);
+                return NotFound(); 
             }
-        }*/
+        }
 
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, string name)
+        {
+            DashboardDto dashboardDto = new DashboardDto()
+            {
+                Name = name,
+                Id=id
+            };
+
+            await _dashboardManager.Update(id, name);
+
+            return Ok();
+        }
 
         public async Task<IActionResult> Delete(int id)
         {
