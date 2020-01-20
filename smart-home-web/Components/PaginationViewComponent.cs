@@ -11,7 +11,7 @@ namespace smart_home_web.Components
 {
     public class PaginationViewComponent:ViewComponent
     {
-        public IViewComponentResult Invoke(string controller,string action, FilterDto filterDTO)
+        public IViewComponentResult Invoke(string controller, string action, FilterDto filterDTO)
         {
             PaginationViewModel model = new PaginationViewModel
             {
