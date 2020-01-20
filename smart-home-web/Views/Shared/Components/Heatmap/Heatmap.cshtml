@@ -114,6 +114,14 @@
                 }
             }],
 
+            exporting: {
+                buttons: {
+                    contextButton: {
+                        enabled: false,
+                    }
+                }
+            },
+
             responsive: {
                 rules: [{
                     condition: {
@@ -123,7 +131,12 @@
                         yAxis: {
                             labels: {
                                 formatter: function () {
-                                    return this.value.charAt(0);
+                                    try {
+                                        return this.value.charAt(0);
+                                    }
+                                    catch (error) {
+
+                                    }
                                 }
                             }
                         }
@@ -144,7 +157,12 @@
 <script>
     $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
         var type = 'Heatmap';
-        var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
+        try {
+            var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
+        }
+        catch (error) {
+
+        }
         if (typeof result !== 'undefined') {
             result.setSize(ui.height, ui.width);
         }
