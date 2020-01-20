@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Domain.Core.Model;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Domain.Core.Model.Enums;
-using Domain.Core.JoinModel;
 using Domain.Core.CalculateModel;
 
 namespace Infrastructure.Data
