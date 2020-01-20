@@ -1,28 +1,15 @@
 ﻿@model smart_home_web.Models.ReportElements.ReportElementViewModel;
 @using Domain.Core.Model.Enums
 
-<link rel="stylesheet" href="~/css/WordCloud.css">
-<link rel="stylesheet" href="~/css/SettingsButton.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
+<script src="https://code.highcharts.com/modules/wordcloud.js"></script>
 @if (Model.IsCorrect)
 {
-    <figure class="highcharts-figure-wordcloud">
-        <div id=@("wordcloud_container_"+Model.Id.ToString())></div>
+    <figure class="highcharts-figure-wordcloud" width="100%" height="100%">
+        <div id=@("Wordcloud"+Model.Id.ToString()) width="100%" height="100%"></div>
     </figure>
-}
-else
-{
-    <label class="control-label graph-label">There is no history measurement for such sensor for that period of time. <a class="btn btn-success text-center" asp-controller="ReportElement" asp-action="EditReportElement" asp-route-id="@Model.Id"><i class="fas fa-cog"></i></a></label>
-}
-
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/modules/wordcloud.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script src="https://code.highcharts.com/modules/export-data.js"></script>
-<script src="https://code.highcharts.com/modules/accessibility.js"></script>
 <script>
 
-    values = JSON.parse('@Html.Raw(Json.Serialize(@Model.Values))')            
+    values = JSON.parse('@Html.Raw(Json.Serialize(@Model.Values))')
     data = Highcharts.reduce(values, function (arr, word) {
     var obj = Highcharts.find(arr, function (obj) {
         return obj.name === word;
@@ -39,26 +26,7 @@ else
     return arr;
     }, []);
 
-
-    Highcharts.chart('wordcloud_container_'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
-        chart: {
-            events: {
-                load: function() {
-
-                    var chart = this,
-                    renderer = chart.renderer;
-                    var pattern = renderer.createElement('pattern').add(renderer.defs).attr({
-                        width: 1,
-                        height: 1,
-                        id: "settings_image",
-                        patternContentUnits: 'userSpaceOnUse'
-                    });
-
-                    renderer.image('../images/SettingsButton.svg', 0, 0, 18, 16).add(pattern);
-
-                }
-            }
-        },
+    Highcharts.chart("Wordcloud"+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
         title: {
             text: 'Word cloud for ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))') + ' for ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.DashboardName))')
         },
@@ -84,17 +52,34 @@ else
         }],
         exporting: {
             buttons: {
-                Edit: {
-                    height: 24,
-                    width: 24,
-                    y: 3,
-                    x: -20,
-                    className : 'highcharts-button-box-settings',
-                    onclick: function () {
-                        window.location.href = '/ReportElement/EditReportElement/'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))')
-                    },
+                contextButton: {
+                    enabled: false,
                 }
             }
         },
     });
+    </script>
+
+}
+else
+{
+    <label id=@("Wordcloud"+Model.Id.ToString()) class="control-label graph-label">There is no history measurement for such sensor for that period of time. <a class="btn btn-success text-center" asp-controller="ReportElement" asp-action="EditReportElement" asp-route-id="@Model.Id"><i class="fas fa-cog"></i></a></label>
+}
+<script>
+    $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
+        var type = 'Wordcloud';
+        var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
+        if (typeof result !== 'undefined') {
+            result.setSize(ui.height, ui.width);
+        }
+    });
 </script>
+
+@*<style>
+    .highcharts-root,
+    .ui-draggable-handle,
+    .highcharts-container {
+        height: 100% !important;
+        width: 100% !important;
+    }
+    </style>*@

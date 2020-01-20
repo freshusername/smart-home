@@ -21,9 +21,17 @@ namespace smart_home_web.Models.ReportElements
         public MeasurementType MeasurementType { get; set; }
         public string MeasurementName { get; set; }
 
+        public string SensorType { get; set; }
+
         public List<dynamic> Values { get; set; }
+        public List<long> Milliseconds { get; set; }
 
         public List<string> Dates { get; set; }
+		public int X { get; set; }
+		public int Y { get; set; }
+		public int Weight { get; set; }
+		public int Height { get; set; }
+	
         public List<dynamic> MinValues { get; set; }
         public List<dynamic> MaxValues { get; set; }
     }

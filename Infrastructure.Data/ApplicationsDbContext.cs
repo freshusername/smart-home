@@ -19,8 +19,6 @@ namespace Infrastructure.Data
         public DbSet<SensorType> SensorTypes { get; set; }
         public DbSet<Dashboard> Dashboards { get; set; }
         public DbSet<ReportElement> ReportElements { get; set; }
-        public DbSet<Options> Options { get; set; }
-        public DbSet<DashboardOptions> DashboardOptions { get; set; }
         public DbQuery<AvgSensorValuePerDay> AvgSensorValuesPerDays { get; set; }
 
         public ApplicationsDbContext(DbContextOptions<ApplicationsDbContext> options) : base(options)

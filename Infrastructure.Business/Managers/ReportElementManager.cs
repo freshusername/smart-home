@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Domain.Core.CalculateModel;
 using Domain.Core.Model;
 using Domain.Core.Model.Enums;
 using Domain.Interfaces;
@@ -29,14 +28,24 @@ namespace Infrastructure.Business.Managers
             return reportElement;
         }
 
-        public void EditReportElement(ReportElementDto reportElementDTO)
+        //TODO: Check if we are able to update options with this method
+        public async Task EditReportElement(ReportElementDto reportElementDTO)
         {
             ReportElement reportElement = mapper.Map<ReportElementDto, ReportElement>(reportElementDTO);
-            unitOfWork.ReportElementRepo.Update(reportElement);
+            await unitOfWork.ReportElementRepo.Update(reportElement);
             unitOfWork.Save();
         }
 
-        public async Task<OperationDetails> CreateReportElement(ReportElementDto reportElementDto)
+        public async Task CreateReportElement(ReportElementDto reportElementDto)
+        {
+            ReportElement reportElement = mapper.Map<ReportElementDto, ReportElement>(reportElementDto);
+            reportElement.Height = 6;
+            reportElement.Width = 6;
+            await unitOfWork.ReportElementRepo.Insert(reportElement);
+            unitOfWork.Save();
+        }
+
+        public async Task<ReportElementDto> GetWordCloudById(int ReportElementId)
         {
             return new OperationDetails(false, "", "Name");
         }
@@ -80,10 +89,8 @@ namespace Infrastructure.Business.Managers
             if (!histories.Any())
                 return new ReportElementDto { Id = ReportElementId, IsCorrect = false };
 
-            ReportElementDto wordCloud = mapper.Map<Sensor, ReportElementDto>(reportElement.Sensor);
+            ReportElementDto wordCloud = mapper.Map<ReportElement, ReportElementDto>(reportElement);
 
-            wordCloud.Id = reportElement.Id;
-            wordCloud.DashboardName = reportElement.Dashboard.Name;
             wordCloud.Values = new List<dynamic>();
 
             foreach (History history in histories)
@@ -100,7 +107,7 @@ namespace Infrastructure.Business.Managers
                         wordCloud.Values.Add(history.BoolValue);
                         break;
                     case MeasurementType.String when !String.IsNullOrEmpty(history.StringValue):
-                        wordCloud.Values.Add(history.IntValue);
+                        wordCloud.Values.Add(history.StringValue);
                         break;
                 }
             }
@@ -128,6 +135,10 @@ namespace Infrastructure.Business.Managers
                 }
                 gaugeDto.IsValid = true;
             }
+            else
+            {
+                gaugeDto.IsValid = false;
+            }
 
             return gaugeDto;
         }
@@ -145,14 +156,16 @@ namespace Infrastructure.Business.Managers
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
             if (reportElement == null)
                 return new ReportElementDto { IsCorrect = false, Message = "Invalid report element" };
-
-            DateTime date = DateTime.Now.AddHours(-(int)reportElement.Hours);
+            DateTime date = new DateTime(1970, 1, 1, 0, 0, 0);
+            if (reportElement.Hours != 0)
+                date = DateTime.Now.AddHours(-(int)reportElement.Hours);
             IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
             if (!histories.Any())
-                return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "No histories for that period of time" };
+                return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "No histories in this report element" };
 
             ReportElementDto columnRange = mapper.Map<Sensor, ReportElementDto>(reportElement.Sensor);
 
+            columnRange.Id = ReportElementId;
             columnRange.DashboardName = reportElement.Dashboard.Name;
             columnRange.Dates = new List<string>();
             columnRange.MinValues = new List<dynamic>();
@@ -188,8 +201,8 @@ namespace Infrastructure.Business.Managers
                     foreach (var t in doubleValues)
                     {
                         columnRange.Dates.Add(t.Date.DateTime.ToShortDateString());
-                        columnRange.MinValues.Add(Math.Round(t.Min.GetValueOrDefault(), 2));
-                        columnRange.MaxValues.Add(Math.Round(t.Max.GetValueOrDefault(), 2));
+                        columnRange.MinValues.Add(t.Min);
+                        columnRange.MaxValues.Add(t.Max);
                     }
                     break;
                 case MeasurementType.Bool:
@@ -202,44 +215,44 @@ namespace Infrastructure.Business.Managers
             return columnRange;
         }
 
-        public async Task<ReportElementDto> GetDataForSchedule(int id, ReportElementHours hours)
+        public async Task<ReportElementDto> GetDataForTimeSeries(int reportElementId)
         {
-            var reportElement = await unitOfWork.ReportElementRepo.GetById(id);
-            if (reportElement == null) return null;
+            var reportElement = await unitOfWork.ReportElementRepo.GetById(reportElementId);
+              if (reportElement == null) return null;
 
-            DateTimeOffset date;
-            if (hours == 0)
-                date = new DateTimeOffset(1970, 1, 1, 0, 0, 0, new TimeSpan(0, 0, 0));
-
-            date = DateTimeOffset.Now.AddHours(-(int)hours);
-
+            DateTimeOffset date = new DateTimeOffset(1970, 1, 1, 0, 0, 0,
+              new TimeSpan(0, 0, 0));
+            if (reportElement.Hours != 0)
+              date = DateTimeOffset.Now.AddHours(-(int)reportElement.Hours);  
+                              
             var histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
-            var dashboard = await unitOfWork.DashboardRepo.GetById(reportElement.DashboardId);
+            if (histories.Count() == 0 || histories == null)
+                return new ReportElementDto {
+                    Id = reportElementId, SensorName = reportElement.Sensor.Name, IsCorrect = false
+                };
 
             var milliseconds = GetMilliseconds(histories).ToList();
-            var values = GetValues(histories).ToList();
+             var values = GetValues(histories).ToList();
 
-            ReportElementDto schedule = mapper.Map<Sensor, ReportElementDto>(histories.First().Sensor);
-            schedule.Milliseconds = milliseconds;
-            schedule.Values = values;
-            schedule.DashboardName = dashboard.Name;
+            ReportElementDto data = mapper.Map<ReportElement,ReportElementDto>(reportElement);
+             data.Milliseconds = milliseconds;
+            data.Values = values;
 
-            return schedule;
+            return data;
         }
 
         private IEnumerable<dynamic> GetValues(IEnumerable<History> histories)
         {
-
             foreach (var items in histories)
             {
                 if (items.Sensor.SensorType.MeasurementType == MeasurementType.Int)
-                    yield return items.IntValue;
+                    yield return items.IntValue.Value;
                 else
                 if (items.Sensor.SensorType.MeasurementType == MeasurementType.Double)
-                    yield return items.DoubleValue;
+                    yield return items.DoubleValue.Value;
                 else
                  if (items.Sensor.SensorType.MeasurementType == MeasurementType.Bool)
-                    yield return items.BoolValue;
+                    yield return items.BoolValue.Value ? 1 : 0;
                 else
                     yield return items.StringValue;
             }
@@ -250,8 +263,25 @@ namespace Infrastructure.Business.Managers
             foreach (var items in histories)
             {
                 yield return items.Date.ToUnixTimeMilliseconds();
-
             }
         }
+
+		public async Task Update(ReportElement reportElement)
+		{
+			ReportElement result = await unitOfWork.ReportElementRepo.GetById(reportElement.Id);
+			result.X = reportElement.X;
+			result.Y = reportElement.Y;
+			result.Width = reportElement.Width;
+			result.Height = reportElement.Height;
+			unitOfWork.ReportElementRepo.Update(result);
+			unitOfWork.Save();
+		}
+
+		public async Task Delete(ReportElement reportElement)
+		{
+			await unitOfWork.ReportElementRepo.Delete(reportElement);
+			unitOfWork.Save();
+		}
+
     }
 }

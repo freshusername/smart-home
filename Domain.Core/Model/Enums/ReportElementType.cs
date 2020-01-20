@@ -10,7 +10,7 @@ namespace Domain.Core.Model.Enums
         Columnrange,
         Gauge,
         Heatmap,
-        Timeseries,
+        TimeSeries,
         Wordcloud
     }
 }

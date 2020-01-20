@@ -17,6 +17,13 @@ namespace Infrastructure.Data.Repositories
 
 		}
 
+		public override async Task<IEnumerable<Dashboard>> GetAll()
+		{
+			return context.Dashboards
+				.Include(d => d.AppUser)
+				.Include(d => d.ReportElements);
+		}
+
 		public override async Task<Dashboard> GetById(int id)
 		{
 			return await context.Dashboards

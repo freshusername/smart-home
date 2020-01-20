@@ -10,7 +10,7 @@ namespace Infrastructure.Business.DTOs.ReportElements
         public int Id { get; set; }
         public int DashboardId { get; set; }
         public int SensorId { get; set; }
-        public bool IsValid { get; set; } = false;
+        public bool IsValid { get; set; }
         public ReportElementHours Hours { get; set; }
 
         public string SensorName { get; set; }

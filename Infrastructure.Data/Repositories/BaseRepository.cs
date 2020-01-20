@@ -21,7 +21,7 @@ namespace Infrastructure.Data.Repositories
             dbSet = context.Set<T>();
         }
 
-        public void Delete(T item)
+        public async Task Delete(T item)
         {
             dbSet.Remove(item);
         }
@@ -41,9 +41,9 @@ namespace Infrastructure.Data.Repositories
             await dbSet.AddAsync(item);
         }
 
-        public void Update(T item)
+        public async Task Update(T item)
         {
             dbSet.Update(item);
         }
-    }
+	}
 }

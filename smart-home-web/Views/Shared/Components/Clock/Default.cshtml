@@ -1,15 +1,5 @@
-﻿<link href="~/css/clock.css" rel="stylesheet" />
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/highcharts-more.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script src="https://code.highcharts.com/modules/export-data.js"></script>
-<script src="https://code.highcharts.com/modules/accessibility.js"></script>
-
-<figure class="highcharts-figure-clock">
-    <div id="container"></div>
-    <p class="highcharts-description">
-        Current time
-    </p>
+﻿<figure class="highcharts-figure-clock">
+    <div id="@("Clock"+Model.Id.ToString())"></div>
 </figure>
 
 <script>
@@ -33,7 +23,7 @@
     var now = getNow();
 
     // Create the chart
-    Highcharts.chart('container', {
+    var chart = Highcharts.chart('Clock'+@Model.Id.ToString(), {
 
         chart: {
             type: 'gauge',
@@ -49,7 +39,7 @@
         },
 
         title: {
-            text: 'Current time'
+            text: ''
         },
 
         pane: {
@@ -140,7 +130,14 @@
             dataLabels: {
                 enabled: false
             }
-        }]
+        }],
+        exporting: {
+                buttons: {
+                    contextButton: {
+                        enabled: false,
+                    }
+                }
+            },
     },
 
         // Move
@@ -188,5 +185,16 @@
         }
         return (7.5625 * (pos -= (2.625 / 2.75)) * pos + 0.984375);
     };
+
+
+
+    $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
+        var type = 'Clock';
+        var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
+        if (typeof result !== 'undefined') {
+            result.setSize(ui.height, ui.width);
+        }
+        
+    });
 
 </script>

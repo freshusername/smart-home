@@ -6,59 +6,19 @@
     <title>@ViewData["Title"] - smart_home_web</title>
 
     <environment include="Development">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
-    <environment exclude="Development">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
-              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
-              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
-        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
-    </environment>
+
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-right"><img class="img-rounded" src="~/images/smart_home.png" width="35" height="35" style="margin-right: 30px;" /></a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Sensor" asp-action="Index">Sensors</a></li>
-                    <li><a asp-area="" asp-controller="SensorType" asp-action="Index">SensorTypes</a></li>
-                    <li><a asp-area="" asp-controller="History" asp-action="Index">Histories</a></li>
-                    <li><a asp-area="" asp-controller="History" asp-action="InvalidSensors">Invalid Sensors</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                </ul>
-                @if (User.Identity.IsAuthenticated == true)
-                {
-                    <ul class="nav navbar-nav navbar-right">
-                        <li>
-                            <a asp-area="" asp-controller="Notification" asp-action="Index">
-                                <div class="notification-icon">
-                                    <span class="glyphicon glyphicon-bell " style="font-size:20px"></span>
-                                    <span class="badge" id="ntCnt"></span>
-                                </div>
-                            </a>
-                        </li>
-                    </ul>
-                }
-                <partial name="_LoginPartial" />
-            </div>
-        </div>
-    </nav>
 
-    @*<partial name="_CookieConsentPartial" />*@
+    <partial name="_NavbarPartial" />
 
     <div class="container body-content">
         @RenderBody()
-        <hr style="clear: both;"/>
+        <hr style="clear: both;" />
         <footer>
             <p>&copy; 2019 - smart_home_web</p>
         </footer>

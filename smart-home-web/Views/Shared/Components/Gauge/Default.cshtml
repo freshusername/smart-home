@@ -1,47 +1,15 @@
 ﻿@using smart_home_web.Models.ReportElements;
 @using Domain.Core.Model.Enums;
 @model GaugeViewModel;
-@if (Model.IsValid)
-{
-    <div>
-        <link href="~/css/gauge.css" rel="stylesheet" />
-        <link href="~/lib/nice-select/dist/css/nice-select.css" rel="stylesheet" />
-        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
-                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
-                asp-fallback-test="window.jQuery"
-                crossorigin="anonymous"
-                integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
-        </script>
-        <script src="https://code.highcharts.com/highcharts.js"></script>
-        <script src="https://code.highcharts.com/highcharts-more.js"></script>
-        <script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
-        <script src="https://code.highcharts.com/modules/exporting.js"></script>
-        <script src="https://code.highcharts.com/modules/export-data.js"></script>
-        <script src="https://code.highcharts.com/modules/accessibility.js"></script>
-    </div>
-<div>
-    <h2>Gauge component</h2>
-    <form id="form1" method="post" >
-        <div class="form-group">
-            <label class="control-label" style="margin-top:20px;">
-                Select period:
-            </label>
-            <div style="margin-bottom:50px">
-                <select id="hours" asp-for="Hours" asp-items="@Html.GetEnumSelectList<ReportElementHours>()" class="nice-select col-lg-4 col-md-5 col-sm-6 col-xs-12"></select>
-            </div>
-        </div>
 
-        <div class="form-group">
-            <input id="id" type="hidden" asp-for="Id" value="@Model.Id" />
-        </div>
-        <div class="form-group">
-            <input id="submit" type="submit" value="Choose" class="btn btn-success text-center" style="width:15%" />
-        </div>
-    </form>
-    <figure class="highcharts-figure">
-        <div id="container" class="chart-container"></div>
-    </figure>
+<div>
+        <figure class="highcharts-figure">
+            <div id=@("Gauge"+Model.Id.ToString()) class="chart-container"></div>
+        </figure>
+        <strong id="alertMessage" class="d-none">Selected sensor does not have values to display in the chosen time period.</strong>
 </div>
+
+<script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
 <script type="text/javascript">
     
     $(function () {  
@@ -138,7 +106,7 @@
         }
     };
 
-    var gaugeChart = Highcharts.chart('container', Highcharts.merge(gaugeOptions, {
+    var gaugeChart = Highcharts.chart('Gauge'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), Highcharts.merge(gaugeOptions, {
         yAxis: {
             min: @Model.Min,
             max: @Model.Max,
@@ -178,32 +146,37 @@
         type: "GET",
         url: "/api/Gauge/GetGauge/@Model.Id",
         contentType: "application/json; charset=utf-8",
-
             success: function (res) {
                 if (gaugeChart) {
-                    point = gaugeChart.series[0].points[0];
-                    point.update(res.value);
-                    gaugeChart.yAxis[0].update({
-                        min: res.min,
-                        max: res.max
-                    }); 
-                    gaugeChart.yAxis[0].tickPositions = [res.min, res.max];
-                    gaugeChart.yAxis[0].update({
-                      tickPositions: gaugeChart.yAxis[0].tickPositions
-                    });
+                    if (res.isValid === true) {
+                        point = gaugeChart.series[0].points[0];
+                        point.update(res.value);
+                        gaugeChart.yAxis[0].update({
+                            min: res.min,
+                            max: res.max
+                        });
+                        gaugeChart.yAxis[0].tickPositions = [res.min, res.max];
+                        gaugeChart.yAxis[0].update({
+                            tickPositions: gaugeChart.yAxis[0].tickPositions
+                        });
+                        $('#gauge_figure_'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))')).addClass("d-inline").removeClass("d-none");
+                        $('#alertMessage').addClass("d-none").removeClass("d-inline");
+                    }
+                    else {
+                        $('#gauge_figure_'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))')).addClass("d-none").removeClass("d-inline");
+                        $('#alertMessage').addClass("d-inline").removeClass("d-none");
+                    }
                 }
-            },
-
-            error: function (res) {
-                console.log(res);
-                alert(res);
             }
         });
     }, 2000);
 
+    $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
+        var type = 'Gauge';
+        var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
+        if (typeof result !== 'undefined') {
+            result.setSize(ui.height, ui.width);
+        }
+        
+    });
 </script>
-}
-else
-{
-    <h1>Selected sensor does not have values to display in the selected time period.</h1>
-}

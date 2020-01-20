@@ -16,10 +16,6 @@ using Infrastructure.Business.DTOs.ReportElements;
 using smart_home_web.Models.ReportElements;
 using Infrastructure.Business.DTOs.Dashboard;
 using smart_home_web.Models.Dashboard;
-using Domain.Core.JoinModel;
-using Infrastructure.Business.DTOs.DashboardOptions;
-using smart_home_web.Models.DashboardOptions;
-using Infrastructure.Business.DTOs.Options;
 using smart_home_web.Models.Options;
 using System;
 using Domain.Core.CalculateModel;
@@ -74,8 +70,7 @@ namespace smart_home_web.AutoMapper
                 .ForMember(ewc => ewc.SensorName, map => map.MapFrom(re => re.Sensor.Name));
 
             CreateMap<EditReportElementViewModel, ReportElementDto>();
-            CreateMap<ReportElementDto, ReportElement>();
-
+            CreateMap<ReportElementDto, ReportElement>().ReverseMap();
 
             CreateMap<SensorTypeDto, SensorType>();
             CreateMap<SensorTypeViewModel, SensorTypeDto>().ReverseMap();
@@ -88,8 +83,8 @@ namespace smart_home_web.AutoMapper
             CreateMap<ReportElement, GaugeDto>().ReverseMap();
             CreateMap<GaugeDto, GaugeViewModel>().ReverseMap();
             CreateMap<GaugeDto, GaugeUpdateViewModel>()
-                .ForMember(gu => gu.Min, map => map.MapFrom(gd => (int)Math.Floor(gd.Min.Value)))
-                .ForMember(gu => gu.Max, map => map.MapFrom(gd => (int)Math.Ceiling(gd.Max.Value)));
+                .ForMember(gu => gu.Min, map => map.MapFrom(gd => gd.Min.HasValue ? (int)Math.Floor(gd.Min.Value) : 0))
+                .ForMember(gu => gu.Max, map => map.MapFrom(gd => gd.Max.HasValue ? (int)Math.Ceiling(gd.Max.Value) : 0));
 
             CreateMap<ReportElement, ClockDto>().ReverseMap();
 
@@ -118,22 +113,24 @@ namespace smart_home_web.AutoMapper
                 .ForMember(gd => gd.SensorName, map => map.MapFrom(s => s.Name))
                 .ForMember(gd => gd.MeasurementName, map => map.MapFrom(s => s.SensorType.MeasurementName))
                 .ForMember(gd => gd.MeasurementType, map => map.MapFrom(s => s.SensorType.MeasurementType));
-            CreateMap<ReportElementDto, ReportElementViewModel>();
 
+            CreateMap<ReportElement, ReportElementDto>()
+                .ForMember(gd => gd.DashboardName, map => map.MapFrom(re => re.Dashboard.Name))
+                .ForMember(gd => gd.SensorId, map => map.MapFrom(re => re.Sensor.Id))
+                .ForMember(gd => gd.SensorName, map => map.MapFrom(re => re.Sensor.Name))
+                .ForMember(gd => gd.MeasurementName, map => map.MapFrom(re => re.Sensor.SensorType.MeasurementName))
+                .ForMember(gd => gd.MeasurementType, map => map.MapFrom(re => re.Sensor.SensorType.MeasurementType))
+                .ForMember(gd => gd.Type, map => map.MapFrom(re => re.Type))
+                .ForMember(gd => gd.SensorType, map => map.MapFrom(re => re.Sensor.SensorType.Name));
+
+            CreateMap<ReportElementDto, ReportElementViewModel>();
+            CreateMap<CreateReportElementViewModel, ReportElementDto>();
             CreateMap<ReportElement, EditReportElementViewModel>()
                 .ForMember(ewc => ewc.DashboardName, map => map.MapFrom(re => re.Dashboard.Name))
                 .ForMember(ewc => ewc.SensorName, map => map.MapFrom(re => re.Sensor.Name));
 
             CreateMap<EditReportElementViewModel, ReportElementDto>();
             CreateMap<ReportElementDto, ReportElement>();
-
-
-            CreateMap<DashboardOptions, DashboardOptionsDto>().ReverseMap();
-            CreateMap<DashboardOptionsDto, DashboardOptionsViewModel>();
-
-            CreateMap<Options, OptionsDto>().ReverseMap();
-            CreateMap<OptionsDto, OptionsViewModel>();
-
-        }
+		}
     }
 }

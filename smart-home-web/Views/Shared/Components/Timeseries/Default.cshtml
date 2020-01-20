@@ -2,23 +2,29 @@
 ﻿@using Domain.Core.Model.Enums
 @model ReportElementViewModel
 
-<link href="~/css/schedule.css" rel="stylesheet" />
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/data.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
-<figure class="highcharts-figure">
-    <div id="container"></div>
-</figure>
+@if (!Model.IsCorrect)
+{
+    <label class="control-label graph-label">There is no history measurement for @Model.SensorName.ToString() for that period of time. <a class="btn btn-success text-center" asp-controller="ReportElement" asp-action="EditReportElement" asp-route-id="@Model.Id"><i class="fas fa-cog"></i></a></label>
+}
+else
+{
+    <figure class="highcharts-figure">
+        <div id=@("TimeSeries"+Model.Id.ToString())></div>
+    </figure>
+}
 <script>
     Highcharts.getJSON(
         'https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/usdeur.json',
         function (data) {
 
-            Highcharts.chart('container', {
-                chart: {
+          Highcharts.chart('TimeSeries'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
+              chart: {
                     zoomType: 'x'
                 },
                 title: {
@@ -29,18 +35,16 @@
                         'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
                 },
                 xAxis: {
-                    type: 'datetime',
-                    categories: JSON.parse('@Html.Raw(Json.Serialize(@Model.Dates))'),
+                categories: JSON.parse('@Html.Raw(Json.Serialize(@Model.Milliseconds))'),
                 labels: {
                     formatter: function () {
                         return new Date(this.value).toLocaleString();
                     }
                 }
-
                 },
                 yAxis: {
                     title: {
-                        text: JSON.parse('@Html.Raw(Json.Serialize(@Model.DashboardName))')
+                        text: JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorType))') + ' ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.MeasurementName))')
                     }
                 },
                  tooltip: {
@@ -48,7 +52,6 @@
                     var date = new Date(this.x).toLocaleString();
                     @switch (Model.MeasurementType)
                      {
-
                         case MeasurementType.Bool:
 
                             <text>
@@ -102,11 +105,27 @@
 
                 series: [{
                     type: 'area',
-                    name: JSON.parse('@Html.Raw(Json.Serialize(@Model.MeasurementName))'),
+                    name: JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorType))'),
                     data: JSON.parse('@Html.Raw(Json.Serialize(@Model.Values))')
 
-                }]
+              }],
+                exporting: {
+            buttons: {
+                contextButton: {
+                    enabled: false,
+                },
+                }
+        },
             });
         }
     );
+
+    $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
+        var type = 'TimeSeries';
+        var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
+        if (typeof result !== 'undefined') {
+            result.setSize(ui.height, ui.width);
+        }
+        
+    });
 </script>
