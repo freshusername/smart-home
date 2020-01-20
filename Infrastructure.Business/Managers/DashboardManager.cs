@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Domain.Core.Model;
-using Domain.Interfaces;
 using Domain.Interfaces.Repositories;
-using Infrastructure.Business.DTOs;
 using Infrastructure.Business.DTOs.Dashboard;
 using Infrastructure.Business.Infrastructure;
-using Infrastructure.Business.Managers;
+using System.Linq;
+using System;
 
 namespace Infrastructure.Business.Managers
 {
@@ -38,7 +35,14 @@ namespace Infrastructure.Business.Managers
 			var dashboards = await unitOfWork.DashboardRepo.GetAll();
 			return mapper.Map<IEnumerable<Dashboard>, IEnumerable<DashboardDto>>(dashboards);
 		}
-		
+
+		public async Task<IEnumerable<DashboardDto>> GetByUserId(string userId)
+		{
+			var dashboards = await unitOfWork.DashboardRepo.GetAll();
+			dashboards = dashboards.Where(d => d.AppUserId == userId);
+			return mapper.Map<IEnumerable<Dashboard>, IEnumerable<DashboardDto>>(dashboards);
+		}
+
 		public async Task<DashboardDto> GetById(int id)
 		{
 			var dashboard = await unitOfWork.DashboardRepo.GetById(id);

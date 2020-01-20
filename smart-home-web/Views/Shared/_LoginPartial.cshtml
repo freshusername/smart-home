@@ -11,6 +11,14 @@
     <form>
         <ul class="nav navbar-nav navbar-right" id="navbarColor01">
             <li class="nav-item increase-padding">
+                <a asp-area="" asp-controller="Notification" asp-action="Index">
+                    <div class="notification-icon">
+                        <span class="glyphicon glyphicon-bell " style="font-size:20px"></span>
+                        <span class="badge" id="ntCnt"></span>
+                    </div>
+                </a>
+            </li>
+            <li class="nav-item increase-padding">
                 <a class="nav-link" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
             </li>
             <li class="nav-item increase-padding">
