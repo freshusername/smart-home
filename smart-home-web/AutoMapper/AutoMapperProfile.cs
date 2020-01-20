@@ -18,6 +18,7 @@ using Infrastructure.Business.DTOs.Dashboard;
 using smart_home_web.Models.Dashboard;
 using smart_home_web.Models.Options;
 using System;
+using Domain.Core.CalculateModel;
 
 namespace smart_home_web.AutoMapper
 {
@@ -63,7 +64,7 @@ namespace smart_home_web.AutoMapper
                .ForMember(gd => gd.MeasurementName, map => map.MapFrom(s => s.SensorType.MeasurementName))
                .ForMember(gd => gd.MeasurementType, map => map.MapFrom(s => s.SensorType.MeasurementType));
             CreateMap<GraphDto, GraphViewModel>();
-       
+
             CreateMap<ReportElement, EditReportElementViewModel>()
                 .ForMember(ewc => ewc.DashboardName, map => map.MapFrom(re => re.Dashboard.Name))
                 .ForMember(ewc => ewc.SensorName, map => map.MapFrom(re => re.Sensor.Name));
@@ -78,7 +79,7 @@ namespace smart_home_web.AutoMapper
             CreateMap<SensorType, SensorTypeDto>()
                 .ForMember(dto => dto.IconPath, map => map.MapFrom(st => st.Icon.Path));
 
-			
+
             CreateMap<ReportElement, GaugeDto>().ReverseMap();
             CreateMap<GaugeDto, GaugeViewModel>().ReverseMap();
             CreateMap<GaugeDto, GaugeUpdateViewModel>()
@@ -86,12 +87,26 @@ namespace smart_home_web.AutoMapper
                 .ForMember(gu => gu.Max, map => map.MapFrom(gd => gd.Max.HasValue ? (int)Math.Ceiling(gd.Max.Value) : 0));
 
             CreateMap<ReportElement, ClockDto>().ReverseMap();
-        
-			CreateMap<Dashboard, DashboardDto>().ReverseMap();
-			CreateMap<DashboardDto, DashboardViewModel>();
+
+            CreateMap<Dashboard, DashboardDto>().ReverseMap();
+            CreateMap<DashboardDto, DashboardViewModel>();
 
             CreateMap<ReportElement, GaugeDto>().ReverseMap();
             CreateMap<GaugeDto, GaugeViewModel>().ReverseMap();
+
+            //================= Heatmap ===================
+
+            CreateMap<ReportElement, HeatmapDto>().ReverseMap();
+            CreateMap<Sensor, HeatmapDto>()
+                .ForMember(gd => gd.SensorId, map => map.MapFrom(s => s.Id))
+                .ForMember(gd => gd.SensorName, map => map.MapFrom(s => s.Name))
+                .ForMember(gd => gd.MeasurementName, map => map.MapFrom(s => s.SensorType.MeasurementName))
+                .ForMember(gd => gd.MeasurementType, map => map.MapFrom(s => s.SensorType.MeasurementType))
+                .ForAllOtherMembers(c => c.Ignore());
+            CreateMap<HeatmapDto, HeatmapViewModel>().ReverseMap();
+
+            CreateMap<AvgSensorValuePerDay, AvgSensorValuePerDayDTO>();
+
 
             CreateMap<Sensor, ReportElementDto>()
                 .ForMember(gd => gd.SensorId, map => map.MapFrom(s => s.Id))

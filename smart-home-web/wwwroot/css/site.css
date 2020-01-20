@@ -81,3 +81,55 @@ a.disabledclass {
         -ms-transform: scale(1.5);
         transform: scale(1.5);
     }
+
+/*body {
+    background-color: #3498db;
+    overflow: hidden;
+    -webkit-animation: colorchange 50s infinite;
+}
+
+@keyframes colorchange {
+    0% {
+        background: #2ecc71;
+    }
+
+    10% {
+        background: #3498db;
+    }
+
+    20% {
+        background: #9b59b6;
+    }
+
+    30% {
+        background: #34495e;
+    }
+
+    40% {
+        background: #16a085;
+    }
+
+    50% {
+        background: #27ae60;
+    }
+
+    60% {
+        background: #2980b9;
+    }
+
+    70% {
+        background: #8e44ad;
+    }
+
+    80% {
+        background: #2c3e50;
+    }
+
+    90% {
+        background: #e74c3c;
+    }
+
+    100% {
+        background: #2ecc71;
+    }
+}*/

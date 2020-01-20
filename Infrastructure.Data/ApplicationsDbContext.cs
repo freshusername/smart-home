@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Domain.Core.Model;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Domain.Core.Model.Enums;
+using Domain.Core.CalculateModel;
 
 namespace Infrastructure.Data
 {
@@ -17,6 +18,7 @@ namespace Infrastructure.Data
         public DbSet<SensorType> SensorTypes { get; set; }
         public DbSet<Dashboard> Dashboards { get; set; }
         public DbSet<ReportElement> ReportElements { get; set; }
+        public DbQuery<AvgSensorValuePerDay> AvgSensorValuesPerDays { get; set; }
 
         public ApplicationsDbContext(DbContextOptions<ApplicationsDbContext> options) : base(options)
         {
@@ -28,19 +30,19 @@ namespace Infrastructure.Data
 
             base.OnModelCreating(modelBuilder);
 
-			modelBuilder
-			.Entity<SensorType>()
-			.Property(e => e.MeasurementType)
-			.HasConversion(
-			v => v.ToString(),
-			v => (MeasurementType)Enum.Parse(typeof(MeasurementType), v));
+            modelBuilder
+            .Entity<SensorType>()
+            .Property(e => e.MeasurementType)
+            .HasConversion(
+            v => v.ToString(),
+            v => (MeasurementType)Enum.Parse(typeof(MeasurementType), v));
 
-			modelBuilder
-			.Entity<ReportElement>()
-			.Property(e => e.Type)
-			.HasConversion(
-			v => v.ToString(),
-			v => (ReportElementType)Enum.Parse(typeof(ReportElementType), v));
-		}
+            modelBuilder
+            .Entity<ReportElement>()
+            .Property(e => e.Type)
+            .HasConversion(
+            v => v.ToString(),
+            v => (ReportElementType)Enum.Parse(typeof(ReportElementType), v));
+        }
     }
 }
