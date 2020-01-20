@@ -1,16 +1,11 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification\ 
 for details on configuring this project to bundle and minify static web assets. */
 body {
-    padding-top: 50px;
     padding-bottom: 20px;
 }
 
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
-.body-content {
-    padding-left: 15px;
-    padding-right: 15px;
-}
 
 /* Carousel */
 .carousel-caption p {
@@ -70,6 +65,71 @@ a.disabledclass {
     display: block;
 }
 
-/*.shadow-standart {
-    box-shadow: -2px 5px 20px 5px rgba(0, 0, 0, 0.18);
+.increase-padding {
+    padding-right: 1rem;
+    padding-left: 1rem;
+}
+
+.report-button{
+    color: #111111;
+}
+
+    .report-button:hover {
+        color: dimgrey;
+        cursor: pointer;
+        -webkit-transform: scale(1.5);
+        -ms-transform: scale(1.5);
+        transform: scale(1.5);
+    }
+
+/*body {
+    background-color: #3498db;
+    overflow: hidden;
+    -webkit-animation: colorchange 50s infinite;
+}
+
+@keyframes colorchange {
+    0% {
+        background: #2ecc71;
+    }
+
+    10% {
+        background: #3498db;
+    }
+
+    20% {
+        background: #9b59b6;
+    }
+
+    30% {
+        background: #34495e;
+    }
+
+    40% {
+        background: #16a085;
+    }
+
+    50% {
+        background: #27ae60;
+    }
+
+    60% {
+        background: #2980b9;
+    }
+
+    70% {
+        background: #8e44ad;
+    }
+
+    80% {
+        background: #2c3e50;
+    }
+
+    90% {
+        background: #e74c3c;
+    }
+
+    100% {
+        background: #2ecc71;
+    }
 }*/

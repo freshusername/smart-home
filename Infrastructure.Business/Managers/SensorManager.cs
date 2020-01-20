@@ -26,18 +26,18 @@ namespace Infrastructure.Business.Managers
         {
             try
             {
-	            Sensor sensor = mapper.Map<SensorDto, Sensor>(sensorDto);
-	            try
-	            {
-		            await unitOfWork.SensorRepo.Insert(sensor);
+                Sensor sensor = mapper.Map<SensorDto, Sensor>(sensorDto);
+                try
+                {
+                    await unitOfWork.SensorRepo.Insert(sensor);
 
-		            unitOfWork.Save();
-	            }
-	            catch (Exception ex)
-	            {
-		            return new OperationDetails(false, ex.Message, "Error");
-				}
-                
+                    unitOfWork.Save();
+                }
+                catch (Exception ex)
+                {
+                    return new OperationDetails(false, ex.Message, "Error");
+                }
+
             }
             catch (Exception ex)
             {
@@ -54,18 +54,32 @@ namespace Infrastructure.Business.Managers
             return model;
         }
 
-        public OperationDetails AddUnclaimedSensor(Guid token , string value)
+        public OperationDetails AddUnclaimedSensor(Guid token, string value)
         {
-                                                        
-            var sensor = new Sensor { Name = "Unidentified", Token = token, CreatedOn= DateTimeOffset.Now,IsActivated = false};
+
+            var sensor = new Sensor { Name = "Unidentified", Token = token, CreatedOn = DateTimeOffset.Now, IsActivated = false };
 
             if (sensor == null)
                 return new OperationDetails(false, "Operation did not succeed!", "");
             unitOfWork.SensorRepo.Insert(sensor);
 
             unitOfWork.Save();
-            return new OperationDetails(true , "Operation succeed" , sensor.Id.ToString());
+            return new OperationDetails(true, "Operation succeed", sensor.Id.ToString());
         }
-             
+
+        public async Task<IEnumerable<SensorDto>> GetSensorsByReportElementType(ReportElementType type, int dashboardId)
+        {
+            var dashboard = await unitOfWork.DashboardRepo.GetById(dashboardId);
+            var sensors = new List<Sensor>();
+            sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.Int, dashboard.AppUserId));
+            sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.Double, dashboard.AppUserId));
+            if (type == ReportElementType.TimeSeries || type == ReportElementType.Clock)
+                sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.Bool, dashboard.AppUserId));
+            if (type == ReportElementType.Clock || type == ReportElementType.Wordcloud)
+                sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.String, dashboard.AppUserId));
+            var res = mapper.Map<IEnumerable<Sensor>, IEnumerable<SensorDto>>(sensors);
+            return res;
+        }
+
     }
 }

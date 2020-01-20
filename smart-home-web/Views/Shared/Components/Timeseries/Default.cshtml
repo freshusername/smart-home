@@ -1,0 +1,136 @@
+﻿@using smart_home_web.Models.ReportElements
+﻿@using Domain.Core.Model.Enums
+@model ReportElementViewModel
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/data.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+@if (!Model.IsCorrect)
+{
+    <label class="control-label graph-label">There is no history measurement for @Model.SensorName.ToString() for that period of time. <a class="btn btn-success text-center" asp-controller="ReportElement" asp-action="EditReportElement" asp-route-id="@Model.Id"><i class="fas fa-cog"></i></a></label>
+}
+else
+{
+    <figure class="highcharts-figure">
+        <div id=@("TimeSeries"+Model.Id.ToString())></div>
+    </figure>
+}
+<script>
+    Highcharts.getJSON(
+        'https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/usdeur.json',
+        function (data) {
+
+          Highcharts.chart('TimeSeries'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
+              chart: {
+                    zoomType: 'x'
+                },
+                title: {
+                    text:  JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))')
+                },
+                subtitle: {
+                    text: document.ontouchstart === undefined ?
+                        'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
+                },
+                xAxis: {
+                categories: JSON.parse('@Html.Raw(Json.Serialize(@Model.Milliseconds))'),
+                labels: {
+                    formatter: function () {
+                        return new Date(this.value).toLocaleString();
+                    }
+                }
+                },
+                yAxis: {
+                    title: {
+                        text: JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorType))') + ' ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.MeasurementName))')
+                    }
+                },
+                 tooltip: {
+                formatter: function () {
+                    var date = new Date(this.x).toLocaleString();
+                    @switch (Model.MeasurementType)
+                     {
+                        case MeasurementType.Bool:
+
+                            <text>
+                            var values = JSON.parse('@Html.Raw(Json.Serialize(@Model.Values))')
+                            var value = values[this.point.index] ? 'true':'false'
+                            var result = '<b>' + date + '</b><br>' + this.series.name + ': <b>' + value + '</b><br>'
+                            return result;
+                            </text>
+                            break;
+
+                        default:
+                            <text>
+                            var result = '<b>' + date + '</b><br>' + this.series.name + ': <b>' + this.y + ' '
+                            + JSON.parse('@Html.Raw(Json.Serialize(@Model.MeasurementName))') + '</b><br>'
+                            return result;
+                            </text>
+                            break;
+                     }
+                 }
+                },
+
+                legend: {
+                    enabled: false
+                },
+                plotOptions: {
+                    area: {
+                        fillColor: {
+                            linearGradient: {
+                                x1: 0,
+                                y1: 0,
+                                x2: 0,
+                                y2: 1
+                            },
+                            stops: [
+                                [0, Highcharts.getOptions().colors[0]],
+                                [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                            ]
+                        },
+                        marker: {
+                            radius: 2
+                        },
+                        lineWidth: 1,
+                        states: {
+                            hover: {
+                                lineWidth: 1
+                            }
+                        },
+                        threshold: null
+                    }
+                },
+
+                series: [{
+                    type: 'area',
+                    name: JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorType))'),
+                    data: JSON.parse('@Html.Raw(Json.Serialize(@Model.Values))')
+
+              }],
+                exporting: {
+            buttons: {
+                contextButton: {
+                    enabled: false,
+                },
+                }
+        },
+            });
+        }
+    );
+
+    $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
+        var type = 'TimeSeries';
+        try {
+            var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
+        }
+        catch (error) {
+            
+        }
+        if (typeof result !== 'undefined') {
+            result.setSize(ui.height, ui.width);
+        }
+        
+    });
+</script>

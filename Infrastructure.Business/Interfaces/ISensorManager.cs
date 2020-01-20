@@ -1,4 +1,5 @@
-﻿using Domain.Core.Model.Enums;
+﻿using Domain.Core.Model;
+using Domain.Core.Model.Enums;
 using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.Infrastructure;
 using System;
@@ -13,5 +14,6 @@ namespace Infrastructure.Business.Managers
         Task<OperationDetails> Create(SensorDto sensorDto);
         Task<IEnumerable<SensorDto>> GetAllSensorsAsync();
         OperationDetails AddUnclaimedSensor(Guid token, string value);
+        Task<IEnumerable<SensorDto>> GetSensorsByReportElementType(ReportElementType type, int dashboardId);
     }
 }

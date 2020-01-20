@@ -13,7 +13,7 @@ using smart_home_web.Models.ReportElements;
 
 namespace smart_home_web.Controllers
 {
-    public class ReportElementController : Controller
+	public class ReportElementController : Controller
     {
         private readonly IReportElementManager _reportElementManager;
         private readonly IMapper _mapper;
@@ -23,6 +23,27 @@ namespace smart_home_web.Controllers
             _reportElementManager = reportElementManager;
             _mapper = mapper;
         }
+
+        [HttpGet]
+        public IActionResult CreateReportElement(int dashboardId)
+        {
+            CreateReportElementViewModel model = new CreateReportElementViewModel
+            {
+                DashboardId = dashboardId
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateReportElement(CreateReportElementViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+            ReportElementDto reportElement = _mapper.Map<CreateReportElementViewModel, ReportElementDto>(model);
+            await _reportElementManager.CreateReportElement(reportElement);
+            return RedirectToAction("Detail", "Dashboard", new { id = model.DashboardId});
+        }
+
         [HttpGet]
         public async Task<IActionResult> EditReportElement(int id)
         {
@@ -34,14 +55,21 @@ namespace smart_home_web.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditReportElement(EditReportElementViewModel model)
+        public async Task<IActionResult> EditReportElement(EditReportElementViewModel model)
         {
             if (!ModelState.IsValid)
                 return View(model);
             ReportElementDto reportElement = _mapper.Map<EditReportElementViewModel, ReportElementDto>(model);
-            _reportElementManager.EditReportElement(reportElement);
-            return RedirectToAction("Index","Home");
-            //return RedirectToAction("Index","Home", new { DashboardId = reportElement.DashboardId});
+            await _reportElementManager.EditReportElement(reportElement);
+            return RedirectToAction("Detail", "Dashboard", new { id = model.DashboardId });
         }
-    }
+
+		[HttpPost]
+		public async Task<IActionResult> DeleteReportElement(int id)
+		{
+			var reportElement = await _reportElementManager.GetById(id);
+			await _reportElementManager.Delete(reportElement);
+			return Ok();
+		}
+	}
 }

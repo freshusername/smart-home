@@ -7,11 +7,11 @@
 <link href="~/lib/nice-select/dist/css/nice-select.css" rel="stylesheet" />
 
 <body>
-    <div class="row">
+    <div class="row" data-save-url="@Url.Action("GetSensorsByReportElementType", "Sensor")">
 
         <div class="col-lg-8 col-lg-offset-2 col-md-6 col-md-offset-3 col-sm-12">
             <div class="text-center">
-                <label style="font-size:20px">Edit word cloud for @Model.SensorName for @Model.DashboardName</label>
+                <label style="font-size:20px">Edit @Model.Type for @Model.SensorName for @Model.DashboardName</label>
             </div>
             <form asp-action="EditReportElement" asp-controller="ReportElement" method="post">
 
@@ -23,43 +23,46 @@
                     <input type="hidden" asp-for="DashboardId" value="@Model.DashboardId" />
                 </div>
                 <div class="form-group">
-                    <input type="hidden" asp-for="SensorId" value="@Model.SensorId" />
+                    <input id="sensor-id" type="hidden" value="@Model.SensorId" />
                 </div>
                 <div class="form-group">
                     <input type="hidden" asp-for="Type" value="@Model.Type" />
+                </div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="X" value="@Model.X" />
+                </div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="Y" value="@Model.Y" />
+                </div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="Width" value="@Model.Width" />
+                </div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="Height" value="@Model.Height" />
+                </div>
+                <div class="form-group">
+                    <input type="hidden" disabled="disabled" asp-for="SensorName" value="@Model.SensorName" class="form-control" />
                 </div>
                 <div class="form-group">
                     <label class="control-label">Dashboard name: </label>
                     <input type="text" disabled="disabled" asp-for="DashboardName" value="@Model.DashboardName" class="form-control" />
                 </div>
                 <div class="form-group">
-                    <label class="control-label">Sensor name: </label>
-                    <input type="text" disabled="disabled" asp-for="SensorName" value="@Model.SensorName" class="form-control" />
-                </div>
-                <div class="form-group">
                     <label class="control-label">Report element type: </label>
-                    <input type="text" disabled="disabled" asp-for="Type" value="@Model.Type" class="form-control" />
+                    <input id="sensor-name" type="text" disabled="disabled" asp-for="Type" value="@Model.Type" class="form-control" />
                 </div>
                 <div class="form-group">
-                    <label class="control-label" style="margin-top:20px;">
+                    <label class="control-label">Select sensor name:</label>
+                    <div style="margin-bottom:50px">
+                        <select id="sensor-select" asp-for="SensorId" class="col-lg-4 col-md-5 col-sm-6 col-xs-12"></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">
                         Select measurement period:
                     </label>
                     <div style="margin-bottom:50px">
-                        <select asp-for="Hours" class="nice-select col-lg-4 col-md-5 col-sm-6 col-xs-12">
-                            <option value="none" selected disabled hidden>
-                                Select an Option
-                            </option>
-                            <option value="1">1 hour</option>
-                            <option value="3">3 hours</option>
-                            <option value="6">6 hours</option>
-                            <option value="12">12 hours</option>
-                            <option value="24">1 day</option>
-                            <option value="168">7 days</option>
-                            <option value="336">14 days</option>
-                            <option value="720">30 days</option>
-                            <option value="2160">90 days</option>
-                            <option value="2399976">For all time</option>
-                        </select>
+                        <select asp-for="Hours" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.ReportElementHours>()" class="nice-select col-lg-4 col-md-5 col-sm-6 col-xs-12"></select>
                     </div>
                 </div>
 
@@ -74,9 +77,29 @@
 @section Scripts {
     <script src="~/lib/nice-select/dist/js/jquery.nice-select.min.js"></script>
     <script>
-        $(document).ready(function () {
-            $('select').niceSelect();
+       $(document).ready(function (){
+           $('select').niceSelect();
+           $.ajax({
+                type: "Get",
+                url: $(".row").data("save-url"),
+                data: { type: $("input#sensor-name").val(), dashboardId: @(Model.DashboardId)},
+                success: function (res) {
+                    $('#sensor-select').empty()
+                    $.each(res, function (key, value) {
+                        $('#sensor-select')
+                            .append($("<option></option>")
+                                .attr("value", value.id)
+                                .text(value.name));
+                    });
+                    $('#sensor-select').val($('#sensor-id').val());
+                    $('select').niceSelect('update');
+                },
+                error: function (res) {
+                    console.log(res);
+                },
+           });
         });
+
     </script>
     @await Html.PartialAsync("_ValidationScriptsPartial")
 }

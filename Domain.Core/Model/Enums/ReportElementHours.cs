@@ -35,6 +35,9 @@ namespace Domain.Core.Model.Enums
         [Display(Name = "30 days")]
         Hour720 = 720,
 
+        [Display(Name = "60 days")]
+        Hour1344 = 1344,
+
         [Display(Name = "90 days")]
         Hour2160 = 2160
     }

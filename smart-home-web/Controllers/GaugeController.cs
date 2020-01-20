@@ -28,6 +28,7 @@ namespace smart_home_web.Controllers
         public async Task<IActionResult> Get(int id)
         {
             GaugeDto gaugeDto = await _reportElementManager.GetGaugeById(id);
+
             GaugeUpdateViewModel result = _mapper.Map<GaugeDto, GaugeUpdateViewModel>(gaugeDto);
 
             return Ok(result);

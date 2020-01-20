@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Core.Model;
+using Domain.Core.Model.Enums;
 using Infrastructure.Business.DTOs.Icon;
 using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.DTOs.SensorType;
@@ -98,6 +99,13 @@ namespace smart_home_web.Controllers
             {
                 return View();
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetSensorsByReportElementType(ReportElementType type, int dashboardId)
+        {
+            var res = await _sensorManager.GetSensorsByReportElementType(type, dashboardId);
+            return Ok(res.ToList());
         }
     }
 }

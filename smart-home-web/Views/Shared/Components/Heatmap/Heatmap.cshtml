@@ -1,0 +1,170 @@
+﻿@model smart_home_web.Models.ReportElements.HeatmapViewModel;
+@using Domain.Core.Model.Enums;
+
+<link rel="stylesheet" href="~/css/heatmap.css" />
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/heatmap.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+<figure class="highcharts-figure">
+    <div id=@("Heatmap"+Model.Id.ToString())></div>
+</figure>
+<script>
+
+        function getPointCategoryName(point, dimension) {
+            var series = point.series,
+                isY = dimension === 'y',
+                axis = series[isY ? 'yAxis' : 'xAxis'];
+            return axis.categories[point[isY ? 'y' : 'x']];
+        }
+
+        Highcharts.chart("Heatmap"+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
+
+            chart: {
+                type: 'heatmap',
+                marginTop: 40,
+                marginBottom: 80,
+                plotBorderWidth: 1
+            },
+
+
+            title: {
+                text: 'Average value per weekday for ' + @Html.Raw(Json.Serialize(Model.SensorName))
+            },
+
+            xAxis: {
+                categories: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+            },
+
+            yAxis: {
+                categories: [],
+                title: null,
+                reversed: true
+            },
+
+            accessibility: {
+                point: {
+                    descriptionFormatter: function (point) {
+                        var ix = point.index + 1,
+                            xName = getPointCategoryName(point, 'x'),
+                            yName = getPointCategoryName(point, 'y'),
+                            val = point.value;
+                        return ix + '. ' + xName + ' sales ' + yName + ', ' + val + '.';
+                    }
+                }
+            },
+
+            colorAxis: {
+                min: 0,
+                minColor: '#FFFFFF',
+                maxColor: Highcharts.getOptions().colors[0]
+            },
+
+            legend: {
+                align: 'right',
+                layout: 'vertical',
+                margin: 0,
+                verticalAlign: 'top',
+                y: 25,
+                symbolHeight: 280
+            },
+
+            tooltip: {
+                formatter: function () {
+                    return '<b>' + '</b><br>' + @Html.Raw(Json.Serialize(Model.SensorName))  + 'average <b>' +
+                        this.point.value + '</b><br> on <b>' + getPointCategoryName(this.point, 'y') + ' '
+                         + getPointCategoryName(this.point, 'x') + '</b>';
+                }
+            },
+            @{
+                List<decimal> vals = new List<decimal>();
+                List<DateTime> days = new List<DateTime>();
+
+                foreach (var c in Model.AvgSensorValuesPerDays)
+                {
+                    vals.Add(c.AvgValue);
+                    days.Add(c.WeekDay);
+                }
+                decimal[] valArray = vals.ToArray();
+            }
+
+            //HeatmapSeriesData
+            //TODO: Correct data display for heatmap
+            series: [{
+                name: 'Average sensor values per weekday',
+                borderWidth: 1,
+                data: [
+                    @for (int i = 0; i < valArray.Length; i++)
+                    {
+                        @for (int j = 0; j < valArray.Length; j++)
+                        {
+                            <text>
+                                [@Html.Raw(Json.Serialize(i)), @Html.Raw(Json.Serialize(j)), @Html.Raw(Json.Serialize(valArray[i]))],
+                            </text>
+
+                        }
+                    }
+                ],
+
+                dataLabels: {
+                    enabled: true,
+                    color: '#000000'
+                }
+            }],
+
+            exporting: {
+                buttons: {
+                    contextButton: {
+                        enabled: false,
+                    }
+                }
+            },
+
+            responsive: {
+                rules: [{
+                    condition: {
+                        maxWidth: 500
+                    },
+                    chartOptions: {
+                        yAxis: {
+                            labels: {
+                                formatter: function () {
+                                    try {
+                                        return this.value.charAt(0);
+                                    }
+                                    catch (error) {
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }]
+            }
+
+        });
+
+    console.log(@for (int i = 0; i < valArray.Length; i++)
+                {
+                    <text>
+                        @Html.Raw(Json.Serialize(valArray[i])),
+                    </text>
+                })
+
+</script>
+<script>
+    $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
+        var type = 'Heatmap';
+        try {
+            var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
+        }
+        catch (error) {
+
+        }
+        if (typeof result !== 'undefined') {
+            result.setSize(ui.height, ui.width);
+        }
+    });
+</script>
