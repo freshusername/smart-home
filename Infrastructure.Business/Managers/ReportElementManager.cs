@@ -40,7 +40,7 @@ namespace Infrastructure.Business.Managers
         {
             ReportElement reportElement = mapper.Map<ReportElementDto, ReportElement>(reportElementDto);
             reportElement.Height = 6;
-            reportElement.Width = 4;
+            reportElement.Width = 6;
             await unitOfWork.ReportElementRepo.Insert(reportElement);
             unitOfWork.Save();
         }
