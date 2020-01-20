@@ -45,8 +45,7 @@ namespace smart_home_web.Controllers
 
             if (histroyResult.Succeeded)
             {
-                //await _messageHub.Clients.All.SendAsync("ShowToastMessage", sensor.Name, value);
-                _messageManager.ShowMessage("ShowToastMessage", sensor.Name, value);
+                await _messageManager.ShowMessage("ShowToastMessage", sensor.Name, value);
                 return Ok(histroyResult.Message);
             }
 

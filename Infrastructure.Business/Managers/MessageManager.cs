@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Business.Managers
 {
@@ -18,9 +19,9 @@ namespace Infrastructure.Business.Managers
             this.messageHub = hubcontext;
         }
 
-        public void ShowMessage(string name, string user, string message)
+        public async Task ShowMessage(string name, string user, string message)
         {
-            messageHub.Clients.All.SendAsync("ShowToastMessage", user, message);
+            await messageHub.Clients.All.SendAsync("ShowToastMessage", user, message);
         }
     }
 }

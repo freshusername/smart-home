@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Business.Interfaces
 {
     public interface IMessageManager
     {
-        void ShowMessage(string name, string user, string message);
+        Task ShowMessage(string name, string user, string message);
     }
 }
