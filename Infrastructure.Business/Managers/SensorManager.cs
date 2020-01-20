@@ -85,5 +85,12 @@ namespace Infrastructure.Business.Managers
             return res;
         }
 
+        public SensorDto GetSensorByToken(Guid token)
+        {
+            var sensor = mapper.Map<Sensor, SensorDto>(unitOfWork.SensorRepo.GetByToken(token));
+
+            return sensor;
+        }
+
     }
 }

@@ -5,6 +5,7 @@ using Domain.Core.Model;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Business.Infrastructure;
 using Infrastructure.Business.Managers;
+using Infrastructure.Business.Services;
 using Infrastructure.Data;
 using Infrastructure.Data.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -93,6 +94,7 @@ namespace smart_home_web
             services.AddTransient<INotificationManager, NotificationManager>();
             services.AddTransient<IDashboardManager, DashboardManager>();
             services.AddTransient<IReportElementManager, ReportElementManager>();
+            services.AddTransient<IActionService, ActionService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

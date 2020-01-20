@@ -1,6 +1,7 @@
 using Domain.Core.Model.Enums;
 using Infrastructure.Business.Infrastructure;
 using Infrastructure.Business.Managers;
+using Infrastructure.Business.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -15,15 +16,17 @@ namespace smart_home_web.Controllers
     {
         private readonly IHistoryManager _historyTestManager;
         private readonly ISensorManager _sensorManager;
-        public ValueController(IHistoryManager historyTestManager ,ISensorManager sensorManager)
+        private readonly IActionService _actionService;
+        public ValueController(IHistoryManager historyTestManager ,ISensorManager sensorManager , IActionService actionService)
         {
             _historyTestManager = historyTestManager;
             _sensorManager = sensorManager;
+            _actionService = actionService;
         }
         [HttpGet("getdata")]
         public IActionResult AddHistory(Guid token, string value)
         {
-            var sensor = _historyTestManager.GetSensorByToken(token);
+            var sensor = _sensorManager.GetSensorByToken(token);
             if (sensor == null)
             {
               var result =  _sensorManager.AddUnclaimedSensor(token , value);
@@ -47,6 +50,11 @@ namespace smart_home_web.Controllers
         [HttpGet("getaction")]
         public int GetAction(Guid token)
         {
+
+            var result = _actionService.IsActive(token, ActionRole.AlarmFire);
+             if (result.Succeeded == true) return 1;
+                
+
             return (DateTime.Now.Second / 10) % 2;
         }
     }

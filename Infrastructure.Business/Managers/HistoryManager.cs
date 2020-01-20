@@ -120,12 +120,7 @@ namespace Infrastructure.Business.Managers
         }
 
 
-        public SensorDto GetSensorByToken(Guid token)
-        {
-            var sensor = mapper.Map<Sensor,SensorDto>(unitOfWork.SensorRepo.GetByToken(token));
-
-            return sensor;
-        }
+        
 
         public OperationDetails AddHistory(string value , int sensorId)
         {
