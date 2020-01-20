@@ -64,6 +64,8 @@ namespace Infrastructure.Business.Managers
         public async Task Update(int id, string name)
         {
             Dashboard dashboard = await unitOfWork.DashboardRepo.GetById(id);
+			if (dashboard.Name == name)
+				return;
             dashboard.Name = name;
             await unitOfWork.DashboardRepo.Update(dashboard);
             unitOfWork.Save();

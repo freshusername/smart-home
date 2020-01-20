@@ -56,39 +56,44 @@
                 </div>
             }
 
-
     </div>
 </div>
 
 <script src="~/lib/jquery/dist/jquery.js"></script>
 <script>
+
+    
+
     $(function () {
 
-        $(".dash_name_edit").hide();
+        function create_edit_form() {
+            let parent = $(this).closest(".dash_element");
+            parent.find(".dash_name_edit").show();
+            parent.find(".dash_name").hide();
+        }
 
-        $("#no_dashboards").hide();
-        $("[data-toggle='toggle']").click(function () {
-            var selector = $(this).data("target");
-            $(selector).toggleClass('in');
-        });
-
-        $("#dash_create").submit(function (event) {
-            event.preventDefault();
-            let name_value = $("#form_dash_name").val();
+        function edit_dashboard() {
+            let parent = $(this).closest(".dash_element");
+            let form = parent.find(".form_edit_name");
+            let name_value = form.find(".form_dash_name").val();
+            let id_value = parent.find(".dash_id").data("dash-id");
 
             $.ajax({
-                url: $(this).data("dash-url"),
-                data: { name: name_value },
-                success: function (data) {
-                    $('#dashboards').prepend("<div  class='border m-2 dash_element' >" + data + "</div>");
-                    $("#form_dash_name").val("");
+                url: form.data("dash-url"),
+                data: { name: name_value, id: id_value },
+                beforeSend: function () {
+                    parent.find(".name_header").text(name_value);
+                    parent.find(".dash_name_edit").hide();
+                    parent.find(".dash_name").show();
                 },
-                type:"POST"
-            })
+                error: function (res) {
+                    console.log(res);
+                },
+                type: "POST"
+            });
+        }
 
-        });
-
-        $(".dash_remove", ".dash_element").click(function () {
+        function delete_dashboard() {
             let parent = $(this).closest(".dash_element");
             let id = parent.children().data("dash-id");
             console.log(id);
@@ -109,37 +114,42 @@
                         //alert($('#dashboards').children(".dash_element").length);
 
                     }
-                })
+                });
             }
+        }
+
+        $("[data-toggle='toggle']").click(function () {
+            var selector = $(this).data("target");
+            $(selector).toggleClass('in');
         });
 
-        $(".dash_icon", ".dash_element").click(function () {
-            let parent = $(this).closest(".dash_element");
-            parent.find(".dash_name_edit").show();
-            parent.find(".dash_name").hide();
-        });
-
-        $(".dash_edit", ".dash_element").click(function () {
-            let parent = $(this).closest(".dash_element");
-            let form = parent.find(".form_edit_name");
-            let name_value = form.find(".form_dash_name").val();
-            let id_value = parent.find(".dash_id").data("dash - id");
+        $("#dash_create").submit(function (event) {
+            event.preventDefault();
+            let name_value = $("#form_dash_name").val();
 
             $.ajax({
-                url: form.data("dash-url"),
-                data: { name: name_value, id: id_value },
-                beforeSend: function () {
-                    parent.find(".name_header").text(name_value);
-                    parent.find(".dash_name_edit").hide();
-                    parent.find(".dash_name").show();
-                },
-                error: function (res) {
-                    console.log(res);
-                },
-                type:"POST"
-            })
-        })
+                url: $(this).data("dash-url"),
+                data: { name: name_value },
+                success: function (data) {
+                    let element = $("<div  class='border m-2 dash_element' >" + data + "</div>")
+                    $('#dashboards').prepend(element);
+                    element.on("click", ".dash_remove", delete_dashboard);
 
+                    element.on("click", ".dash_icon", create_edit_form);
 
+                    element.on("click", ".dash_edit", edit_dashboard);
+
+                    $("#form_dash_name").val("");
+                },
+                type: "POST"
+            });
+
+        });
+
+        $(".dash_remove", ".dash_element").click(delete_dashboard);
+
+        $(".dash_icon", ".dash_element").click(create_edit_form);
+
+        $(".dash_edit", ".dash_element").click(edit_dashboard);
     });
 </script>
