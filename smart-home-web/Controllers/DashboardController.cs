@@ -3,6 +3,7 @@ using Domain.Core.Model;
 using Domain.Core.Model.Enums;
 using Infrastructure.Business.DTOs.Dashboard;
 using Infrastructure.Business.DTOs.Icon;
+using Infrastructure.Business.DTOs.ReportElements;
 using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.DTOs.SensorType;
 using Infrastructure.Business.Managers;
@@ -11,11 +12,13 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using smart_home_web.Models;
 using smart_home_web.Models.Dashboard;
 using smart_home_web.Models.SensorType;
 using smart_home_web.Models.SensorViewModel;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -48,6 +51,10 @@ namespace smart_home_web.Controllers
 		{
 			var userId = _userManager.GetUserId(User);
 			var dashboard = await _dashboardManager.GetById(id);
+			if (userId != dashboard.AppUserId)
+			{
+				return StatusCode(403);
+			}
 			var result = _mapper.Map<DashboardDto, DashboardViewModel>(dashboard);
 
 			return View(result);
