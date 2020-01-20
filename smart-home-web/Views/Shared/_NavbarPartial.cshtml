@@ -25,19 +25,6 @@
                 <a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">About<span class="sr-only">(current)</span></a>
             </li>
         </ul>
-        @*@if (User.Identity.IsAuthenticated == true)
-        {
-            <ul class="navbar-nav navbar-right">
-                <li class="nav-item increase-padding">
-                    <a asp-area="" asp-controller="Notification" asp-action="Index">
-                        <div class="notification-icon">
-                            <span class="glyphicon glyphicon-bell " style="font-size:20px"></span>
-                            <span class="badge" id="ntCnt"></span>
-                        </div>
-                    </a>
-                </li>
-            </ul>
-        }*@
         <partial name="_LoginPartial" />
     </div>
 </nav>
