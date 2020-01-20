@@ -12,23 +12,7 @@
     <div id="container"></div>
 </figure>
 <script>
-        @switch (Model.MeasurementType)
-        {
-            case MeasurementType.Int:
-                    <text>
-                    values = JSON.parse('@Html.Raw(Json.Serialize(@Model.Values))')
-                    </text>
-                break;
 
-            case MeasurementType.Double:
-                    <text>
-                    values = JSON.parse('@Html.Raw(Json.Serialize(@Model.Values))')
-                    </text>
-                break;
-
-            default:
-                break;
-        }
         function getPointCategoryName(point, dimension) {
             var series = point.series,
                 isY = dimension === 'y',
@@ -51,11 +35,11 @@
             },
 
             xAxis: {
-                categories: []
+                categories: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
             },
 
             yAxis: {
-                categories: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+                categories: [],
                 title: null,
                 reversed: true
             },
@@ -105,57 +89,24 @@
                 }
                 decimal[] valArray = vals.ToArray();
             }
+
             //HeatmapSeriesData
+            //TODO: Correct data display for heatmap
             series: [{
                 name: 'Average sensor values per weekday',
                 borderWidth: 1,
                 data: [
-                @for (int i = 0; i < valArray.Length; i++)
-                {
-                    @for (int j = 0; j < valArray.Length; j++)
+                    @for (int i = 0; i < valArray.Length; i++)
                     {
-                        //if (valArray[i] != 0)
-                        //{
+                        @for (int j = 0; j < valArray.Length; j++)
+                        {
                             <text>
-                                [@Html.Raw(Json.Serialize(j)), @Html.Raw(Json.Serialize(i)), @Html.Raw(Json.Serialize(valArray[i]))],
+                                [@Html.Raw(Json.Serialize(i)), @Html.Raw(Json.Serialize(j)), @Html.Raw(Json.Serialize(valArray[i]))],
                             </text>
 
-                        //}
-                        //else
-                        //{
-                        //    <text>
-                        //       [i, j, 0],
-                        //    </text>
-                        //}
+                        }
                     }
-                }
-                                ],
-
-                @{
-                    #region working square heatmap
-                    //    data: [
-                    //@for (int i = 0; i < valArray.Length; i++)
-                    //{
-                    //    @for (int j = 0; j < valArray.Length; j++)
-                    //    {
-                    //        if (valArray[i] != 0)
-                    //        {
-                    //            <text>
-                    //                [@Html.Raw(Json.Serialize(i)), @Html.Raw(Json.Serialize(j)), @Html.Raw(Json.Serialize(valArray[i]))],
-                    //            </text>
-
-                    //        }
-                    //        else
-                    //        {
-                    //            <text>
-                    //                [i, j, 0],
-                    //            </text>
-                    //        }
-                    //    }
-                    // }
-                    //                ],
-                    #endregion
-                }
+                ],
 
                 dataLabels: {
                     enabled: true,
@@ -187,6 +138,6 @@
                     <text>
                         @Html.Raw(Json.Serialize(valArray[i])),
                     </text>
-                });
+                })
 
 </script>
