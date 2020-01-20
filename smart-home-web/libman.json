@@ -3,9 +3,42 @@
   "defaultProvider": "cdnjs",
   "libraries": [
     {
-      "provider": "cdnjs",
       "library": "gridstack.js@0.4.0",
       "destination": "wwwroot/lib/gridstack.js/"
+    },
+    {
+      "provider": "unpkg",
+      "library": "@aspnet/signalr@1.0.2",
+      "destination": "wwwroot/lib/signalr/",
+      "files": [
+        "dist/browser/signalr.js",
+        "dist/browser/signalr.min.js",
+        "src/AbortController.ts",
+        "src/browser-index.ts",
+        "src/Errors.ts",
+        "src/HandshakeProtocol.ts",
+        "src/HttpClient.ts",
+        "src/HttpConnection.ts",
+        "src/HubConnection.ts",
+        "src/HubConnectionBuilder.ts",
+        "src/IConnection.ts",
+        "src/IHttpConnectionOptions.ts",
+        "src/IHubProtocol.ts",
+        "src/ILogger.ts",
+        "src/index.ts",
+        "src/ITransport.ts",
+        "src/JsonHubProtocol.ts",
+        "src/Loggers.ts",
+        "src/LongPollingTransport.ts",
+        "src/ServerSentEventsTransport.ts",
+        "src/Stream.ts",
+        "src/TextMessageFormat.ts",
+        "src/third-party-notices.txt",
+        "src/Utils.ts",
+        "src/WebSocketTransport.ts",
+        "package.json",
+        "README.md"
+      ]
     }
   ]
 }

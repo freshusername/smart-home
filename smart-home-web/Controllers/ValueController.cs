@@ -1,7 +1,10 @@
 using Domain.Core.Model.Enums;
+using Infrastructure.Business.Hubs;
 using Infrastructure.Business.Infrastructure;
+using Infrastructure.Business.Interfaces;
 using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,14 +17,16 @@ namespace smart_home_web.Controllers
     public class ValueController : ControllerBase
     {
         private readonly IHistoryManager _historyTestManager;
+        private readonly IMessageManager _messageManager;
         private readonly ISensorManager _sensorManager;
-        public ValueController(IHistoryManager historyTestManager ,ISensorManager sensorManager)
+        public ValueController(IHubContext<MessageHub> messageHub, IMessageManager messageManager, IHistoryManager historyTestManager ,ISensorManager sensorManager)
         {
             _historyTestManager = historyTestManager;
+            _messageManager = messageManager;
             _sensorManager = sensorManager;
         }
         [HttpGet("getdata")]
-        public IActionResult AddHistory(Guid token, string value)
+        public async Task<IActionResult> AddHistory(Guid token, string value)
         {
             var sensor = _historyTestManager.GetSensorByToken(token);
             if (sensor == null)
@@ -39,7 +44,11 @@ namespace smart_home_web.Controllers
             var histroyResult = _historyTestManager.AddHistory(value, sensor.Id);
 
             if (histroyResult.Succeeded)
+            {
+                //await _messageHub.Clients.All.SendAsync("ShowToastMessage", sensor.Name, value);
+                _messageManager.ShowMessage("ShowToastMessage", sensor.Name, value);
                 return Ok(histroyResult.Message);
+            }
 
             return BadRequest(histroyResult.Message);        
         }
