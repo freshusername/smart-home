@@ -20,7 +20,9 @@ namespace Infrastructure.Business.Managers
 		public async Task<OperationDetails> Create(DashboardDto dashboardDto)
 		{
 			var dashboard = mapper.Map<DashboardDto, Dashboard> (dashboardDto);
-			await unitOfWork.DashboardRepo.Insert(dashboard);
+            if(String.IsNullOrEmpty(dashboard.Name))
+                return new OperationDetails(false, "Name is null", "Name");
+            await unitOfWork.DashboardRepo.Insert(dashboard);
 			var res = unitOfWork.Save();
 
 			if (res > 0)
@@ -50,5 +52,27 @@ namespace Infrastructure.Business.Managers
 
 			return result;
 		}
-	}
+
+		public async Task<OperationDetails> DeleteById(int id)
+		{
+			await unitOfWork.DashboardRepo.DeleteById(id);
+			var res = unitOfWork.Save();
+
+			if (res > 0)
+			{
+				return new OperationDetails(true, "Saved successfully", "");
+			}
+			return new OperationDetails(true, "Something is wrong", "");
+		}
+
+        public async Task Update(int id, string name)
+        {
+            Dashboard dashboard = await unitOfWork.DashboardRepo.GetById(id);
+			if (dashboard.Name == name)
+				return;
+            dashboard.Name = name;
+            await unitOfWork.DashboardRepo.Update(dashboard);
+            unitOfWork.Save();
+        }
+    }
 }

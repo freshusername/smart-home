@@ -72,5 +72,40 @@ namespace smart_home_web.Controllers
 				Dashboards = result
 			});
 		}
-	}
+
+        [HttpPost]
+        public async Task<IActionResult> Create(string name)
+        {
+            DashboardDto dashboardDto = new DashboardDto()
+            {
+                Name = name
+            };
+            OperationDetails result = await _dashboardManager.Create(dashboardDto);
+            if (result.Succeeded)
+            {
+                var dashboardDtos = await _dashboardManager.GetAll();
+                var dashboard = _mapper.Map<DashboardDto, DashboardViewModel>(dashboardDtos.Last());
+                return ViewComponent("Dashboard", new { model = dashboard });
+            }
+            else
+            {
+                ModelState.AddModelError(result.Property, result.Message);
+                return NotFound();
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, string name)
+        {
+            await _dashboardManager.Update(id, name);
+            return Ok();
+        }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _dashboardManager.DeleteById(id);
+            return Ok();
+
+        }
+    }
 }

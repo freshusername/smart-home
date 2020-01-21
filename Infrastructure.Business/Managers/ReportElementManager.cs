@@ -169,7 +169,7 @@ namespace Infrastructure.Business.Managers
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(gaugeId);
             reportElement.Hours = (ReportElementHours)hours;
-            unitOfWork.ReportElementRepo.Update(reportElement);
+            await unitOfWork.ReportElementRepo.Update(reportElement);
             unitOfWork.Save();
         }
 
@@ -227,10 +227,6 @@ namespace Infrastructure.Business.Managers
                         columnRange.MaxValues.Add(t.Max);
                     }
                     break;
-                case MeasurementType.Bool:
-                    return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "Incorrect sensor type for this element" };
-                case MeasurementType.String:
-                    return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "Incorrect sensor type for this element" };
                 default:
                     return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "Incorrect sensor type for this element" };
             }
