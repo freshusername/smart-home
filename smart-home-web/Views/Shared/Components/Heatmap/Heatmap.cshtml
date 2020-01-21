@@ -9,7 +9,7 @@
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
 <figure class="highcharts-figure">
-    <div id=@("Heatmap"+Model.Id.ToString())></div>
+    <div id=@("Heatmap" + Model.Id.ToString())></div>
 </figure>
 <script>
 
@@ -28,7 +28,6 @@
                 marginBottom: 80,
                 plotBorderWidth: 1
             },
-
 
             title: {
                 text: 'Average value per weekday for ' + @Html.Raw(Json.Serialize(Model.SensorName))
@@ -73,7 +72,7 @@
 
             tooltip: {
                 formatter: function () {
-                    return '<b>' + '</b><br>' + @Html.Raw(Json.Serialize(Model.SensorName))  + 'average <b>' +
+                    return '<b>' + '</b><br>' + @Html.Raw(Json.Serialize(Model.SensorName))  + ' has average: <b>' +
                         this.point.value + '</b><br> on <b>' + getPointCategoryName(this.point, 'y') + ' '
                          + getPointCategoryName(this.point, 'x') + '</b>';
                 }
@@ -90,20 +89,18 @@
                 decimal[] valArray = vals.ToArray();
             }
 
-            //HeatmapSeriesData
-            //TODO: Correct data display for heatmap
             series: [{
                 name: 'Average sensor values per weekday',
                 borderWidth: 1,
                 data: [
-                    @for (int i = 0; i < valArray.Length; i++)
+                    @{int h = 0;}
+                    @for (int i = 0; i < 4; i++)
                     {
-                        @for (int j = 0; j < valArray.Length; j++)
+                        @for (int j = 0; j < 7; j++)
                         {
                             <text>
-                                [@Html.Raw(Json.Serialize(i)), @Html.Raw(Json.Serialize(j)), @Html.Raw(Json.Serialize(valArray[i]))],
+                                [@Html.Raw(Json.Serialize(j)), @Html.Raw(Json.Serialize(i)), @Html.Raw(Json.Serialize(valArray[h++]))],
                             </text>
-
                         }
                     }
                 ],
@@ -145,15 +142,8 @@
             }
 
         });
-
-    console.log(@for (int i = 0; i < valArray.Length; i++)
-                {
-                    <text>
-                        @Html.Raw(Json.Serialize(valArray[i])),
-                    </text>
-                })
-
 </script>
+
 <script>
     $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
         var type = 'Heatmap';
