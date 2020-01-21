@@ -112,7 +112,12 @@
             max: @Model.Max,
             tickPositions: [@Model.Min, @Model.Max],
             title: {
-                text: '@Model.SensorName'
+                text: '@Model.SensorName',
+                style: {
+                    fontWeight: 'bold'
+                },
+                floating: true,
+                y: -170
             }
         },
 
@@ -169,7 +174,7 @@
                 }
             }
         });
-    }, 2000);
+    }, 200000);
 
     $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
         var type = 'Gauge';
