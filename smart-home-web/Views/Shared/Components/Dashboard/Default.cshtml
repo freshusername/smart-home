@@ -1,8 +1,6 @@
 ﻿@model smart_home_web.Models.Dashboard.DashboardViewModel
 
 
-<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
-
 <div class="col-lg-3 dash_id h-100 " data-dash-id="@Model.Id.ToString()">
     <div class="text-center p-2 h-100 d-flex flex-column justify-content-between"  style="width: 18rem;">
         <div>
@@ -23,7 +21,7 @@
                 </form>
 
             </div>
-            <div class="dash_name mb-2">
+            <div class="dash_name m-2">
                 <h3 class="d-inline name_header" style="word-break: break-all;">@Model.Name </h3>
                 <a href="#" class="d-inline">
                     <span class="glyphicon glyphicon-pencil dash_icon"></span>
@@ -38,7 +36,7 @@
             </div>
         </div>
 
-        <div>
+        <div class="m-3">
             <a asp-controller="Dashboard" asp-action="Detail" asp-route-id="@Model.Id" class="btn btn-primary dash_open">OPEN</a>
         </div>
     </div>
