@@ -42,7 +42,7 @@ namespace Infrastructure.Business.Services
 
         private OperationDetails AlarmFire(int sendorId)
         {
-            DateTimeOffset date = DateTimeOffset.Now.AddSeconds(4);        
+            DateTimeOffset date = DateTimeOffset.Now.AddSeconds(-4);        
               var history =  _db.HistoryRepo.GetLastHistoryBySensorIdAndDate(sendorId , date);
 
             if (history.BoolValue == true)

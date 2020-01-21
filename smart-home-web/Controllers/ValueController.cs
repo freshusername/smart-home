@@ -52,7 +52,7 @@ namespace smart_home_web.Controllers
         {
 
             var result = _actionService.CheckStatus(token).Result;
-            if (result.Succeeded) return 1;
+             if (result.Succeeded) return 1;
 
 
             return 0;

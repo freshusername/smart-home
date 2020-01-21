@@ -26,5 +26,14 @@ namespace Infrastructure.Data.Repositories
 
             return sensorControl;
         }
+
+        public override async Task<IEnumerable<SensorControl>> GetAll()
+        {
+            var sensorControl = await context.SensorControls
+                .Include(e => e.Control)
+                 .Include(e => e.Sensor).ToListAsync();
+
+            return sensorControl;
+        }
     }
 }

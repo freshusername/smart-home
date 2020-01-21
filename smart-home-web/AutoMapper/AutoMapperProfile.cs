@@ -131,6 +131,21 @@ namespace smart_home_web.AutoMapper
 
             CreateMap<EditReportElementViewModel, ReportElementDto>();
             CreateMap<ReportElementDto, ReportElement>();
-		}
+
+
+            CreateMap<SensorControl, SensorControlDto>()
+             .ForMember(gd => gd.Id, map => map.MapFrom(s => s.Id))
+             .ForMember(gd => gd.IsActive, map => map.MapFrom(s => s.IsActive))
+             .ForMember(gd => gd.Role, map => map.MapFrom(s => s.Role));
+
+
+            CreateMap<SensorControlDto, SensorControlViewModel>()
+             .ForMember(gd => gd.Id, map => map.MapFrom(s => s.Id))
+             .ForMember(gd => gd.IsActive, map => map.MapFrom(s => s.IsActive))
+             .ForMember(gd => gd.Role, map => map.MapFrom(s => s.Role));
+
+
+
+        }
     }
 }
