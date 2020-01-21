@@ -77,25 +77,37 @@ namespace Infrastructure.Business.Managers
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(heatmapId);
 
             DateTime dateFrom = new DateTime();
-            DateTime dateTo = DateTime.Now.Date;
+            DateTime dateTo = DateTime.Now.AddDays(1);
+            DateTime[] daysArray = new DateTime[28];
 
             if (reportElement.Hours != 0)
-                dateFrom = DateTime.Now.AddHours(-(int)reportElement.Hours).Date;
+                dateFrom = DateTime.Now.AddHours(-(int)reportElement.Hours).Date.AddDays(1);
+
+            for (int i = 0; i < daysArray.Length; i++)
+            {
+                daysArray[i] = dateFrom.AddDays(i);
+            }
 
             IEnumerable<AvgSensorValuePerDay> avgSensorValuesPerDays = await
                 unitOfWork.HistoryRepo.GetAvgSensorsValuesPerDays(reportElement.SensorId, dateFrom, dateTo);
+            List<AvgSensorValuePerDay> AvgSensorValuesPerDays = avgSensorValuesPerDays.ToList();
+
+            for(int i = 0; i < daysArray.Length; i++)
+            {
+                if (!avgSensorValuesPerDays.Any(a => a.WeekDay.ToString("yyyy-MM-dd") == daysArray[i].ToString("yyyy-MM-dd")))
+                    AvgSensorValuesPerDays.Add(new AvgSensorValuePerDay { WeekDay = daysArray[i], AvgValue = 0 });
+            }
+
+            AvgSensorValuesPerDays = AvgSensorValuesPerDays.OrderBy(d => d.WeekDay).ToList();
 
             if (!avgSensorValuesPerDays.Any())
                 return new HeatmapDto { Id = heatmapId, IsCorrect = false };
 
             HeatmapDto heatmap = mapper.Map<Sensor, HeatmapDto>(reportElement.Sensor);
 
-
             heatmap.Id = reportElement.Id;
             heatmap.DashboardName = reportElement.Dashboard.Name;
-            heatmap.Values = new List<dynamic>();
-            heatmap.AvgSensorValuesPerDays = avgSensorValuesPerDays.ToList();
-
+            heatmap.AvgSensorValuesPerDays = AvgSensorValuesPerDays;
 
             return heatmap;
         }
