@@ -3,14 +3,16 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationsDbContext))]
-    partial class ApplicationsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200121141935_Test")]
+    partial class Test
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -147,6 +149,12 @@ namespace Infrastructure.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<bool?>("BoolValue");
+
+                    b.Property<double?>("DoubleValue");
+
+                    b.Property<int?>("IntValue");
+
                     b.Property<string>("NotificationType")
                         .IsRequired();
 
@@ -155,7 +163,7 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<int>("SensorId");
 
-                    b.Property<string>("Value");
+                    b.Property<string>("StringValue");
 
                     b.HasKey("Id");
 

@@ -24,7 +24,7 @@ namespace Infrastructure.Business.Managers
 			//if (!this.unitOfWork.UserManager.GetUserId()
 			//	return this.Redirect("/");
 
-			var notification = await unitOfWork.NotificationRepository.GetById(id);
+			var notification = await unitOfWork.MessageRepository.GetById(id);
 			var result = mapper.Map<Message, NotificationDto>(notification);
 
 			return result;
@@ -32,7 +32,7 @@ namespace Infrastructure.Business.Managers
 
 		public async Task<IEnumerable<NotificationDto>> GetAllNotificationsAsync()
 		{
-			var notifications = await unitOfWork.NotificationRepository.GetAll();
+			var notifications = await unitOfWork.MessageRepository.GetAll();
 			var result = mapper.Map<IEnumerable<Message>, IEnumerable<NotificationDto>>(notifications);
 
 			return result;
@@ -40,7 +40,7 @@ namespace Infrastructure.Business.Managers
 
 		public async Task ChangeStatusAsync(int id)
 		{
-			var notification = await unitOfWork.NotificationRepository.GetById(id);
+			var notification = await unitOfWork.MessageRepository.GetById(id);
 			notification.IsRead = notification.IsRead ? false : true;
 			unitOfWork.Save();
 		}
