@@ -67,7 +67,6 @@ namespace Infrastructure.Business.Managers
 
             heatmap.Id = reportElement.Id;
             heatmap.DashboardName = reportElement.Dashboard.Name;
-            heatmap.Values = new List<dynamic>();
             heatmap.AvgSensorValuesPerDays = avgSensorValuesPerDays.ToList();
 
 

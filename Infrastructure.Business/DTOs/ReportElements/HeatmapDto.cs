@@ -21,10 +21,6 @@ namespace Infrastructure.Business.DTOs.ReportElements
         public MeasurementType MeasurementType { get; set; }
         public string MeasurementName { get; set; }
 
-        public List<dynamic> Values { get; set; }
-
-        public List<string> Dates { get; set; }
-
         public List<AvgSensorValuePerDay> AvgSensorValuesPerDays { get; set; }
     }
 }

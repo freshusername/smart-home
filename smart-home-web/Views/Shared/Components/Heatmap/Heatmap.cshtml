@@ -13,6 +13,18 @@
 </figure>
 <script>
 
+        @{
+            List<decimal> vals = new List<decimal>();
+            List<DateTime> days = new List<DateTime>();
+
+            foreach (var c in Model.AvgSensorValuesPerDays)
+            {
+                vals.Add(c.AvgValue);
+                days.Add(c.WeekDay);
+            }
+            decimal[] valArray = vals.ToArray();
+        }
+
         function getPointCategoryName(point, dimension) {
             var series = point.series,
                 isY = dimension === 'y',
@@ -78,17 +90,6 @@
                          + getPointCategoryName(this.point, 'x') + '</b>';
                 }
             },
-            @{
-                List<decimal> vals = new List<decimal>();
-                List<DateTime> days = new List<DateTime>();
-
-                foreach (var c in Model.AvgSensorValuesPerDays)
-                {
-                    vals.Add(c.AvgValue);
-                    days.Add(c.WeekDay);
-                }
-                decimal[] valArray = vals.ToArray();
-            }
 
             //HeatmapSeriesData
             //TODO: Correct data display for heatmap
