@@ -82,54 +82,30 @@ a.disabledclass {
         transform: scale(1.5);
     }
 
-/*body {
-    background-color: #3498db;
+
+/* Page of dashboards */ 
+#create_elem {
+    -webkit-transition: width 1.5s ease;
+    -moz-transition: width 1.5s ease;
+    -o-transition: width 1.5s ease;
+    transition: width 1.5s ease;
+    display: inline-block;
     overflow: hidden;
-    -webkit-animation: colorchange 50s infinite;
+    white-space: nowrap;
+    vertical-align: middle;
+    line-height: 30px;
+    height: 37px;
+    width: 0px;
 }
 
-@keyframes colorchange {
-    0% {
-        background: #2ecc71;
-    }
+#create_elem.in {
+    width: 320px;
+}
 
-    10% {
-        background: #3498db;
-    }
-
-    20% {
-        background: #9b59b6;
-    }
-
-    30% {
-        background: #34495e;
-    }
-
-    40% {
-        background: #16a085;
-    }
-
-    50% {
-        background: #27ae60;
-    }
-
-    60% {
-        background: #2980b9;
-    }
-
-    70% {
-        background: #8e44ad;
-    }
-
-    80% {
-        background: #2c3e50;
-    }
-
-    90% {
-        background: #e74c3c;
-    }
-
-    100% {
-        background: #2ecc71;
-    }
-}*/
+.dash_edit {
+    background: none;
+    color: #337ab7;
+    border: none;
+    padding: 0;
+    outline: none;
+}

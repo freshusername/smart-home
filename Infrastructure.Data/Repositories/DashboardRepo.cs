@@ -19,9 +19,14 @@ namespace Infrastructure.Data.Repositories
 
 		public override async Task<IEnumerable<Dashboard>> GetAll()
 		{
-			return context.Dashboards
+			return await context.Dashboards
 				.Include(d => d.AppUser)
-				.Include(d => d.ReportElements);
+				.Include(d => d.ReportElements).ToListAsync();
+		}
+
+		public override async Task DeleteById(int id)
+		{
+			context.Dashboards.Remove(await GetById(id));
 		}
 
 		public override async Task<Dashboard> GetById(int id)
