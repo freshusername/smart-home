@@ -9,7 +9,7 @@
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
 <figure class="highcharts-figure">
-    <div id="container"></div>
+    <div id=@("Heatmap" + Model.Id.ToString())></div>
 </figure>
 <script>
 
@@ -32,7 +32,7 @@
             return axis.categories[point[isY ? 'y' : 'x']];
         }
 
-        Highcharts.chart('container', {
+        Highcharts.chart("Heatmap"+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
 
             chart: {
                 type: 'heatmap',
@@ -40,7 +40,6 @@
                 marginBottom: 80,
                 plotBorderWidth: 1
             },
-
 
             title: {
                 text: 'Average value per weekday for ' + @Html.Raw(Json.Serialize(Model.SensorName))
@@ -85,26 +84,24 @@
 
             tooltip: {
                 formatter: function () {
-                    return '<b>' + '</b><br>' + @Html.Raw(Json.Serialize(Model.SensorName))  + 'average <b>' +
+                    return '<b>' + '</b><br>' + @Html.Raw(Json.Serialize(Model.SensorName))  + ' has average: <b>' +
                         this.point.value + '</b><br> on <b>' + getPointCategoryName(this.point, 'y') + ' '
                          + getPointCategoryName(this.point, 'x') + '</b>';
                 }
             },
 
-            //HeatmapSeriesData
-            //TODO: Correct data display for heatmap
             series: [{
                 name: 'Average sensor values per weekday',
                 borderWidth: 1,
                 data: [
-                    @for (int i = 0; i < valArray.Length; i++)
+                    @{int h = 0;}
+                    @for (int i = 0; i < 4; i++)
                     {
-                        @for (int j = 0; j < valArray.Length; j++)
+                        @for (int j = 0; j < 7; j++)
                         {
                             <text>
-                                [@Html.Raw(Json.Serialize(i)), @Html.Raw(Json.Serialize(j)), @Html.Raw(Json.Serialize(valArray[i]))],
+                                [@Html.Raw(Json.Serialize(j)), @Html.Raw(Json.Serialize(i)), @Html.Raw(Json.Serialize(valArray[h++]))],
                             </text>
-
                         }
                     }
                 ],
@@ -115,6 +112,14 @@
                 }
             }],
 
+            exporting: {
+                buttons: {
+                    contextButton: {
+                        enabled: false,
+                    }
+                }
+            },
+
             responsive: {
                 rules: [{
                     condition: {
@@ -124,7 +129,12 @@
                         yAxis: {
                             labels: {
                                 formatter: function () {
-                                    return this.value.charAt(0);
+                                    try {
+                                        return this.value.charAt(0);
+                                    }
+                                    catch (error) {
+
+                                    }
                                 }
                             }
                         }
@@ -133,12 +143,19 @@
             }
 
         });
+</script>
 
-    console.log(@for (int i = 0; i < valArray.Length; i++)
-                {
-                    <text>
-                        @Html.Raw(Json.Serialize(valArray[i])),
-                    </text>
-                })
+<script>
+    $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
+        var type = 'Heatmap';
+        try {
+            var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
+        }
+        catch (error) {
 
+        }
+        if (typeof result !== 'undefined') {
+            result.setSize(ui.height, ui.width);
+        }
+    });
 </script>

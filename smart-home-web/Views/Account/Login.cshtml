@@ -12,13 +12,13 @@
         <div class="row align-items-center">
             <div class="col-lg-6 col-md-6">
                 <div class="login_part_text text-center">
-                    <div class="login_part_text_iner">
+                    <div class="login_part_text_iner thumbnail" style="padding: 30px">
                         <h2>New to our Smart Home?</h2>
                         <p>
                             There are advances being made in science and technology
                             everyday, and a good example of this is the
                         </p>
-                        <a asp-controller="Account" asp-action="Register" class="btn_3">Create an account</a>
+                        <a asp-controller="Account" asp-action="Register" class="btn btn_3 btn-primary" style="margin-top:15px">Create an account</a>
                     </div>
                 </div>
             </div>
@@ -41,20 +41,25 @@
                                        placeholder="Password">
                             </div>
                             <div class="col-md-12 form-group">
-                                <div class="creat_account d-flex align-items-center">
-                                    <input type="checkbox" id="f-option" name="selector">
-                                    <label for="f-option">@Html.DisplayNameFor(m => m.RememberMe)</label>
-                                    <a asp-action="ForgotPassword" asp-controller="Account" class="lost_pass">Forget password?</a>
+                                <div class="creat_account d-flex align-items-center row">
+                                    <div class="col">
+                                        <input type="checkbox" id="f-option" name="selector">
+                                        <label for="f-option">@Html.DisplayNameFor(m => m.RememberMe)</label>
+                                    </div>
+                                    <div>
+                                        <a asp-action="ForgotPassword" asp-controller="Account" class="lost_pass btn btn-info" style="margin-right:15px">Forget password?</a>
+                                    </div>
+
                                 </div>
 
-                                <button type="submit" value="submit" class="btn_3">
-                                    Sign In
+                                <button type="submit" value="submit" class="btn_3 btn btn-primary">
+                                    SIGN IN
                                 </button>
 
                             </div>
-                        </form>
-                        <a asp-action="SignInGoogle" asp-controller="Account" class="btn btn-lg btn-google btn-block text-uppercase"><i class="fab fa-google mr-2"></i>Sign in with Google</a>
-                        <button class="btn btn-lg btn-facebook btn-block text-uppercase" type="submit"><i class="fab fa-facebook-f mr-2"></i> Sign in with Facebook</button>
+                        </form>          
+                            <a asp-action="SignInGoogle" asp-controller="Account" class="btn btn-lg btn-warning"><i class="fab fa-google mr-2"></i>Sign in with Google</a>
+                            <button class="btn btn-lg btn-primary" type="submit"><i class="fab fa-facebook-f mr-2"></i> Sign in with Facebook</button>
                     </div>
                 </div>
             </div>

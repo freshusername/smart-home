@@ -19,9 +19,9 @@ namespace smart_home_web.Components
             _reportElementManager = reportElementManager;
             _mapper = mapper;
         }
-        public async Task<IViewComponentResult> InvokeAsync(int heatmapId)
+        public async Task<IViewComponentResult> InvokeAsync(int reportElementId)
         {
-            HeatmapDto heatmapDto = await _reportElementManager.GetHeatmapById(heatmapId);
+            HeatmapDto heatmapDto = await _reportElementManager.GetHeatmapById(reportElementId);
             HeatmapViewModel result = _mapper.Map<HeatmapDto, HeatmapViewModel>(heatmapDto);
             return View("Heatmap", result);
         }
