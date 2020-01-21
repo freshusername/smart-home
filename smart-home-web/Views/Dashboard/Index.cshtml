@@ -4,6 +4,7 @@
     ViewData["Title"] = "Dashboards";
 }
 
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
 
 <div class="row">
     <div class="col">
@@ -35,7 +36,7 @@
 
         @foreach (var dashboard in Model.Dashboards)
         {
-            <div class="border m-2 dash_element">
+            <div class="border m-2 dash_element ">
                 @await Component.InvokeAsync("Dashboard", new { model = dashboard })
             </div>
         }

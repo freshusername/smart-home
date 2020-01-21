@@ -7,20 +7,23 @@ using Infrastructure.Business.DTOs.Dashboard;
 using Infrastructure.Business.Infrastructure;
 using System.Linq;
 using System;
+using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Business.Managers
 {
 	public class DashboardManager : BaseManager, IDashboardManager
 	{
-		public DashboardManager(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
-		{
+		private UserManager<AppUser> _userManager { get; set; }
 
+		public DashboardManager(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager) : base(unitOfWork, mapper)
+		{
+			_userManager = userManager;
 		}
 
 		public async Task<OperationDetails> Create(DashboardDto dashboardDto)
 		{
 			var dashboard = mapper.Map<DashboardDto, Dashboard> (dashboardDto);
-            if(String.IsNullOrEmpty(dashboard.Name))
+			if (String.IsNullOrEmpty(dashboard.Name))
                 return new OperationDetails(false, "Name is null", "Name");
             await unitOfWork.DashboardRepo.Insert(dashboard);
 			var res = unitOfWork.Save();
