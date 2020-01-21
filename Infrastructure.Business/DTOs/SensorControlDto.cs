@@ -16,6 +16,7 @@ namespace Infrastructure.Business.DTOs
 
         public Control Control { get; set; }
 
-        public Domain.Core.Model.Sensor Sensors { get; set; }
+        public Domain.Core.Model.Sensor Sensor { get; set; }
+        public Domain.Core.Model.Sensor ControlSensor { get; set; }
     }
 }

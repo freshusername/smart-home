@@ -23,24 +23,20 @@ namespace Infrastructure.Business.Services
         {
             var data = await _db.SensorControlRepo.GetByToken(token);          
              if (data == null || data.Count() == 0) return new OperationDetails(false, "", "");
-
-            var sensor = _db.SensorRepo.GetByToken(token);
-             if (sensor.Name == "Beep")
-             {
+           
                 foreach (var item in data)
-                {
-                    if(item.Role == ActionRole.AlarmFire && item.IsActive)
+                { 
+                    if(item.IsActive && item.Sensor.SensorType.MeasurementType == MeasurementType.Bool)
                     {
-                        var result = AlarmFire(item.SensorId);
+                        var result = CheckForBool(item.SensorId);
                          return result;
                     }
                 }
-             }
-         
+                     
             return new OperationDetails(false , "" , "");
         }
 
-        private OperationDetails AlarmFire(int sendorId)
+        private OperationDetails CheckForBool(int sendorId)
         {
             DateTimeOffset date = DateTimeOffset.Now.AddSeconds(-4);        
               var history =  _db.HistoryRepo.GetLastHistoryBySensorIdAndDate(sendorId , date);

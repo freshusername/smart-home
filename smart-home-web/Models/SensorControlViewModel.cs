@@ -17,6 +17,7 @@ namespace smart_home_web.Models
 
         public Control Control { get; set; }
 
-        public Sensor Sensors { get; set; }
+        public Sensor Sensor { get; set; }
+        public Sensor ControlSensor { get; set; }
     }
 }

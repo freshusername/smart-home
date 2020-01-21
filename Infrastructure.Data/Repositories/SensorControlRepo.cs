@@ -22,6 +22,7 @@ namespace Infrastructure.Data.Repositories
             var sensorControl = await context.SensorControls
                 .Include(e => e.Control)
                  .Include(e => e.Sensor)
+                 .ThenInclude(e => e.SensorType)
                 .Where(e => e.Control.Token == token ).ToListAsync();
 
             return sensorControl;
@@ -32,6 +33,15 @@ namespace Infrastructure.Data.Repositories
             var sensorControl = await context.SensorControls
                 .Include(e => e.Control)
                  .Include(e => e.Sensor).ToListAsync();
+
+            return sensorControl;
+        }
+
+        public override async Task<SensorControl> GetById(int id)
+        {
+            var sensorControl = await context.SensorControls
+                .Include(e => e.Control)
+                 .Include(e => e.Sensor).FirstOrDefaultAsync(e=> e.Id == id);
 
             return sensorControl;
         }

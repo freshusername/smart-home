@@ -21,11 +21,18 @@ namespace smart_home_web.Controllers
             _mapper = mapper;
         }
 
-        public IActionResult Index(List<SensorControlViewModel> model)
+        public IActionResult Index()
         {
             var data = _sensorControlManager.GetSensorControls();
-             model = _mapper.Map<List<SensorControlDto>,List<SensorControlViewModel>>(data);
+             var model = _mapper.Map<List<SensorControlDto>,List<SensorControlViewModel>>(data);
+            return View(model);
+        }
 
+        [HttpGet]
+        public IActionResult Change(int id)
+        {
+            var data = _sensorControlManager.GetById(id);
+             var model = _mapper.Map<SensorControlDto,SensorControlViewModel>(data);
             return View(model);
         }
     }

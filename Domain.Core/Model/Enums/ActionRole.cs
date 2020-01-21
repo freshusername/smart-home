@@ -6,9 +6,8 @@ namespace Domain.Core.Model.Enums
 {
     public enum ActionRole
     {
-        AlarmFire,
-        Light,
-
-
+        Fire_Alarm,
+        Movement_Alarm,
+        Custom
     }
 }

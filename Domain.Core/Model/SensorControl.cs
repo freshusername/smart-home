@@ -18,5 +18,9 @@ namespace Domain.Core.Model
 
         public int ControlId { get; set; }
         public virtual Control Control { get; set; }
+
+        public int IconId { get; set; }
+        public Icon Icon { get; set; }
+        
     }
 }

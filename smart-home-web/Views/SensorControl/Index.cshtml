@@ -9,14 +9,16 @@
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="card h-100">
                     <div class="card-body">
-                        <a href="#"><i class="fas fa-cog"></i></a>
+                        <a asp-action="Change" asp-controller="SensorControl" asp-route-Id="@item.Id" class="pull-right">
+                            <i class="fas fa-cog fa-2x"></i>                          
+                        </a>                     
                         <img src="https://igenappsfiles.blob.core.windows.net/users/1867624/fa-quick-guide/apple-touch-icon-precomposed.png" width="130" height="130" alt="Alternate Text" class="center-block" />
-                        <h1 class="card-title text-center">@item.Role.ToString()</h1>
-                        <div class="col-sm-5">
+                        <h1 class="card-title text-center pull-left">@item.Role.ToString()</h1>
+                      
                             <button type="button" class="btn btn-lg btn-toggle" data-toggle="button" aria-pressed="false" autocomplete="off">
                                 <div class="handle"></div>
                             </button>
-                        </div>
+                      
                     </div>
                 </div>
 
