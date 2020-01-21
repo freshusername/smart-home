@@ -26,6 +26,11 @@ namespace Infrastructure.Data.Repositories
             dbSet.Remove(item);
         }
 
+        public async virtual Task DeleteById(int id)
+        {
+            dbSet.Remove(await dbSet.FindAsync(id));
+        }
+
         public async virtual Task<IEnumerable<T>> GetAll()
         {
             return await dbSet.ToListAsync();

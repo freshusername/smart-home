@@ -1,25 +1,14 @@
 ﻿using AutoMapper;
 using Domain.Core.Model;
-using Domain.Core.Model.Enums;
 using Infrastructure.Business.DTOs.Dashboard;
-using Infrastructure.Business.DTOs.Icon;
-using Infrastructure.Business.DTOs.ReportElements;
-using Infrastructure.Business.DTOs.Sensor;
-using Infrastructure.Business.DTOs.SensorType;
+using Infrastructure.Business.Infrastructure;
 using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using smart_home_web.Models;
 using smart_home_web.Models.Dashboard;
-using smart_home_web.Models.SensorType;
-using smart_home_web.Models.SensorViewModel;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -71,6 +60,46 @@ namespace smart_home_web.Controllers
 			{
 				Dashboards = result
 			});
+		}
+
+		[Authorize]
+		[HttpPost]
+		public async Task<IActionResult> Create(string name)
+		{
+			DashboardDto dashboardDto = new DashboardDto()
+			{
+				Name = name,
+				AppUserId = _userManager.GetUserId(User)
+
+			};
+
+			OperationDetails result = await _dashboardManager.Create(dashboardDto);
+			if (result.Succeeded)
+			{
+				var dashboardDtos = await _dashboardManager.GetAll();
+				var dashboard = _mapper.Map<DashboardDto, DashboardViewModel>(dashboardDtos.Last());
+				return ViewComponent("Dashboard", new { model = dashboard });
+			}
+			else
+			{
+				ModelState.AddModelError(result.Property, result.Message);
+				return NotFound();
+			}
+		}
+
+		[Authorize]
+		[HttpPost]
+		public async Task<IActionResult> Edit(int id, string name)
+		{
+			await _dashboardManager.Update(id, name);
+			return Ok();
+		}
+
+		public async Task<IActionResult> Delete(int id)
+		{
+			await _dashboardManager.DeleteById(id);
+			return Ok();
+
 		}
 	}
 }

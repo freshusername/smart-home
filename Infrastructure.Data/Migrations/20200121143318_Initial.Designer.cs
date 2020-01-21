@@ -9,31 +9,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationsDbContext))]
-    [Migration("20200117082539_sp-GetAvgValesForSensor")]
-    partial class spGetAvgValesForSensor
+    [Migration("20200121143318_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.14-servicing-32113")
+                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
-
-            modelBuilder.Entity("Domain.Core.JoinModel.DashboardOptions", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("DashboardId");
-
-                    b.Property<int>("OptionsId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DashboardId");
-
-                    b.ToTable("DashboardOptions");
-                });
 
             modelBuilder.Entity("Domain.Core.Model.AppUser", b =>
                 {
@@ -158,28 +142,6 @@ namespace Infrastructure.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Messages");
-                });
-
-            modelBuilder.Entity("Domain.Core.Model.Options", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("DashboardOptionsId");
-
-                    b.Property<int>("Height");
-
-                    b.Property<int>("Weight");
-
-                    b.Property<int>("X");
-
-                    b.Property<int>("Y");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DashboardOptionsId");
-
-                    b.ToTable("Options");
                 });
 
             modelBuilder.Entity("Domain.Core.Model.ReportElement", b =>
@@ -374,14 +336,6 @@ namespace Infrastructure.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Domain.Core.JoinModel.DashboardOptions", b =>
-                {
-                    b.HasOne("Domain.Core.Model.Dashboard", "Dashboard")
-                        .WithMany()
-                        .HasForeignKey("DashboardId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("Domain.Core.Model.Dashboard", b =>
                 {
                     b.HasOne("Domain.Core.Model.AppUser", "AppUser")
@@ -406,14 +360,6 @@ namespace Infrastructure.Data.Migrations
                     b.HasOne("Domain.Core.Model.History", "History")
                         .WithOne("Message")
                         .HasForeignKey("Domain.Core.Model.Message", "HistoryId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Domain.Core.Model.Options", b =>
-                {
-                    b.HasOne("Domain.Core.JoinModel.DashboardOptions")
-                        .WithMany("Options")
-                        .HasForeignKey("DashboardOptionsId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
