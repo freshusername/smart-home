@@ -40,11 +40,14 @@ namespace Infrastructure.Business.Managers
         public async Task CreateReportElement(ReportElementDto reportElementDto)
         {
 			var reportElements = await unitOfWork.ReportElementRepo.GetAll();
-			ReportElement lastReportElement = reportElements.Last();
-            ReportElement reportElement = mapper.Map<ReportElementDto, ReportElement>(reportElementDto);
+			int maxX = reportElements.OrderByDescending(r => r.X).First().X;
+			int maxY = reportElements.OrderByDescending(r => r.X).First().Y;
+
+			ReportElement reportElement = mapper.Map<ReportElementDto, ReportElement>(reportElementDto);
             reportElement.Height = 4;
             reportElement.Width = 6;
-			reportElement.X = lastReportElement.X + 1;
+            reportElement.X = maxX++;
+            reportElement.Y = maxY++;
             await unitOfWork.ReportElementRepo.Insert(reportElement);
             unitOfWork.Save();
         }
