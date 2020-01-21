@@ -6,6 +6,7 @@ using Infrastructure.Business.DTOs.Icon;
 using Infrastructure.Business.DTOs.ReportElements;
 using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.DTOs.SensorType;
+using Infrastructure.Business.Infrastructure;
 using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
