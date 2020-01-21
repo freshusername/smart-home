@@ -40,6 +40,7 @@ namespace smart_home_web.AutoMapper
             CreateMap<SensorDto, Sensor>();
             CreateMap<SensorDto, SensorViewModel>();
             CreateMap<CreateSensorViewModel, SensorDto>();
+            CreateMap<EditSensorViewModel, SensorDto>().ReverseMap();
 
             CreateMap<Icon, IconDto>().ReverseMap();
 
@@ -94,8 +95,6 @@ namespace smart_home_web.AutoMapper
             CreateMap<ReportElement, GaugeDto>().ReverseMap();
             CreateMap<GaugeDto, GaugeViewModel>().ReverseMap();
 
-            //================= Heatmap ===================
-
             CreateMap<ReportElement, HeatmapDto>().ReverseMap();
             CreateMap<Sensor, HeatmapDto>()
                 .ForMember(gd => gd.SensorId, map => map.MapFrom(s => s.Id))
@@ -106,7 +105,6 @@ namespace smart_home_web.AutoMapper
             CreateMap<HeatmapDto, HeatmapViewModel>().ReverseMap();
 
             CreateMap<AvgSensorValuePerDay, AvgSensorValuePerDayDTO>();
-
 
             CreateMap<Sensor, ReportElementDto>()
                 .ForMember(gd => gd.SensorId, map => map.MapFrom(s => s.Id))
@@ -131,6 +129,6 @@ namespace smart_home_web.AutoMapper
 
             CreateMap<EditReportElementViewModel, ReportElementDto>();
             CreateMap<ReportElementDto, ReportElement>();
-		}
+        }
     }
 }

@@ -54,7 +54,27 @@
                     </div>
                 </td>
 
-                <td><a class="btn btn-success text-center" asp-controller="History" asp-action="Graph" asp-route-sensorId="@sensor.Id" asp-route-days="99999"><i class="fa fa-bar-chart"></i></a></td>
+                <td>
+                    <div class="col-xs-3">
+                        <a class="btn btn-sm btn-success text-center"
+                           asp-controller="History"
+                           asp-action="Graph"
+                           asp-route-sensorId="@sensor.Id"
+                           asp-route-days="99999">
+                            <i class="fa fa-bar-chart"></i>
+                        </a>
+                        <a class="btn btn-sm btn-info text-center"
+                           asp-action="Update"
+                           asp-route-sensorId="@sensor.Id">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        <a class="btn btn-sm btn-danger text-center"
+                           asp-action="Delete"
+                           asp-route-sensorId="@sensor.Id">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    </div>
+                </td>
             </tr>
         }
     </tbody>

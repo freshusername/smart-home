@@ -69,36 +69,41 @@ namespace smart_home_web.Controllers
             return RedirectToAction("Index", "Sensor");
         }
 
+        public async Task<ActionResult> Update(int sensorId)
+        {
+            var sensorDto = await _sensorManager.GetSensorByIdAsync(sensorId);
+            EditSensorViewModel sensorViewModel = _mapper.Map<SensorDto, EditSensorViewModel>(sensorDto);
+            return View("Update", sensorViewModel);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Update(EditSensorViewModel sensorViewModel)
         {
+            SensorDto sensorDto = _mapper.Map<EditSensorViewModel, SensorDto>(sensorViewModel);
+            if (sensorViewModel.IconFile != null)
+            {
+                sensorDto.IconId = await _iconManager.CreateAndGetIconId(sensorViewModel.IconFile);
+            }
             try
             {
-                // TODO: Add update logic here
+                _sensorManager.Update(sensorDto);
 
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return View("Update");
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(int sensorId)
         {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var sensorDto = await _sensorManager.GetSensorByIdAsync(sensorId);
+            EditSensorViewModel sensorViewModel = _mapper.Map<SensorDto, EditSensorViewModel>(sensorDto);
+            return View(sensorViewModel);
         }
 
         [HttpGet]
