@@ -68,6 +68,7 @@
 
                 <div class="form-group text-center">
                     <input type="submit" value="Save" class="btn btn-success text-center" style="width:20%" />
+                    <a asp-controller="Dashboard" asp-action="Detail" asp-route-id="@Model.DashboardId" class="btn btn-primary"><em class="glyphicon glyphicon-arrow-left"></em> Back to dashboard</a>
                 </div>
             </form>
         </div>
@@ -92,6 +93,13 @@
                                 .text(value.name));
                     });
                     $('#sensor-select').val($('#sensor-id').val());
+                    if ($('#sensor-select').children().length == 0) {
+                             $('#sensor-select')
+                                .append($("<option></option>")
+                                    .attr("disabled", true)
+                                    .attr("selected", true)
+                                    .text("There is not suitable sensor"));
+                        }
                     $('select').niceSelect('update');
                 },
                 error: function (res) {
