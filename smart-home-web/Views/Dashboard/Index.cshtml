@@ -1,40 +1,9 @@
 ﻿@using smart_home_web.Models.Dashboard;
+@model DashboardIndexViewModel;
 @{
     ViewData["Title"] = "Dashboards";
 }
 
-@model DashboardIndexViewModel;
-
-@*Not working*@
-@*<link href="~/css/site.css" rel="stylesheet" />*@
-
-<style>
-    #create_elem {
-        -webkit-transition: width 1.5s ease;
-        -moz-transition: width 1.5s ease;
-        -o-transition: width 1.5s ease;
-        transition: width 1.5s ease;
-        display: inline-block;
-        overflow: hidden;
-        white-space: nowrap;
-        vertical-align: middle;
-        line-height: 30px;
-        height: 37px;
-        width: 0px;
-    }
-
-        #create_elem.in {
-            width: 320px;
-        }
-
-    .dash_edit {
-        background: none;
-        color: #337ab7;
-        border: none;
-        padding: 0;
-        outline: none;
-    }
-</style>
 
 <div class="row">
     <div class="col">
@@ -87,12 +56,15 @@
         }
         no_dashboards_show();
 
-        $("#dash_create_button").click(function () {
+        function toggle_icon() {
             $(this).children().toggleClass("glyphicon-plus-sign glyphicon-remove-circle");
-        });
+        }
+        toggle_icon();
 
         function create_edit_form() {
             let parent = $(this).closest(".dash_element");
+            $(".dash_name_edit").hide();
+            $(".dash_name").show();
             parent.find(".dash_name_edit").show();
             parent.find(".dash_name").hide();
         }
@@ -100,6 +72,8 @@
         function edit_dashboard() {
             event.preventDefault();
             let parent = $(this).closest(".dash_element");
+            let open = parent.find(".dash_open");
+            open.toggleClass("disabled");
             let form = parent.find(".form_edit_name");
             let name_value = form.find(".form_dash_name").val();
             let id_value = parent.find(".dash_id").data("dash-id");
@@ -114,6 +88,9 @@
                 },
                 error: function (res) {
                     console.log(res);
+                },
+                success: function () {
+                    open.toggleClass("disabled");
                 },
                 type: "POST"
             });
@@ -148,9 +125,14 @@
 
         function create_dashboard() {
             event.preventDefault();
+            $(".dash_name_edit").hide();
+            $(".dash_name").show();
             $.ajax({
                 url: $(this).data("dash-url"),
                 data: { name: $("#form_dash_name").val() },
+                error: function (result) {
+                    console.log(result);
+                },
                 success: function (data) {
                     let element = $("<div  class='border m-2 dash_element' >" + data + "</div>");
                     element.hide();
@@ -166,12 +148,15 @@
                     $("#form_dash_name").val("");
                     var selector = $("[data-toggle='toggle']").data("target");
                     $(selector).toggleClass('in');
+                    $("#dash_create_button").children().toggleClass("glyphicon-plus-sign glyphicon-remove-circle");
                 },
                 type: "POST"
             });
 
         }
 
+
+        $("#dash_create_button").click(toggle_icon);
         $("[data-toggle='toggle']").click(collapse_button);
         $("#dash_create").submit(create_dashboard);
         $(".dash_remove", ".dash_element").click(delete_dashboard);

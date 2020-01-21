@@ -82,6 +82,8 @@ a.disabledclass {
         transform: scale(1.5);
     }
 
+
+/* Page of dashboards */ 
 #create_elem {
     -webkit-transition: width 1.5s ease;
     -moz-transition: width 1.5s ease;
