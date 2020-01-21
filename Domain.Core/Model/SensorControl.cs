@@ -11,6 +11,8 @@ namespace Domain.Core.Model
 
         public ActionRole Role { get; set; }
 
+        public bool IsActive { get; set; } = false;
+
         public int SensorId { get; set; }
         public virtual Sensor Sensor { get; set; }
 

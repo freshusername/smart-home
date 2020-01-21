@@ -9,6 +9,6 @@ namespace Infrastructure.Business.Services
 {
     public interface IActionService
     {
-        OperationDetails IsActive(Guid token, ActionRole role);
+        Task<OperationDetails> CheckStatus(Guid token);
     }
 }

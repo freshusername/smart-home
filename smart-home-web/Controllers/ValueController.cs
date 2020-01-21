@@ -51,11 +51,11 @@ namespace smart_home_web.Controllers
         public int GetAction(Guid token)
         {
 
-            var result = _actionService.IsActive(token, ActionRole.AlarmFire);
-             if (result.Succeeded == true) return 1;
-                
+            var result = _actionService.CheckStatus(token).Result;
+            if (result.Succeeded) return 1;
 
-            return (DateTime.Now.Second / 10) % 2;
+
+            return 0;
         }
     }
 }

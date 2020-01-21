@@ -19,29 +19,31 @@ namespace Infrastructure.Business.Services
             _db = _unitOfWork;
         }
 
-        public OperationDetails IsActive(Guid token , ActionRole role)
+        public async Task<OperationDetails> CheckStatus(Guid token)
         {
-            var data =  _db.SensorControlRepo.GetByTokenAndRople(token , role).Result;
-             if (data == null) return new OperationDetails(false, "", "");
+            var data = await _db.SensorControlRepo.GetByToken(token);          
+             if (data == null || data.Count() == 0) return new OperationDetails(false, "", "");
 
-            var seconds = DateTimeOffset.Now.AddSeconds(-10);
-             var histories =  _db.HistoryRepo.GetHistoriesBySensorIdAndDate(data.SensorId, seconds).Result;
-            if (histories == null || histories.Count() == 0) return new OperationDetails(false, "", "");
-
-            if (role == ActionRole.AlarmFire)
-            {
-                var result = AlarmFire(data.SensorId);
-                 return result;
-            }
-
+            var sensor = _db.SensorRepo.GetByToken(token);
+             if (sensor.Name == "Beep")
+             {
+                foreach (var item in data)
+                {
+                    if(item.Role == ActionRole.AlarmFire && item.IsActive)
+                    {
+                        var result = AlarmFire(item.SensorId);
+                         return result;
+                    }
+                }
+             }
+         
             return new OperationDetails(false , "" , "");
         }
 
-
-
-        public OperationDetails AlarmFire(int sendorId)
-        {           
-           var history = _db.HistoryRepo.GetLastHistoryBySensorId(sendorId);
+        private OperationDetails AlarmFire(int sendorId)
+        {
+            DateTimeOffset date = DateTimeOffset.Now.AddSeconds(4);        
+              var history =  _db.HistoryRepo.GetLastHistoryBySensorIdAndDate(sendorId , date);
 
             if (history.BoolValue == true)
               return new OperationDetails(true, "" , "");

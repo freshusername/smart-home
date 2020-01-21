@@ -20,5 +20,6 @@ namespace Domain.Interfaces.Repositories
         Task<IEnumerable<History>> GetHistoriesBySensorIdAndDatePeriod(int SensorId, DateTime dateFrom, DateTime dateTo);
         Task<IEnumerable<AvgSensorValuePerDay>> GetAvgSensorsValuesPerDays(int sensorId, DateTime dateFrom, DateTime dateTo);
         Task<int> GetAmountAsync(bool isActivated);
+        History GetLastHistoryBySensorIdAndDate(int sensorId, DateTimeOffset date);
     }
 }

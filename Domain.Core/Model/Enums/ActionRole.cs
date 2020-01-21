@@ -6,6 +6,6 @@ namespace Domain.Core.Model.Enums
 {
     public enum ActionRole
     {
-        AlarmFire
+        AlarmFire        
     }
 }
