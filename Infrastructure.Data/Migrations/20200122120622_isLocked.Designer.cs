@@ -9,14 +9,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationsDbContext))]
-    [Migration("20200121144027_NotifValue")]
-    partial class NotifValue
+    [Migration("20200122120622_isLocked")]
+    partial class isLocked
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.14-servicing-32113")
+                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Domain.Core.Model.AppUser", b =>
@@ -176,6 +176,8 @@ namespace Infrastructure.Data.Migrations
                     b.Property<int>("Height");
 
                     b.Property<int>("Hours");
+
+                    b.Property<bool>("IsLocked");
 
                     b.Property<int>("SensorId");
 

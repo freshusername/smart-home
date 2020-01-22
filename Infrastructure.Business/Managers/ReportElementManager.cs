@@ -333,7 +333,7 @@ namespace Infrastructure.Business.Managers
 		public async Task Lock(ReportElement reportElement)
 		{
 			ReportElement result = await unitOfWork.ReportElementRepo.GetById(reportElement.Id);
-			result.IsLocked = reportElement.IsLocked;
+			result.IsLocked = !reportElement.IsLocked;
 			await unitOfWork.ReportElementRepo.Update(result);
 			unitOfWork.Save();
 		}
