@@ -149,8 +149,8 @@ namespace Infrastructure.Business.Managers
                 history.StringValue = valueModel;
 
 
-            if (!CheckValue(history))
-                return new OperationDetails(false, "Operation did not succeed!", "");
+            //if (!CheckValue(history))
+            //    return new OperationDetails(false, "Operation did not succeed!", "");
 
             unitOfWork.HistoryRepo.Insert(history);
             unitOfWork.Save();

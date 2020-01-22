@@ -9,14 +9,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationsDbContext))]
-    [Migration("20200120172641_MigrationDb")]
-    partial class MigrationDb
+    [Migration("20200122201035_migrationdb")]
+    partial class migrationdb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.8-servicing-32085")
+                .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Domain.Core.Model.AppUser", b =>
@@ -156,6 +156,28 @@ namespace Infrastructure.Data.Migrations
                     b.ToTable("Messages");
                 });
 
+            modelBuilder.Entity("Domain.Core.Model.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Message");
+
+                    b.Property<int>("NotificationType");
+
+                    b.Property<int>("Rule");
+
+                    b.Property<int>("SensorId");
+
+                    b.Property<string>("Value");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SensorId");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("Domain.Core.Model.ReportElement", b =>
                 {
                     b.Property<int>("Id")
@@ -166,6 +188,8 @@ namespace Infrastructure.Data.Migrations
                     b.Property<int>("Height");
 
                     b.Property<int>("Hours");
+
+                    b.Property<bool>("IsLocked");
 
                     b.Property<int>("SensorId");
 
@@ -226,14 +250,23 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<int>("ControlId");
 
-                    b.Property<string>("Role")
-                        .IsRequired();
+                    b.Property<int>("IconId");
+
+                    b.Property<bool>("IsActive");
+
+                    b.Property<string>("Name");
 
                     b.Property<int>("SensorId");
+
+                    b.Property<int?>("maxValue");
+
+                    b.Property<int?>("minValue");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ControlId");
+
+                    b.HasIndex("IconId");
 
                     b.HasIndex("SensorId");
 
@@ -251,7 +284,8 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<string>("MeasurementName");
 
-                    b.Property<string>("MeasurementType");
+                    b.Property<string>("MeasurementType")
+                        .IsRequired();
 
                     b.Property<string>("Name");
 
@@ -396,6 +430,14 @@ namespace Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("Domain.Core.Model.Notification", b =>
+                {
+                    b.HasOne("Domain.Core.Model.Sensor", "Sensor")
+                        .WithMany("Notifications")
+                        .HasForeignKey("SensorId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("Domain.Core.Model.ReportElement", b =>
                 {
                     b.HasOne("Domain.Core.Model.Dashboard", "Dashboard")
@@ -429,6 +471,11 @@ namespace Infrastructure.Data.Migrations
                     b.HasOne("Domain.Core.Model.Control", "Control")
                         .WithMany("SensorControls")
                         .HasForeignKey("ControlId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Domain.Core.Model.Icon", "Icon")
+                        .WithMany()
+                        .HasForeignKey("IconId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Domain.Core.Model.Sensor", "Sensor")

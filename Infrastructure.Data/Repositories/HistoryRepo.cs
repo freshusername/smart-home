@@ -98,10 +98,12 @@ namespace Infrastructure.Data.Repositories
 
         public History GetLastHistoryBySensorIdAndDate(int sensorId, DateTimeOffset date)
         {
-            var histories = context.Histories.Where(h => h.SensorId == sensorId && h.Date > date)
-                .OrderBy(e => e.Date).Last();
-               
-            return histories;
+            var histories = context.Histories.Where(h => h.SensorId == sensorId && h.Date > date);
+            if (histories == null) return null;
+
+            var lasthistory = histories.OrderByDescending(e => e.Date).FirstOrDefault();
+                 
+            return lasthistory;
         }
 
         public async Task<IEnumerable<History>> GetByPage(int count, int page, SortState sortState, bool isActivated = true, int sensorId = 0)
