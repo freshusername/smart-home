@@ -27,7 +27,6 @@ namespace Infrastructure.Business.Managers
         public async Task ShowMessage(Guid token, string value)
         {
             var sensor = unitOfWork.SensorRepo.GetByToken(token);
-            string toasttype = "info";
             var notifications = await unitOfWork.NotificationRepo.GetBySensorId(sensor.Id);
             if(notifications.Any())
             {
@@ -37,13 +36,13 @@ namespace Infrastructure.Business.Managers
                     var ruleValue = ValueParser.Parse(notification.Value);
                     if (incomingValue.CompareTo(ruleValue) == (int)notification.Rule)
                     {
-                        toasttype = notification.NotificationType.ToString().ToLower();
-                    }
-                    string message = notification.Message;
-                    message = message.Replace("$Value$", value + sensor.SensorType.MeasurementName);
-                    message = message.Replace("$SensorName$", sensor.Name);
+                        string toasttype = notification.NotificationType.ToString().ToLower();
+                        string message = notification.Message;
+                        message = message.Replace("$Value$", value + sensor.SensorType.MeasurementName);
+                        message = message.Replace("$SensorName$", sensor.Name);
 
-                    await messageHub.Clients.All.SendAsync("ShowToastMessage", toasttype, message);
+                        await messageHub.Clients.All.SendAsync("ShowToastMessage", toasttype, message);
+                    }
                 }
             }
         }
