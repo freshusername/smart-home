@@ -41,35 +41,49 @@ namespace Infrastructure.Business.Managers
         {
 			var reportElements = await unitOfWork.ReportElementRepo.GetAll();
 			reportElements = reportElements.Where(r => r.DashboardId == reportElementDto.DashboardId);
-			var el = reportElements.OrderByDescending(r => r.Y).First();
-			var maxElements = reportElements.Where(e => e.Y == el.Y);
-			bool rightPos = false;
-			int totalWidth = 0;
-			foreach(var element in maxElements)
-			{
-				if (element.X < 5)
-				{				
-					rightPos = true;
+			if ( reportElements.Any())
+			{ 	
+				var el = reportElements.OrderByDescending(r => r.Y).First();
+				var maxElements = reportElements.Where(e => e.Y == el.Y);
+				bool rightPos = false;
+				int totalWidth = 0;
+				foreach (var element in maxElements)
+				{
+					if (element.X < 5)
+					{
+						rightPos = true;
+					}
+					totalWidth += element.Width;
 				}
-				totalWidth += element.Width;
-			}
 
-			ReportElement reportElement = mapper.Map<ReportElementDto, ReportElement>(reportElementDto);
-			reportElement.Height = 4;
-			reportElement.Width = 4;
-			if (rightPos)
-			{
-				reportElement.X = totalWidth;
-				reportElement.Y = el.Y;
+				ReportElement reportElement = mapper.Map<ReportElementDto, ReportElement>(reportElementDto);
+				reportElement.Height = 4;
+				reportElement.Width = 4;
+				if (rightPos)
+				{
+					reportElement.X = totalWidth;
+					reportElement.Y = el.Y;
+				}
+				else
+				{
+					reportElement.X = 0;
+					reportElement.Y = el.Y;
+				}
+
+				await unitOfWork.ReportElementRepo.Insert(reportElement);
+				unitOfWork.Save();
 			}
 			else
 			{
+				ReportElement reportElement = mapper.Map<ReportElementDto, ReportElement>(reportElementDto);
+				reportElement.Height = 4;
+				reportElement.Width = 4;
 				reportElement.X = 0;
-				reportElement.Y = el.Y;
+				reportElement.Y = 0;
+				await unitOfWork.ReportElementRepo.Insert(reportElement);
+				unitOfWork.Save();
 			}
 			
-			await unitOfWork.ReportElementRepo.Insert(reportElement);
-            unitOfWork.Save();
         }
 
         public async Task<HeatmapDto> GetHeatmapById(int heatmapId)
