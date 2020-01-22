@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Business.Managers
@@ -38,11 +39,13 @@ namespace Infrastructure.Business.Managers
                     {
                         toasttype = notification.NotificationType.ToString().ToLower();
                     }
-                    await messageHub.Clients.All.SendAsync("ShowToastMessage", toasttype, sensor.Name, value);
+                    string message = notification.Message;
+                    message = message.Replace("$Value$", value + sensor.SensorType.MeasurementName);
+                    message = message.Replace("$SensorName$", sensor.Name);
+
+                    await messageHub.Clients.All.SendAsync("ShowToastMessage", toasttype, message);
                 }
             }
-            else
-                await messageHub.Clients.All.SendAsync("ShowToastMessage", "info", sensor.Name, value);
         }
     }
 }

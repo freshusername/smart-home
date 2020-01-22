@@ -2,11 +2,10 @@
 
 var connection = new signalR.HubConnectionBuilder().withUrl("/messages").build();
 
-connection.on("ShowToastMessage", function (type, user, message) {
+connection.on("ShowToastMessage", function (type, message) {
     var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    var encodedMsg = user + " returned value " + msg;
-    //toastr.info(encodedMsg);
-    toastr[type](encodedMsg);
+    //var encodedMsg = user + " returned value " + msg;
+    toastr[type](msg);
 });
 
 connection.start().then(function () {
