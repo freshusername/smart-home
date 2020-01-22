@@ -14,7 +14,7 @@
 <script>
 
         @{
-            List<decimal> vals = new List<decimal>();
+            List<decimal?> vals = new List<decimal?>();
             List<DateTime> daysList = new List<DateTime>();
             List<string> weeksList = new List<string>();
             List<string> weekDaysList = new List<string>();
@@ -34,7 +34,7 @@
             {
                 dayOfWeekList.Add(daysList[i].DayOfWeek.ToString());
             }
-            decimal[] valArray = vals.ToArray();
+            decimal?[] valArray = vals.ToArray();
             string[] daysArray = weekDaysList.ToArray();
             string[] weeksArray = weeksList.ToArray();
             string[] dayOfWeekArray = dayOfWeekList.ToArray();
@@ -127,8 +127,9 @@
 
             tooltip: {
                 formatter: function () {
-                    return '<b>' + '</b><br>' + @Html.Raw(Json.Serialize(Model.SensorName))  + ' has average: <b>' +
-                         this.point.value + '</b><br> on <b>' + getPointCategoryName(this.point, 'x') + ', ' + getDateForValue(this.point.index) + '</b>';
+                    return '<b>' + '</b><br>' + @Html.Raw(Json.Serialize(Model.SensorName))  +
+                        (this.point.value == undefined ? ' has no data' : ' has average: <b>' + this.point.value) + '</b><br> on <b>' + getPointCategoryName(this.point, 'x')  + ', ' +
+                        getDateForValue(this.point.index) + '</b>';
                 }
             },
 
@@ -142,7 +143,7 @@
                         @for (int j = 0; j < 7; j++)
                         {
                             <text>
-                                [@Html.Raw(Json.Serialize(j)), @Html.Raw(Json.Serialize(i)), @Html.Raw(Json.Serialize(valArray[h++]))],
+                                [@Html.Raw(Json.Serialize(j)), @Html.Raw(Json.Serialize(i)), @Html.Raw(Json.Serialize(valArray[h++]))], 
                             </text>
                         }
                     }
