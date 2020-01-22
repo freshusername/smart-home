@@ -10,8 +10,8 @@
 <figure class="highcharts-figure">
     <div id=@("Heatmap" + Model.Id.ToString())></div>
 </figure>
-<script>
 
+<script>
         @{
             List<decimal?> vals = new List<decimal?>();
             List<DateTime> daysList = new List<DateTime>();
@@ -38,6 +38,7 @@
             string[] weeksArray = weeksList.ToArray();
             string[] dayOfWeekArray = dayOfWeekList.ToArray();
         }
+
 
         function getPointCategoryName(point, dimension) {
             var series = point.series,
@@ -67,7 +68,7 @@
             },
 
             title: {
-                text: 'Average value per weekday for ' + @Html.Raw(Json.Serialize(Model.SensorName))
+                text: 'Average value per weekday for ' + '@Html.Raw(Json.Serialize(Model.SensorName))'
             },
 
             xAxis: {
@@ -100,11 +101,11 @@
             accessibility: {
                 point: {
                     descriptionFormatter: function (point) {
-                        var ix = point.index + 1,
-                            xName = getPointCategoryName(point, 'x'),
-                            yName = getPointCategoryName(point, 'y'),
-                            val = point.value;
-                        return ix + '. ' + xName + ' sales ' + yName + ', ' + val + '.';
+                var ix = point.index + 1,
+                    xName = getPointCategoryName(point, 'x'),
+                    yName = getPointCategoryName(point, 'y'),
+                    val = point.value;
+                return ix + '. ' + xName + ' sales ' + yName + ', ' + val + '.';
                     }
                 }
             },
@@ -142,7 +143,7 @@
                         @for (int j = 0; j < 7; j++)
                         {
                             <text>
-                                [@Html.Raw(Json.Serialize(j)), @Html.Raw(Json.Serialize(i)), @Html.Raw(Json.Serialize(valArray[h++]))], 
+                                [@Html.Raw(Json.Serialize(j)), @Html.Raw(Json.Serialize(i)), @Html.Raw(Json.Serialize(valArray[h++]))],
                             </text>
                         }
                     }

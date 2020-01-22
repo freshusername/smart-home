@@ -88,7 +88,7 @@ namespace Infrastructure.Business.Managers
 
         public async Task<HeatmapDto> GetHeatmapById(int heatmapId)
         {
-            ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(heatmapId);
+            ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(reportElementId);
 
             DateTime dateFrom = new DateTime();
             DateTime dateTo = DateTime.Now.AddDays(1);
@@ -106,7 +106,7 @@ namespace Infrastructure.Business.Managers
                 unitOfWork.HistoryRepo.GetAvgSensorsValuesPerDays(reportElement.SensorId, dateFrom, dateTo);
             List<AvgSensorValuePerDay> AvgSensorValuesPerDays = avgSensorValuesPerDays.ToList();
 
-            for(int i = 0; i < daysArray.Length; i++)
+            for (int i = 0; i < daysArray.Length; i++)
             {
                 if (!avgSensorValuesPerDays.Any(a => a.WeekDay.ToString("yyyy-MM-dd") == daysArray[i].ToString("yyyy-MM-dd")))
                     AvgSensorValuesPerDays.Add(new AvgSensorValuePerDay { WeekDay = daysArray[i], AvgValue = null });
@@ -115,7 +115,7 @@ namespace Infrastructure.Business.Managers
             AvgSensorValuesPerDays = AvgSensorValuesPerDays.OrderBy(d => d.WeekDay).ToList();
 
             if (!avgSensorValuesPerDays.Any())
-                return new HeatmapDto { Id = heatmapId, IsCorrect = false };
+                return new HeatmapDto { Id = reportElementId, IsCorrect = false };
 
             HeatmapDto heatmap = mapper.Map<Sensor, HeatmapDto>(reportElement.Sensor);
 
