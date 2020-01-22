@@ -32,17 +32,6 @@ namespace smart_home_web.AutoMapper
             CreateMap<LoginViewModel, UserDTO>().ForMember(au => au.UserName, map => map.MapFrom(vm => vm.Email));
             CreateMap<UserDTO, AppUser>().ForMember(au => au.UserName, map => map.MapFrom(vm => vm.Email));
 
-
-
-
-
-
-
-
-
-
-
-
             CreateMap<EditSensorViewModel, SensorDto>().ReverseMap();
             CreateMap<Sensor, SensorDto>()
                 .ForMember(dto => dto.IconPath, map => map.MapFrom(s => (s.IconId.HasValue) ? s.Icon.Path : s.SensorType.Icon.Path))
@@ -52,17 +41,6 @@ namespace smart_home_web.AutoMapper
             CreateMap<SensorDto, SensorViewModel>();
             CreateMap<CreateSensorViewModel, SensorDto>();
             CreateMap<SensorViewModel, SensorDto>();
-
-
-
-
-
-
-
-
-
-
-
 
             CreateMap<Icon, IconDto>().ReverseMap();
 
@@ -95,41 +73,12 @@ namespace smart_home_web.AutoMapper
             CreateMap<EditReportElementViewModel, ReportElementDto>();
             CreateMap<ReportElementDto, ReportElement>().ReverseMap();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             CreateMap<SensorTypeDto, SensorType>();
             CreateMap<SensorTypeViewModel, SensorTypeDto>().ReverseMap();
             CreateMap<CreateSensorTypeViewModel, SensorTypeDto>().ReverseMap();
             CreateMap<EditSensorTypeViewModel, SensorTypeDto>().ReverseMap();
             CreateMap<SensorType, SensorTypeDto>()
                 .ForMember(dto => dto.IconPath, map => map.MapFrom(st => st.Icon.Path));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             CreateMap<ReportElement, GaugeDto>().ReverseMap();
             CreateMap<GaugeDto, GaugeViewModel>().ReverseMap();

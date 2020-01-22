@@ -35,6 +35,9 @@
                         <p>No image was added</p>
                     }
 
+                    <input asp-for="@Model.IsActivated" type="hidden" />
+                    <input asp-for="@Model.CreatedOn" type="hidden" />
+                    <input asp-for="@Model.Token" type="hidden" />
                     <input asp-for="@Model.IconId" type="hidden" />
                     <input asp-for="@Model.SensorTypeId" type="hidden" />
 
