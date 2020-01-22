@@ -2,36 +2,32 @@
 
 namespace Infrastructure.Data.Migrations
 {
-    public partial class Test : Migration
+    public partial class Message : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
-                name: "Rule",
-                table: "Notifications",
+                name: "MeasurementType",
+                table: "SensorTypes",
                 nullable: false,
                 oldClrType: typeof(string),
                 oldNullable: true);
 
-            migrationBuilder.AlterColumn<string>(
-                name: "NotificationType",
+            migrationBuilder.AddColumn<string>(
+                name: "Message",
                 table: "Notifications",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldNullable: true);
+                nullable: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<string>(
-                name: "Rule",
-                table: "Notifications",
-                nullable: true,
-                oldClrType: typeof(string));
+            migrationBuilder.DropColumn(
+                name: "Message",
+                table: "Notifications");
 
             migrationBuilder.AlterColumn<string>(
-                name: "NotificationType",
-                table: "Notifications",
+                name: "MeasurementType",
+                table: "SensorTypes",
                 nullable: true,
                 oldClrType: typeof(string));
         }

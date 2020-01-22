@@ -6,11 +6,8 @@ namespace Domain.Core.Model.Enums
 {
     public enum RuleEnum
     {
-        Equals = 1,
-        More,
-        Less,
-        Between,
-        IsTrue,
-        IsFalse        
+        Equals = 0,
+        More = 1,
+        Less = -1,       
     }
 }

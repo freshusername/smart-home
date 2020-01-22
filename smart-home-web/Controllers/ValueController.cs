@@ -45,7 +45,7 @@ namespace smart_home_web.Controllers
 
             if (histroyResult.Succeeded)
             {
-                await _messageManager.ShowMessage(sensor, value);
+                await _messageManager.ShowMessage(token, value);
                 return Ok(histroyResult.Message);
             }
 

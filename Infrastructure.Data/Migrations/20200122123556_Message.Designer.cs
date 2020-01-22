@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationsDbContext))]
-    [Migration("20200121144027_NotifValue")]
-    partial class NotifValue
+    [Migration("20200122123556_Message")]
+    partial class Message
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -149,6 +149,8 @@ namespace Infrastructure.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Message");
+
                     b.Property<string>("NotificationType")
                         .IsRequired();
 
@@ -240,7 +242,8 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<string>("MeasurementName");
 
-                    b.Property<string>("MeasurementType");
+                    b.Property<string>("MeasurementType")
+                        .IsRequired();
 
                     b.Property<string>("Name");
 

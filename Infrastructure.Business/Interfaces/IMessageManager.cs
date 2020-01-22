@@ -8,6 +8,6 @@ namespace Infrastructure.Business.Interfaces
 {
     public interface IMessageManager
     {
-        Task ShowMessage(SensorDto sensor, string value);
+        Task ShowMessage(Guid token, string value);
     }
 }
