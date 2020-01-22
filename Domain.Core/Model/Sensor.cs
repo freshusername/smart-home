@@ -24,5 +24,6 @@ namespace Domain.Core.Model
         public virtual ICollection<ReportElement> ReportElements { get; set; }
 
         public virtual ICollection<SensorControl> SensorControls { get; set; }
+        public virtual ICollection<Notification> Notifications { get; set; }
     }
 }

@@ -9,22 +9,27 @@
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gridstack@0.6.0/dist/gridstack.all.js"></script>
 
-<script type="text/javascript">
-    $('.grid-stack').gridstack();
-</script>
-<h1>@Model.Name Dashboard<a class="btn text-center" asp-controller="ReportElement" asp-action="CreateReportElement" asp-route-dashboardId="@Model.Id"><i style="font-size:16px" class="fa fa-plus-circle report-button" aria-hidden="true"></i></a></h1>
+<h1>@Model.Name Dashboard<a class="btn text-center" asp-controller="ReportElement" asp-action="CreateReportElement" asp-route-dashboardId="@Model.Id"><i style="font-size:25px;" class="fa fa-plus-circle report-button" aria-hidden="true"></i></a></h1>
 
 <div class="grid-stack" data-save-url="@Url.Action("UpdateOptions", "DashboardOptions")">
     @foreach (var report in Model.ReportElements)
     {
-        <div id="@report.Id" class="grid-stack-item d-flex flex-column" style="padding-left:20px" data-identifier="@report.Id" data-gs-x="@report.X" data-gs-y="@report.Y" data-gs-width="@report.Width" data-gs-height="@report.Height">
+        <div id="@report.Id" class="grid-stack-item d-flex flex-column" 
+             data-identifier="@report.Id"  data-locked="@report.IsLocked" 
+             data-gs-min-height="6" data-gs-min-width="4"
+             data-gs-width="@report.Width" data-gs-height="@report.Height"
+             data-gs-x="@report.X" data-gs-y="@report.Y" 
+        >
             <div class="grid-stack-item-content card">
                 <div class="d-flex flex-row">
-                    <div id="trash-@report.Id" class="text-center btn-control-icon report-button text-center" onclick=remove(@report.Id)>
+                    <div class="text-center btn-control-icon report-button text-center" onclick=remove(@report.Id)>
                         <span><i class="fas fa-times"></i></span>
                     </div>
                     <div class="text-center btn-control-icon text-center">
                         <a asp-controller="ReportElement" asp-action="EditReportElement" asp-route-id="@report.Id"><i class="fas fa-cog report-button"></i></a>
+                    </div>
+                    <div class="text-center btn-control-icon text-center" onclick=lock(@report.Id)>
+                        <i class="fas report-button i-button"></i>
                     </div>
                 </div>
                 <div>@await Component.InvokeAsync(report.Type.ToString(), new { reportElementId = report.Id })</div>
@@ -33,11 +38,10 @@
     }
 </div>
 
-
-
 <script>
+$(".grid-stack").gridstack();
 
-    let arrToJson = arr => {
+    let arrToObj = arr => {
         let obj = {}
         for (const i in arr) {
             obj[i] = arr[i]
@@ -45,9 +49,8 @@
         return obj
     }
 
-    $('.grid-stack').gridstack();
     $('body').on('change', '.grid-stack', function (event, items) {
-        var options = [];
+        let options = [];
         options = items.map(i => {
             return { id: parseInt(i.el[0].id), x: i.x, y: i.y, width: i.width, height: i.height }
         });
@@ -55,17 +58,15 @@
         $.ajax({
             type: "POST",
             url: $(".grid-stack").data("save-url"),
-            data: { options: arrToJson(options) }
+            data: { options: arrToObj(options) }
         });
     });
-</script>
 
-<script>
     let remove = (id) => {
         if (confirm("Are you sure you wish to delete this widget?") == true) {
-            var $eGridstack = $(".grid-stack");
-            var item = $("#" + id)[0];
-            $eGridstack.data('gridstack').removeWidget(item);
+            let grid = $(".grid-stack");
+            let item = $("#" + id)[0];
+            grid.data('gridstack').removeWidget(item);
 
             $.ajax({
                 type: "POST",
@@ -73,5 +74,63 @@
                 data: { id : id }
             });
         }
+    }
+
+    var lock = (id) => {
+        grid = $(".grid-stack").data("gridstack");
+        let item = $("#" + id);
+        if (item != null)
+        {
+            if (item[0].dataset.locked == "False") {
+                item[0].dataset.locked = "True"
+            }
+            else {
+                item[0].dataset.locked = "False"
+            }
+
+            let flag = item[0].dataset.locked == "True";
+            grid.resizable(item, !flag);
+            grid.movable(item, !flag);
+            grid.locked(item, flag);
+
+            $(".i-button", item).toggleClass("fa-lock text-danger");
+            $(".i-button", item).toggleClass("fa-unlock text-success");
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("LockReportElement", "ReportElement")",
+                data: { id : id }
+            });
+
+
+            
+        }
+    }
+
+    var visualLock = (id) => {
+        grid = $(".grid-stack").data("gridstack");
+        let item = $("#" + id);
+        if (item != null)
+        {
+            //TODO: Create separate func
+            let flag = item[0].dataset.locked == "True";
+            grid.resizable(item, !flag);
+            grid.movable(item, !flag);
+            grid.locked(item, flag);
+            if (flag)  {
+                $(".i-button", item).addClass("fa-lock text-danger");
+                $(".i-button", item).removeClass("fa-unlock text-success");
+            }
+            else {
+                $(".i-button", item).removeClass("fa-lock text-danger");
+                $(".i-button", item).addClass("fa-unlock text-success");
+            }
+        }
+    }
+
+    $(".grid-stack").gridstack();
+    let elements = $(".grid-stack-item");
+    for (var i = 0; i < elements.length; i++) {
+        visualLock(elements[i].id);
     }
 </script>

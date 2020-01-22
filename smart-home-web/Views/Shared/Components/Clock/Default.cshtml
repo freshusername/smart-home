@@ -31,7 +31,7 @@
             plotBackgroundImage: null,
             plotBorderWidth: 0,
             plotShadow: false,
-            height: '80%'
+            height: '72%'
         },
 
         credits: {
@@ -190,7 +190,12 @@
 
     $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
         var type = 'Clock';
-        var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
+        try {
+            var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
+        }
+        catch (error) {
+
+        }
         if (typeof result !== 'undefined') {
             result.setSize(ui.height, ui.width);
         }

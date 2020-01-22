@@ -25,10 +25,12 @@ else
 
           Highcharts.chart('TimeSeries'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
               chart: {
-                    zoomType: 'x'
+                  zoomType: 'x',
+                  height: 380
                 },
                 title: {
-                    text:  JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))')
+                    text: JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))'),
+                    y: -10
                 },
                 subtitle: {
                     text: document.ontouchstart === undefined ?
@@ -122,7 +124,12 @@ else
 
     $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
         var type = 'TimeSeries';
-        var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
+        try {
+            var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
+        }
+        catch (error) {
+            
+        }
         if (typeof result !== 'undefined') {
             result.setSize(ui.height, ui.width);
         }

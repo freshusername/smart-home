@@ -20,7 +20,8 @@ namespace Infrastructure.Data
         private ISensorTypeRepo _sensorTypeRepo;
         private IIconRepo _iconRepo;
         private IHistoryRepo _historyRepo;
-        private INotificationRepository _notificationRepository;
+        private IMessageRepository _messageRepository;
+        private INotificationRepo _notificationRepository;
 		private IDashboardRepo _dashboardRepo;
         private IReportElementRepo _reportElementRepo;
         private IControlRepo _controlRepo;
@@ -81,16 +82,25 @@ namespace Infrastructure.Data
             }
         }
 
-        public INotificationRepository NotificationRepository
+        public IMessageRepository MessageRepository
         {
             get
             {
-                if (_notificationRepository == null) _notificationRepository = new NotificationRepository(context);
+                if (_messageRepository == null) _messageRepository = new MessageRepository(context);
+                return _messageRepository;
+            }
+        }
+
+        public INotificationRepo NotificationRepo
+        {
+            get
+            {
+                if (_notificationRepository == null) _notificationRepository = new NotificationRepo(context);
                 return _notificationRepository;
             }
         }
 
-		public IDashboardRepo DashboardRepo
+        public IDashboardRepo DashboardRepo
 		{
 			get
 			{

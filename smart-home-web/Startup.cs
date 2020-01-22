@@ -12,12 +12,15 @@ using Infrastructure.Data.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using smart_home_web.AutoMapper;
+using Infrastructure.Business.Hubs;
+using Infrastructure.Business.Interfaces;
 
 namespace smart_home_web
 {
@@ -49,6 +52,7 @@ namespace smart_home_web
                 googleOptions.ClientSecret = Configuration["GoogleAuth:ClientSecret"];
             });
             services.AddAuthentication();
+            services.AddSignalR();
             services.Configure<IdentityOptions>(options =>
             {
                 // Password settings.
@@ -85,6 +89,7 @@ namespace smart_home_web
             services.AddTransient<IAuthenticationManager, AuthenticationManager>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddSingleton<IEmailSender, EmailSender>();
+            services.AddSingleton<IUserIdProvider, SignalRUserIdProvider>();
 
             services.AddTransient<ISensorManager, SensorManager>();
             services.AddTransient<ISensorControlManager, SensorControlManager>();
@@ -97,6 +102,7 @@ namespace smart_home_web
             services.AddTransient<IDashboardManager, DashboardManager>();
             services.AddTransient<IReportElementManager, ReportElementManager>();
             services.AddTransient<IActionService, ActionService>();
+            services.AddTransient<IMessageManager, MessageManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -111,7 +117,6 @@ namespace smart_home_web
                 app.UseExceptionHandler("/Home/Error");
             }
             app.UseDeveloperExceptionPage();
-
             app.UseDefaultFiles();
             app.UseStaticFiles();
      
@@ -120,7 +125,11 @@ namespace smart_home_web
             app.UseStaticFiles();        
             app.UseCookiePolicy();
             app.UseAuthentication();
-   
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<MessageHub>("/messages");
+            });
 
             app.UseMvc(routes =>
             {

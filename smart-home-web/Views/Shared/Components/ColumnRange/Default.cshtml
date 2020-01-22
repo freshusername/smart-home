@@ -28,7 +28,7 @@ else
             inverted: true,
         },
         title: {
-            text: 'Column range for ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))') + ' for dashboard ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.DashboardName))')
+            text: 'Column range for <b>' + JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))') + '</b> for <b>' + JSON.parse('@Html.Raw(Json.Serialize(@Model.DashboardName))') + '</b>'
         },
 
         xAxis: {
@@ -83,7 +83,12 @@ else
 
     $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
         var type = 'Columnrange';
-        var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
+        try {
+            var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
+        }
+        catch (error) {
+
+        }
         if (typeof result !== 'undefined') {
             result.setSize(ui.height, ui.width);
         }

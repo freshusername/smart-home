@@ -71,15 +71,11 @@ namespace Infrastructure.Business.Managers
         {
             var dashboard = await unitOfWork.DashboardRepo.GetById(dashboardId);
             var sensors = new List<Sensor>();
-            if (type == ReportElementType.Columnrange || type == ReportElementType.Gauge || type == ReportElementType.Heatmap 
-                || type == ReportElementType.TimeSeries || type == ReportElementType.Clock || type == ReportElementType.Wordcloud)
-            {
-                sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.Int, dashboard.AppUserId));
-                sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.Double, dashboard.AppUserId));
-            }
+            sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.Int, dashboard.AppUserId));
+            sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.Double, dashboard.AppUserId));
             if (type == ReportElementType.TimeSeries || type == ReportElementType.Clock)
                 sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.Bool, dashboard.AppUserId));
-            if(type == ReportElementType.Clock || type == ReportElementType.Wordcloud)
+            if (type == ReportElementType.Clock || type == ReportElementType.Wordcloud)
                 sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.String, dashboard.AppUserId));
             var res = mapper.Map<IEnumerable<Sensor>, IEnumerable<SensorDto>>(sensors);
             return res;

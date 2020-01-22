@@ -41,6 +41,12 @@
                     <input type="hidden" asp-for="Height" value="@Model.Height" />
                 </div>
                 <div class="form-group">
+                    <input type="hidden" asp-for="SensorName" value="@Model.SensorName" />
+                </div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="DashboardName" value="@Model.DashboardName" />
+                </div>
+                <div class="form-group">
                     <input type="hidden" disabled="disabled" asp-for="SensorName" value="@Model.SensorName" class="form-control" />
                 </div>
                 <div class="form-group">
@@ -68,6 +74,7 @@
 
                 <div class="form-group text-center">
                     <input type="submit" value="Save" class="btn btn-success text-center" style="width:20%" />
+                    <a asp-controller="Dashboard" asp-action="Detail" asp-route-id="@Model.DashboardId" class="btn btn-primary"><em class="glyphicon glyphicon-arrow-left"></em> Back to dashboard</a>
                 </div>
             </form>
         </div>
@@ -94,8 +101,13 @@
                     $('#sensor-select').val($('#sensor-id').val());
                     $('select').niceSelect('update');
                 },
-                error: function (res) {
-                    console.log(res);
+                error: function () {
+                    $('#sensor-select')
+                        .append($("<option></option>")
+                            .attr("disabled", true)
+                            .attr("selected", true)
+                            .text("There is not suitable sensor"));
+                     $('select').niceSelect('update');
                 },
            });
         });

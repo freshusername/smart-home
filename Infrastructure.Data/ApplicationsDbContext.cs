@@ -18,6 +18,7 @@ namespace Infrastructure.Data
         public DbSet<SensorType> SensorTypes { get; set; }
         public DbSet<Dashboard> Dashboards { get; set; }
         public DbSet<ReportElement> ReportElements { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
         public DbSet<Control> Controls { get; set; }
         public DbSet<SensorControl> SensorControls { get; set; }
         public DbQuery<AvgSensorValuePerDay> AvgSensorValuesPerDays { get; set; }
@@ -45,7 +46,6 @@ namespace Infrastructure.Data
             .HasConversion(
             v => v.ToString(),
             v => (ReportElementType)Enum.Parse(typeof(ReportElementType), v));
-          
         }
     }
 }

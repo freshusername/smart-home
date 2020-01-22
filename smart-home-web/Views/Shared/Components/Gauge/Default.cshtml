@@ -48,7 +48,8 @@
 <script>
     var gaugeOptions = {
         chart: {
-            type: 'solidgauge'
+            type: 'solidgauge',
+            height: '50%',
         },
 
         title: null,
@@ -112,7 +113,20 @@
             max: @Model.Max,
             tickPositions: [@Model.Min, @Model.Max],
             title: {
-                text: '@Model.SensorName'
+                text: '@Model.SensorName',
+                style: {
+                    fontWeight: 'bold'
+                },
+                floating: true,
+                y: 25
+            },
+            labels: {
+                distance: '80%',
+                y: 20,
+                style: {
+                    fontWeight: 'bold',
+                    fontSize: '16px'
+                }
             }
         },
 
@@ -173,7 +187,12 @@
 
     $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
         var type = 'Gauge';
-        var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
+        try {
+            var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
+        }
+        catch (error) {
+
+        }
         if (typeof result !== 'undefined') {
             result.setSize(ui.height, ui.width);
         }

@@ -6,6 +6,7 @@ using AutoMapper;
 using Domain.Core.Model;
 using Infrastructure.Business.DTOs.ReportElements;
 using Infrastructure.Business.Managers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using smart_home_web.Models;
@@ -13,6 +14,7 @@ using smart_home_web.Models.ReportElements;
 
 namespace smart_home_web.Controllers
 {
+	[Authorize]
 	public class ReportElementController : Controller
     {
         private readonly IReportElementManager _reportElementManager;
@@ -39,6 +41,11 @@ namespace smart_home_web.Controllers
         {
             if (!ModelState.IsValid)
                 return View(model);
+            if (model.SensorId == 0)
+            {
+                ModelState.AddModelError("", "There is not such sensor");
+                return View(model);
+            }
             ReportElementDto reportElement = _mapper.Map<CreateReportElementViewModel, ReportElementDto>(model);
             await _reportElementManager.CreateReportElement(reportElement);
             return RedirectToAction("Detail", "Dashboard", new { id = model.DashboardId});
@@ -59,6 +66,11 @@ namespace smart_home_web.Controllers
         {
             if (!ModelState.IsValid)
                 return View(model);
+            if (model.SensorId == 0)
+            {
+                ModelState.AddModelError("", "There is not such sensor");
+                return View(model);
+            }
             ReportElementDto reportElement = _mapper.Map<EditReportElementViewModel, ReportElementDto>(model);
             await _reportElementManager.EditReportElement(reportElement);
             return RedirectToAction("Detail", "Dashboard", new { id = model.DashboardId });
@@ -69,6 +81,14 @@ namespace smart_home_web.Controllers
 		{
 			var reportElement = await _reportElementManager.GetById(id);
 			await _reportElementManager.Delete(reportElement);
+			return Ok();
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> LockReportElement(int id)
+		{
+			var reportElement = await _reportElementManager.GetById(id);
+			await _reportElementManager.Lock(reportElement);
 			return Ok();
 		}
 	}

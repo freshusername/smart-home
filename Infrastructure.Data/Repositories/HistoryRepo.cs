@@ -37,6 +37,13 @@ namespace Infrastructure.Data.Repositories
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
 
+        public async Task<History> GetLastBySensorId(int sensorId)
+        {
+            var history = await context.Histories
+                .LastOrDefaultAsync(h => h.SensorId == sensorId);
+            return history;
+        }
+
         public async Task<int> GetAmountAsync(bool isActivated)
         {
             return await context.Histories.Where(p => p.Sensor.IsActivated == isActivated).CountAsync();

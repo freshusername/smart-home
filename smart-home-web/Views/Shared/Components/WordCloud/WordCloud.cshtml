@@ -7,6 +7,12 @@
     <figure class="highcharts-figure-wordcloud" width="100%" height="100%">
         <div id=@("Wordcloud"+Model.Id.ToString()) width="100%" height="100%"></div>
     </figure>
+}
+else
+{
+    <label class="control-label graph-label">There is no word cloud for such sensor for that period of time.</label>
+}
+
 <script>
 
     values = JSON.parse('@Html.Raw(Json.Serialize(@Model.Values))')
@@ -58,28 +64,19 @@
             }
         },
     });
-    </script>
+</script>
 
-}
-else
-{
-    <label id=@("Wordcloud"+Model.Id.ToString()) class="control-label graph-label">There is no history measurement for such sensor for that period of time. <a class="btn btn-success text-center" asp-controller="ReportElement" asp-action="EditReportElement" asp-route-id="@Model.Id"><i class="fas fa-cog"></i></a></label>
-}
 <script>
     $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
         var type = 'Wordcloud';
-        var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
+        try {
+            var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
+        }
+        catch (error) {
+
+        }
         if (typeof result !== 'undefined') {
             result.setSize(ui.height, ui.width);
         }
     });
 </script>
-
-@*<style>
-    .highcharts-root,
-    .ui-draggable-handle,
-    .highcharts-container {
-        height: 100% !important;
-        width: 100% !important;
-    }
-    </style>*@

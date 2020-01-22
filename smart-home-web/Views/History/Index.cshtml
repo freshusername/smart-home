@@ -11,8 +11,7 @@
 }
 
 <body class="body-content">
-    <div class="row text-center">
-        <h2 style="color:blue;">Sensor`s Histories</h2>
+    <div class="d-flex flex-column align-items-center">
         <table class="table table-hover table">
             <thead class="text-center">
                 <tr>
@@ -69,9 +68,6 @@
                                 <td>@history.Value</td>
                             }
                         }
-
-
-
                         <td>@history.MeasurementName</td>
                     </tr>
                 }
@@ -80,7 +76,5 @@
         </table>
         <br />
         @await Component.InvokeAsync("Pagination", new { action = "Index", controller = "History", filterDto = Model.FilterDto })
-
     </div>
-
 </body>

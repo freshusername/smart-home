@@ -6,7 +6,7 @@ namespace Domain.Interfaces.Repositories
     public interface IUnitOfWork
     {
         IHistoryRepo HistoryRepo { get; }
-        INotificationRepository NotificationRepository { get; }
+        IMessageRepository MessageRepository { get; }
         ISensorRepo SensorRepo { get; }
         ISensorTypeRepo SensorTypeRepo { get; }
         IIconRepo IconRepo { get; }
@@ -14,6 +14,7 @@ namespace Domain.Interfaces.Repositories
         IReportElementRepo ReportElementRepo { get; }
         IControlRepo ControlRepo { get; }
         ISensorControlRepo SensorControlRepo { get; }
+        INotificationRepo NotificationRepo { get; }
         UserManager<AppUser> UserManager { get; }
         RoleManager<IdentityRole> RoleManager { get; }
         SignInManager<AppUser> SignInManager { get; }
