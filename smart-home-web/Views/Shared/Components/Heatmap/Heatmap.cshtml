@@ -16,13 +16,26 @@
         @{
             List<decimal> vals = new List<decimal>();
             List<DateTime> days = new List<DateTime>();
+            List<string> periods = new List<string>();
 
             foreach (var c in Model.AvgSensorValuesPerDays)
             {
                 vals.Add(c.AvgValue);
                 days.Add(c.WeekDay);
             }
+            for (int i = 0; i < 28; i += 7)
+            {
+                periods.Add(days[i].ToString("dd/MM/yyy") + " - " + days[i + 6].ToString("dd/MM/yyy") );
+            }
             decimal[] valArray = vals.ToArray();
+            string[] weeks = periods.ToArray();
+        }
+
+        function getPointCategoryName(point, dimension) {
+            var series = point.series,
+                isY = dimension === 'y',
+                axis = series[isY ? 'yAxis' : 'xAxis'];
+            return axis.categories[point[isY ? 'y' : 'x']];
         }
 
         function getPointCategoryName(point, dimension) {
@@ -50,7 +63,16 @@
             },
 
             yAxis: {
-                categories: [],
+                categories:
+                [
+                    @for (int i = 0; i < weeks.Length; i++)
+                    {
+                        <text>
+                            @Html.Raw(Json.Serialize(weeks[i])) ,
+                        </text>
+                    }
+                    ],
+
                 title: null,
                 reversed: true
             },
