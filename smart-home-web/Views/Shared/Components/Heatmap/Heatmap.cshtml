@@ -15,20 +15,23 @@
 
         @{
             List<decimal> vals = new List<decimal>();
-            List<DateTime> days = new List<DateTime>();
-            List<string> periods = new List<string>();
+            List<DateTime> daysList = new List<DateTime>();
+            List<string> weeksList = new List<string>();
+            List<string> weekDaysList = new List<string>();
 
             foreach (var c in Model.AvgSensorValuesPerDays)
             {
                 vals.Add(c.AvgValue);
-                days.Add(c.WeekDay);
+                daysList.Add(c.WeekDay);
+                weekDaysList.Add(c.WeekDay.ToString("dd/MM/yyyy"));
             }
             for (int i = 0; i < 28; i += 7)
             {
-                periods.Add(days[i].ToString("dd/MM/yyy") + " - " + days[i + 6].ToString("dd/MM/yyy") );
+                weeksList.Add(daysList[i].ToString("dd/MM/yyyy") + " - " + daysList[i + 6].ToString("dd/MM/yyyy") );
             }
             decimal[] valArray = vals.ToArray();
-            string[] weeks = periods.ToArray();
+            string[] daysArray = weekDaysList.ToArray();
+            string[] weeksArray = weeksList.ToArray();
         }
 
         function getPointCategoryName(point, dimension) {
@@ -38,11 +41,15 @@
             return axis.categories[point[isY ? 'y' : 'x']];
         }
 
-        function getPointCategoryName(point, dimension) {
-            var series = point.series,
-                isY = dimension === 'y',
-                axis = series[isY ? 'yAxis' : 'xAxis'];
-            return axis.categories[point[isY ? 'y' : 'x']];
+        var arr = @Html.Raw(Json.Serialize(daysArray));
+        function getDateForValue(index) {
+            var currDate = '';
+                for (var i = 0; i < arr.length; i++) {
+                    if (i == index) {
+                         currDate =  arr[i];
+                    }
+                }
+            return currDate;
         }
 
         Highcharts.chart("Heatmap"+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
@@ -65,10 +72,10 @@
             yAxis: {
                 categories:
                 [
-                    @for (int i = 0; i < weeks.Length; i++)
+                    @for (int i = 0; i < weeksArray.Length; i++)
                     {
                         <text>
-                            @Html.Raw(Json.Serialize(weeks[i])) ,
+                            @Html.Raw(Json.Serialize(weeksArray[i])) ,
                         </text>
                     }
                     ],
@@ -107,8 +114,7 @@
             tooltip: {
                 formatter: function () {
                     return '<b>' + '</b><br>' + @Html.Raw(Json.Serialize(Model.SensorName))  + ' has average: <b>' +
-                        this.point.value + '</b><br> on <b>' + getPointCategoryName(this.point, 'y') + ' '
-                         + getPointCategoryName(this.point, 'x') + '</b>';
+                         this.point.value + '</b><br> on <b>' + getDateForValue(this.point.index) + '</b>';
                 }
             },
 
