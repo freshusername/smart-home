@@ -75,6 +75,12 @@ namespace smart_home_web.Controllers
             EditSensorViewModel sensorViewModel = _mapper.Map<SensorDto, EditSensorViewModel>(sensorDto);
             return View("Update", sensorViewModel);
         }
+        public async Task<ActionResult> Delete(int sensorId)
+        {
+            var sensorDto = await _sensorManager.GetSensorByIdAsync(sensorId);
+            SensorViewModel sensorViewModel = _mapper.Map<SensorDto, SensorViewModel>(sensorDto);
+            return View("Delete", sensorViewModel);
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -99,11 +105,20 @@ namespace smart_home_web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(int sensorId)
+        public async Task<ActionResult> Delete(SensorViewModel sensorViewModel)
         {
-            var sensorDto = await _sensorManager.GetSensorByIdAsync(sensorId);
-            EditSensorViewModel sensorViewModel = _mapper.Map<SensorDto, EditSensorViewModel>(sensorDto);
-            return View(sensorViewModel);
+            SensorDto sensorDto = _mapper.Map<SensorViewModel, SensorDto>(sensorViewModel);
+
+            try
+            {
+                _sensorManager.Delete(sensorDto);
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View("Delete");
+            }
         }
 
         [HttpGet]

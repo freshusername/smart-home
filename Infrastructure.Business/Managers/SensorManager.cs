@@ -57,7 +57,21 @@ namespace Infrastructure.Business.Managers
             {
                 return new OperationDetails(false, ex.Message, "Error");
             }
-            return new OperationDetails(true, "New sensor has been created!", "Name");
+            return new OperationDetails(true, "Sensor has been updated!", "Name");
+        }
+        public OperationDetails Delete(SensorDto sensorDto)
+        {
+            Sensor sensor = mapper.Map<SensorDto, Sensor>(sensorDto);
+            try
+            {
+                unitOfWork.SensorRepo.Delete(sensor);
+                unitOfWork.Save();
+            }
+            catch (Exception ex)
+            {
+                return new OperationDetails(false, ex.Message, "Error");
+            }
+            return new OperationDetails(true, "Sensor has been deleted!", "Name");
         }
 
         public async Task<SensorDto> GetSensorByIdAsync(int sensorId)

@@ -13,6 +13,7 @@ namespace Infrastructure.Business.Managers
     {
         Task<OperationDetails> Create(SensorDto sensorDto);
         OperationDetails Update(SensorDto sensorDto);
+        OperationDetails Delete(SensorDto sensorDto);
         Task<IEnumerable<SensorDto>> GetAllSensorsAsync();
         Task<SensorDto> GetSensorByIdAsync(int sensorId);
         OperationDetails AddUnclaimedSensor(Guid token, string value);
