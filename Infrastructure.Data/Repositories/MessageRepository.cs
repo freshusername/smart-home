@@ -10,11 +10,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data.Repositories
 {
-	public class NotificationRepository : BaseRepository<Message>, INotificationRepository
+	public class MessageRepository : BaseRepository<Message>, IMessageRepository
     {
 		private readonly ApplicationsDbContext _context;
 
-		public NotificationRepository(ApplicationsDbContext context) : base(context)
+		public MessageRepository(ApplicationsDbContext context) : base(context)
 		{
 			_context = context;
 		}
