@@ -11,8 +11,8 @@
 <figure class="highcharts-figure">
     <div id=@("Heatmap" + Model.Id.ToString())></div>
 </figure>
-<script>
 
+<script>
         @{
             List<decimal> vals = new List<decimal>();
             List<DateTime> days = new List<DateTime>();
@@ -23,7 +23,8 @@
                 days.Add(c.WeekDay);
             }
             decimal[] valArray = vals.ToArray();
-        }
+          }
+
 
         function getPointCategoryName(point, dimension) {
             var series = point.series,
@@ -46,11 +47,27 @@
             },
 
             xAxis: {
-                categories: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+                categories: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
             },
 
+            @{
+                List<string> periods = new List<string>();
+                for (int i = 0; i < 28; i += 7)
+                {
+                     periods.Add(days[i].ToString("dd/MM/yyy") + " - " + days[i + 6].ToString("dd/MM/yyy"));
+                }
+                string[] weeks = periods.ToArray();
+            }
+
             yAxis: {
-                categories: [],
+                categories: [
+                        @for (int i = 0; i < weeks.Length; i++)
+                        {
+                            <text>
+                                @Html.Raw(Json.Serialize(weeks[i])),
+                            </text>
+                        }
+                ],
                 title: null,
                 reversed: true
             },
@@ -58,11 +75,11 @@
             accessibility: {
                 point: {
                     descriptionFormatter: function (point) {
-                        var ix = point.index + 1,
-                            xName = getPointCategoryName(point, 'x'),
-                            yName = getPointCategoryName(point, 'y'),
-                            val = point.value;
-                        return ix + '. ' + xName + ' sales ' + yName + ', ' + val + '.';
+                var ix = point.index + 1,
+                    xName = getPointCategoryName(point, 'x'),
+                    yName = getPointCategoryName(point, 'y'),
+                    val = point.value;
+                return ix + '. ' + xName + ' sales ' + yName + ', ' + val + '.';
                     }
                 }
             },
@@ -84,9 +101,9 @@
 
             tooltip: {
                 formatter: function () {
-                    return '<b>' + '</b><br>' + @Html.Raw(Json.Serialize(Model.SensorName))  + ' has average: <b>' +
-                        this.point.value + '</b><br> on <b>' + getPointCategoryName(this.point, 'y') + ' '
-                         + getPointCategoryName(this.point, 'x') + '</b>';
+                return '<b>' + '</b><br>' + @Html.Raw(Json.Serialize(Model.SensorName))  + ' has average: <b>' +
+                    this.point.value + '</b><br> on <b>' + getPointCategoryName(this.point, 'y') + ' '
+                     + getPointCategoryName(this.point, 'x') + '</b>';
                 }
             },
 
