@@ -39,54 +39,54 @@ namespace Infrastructure.Business.Managers
 
         public async Task CreateReportElement(ReportElementDto reportElementDto)
         {
-			var reportElements = await unitOfWork.ReportElementRepo.GetAll();
-			reportElements = reportElements.Where(r => r.DashboardId == reportElementDto.DashboardId);
-			if ( reportElements.Any())
-			{ 	
-				var el = reportElements.OrderByDescending(r => r.Y).First();
-				var maxElements = reportElements.Where(e => e.Y == el.Y);
-				bool rightPos = false;
-				int totalWidth = 0;
-				foreach (var element in maxElements)
-				{
-					if (element.X < 5)
-					{
-						rightPos = true;
-					}
-					totalWidth += element.Width;
-				}
+            var reportElements = await unitOfWork.ReportElementRepo.GetAll();
+            reportElements = reportElements.Where(r => r.DashboardId == reportElementDto.DashboardId);
+            if (reportElements.Any())
+            {
+                var el = reportElements.OrderByDescending(r => r.Y).First();
+                var maxElements = reportElements.Where(e => e.Y == el.Y);
+                bool rightPos = false;
+                int totalWidth = 0;
+                foreach (var element in maxElements)
+                {
+                    if (element.X < 5)
+                    {
+                        rightPos = true;
+                    }
+                    totalWidth += element.Width;
+                }
 
-				ReportElement reportElement = mapper.Map<ReportElementDto, ReportElement>(reportElementDto);
-				reportElement.Height = 6;
-				reportElement.Width = 4;
-				if (rightPos)
-				{
-					reportElement.X = totalWidth;
-					reportElement.Y = el.Y;
-				}
-				else
-				{
-					reportElement.X = 0;
-					reportElement.Y = el.Y;
-				}
+                ReportElement reportElement = mapper.Map<ReportElementDto, ReportElement>(reportElementDto);
+                reportElement.Height = 6;
+                reportElement.Width = 4;
+                if (rightPos)
+                {
+                    reportElement.X = totalWidth;
+                    reportElement.Y = el.Y;
+                }
+                else
+                {
+                    reportElement.X = 0;
+                    reportElement.Y = el.Y;
+                }
 
-				await unitOfWork.ReportElementRepo.Insert(reportElement);
-				unitOfWork.Save();
-			}
-			else
-			{
-				ReportElement reportElement = mapper.Map<ReportElementDto, ReportElement>(reportElementDto);
-				reportElement.Height = 6;
-				reportElement.Width = 4;
-				reportElement.X = 0;
-				reportElement.Y = 0;
-				await unitOfWork.ReportElementRepo.Insert(reportElement);
-				unitOfWork.Save();
-			}
-			
+                await unitOfWork.ReportElementRepo.Insert(reportElement);
+                unitOfWork.Save();
+            }
+            else
+            {
+                ReportElement reportElement = mapper.Map<ReportElementDto, ReportElement>(reportElementDto);
+                reportElement.Height = 6;
+                reportElement.Width = 4;
+                reportElement.X = 0;
+                reportElement.Y = 0;
+                await unitOfWork.ReportElementRepo.Insert(reportElement);
+                unitOfWork.Save();
+            }
+
         }
 
-        public async Task<HeatmapDto> GetHeatmapById(int heatmapId)
+        public async Task<HeatmapDto> GetHeatmapById(int reportElementId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(reportElementId);
 
@@ -222,7 +222,7 @@ namespace Infrastructure.Business.Managers
                     strhours = $"{hours / 24} days";
                 return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = $"No histories in this report element per {strhours}" };
             }
-                
+
 
             ReportElementDto columnRange = mapper.Map<Sensor, ReportElementDto>(reportElement.Sensor);
 
@@ -343,12 +343,12 @@ namespace Infrastructure.Business.Managers
             unitOfWork.Save();
         }
 
-		public async Task Lock(ReportElement reportElement)
-		{
-			ReportElement result = await unitOfWork.ReportElementRepo.GetById(reportElement.Id);
-			result.IsLocked = !reportElement.IsLocked;
-			await unitOfWork.ReportElementRepo.Update(result);
-			unitOfWork.Save();
-		}
-	}
+        public async Task Lock(ReportElement reportElement)
+        {
+            ReportElement result = await unitOfWork.ReportElementRepo.GetById(reportElement.Id);
+            result.IsLocked = !reportElement.IsLocked;
+            await unitOfWork.ReportElementRepo.Update(result);
+            unitOfWork.Save();
+        }
+    }
 }
