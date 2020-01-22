@@ -7,19 +7,16 @@ using System.Threading.Tasks;
 
 namespace smart_home_web.Models
 {
-    public class SensorControlViewModel
+    public class EditSensorControlViewModel
     {
         public int Id { get; set; }
-
         public string Name { get; set; }
 
-        public bool IsActive { get; set; } = false;
+        public int ControlId { get; set; }
 
-        public Icon Icon { get; set; }
+        public int Icon { get; set; }
 
-        public Sensor Sensor { get; set; }
-
-        public Sensor ControlSensor { get; set; }
-       
+        public int SensorId { get; set; }
+      
     }
 }

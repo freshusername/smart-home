@@ -28,12 +28,18 @@ namespace smart_home_web.Controllers
             return View(model);
         }
 
+        //[HttpGet]
+        //public IActionResult Edit(int id)
+        //{
+        //    var data = _sensorControlManager.GetById(id);
+        //     var model = _mapper.Map<SensorControlDto,SensorControlViewModel>(data);
+        //    return View(model);
+        //}
+
         [HttpGet]
-        public IActionResult Change(int id)
-        {
-            var data = _sensorControlManager.GetById(id);
-             var model = _mapper.Map<SensorControlDto,SensorControlViewModel>(data);
-            return View(model);
+        public IActionResult Edit()
+        {        
+            return View();
         }
     }
 }

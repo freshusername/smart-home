@@ -9,11 +9,14 @@ namespace Domain.Core.Model
     {
         public int Id { get; set; }
 
-        public CheckBy Rule { get; set; }
-        public int Time { get; set; }
-        public bool IsActive { get; set; } = false;
-       
+        public string Name { get; set; }
 
+        public bool IsActive { get; set; } = false;
+        
+        public int? minValue { get; set; }
+
+        public int? maxValue { get; set; }
+             
         public int SensorId { get; set; }
         public virtual Sensor Sensor { get; set; }
 
@@ -22,8 +25,6 @@ namespace Domain.Core.Model
 
         public int IconId { get; set; }
         public Icon Icon { get; set; }
-
-
-        
+     
     }
 }

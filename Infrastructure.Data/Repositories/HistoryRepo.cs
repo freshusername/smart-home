@@ -187,6 +187,50 @@ namespace Infrastructure.Data.Repositories
             return maxvalue;
         }
 
-           
+
+        public int? GetIntMinValueForPeriod(int sensorId, int? minutes)
+        {
+            var items = context.Histories.Where(h => h.SensorId == sensorId);
+
+            if (minutes.HasValue && minutes != 0)
+            {
+                items = items.Where(h => h.Date > (DateTimeOffset.Now - new TimeSpan(0, minutes.Value, 0)));
+            }
+
+            int? minvalue = null;
+            try
+            {
+                minvalue = items.Min(h => h.IntValue);
+            }
+            catch
+            {
+
+            }
+
+            return minvalue;
+        }
+
+        public int? GetIntMaxValueForPeriod(int sensorId, int? minutes)
+        {
+            var items = context.Histories.Where(h => h.SensorId == sensorId);
+
+            if (minutes.HasValue && minutes != 0)
+            {
+                items = items.Where(h => h.Date > (DateTimeOffset.Now - new TimeSpan(0, minutes.Value, 0)));
+            }
+
+            int? maxvalue = null;
+            try
+            {
+                maxvalue = items.Max(h => h.IntValue);
+            }
+            catch
+            {
+
+            }
+
+            return maxvalue;
+        }
+       
     }
 }

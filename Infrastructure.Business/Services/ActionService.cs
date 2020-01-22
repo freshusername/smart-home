@@ -1,4 +1,5 @@
-﻿using Domain.Core.Model.Enums;
+﻿using Domain.Core.Model;
+using Domain.Core.Model.Enums;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Business.Infrastructure;
 using System;
@@ -28,21 +29,47 @@ namespace Infrastructure.Business.Services
                 { 
                     if(item.IsActive)
                     {
-                        var result = Verification(item.SensorId ,item.Time ,item.Rule);
-                       if(result) return new OperationDetails(true ,"" , "");
+                      var result = Verification(item.SensorId, item.minValue,item.minValue);
+                       if (result) return new OperationDetails(true, "", "");
                     }
                 }
                      
             return new OperationDetails(false , "" , "");
         }
 
-        private bool Verification(int sensorId , int time , CheckBy rule)
+        private bool Verification(int sensorId, int? minValue, int? maxValue)
         {
-            DateTimeOffset date;
-           var history =  _db.HistoryRepo.GetLastHistoryBySensorIdAndDate(sensorId, date);
-            var sensor = _db.SensorRepo.GetSensorById(sensorId).Result;
+            var sensor = _db.SensorRepo.GetById(sensorId).Result;
+             var seconds = DateTimeOffset.Now.AddSeconds(-4);
+            var period = 5;
 
+            switch (sensor.SensorType.MeasurementType)
+            {
+                case MeasurementType.Bool:
+                    var lastHistory = _db.HistoryRepo.GetLastHistoryBySensorIdAndDate(sensorId, seconds);
+                    if (lastHistory.BoolValue.Value) return true;
+                break;
+                case MeasurementType.Int:
+                    if (minValue != null && maxValue != null)
+                    {
+                        var min = _db.HistoryRepo.GetIntMinValueForPeriod(sensorId, period);
+                         var max = _db.HistoryRepo.GetIntMaxValueForPeriod(sensorId, period);
+                        if (min.Value <= minValue || max.Value >= maxValue) return true;
+                    }
+                    else if (minValue != null)
+                    {
+                        var min = _db.HistoryRepo.GetIntMinValueForPeriod(sensorId, period);
+                         if (min.Value <= minValue) return true;
+                    }
+                    else if (maxValue != null)
+                    {
+                        var min = _db.HistoryRepo.GetIntMinValueForPeriod(sensorId, period);
+                         if (min.Value <= minValue) return true;
+                    }
+                break;
+            }
+
+            return false;
         }
-
     }
 }

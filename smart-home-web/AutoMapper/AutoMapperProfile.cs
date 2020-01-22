@@ -135,16 +135,13 @@ namespace smart_home_web.AutoMapper
 
             CreateMap<SensorControl, SensorControlDto>()
              .ForMember(gd => gd.Id, map => map.MapFrom(s => s.Id))
-             .ForMember(gd => gd.IsActive, map => map.MapFrom(s => s.IsActive))
-             .ForMember(gd => gd.Role, map => map.MapFrom(s => s.Role));
+             .ForMember(gd => gd.IsActive, map => map.MapFrom(s => s.IsActive));
 
 
             CreateMap<SensorControlDto, SensorControlViewModel>()
              .ForMember(gd => gd.Id, map => map.MapFrom(s => s.Id))
-             .ForMember(gd => gd.IsActive, map => map.MapFrom(s => s.IsActive))
-             .ForMember(gd => gd.Role, map => map.MapFrom(s => s.Role));
-
-
+             .ForMember(gd => gd.IsActive, map => map.MapFrom(s => s.IsActive));
+            
 
         }
     }

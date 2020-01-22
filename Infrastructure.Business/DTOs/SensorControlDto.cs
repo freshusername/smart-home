@@ -10,13 +10,17 @@ namespace Infrastructure.Business.DTOs
     {
         public int Id { get; set; }
 
-        public ActionRole Role { get; set; }
+        public string Name { get; set; }
 
         public bool IsActive { get; set; } = false;
 
-        public Control Control { get; set; }
+        public int? minValue { get; set; }
 
+        public int? maxValue { get; set; }
+
+        public Domain.Core.Model.Icon Icon { get; set; }
         public Domain.Core.Model.Sensor Sensor { get; set; }
         public Domain.Core.Model.Sensor ControlSensor { get; set; }
+        public Control Control { get; set; }
     }
 }

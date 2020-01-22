@@ -45,13 +45,7 @@ namespace Infrastructure.Data
             .HasConversion(
             v => v.ToString(),
             v => (ReportElementType)Enum.Parse(typeof(ReportElementType), v));
-
-                  modelBuilder
-            .Entity<SensorControl>()
-            .Property(e => e.Role)
-            .HasConversion(
-            v => v.ToString(),
-            v => (ActionRole)Enum.Parse(typeof(ActionRole), v));
+          
         }
     }
 }
