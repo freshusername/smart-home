@@ -19,7 +19,7 @@ namespace smart_home_web.Controllers
         private readonly IHistoryManager _historyTestManager;
         private readonly IMessageManager _messageManager;
         private readonly ISensorManager _sensorManager;
-        public ValueController(IHubContext<MessageHub> messageHub, IMessageManager messageManager, IHistoryManager historyTestManager ,ISensorManager sensorManager)
+        public ValueController(IMessageManager messageManager, IHistoryManager historyTestManager, ISensorManager sensorManager)
         {
             _historyTestManager = historyTestManager;
             _messageManager = messageManager;
@@ -31,7 +31,7 @@ namespace smart_home_web.Controllers
             var sensor = _historyTestManager.GetSensorByToken(token);
             if (sensor == null)
             {
-              var result =  _sensorManager.AddUnclaimedSensor(token , value);
+              var result =  _sensorManager.AddUnclaimedSensor(token, value);
               if (result.Succeeded)
               {
                   result = _historyTestManager.AddHistory(value, Convert.ToInt32(result.Property));
@@ -45,7 +45,7 @@ namespace smart_home_web.Controllers
 
             if (histroyResult.Succeeded)
             {
-                await _messageManager.ShowMessage("ShowToastMessage", sensor.Name, value);
+                await _messageManager.ShowMessage(sensor, value);
                 return Ok(histroyResult.Message);
             }
 

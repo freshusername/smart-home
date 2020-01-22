@@ -22,5 +22,6 @@ namespace Domain.Core.Model
         public Icon Icon { get; set; }
         public virtual ICollection<History> Histories { get; set; }
         public virtual ICollection<ReportElement> ReportElements { get; set; }
+        public virtual ICollection<Notification> Notifications { get; set; }
     }
 }
