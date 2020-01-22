@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Domain.Core.Model.Enums;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.Hubs;
@@ -22,17 +23,20 @@ namespace Infrastructure.Business.Managers
             this.messageHub = hubcontext;
         }
 
-        public async Task ShowMessage(SensorDto sensor, string value)
+        public async Task ShowMessage(Guid token, string value)
         {
+            var sensor = unitOfWork.SensorRepo.GetByToken(token);
             string toasttype = "info";
             var notifications = await unitOfWork.NotificationRepo.GetBySensorId(sensor.Id);
             if(notifications.Any())
             {
                 foreach(var notification in notifications)
                 {
-                    if(value == notification.Value)
+                    var incomingValue = ValueParser.Parse(value);
+                    var ruleValue = ValueParser.Parse(notification.Value);
+                    if (incomingValue.CompareTo(ruleValue) == (int)notification.Rule)
                     {
-                        toasttype = notification.NotificationType.ToString().ToLower(); 
+                        toasttype = notification.NotificationType.ToString().ToLower();
                     }
                     await messageHub.Clients.All.SendAsync("ShowToastMessage", toasttype, sensor.Name, value);
                 }
