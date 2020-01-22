@@ -129,13 +129,14 @@ namespace Infrastructure.Business.Managers
 
         public OperationDetails AddHistory(string value , int sensorId)
         {
-           
             var history = new History
             {
                 Date = DateTimeOffset.Now,
                 SensorId = sensorId,
-                
             };
+
+            if (history == null)
+                return new OperationDetails(false, "Operation did not succeed!", "");
 
             var valuemMdel = ValueParser.Parse(value);
 
@@ -150,13 +151,25 @@ namespace Infrastructure.Business.Managers
              else
                 history.StringValue = valuemMdel;
 
-            if (history == null)
+
+            if (!CheckValue(history))
                 return new OperationDetails(false, "Operation did not succeed!", "");
+
             unitOfWork.HistoryRepo.Insert(history);
             unitOfWork.Save();
 
             return new OperationDetails(true, "Operation succeed", "");
         
+        }
+
+        public bool CheckValue(History history)
+        {
+            var lastHistory = unitOfWork.HistoryRepo.GetLastBySensorId(history.SensorId).Result;
+            if (lastHistory.Date.AddMinutes(5) < history.Date)
+                return true;
+            if (lastHistory.BoolValue == history.BoolValue && lastHistory.DoubleValue == history.DoubleValue && lastHistory.IntValue == history.IntValue && lastHistory.StringValue == history.StringValue)
+                return false;
+            return true;
         }
 
 		public async Task<int> GetAmountAsync(bool isActivated)
