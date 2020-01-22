@@ -9,10 +9,10 @@
                 <span class="glyphicon glyphicon-remove"></span>
 
             </a>
-            <img class="card-img-top m-2 w-100" src="https://miro.medium.com/max/3440/0*8UNAgR_1_4SMV4BY.png" alt="Card image cap">
+            <img class="card-img-top m-2" src="https://miro.medium.com/max/3440/0*8UNAgR_1_4SMV4BY.png" alt="Card image cap">
         </div>
         <div>
-            <div class="dash_name_edit mb-2" style="display:none">
+            <div class="dash_name_edit mb-2" style="display:none;">
                 <form data-dash-url="@Url.Action("Edit","Dashboard")" method="post" class="form_edit_name">
                     <input class="form_dash_name" placeholder="Enter name" size="15" maxlength="35" required value="@Model.Name" />
                     <button type="submit" class="dash_edit d-inline">
@@ -31,7 +31,7 @@
 
             <div>
                 <p>
-                    <span class="badge">@Model.ReportElements.Count()</span> report element@(Model.ReportElements.Count() != 1 ? "s" : "")
+                    <span class="badge badge-light">@Model.ReportElements.Count()</span> report element@(Model.ReportElements.Count() != 1 ? "s" : "")
                 </p>
             </div>
         </div>
