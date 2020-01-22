@@ -57,7 +57,7 @@ namespace Infrastructure.Business.Managers
 				}
 
 				ReportElement reportElement = mapper.Map<ReportElementDto, ReportElement>(reportElementDto);
-				reportElement.Height = 4;
+				reportElement.Height = 6;
 				reportElement.Width = 4;
 				if (rightPos)
 				{
@@ -76,7 +76,7 @@ namespace Infrastructure.Business.Managers
 			else
 			{
 				ReportElement reportElement = mapper.Map<ReportElementDto, ReportElement>(reportElementDto);
-				reportElement.Height = 4;
+				reportElement.Height = 6;
 				reportElement.Width = 4;
 				reportElement.X = 0;
 				reportElement.Y = 0;
@@ -320,7 +320,7 @@ namespace Infrastructure.Business.Managers
             result.Y = reportElement.Y;
             result.Width = reportElement.Width;
             result.Height = reportElement.Height;
-            unitOfWork.ReportElementRepo.Update(result);
+            await unitOfWork.ReportElementRepo.Update(result);
             unitOfWork.Save();
         }
 
@@ -330,5 +330,12 @@ namespace Infrastructure.Business.Managers
             unitOfWork.Save();
         }
 
-    }
+		public async Task Lock(ReportElement reportElement)
+		{
+			ReportElement result = await unitOfWork.ReportElementRepo.GetById(reportElement.Id);
+			result.IsLocked = reportElement.IsLocked;
+			await unitOfWork.ReportElementRepo.Update(result);
+			unitOfWork.Save();
+		}
+	}
 }
