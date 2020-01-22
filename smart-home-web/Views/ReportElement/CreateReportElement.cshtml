@@ -81,17 +81,16 @@
                                     .attr("value", value.id)
                                     .text(value.name));
                         });
-                        if ($('#sensor-select').children().length == 0) {
-                             $('#sensor-select')
-                                .append($("<option></option>")
-                                    .attr("disabled", true)
-                                    .attr("selected", true)
-                                    .text("There is not suitable sensor"));
-                        }
                         $('select').niceSelect('update');
                     },
-                    error: function (res) {
-                        console.log(res);
+                    error: function () {
+                        $('#sensor-select').empty()
+                            $('#sensor-select')
+                                .append($("<option></option>")
+                                .attr("disabled", true)
+                                .attr("selected", true)
+                                .text("There is not suitable sensor"));
+                        $('select').niceSelect('update');
                     }
                 });
             }
