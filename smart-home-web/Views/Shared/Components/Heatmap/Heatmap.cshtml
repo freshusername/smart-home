@@ -69,7 +69,7 @@
             },
 
             title: {
-                text: 'Average value per weekday for ' + @Html.Raw(Json.Serialize(Model.SensorName))
+                text: 'Average value per weekday for ' + '@Html.Raw(Json.Serialize(Model.SensorName))'
             },
 
             xAxis: {
@@ -83,15 +83,6 @@
                         }
                     ]
             },
-
-            @{
-                List<string> periods = new List<string>();
-                for (int i = 0; i < 28; i += 7)
-                {
-                     periods.Add(days[i].ToString("dd/MM/yyy") + " - " + days[i + 6].ToString("dd/MM/yyy"));
-                }
-                string[] weeks = periods.ToArray();
-            }
 
             yAxis: {
                 categories:
@@ -153,7 +144,7 @@
                         @for (int j = 0; j < 7; j++)
                         {
                             <text>
-                                [@Html.Raw(Json.Serialize(j)), @Html.Raw(Json.Serialize(i)), @Html.Raw(Json.Serialize(valArray[h++]))], 
+                                [@Html.Raw(Json.Serialize(j)), @Html.Raw(Json.Serialize(i)), @Html.Raw(Json.Serialize(valArray[h++]))],
                             </text>
                         }
                     }
