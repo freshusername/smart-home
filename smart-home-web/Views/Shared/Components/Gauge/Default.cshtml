@@ -48,7 +48,8 @@
 <script>
     var gaugeOptions = {
         chart: {
-            type: 'solidgauge'
+            type: 'solidgauge',
+            height: '50%',
         },
 
         title: null,
@@ -117,7 +118,15 @@
                     fontWeight: 'bold'
                 },
                 floating: true,
-                y: -170
+                y: 25
+            },
+            labels: {
+                distance: '80%',
+                y: 20,
+                style: {
+                    fontWeight: 'bold',
+                    fontSize: '16px'
+                }
             }
         },
 

@@ -2,21 +2,35 @@
 @model smart_home_web.Models.PaginationViewModel;
 
 
-<nav aria-label="Page navigation example" class="center-block">
-    <ul class="pagination justify-content-center">
-        @if (Model.filterDto != null)
+<nav>
+    <ul class="pagination">
+        @if (Model.filterDto != null & Model.filterDto.PagesCount > 1)
         {
-            <li class="page-item @(!Model.filterDto.HasPrevious ? "disabled" : "") ">
+            <li class="page-item @(!Model.filterDto.HasPrevious ? "d-none" : "")">
+                @{
+                    var first = (FilterDto)Model.filterDto.Clone();
+                    first.CurrentPage = 1;
+                }
+
+                @Html.ActionLink("First", Model.action, Model.controller, first, new { @class = "page-link" })
+            </li>
+
+            <li class="page-item @(!Model.filterDto.HasPrevious ? "d-none" : "") ">
                 @{
                     var prev = (FilterDto)Model.filterDto.Clone();
                     prev.CurrentPage = Model.filterDto.CurrentPage - 1;
                 }
 
-                @Html.ActionLink("<", Model.action, Model.controller, prev, new {@class = "page-link" })
+                <a class="page-link" href="@Url.Action(Model.action, Model.controller, prev, null, null, null)"><i class="fas fa-arrow-left"></i></a>
             </li>
 
-            @for (var i = 1; i <= Model.filterDto.PagesCount; i++)
+
+            var start = Model.filterDto.CurrentPage < 3 ? 1 : Model.filterDto.CurrentPage - 3;
+            var end = (Model.filterDto.CurrentPage + 3 < Model.filterDto.PagesCount) ? Model.filterDto.CurrentPage + 3 : Model.filterDto.PagesCount;
+
+            @for (var i = start; i <= end; i++)
             {
+
                 var page_i = (FilterDto)Model.filterDto.Clone();
                 page_i.CurrentPage = i;
 
@@ -25,13 +39,23 @@
                 </li>
             }
 
-            <li class="page-item @(!Model.filterDto.HasNext ? "disabled" : "") ">
+
+            <li class="page-item @(!Model.filterDto.HasNext ? "d-none" : "") ">
                 @{
                     var next = (FilterDto)Model.filterDto.Clone();
                     next.CurrentPage = Model.filterDto.CurrentPage + 1;
                 }
 
-                @Html.ActionLink(">", Model.action, Model.controller, next, new { @class = "page-link" })
+                <a class="page-link" href="@Url.Action(Model.action, Model.controller, next, null, null, null)"><i class="fas fa-arrow-right"></i></a>
+            </li>
+
+            <li class="page-item @(!Model.filterDto.HasNext ? "d-none" : "") ">
+                @{
+                    var last = (FilterDto)Model.filterDto.Clone();
+                    last.CurrentPage = last.PagesCount;
+                }
+
+                @Html.ActionLink("Last", Model.action, Model.controller, last, new { @class = "page-link" })
             </li>
         }
     </ul>

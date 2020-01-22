@@ -11,7 +11,7 @@
 }
 
 <body class="body-content">
-    <div class="row text-center">
+    <div class="d-flex flex-column align-items-center">
         <table class="table table-hover table">
             <thead class="text-center">
                 <tr>
@@ -75,11 +75,6 @@
 
         </table>
         <br />
-        <div class="center-block" >
-            @await Component.InvokeAsync("Pagination", new { action = "Index", controller = "History", filterDto = Model.FilterDto })
-        </div>
-
-
+        @await Component.InvokeAsync("Pagination", new { action = "Index", controller = "History", filterDto = Model.FilterDto })
     </div>
-
 </body>

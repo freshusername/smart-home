@@ -35,5 +35,7 @@ namespace Infrastructure.Business.DTOs.ReportElements
         public int Y { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
+
+		public bool IsLocked { get; set; }
     }
 }
