@@ -41,6 +41,12 @@
                     <input type="hidden" asp-for="Height" value="@Model.Height" />
                 </div>
                 <div class="form-group">
+                    <input type="hidden" asp-for="SensorName" value="@Model.SensorName" />
+                </div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="DashboardName" value="@Model.DashboardName" />
+                </div>
+                <div class="form-group">
                     <input type="hidden" disabled="disabled" asp-for="SensorName" value="@Model.SensorName" class="form-control" />
                 </div>
                 <div class="form-group">
@@ -93,17 +99,15 @@
                                 .text(value.name));
                     });
                     $('#sensor-select').val($('#sensor-id').val());
-                    if ($('#sensor-select').children().length == 0) {
-                             $('#sensor-select')
-                                .append($("<option></option>")
-                                    .attr("disabled", true)
-                                    .attr("selected", true)
-                                    .text("There is not suitable sensor"));
-                        }
                     $('select').niceSelect('update');
                 },
-                error: function (res) {
-                    console.log(res);
+                error: function () {
+                    $('#sensor-select')
+                        .append($("<option></option>")
+                            .attr("disabled", true)
+                            .attr("selected", true)
+                            .text("There is not suitable sensor"));
+                     $('select').niceSelect('update');
                 },
            });
         });
