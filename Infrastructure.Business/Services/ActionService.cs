@@ -26,25 +26,23 @@ namespace Infrastructure.Business.Services
            
                 foreach (var item in data)
                 { 
-                    if(item.IsActive && item.Sensor.SensorType.MeasurementType == MeasurementType.Bool)
+                    if(item.IsActive)
                     {
-                        var result = CheckForBool(item.SensorId);
-                         return result;
+                        var result = Verification(item.SensorId ,item.Time ,item.Rule);
+                       if(result) return new OperationDetails(true ,"" , "");
                     }
                 }
                      
             return new OperationDetails(false , "" , "");
         }
 
-        private OperationDetails CheckForBool(int sendorId)
+        private bool Verification(int sensorId , int time , CheckBy rule)
         {
-            DateTimeOffset date = DateTimeOffset.Now.AddSeconds(-4);        
-              var history =  _db.HistoryRepo.GetLastHistoryBySensorIdAndDate(sendorId , date);
+            DateTimeOffset date;
+           var history =  _db.HistoryRepo.GetLastHistoryBySensorIdAndDate(sensorId, date);
+            var sensor = _db.SensorRepo.GetSensorById(sensorId).Result;
 
-            if (history.BoolValue == true)
-              return new OperationDetails(true, "" , "");
-
-            return new OperationDetails(false, "", "");
         }
+
     }
 }

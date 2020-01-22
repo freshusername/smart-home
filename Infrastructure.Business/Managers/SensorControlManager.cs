@@ -43,7 +43,7 @@ namespace Infrastructure.Business.Managers
         {
             var sensorControl = mapper.Map<SensorControlDto, SensorControl>(controlDto);
             if (sensorControl == null) return new OperationDetails(false , "" , "");
-             unitOfWork.SensorControlRepo.Update(sensorControl);
+              unitOfWork.SensorControlRepo.Update(sensorControl);
              unitOfWork.Save();
             return new OperationDetails(true , "" , "");
         }
