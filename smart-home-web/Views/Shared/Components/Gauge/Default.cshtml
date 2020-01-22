@@ -55,10 +55,8 @@
     var gaugeOptions = {
         chart: {
             type: 'solidgauge',
-            height: '50%',
+            height: '75%',
         },
-
-        title: null,
 
         pane: {
             center: ['50%', '85%'],
@@ -118,14 +116,6 @@
             min: @Model.Min,
             max: @Model.Max,
             tickPositions: [@Model.Min, @Model.Max],
-            title: {
-                text: '@Model.SensorName',
-                style: {
-                    fontWeight: 'bold'
-                },
-                floating: true,
-                y: 25
-            },
             labels: {
                 distance: '80%',
                 y: 20,
@@ -134,6 +124,10 @@
                     fontSize: '16px'
                 }
             }
+        },
+
+        title: {
+                text: 'Gauge for ' + @Html.Raw(Json.Serialize(Model.SensorName)) + ' for time period of ' +  '@Html.DisplayFor(model => model.Hours)'
         },
 
         credits: {
@@ -189,7 +183,7 @@
                 }
             }
         });
-    }, 2000);
+    }, 200000);
 
     $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
         var type = 'Gauge';
