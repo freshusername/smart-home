@@ -209,7 +209,20 @@ namespace Infrastructure.Business.Managers
                 date = DateTime.Now.AddHours(-(int)reportElement.Hours);
             IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
             if (!histories.Any())
-                return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "No histories in this report element" };
+            {
+                int hours = (int)reportElement.Hours;
+                string strhours;
+                if (hours == 1)
+                    strhours = "1 hour";
+                else if (hours <= 12)
+                    strhours = $"{hours} hours";
+                else if (hours / 24 == 1)
+                    strhours = "1 day";
+                else
+                    strhours = $"{hours / 24} days";
+                return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = $"No histories in this report element per {strhours}" };
+            }
+                
 
             ReportElementDto columnRange = mapper.Map<Sensor, ReportElementDto>(reportElement.Sensor);
 
