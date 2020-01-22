@@ -62,7 +62,7 @@
                         Select measurement period:
                     </label>
                     <div style="margin-bottom:50px">
-                        <select asp-for="Hours" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.ReportElementHours>()" class="nice-select col-lg-4 col-md-5 col-sm-6 col-xs-12"></select>
+                        <select asp-for="Hours" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.ReportElementHours>()" class="nice-select col-lg-4 col-md-5 col-sm-6 col-xs-12 @(Model.Type == Domain.Core.Model.Enums.ReportElementType.Heatmap ? "disabled" : "")"></select>
                     </div>
                 </div>
 

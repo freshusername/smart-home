@@ -107,7 +107,9 @@ namespace Infrastructure.Business.Managers
 
             heatmap.Id = reportElement.Id;
             heatmap.DashboardName = reportElement.Dashboard.Name;
+            heatmap.DashboardId = reportElement.Dashboard.Id;
             heatmap.AvgSensorValuesPerDays = AvgSensorValuesPerDays;
+            heatmap.Hours = reportElement.Hours;
 
             return heatmap;
         }
