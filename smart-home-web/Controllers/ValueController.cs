@@ -21,8 +21,8 @@ namespace smart_home_web.Controllers
         private readonly IMessageManager _messageManager;
         private readonly ISensorManager _sensorManager;
         private readonly IActionService _actionService;
-        public ValueController(IHistoryManager historyTestManager ,ISensorManager sensorManager , IActionService actionService)
-        public ValueController(IMessageManager messageManager, IHistoryManager historyTestManager, ISensorManager sensorManager)
+      
+        public ValueController(IMessageManager messageManager, IHistoryManager historyTestManager, ISensorManager sensorManager , IActionService actionService)
         {
             _historyManager = historyTestManager;
             _messageManager = messageManager;
