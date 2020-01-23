@@ -9,7 +9,7 @@
 }
 else
 {
-    <label class="control-label graph-label">@Model.Message <a class="btn btn-success text-center" asp-controller="ReportElement" asp-action="EditReportElement" asp-route-id="@Model.Id"><i class="fas fa-cog"></i></a></label>
+    <label class="control-label graph-label text-center">@Model.Message <a class="btn btn-success text-center" asp-controller="ReportElement" asp-action="EditReportElement" asp-route-id="@Model.Id"><i class="fas fa-cog"></i></a></label>
 }
 
 <script>
@@ -32,11 +32,12 @@ else
         },
 
         xAxis: {
+            minorTickInterval: 'auto',
             title: {
                 style: {
                     textTransform: 'uppercase'
                 },
-                text: 'dates'
+                text: '<b>dates</b>'
             },
             categories: columndates
         },
@@ -47,7 +48,7 @@ else
                 style: {
                     textTransform: 'uppercase'
                 },
-                text: 'values'
+                text: '<b>values</b>'
             },
             labels: {
                 style: {
@@ -68,7 +69,7 @@ else
         },
 
         series: [{
-            name: 'Temperatures',
+            name: 'Values',
             data: columntemperatures
         }],
         exporting: {
