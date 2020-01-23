@@ -68,7 +68,7 @@
             },
 
             title: {
-                text: 'Average value per weekday for ' + '@Html.Raw(Json.Serialize(Model.SensorName))'
+                text: 'Average values for ' + '@Html.Raw(Json.Serialize(Model.SensorName))' + ' for the last @Html.Raw(Json.Serialize((int)Model.Hours/24)) days'
             },
 
             xAxis: {
@@ -128,8 +128,9 @@
             tooltip: {
                 formatter: function () {
                     return '<b>' + '</b><br>' + @Html.Raw(Json.Serialize(Model.SensorName))  +
-                        (this.point.value == undefined ? ' has no data' : ' has average: <b>' + this.point.value) + '</b><br> on <b>' + getPointCategoryName(this.point, 'x')  + ', ' +
-                        getDateForValue(this.point.index) + '</b>';
+                        (this.point.value == undefined ? ' has no data' : ' has average: <b>' + this.point.value) +
+                            '</b><br> on <b>' + getPointCategoryName(this.point, 'x') + ', ' +
+                                getDateForValue(this.point.index) + '</b>';
                 }
             },
 
