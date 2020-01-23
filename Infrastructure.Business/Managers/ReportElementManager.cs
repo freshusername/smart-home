@@ -114,7 +114,7 @@ namespace Infrastructure.Business.Managers
 
             AvgSensorValuesPerDays = AvgSensorValuesPerDays.OrderBy(d => d.WeekDay).ToList();
 
-            if (!avgSensorValuesPerDays.Any())
+            if (avgSensorValuesPerDays.Count() == 0)
                 return new HeatmapDto { Id = reportElementId, IsCorrect = false };
 
             HeatmapDto heatmap = mapper.Map<Sensor, HeatmapDto>(reportElement.Sensor);

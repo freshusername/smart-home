@@ -10,8 +10,9 @@
 <figure class="highcharts-figure">
     <div id=@("Heatmap" + Model.Id.ToString())></div>
 </figure>
-
-<script>
+@if (Model.IsCorrect)
+{
+    <script>
         @{
             List<decimal?> vals = new List<decimal?>();
             List<DateTime> daysList = new List<DateTime>();
@@ -27,9 +28,9 @@
             }
             for (int i = 0; i < 28; i += 7)
             {
-                weeksList.Add(daysList[i].ToString("dd/MM/yyyy") + " - " + daysList[i + 6].ToString("dd/MM/yyyy") );
+                weeksList.Add(daysList[i].ToString("dd/MM/yyyy") + " - " + daysList[i + 6].ToString("dd/MM/yyyy"));
             }
-            for (int i = 0; i < 7; i ++)
+            for (int i = 0; i < 7; i++)
             {
                 dayOfWeekList.Add(daysList[i].DayOfWeek.ToString());
             }
@@ -68,7 +69,7 @@
             },
 
             title: {
-                text: 'Average values for ' + '@Html.Raw(Json.Serialize(Model.SensorName))' + ' for the last @Html.Raw(Json.Serialize((int)Model.Hours/24)) days'
+                text: 'Average values for ' + '@Html.Raw(Json.Serialize(Model.SensorName))' + ' for the last @Html.Raw(Json.Serialize((int)Model.Hours / 24)) days'
             },
 
             xAxis: {
@@ -187,8 +188,12 @@
             }
 
         });
-</script>
-
+    </script>
+}
+else
+{
+    <h4>No Data for Heatmap for this period of time</h4>                        
+}
 <script>
     $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
         var type = 'Heatmap';
