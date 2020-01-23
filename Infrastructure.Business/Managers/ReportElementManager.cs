@@ -230,6 +230,7 @@ namespace Infrastructure.Business.Managers
 
             columnRange.Id = ReportElementId;
             columnRange.DashboardName = reportElement.Dashboard.Name;
+            columnRange.Hours = reportElement.Hours;
             columnRange.Dates = new List<string>();
             columnRange.MinValues = new List<dynamic>();
             columnRange.MaxValues = new List<dynamic>();
@@ -237,104 +238,172 @@ namespace Infrastructure.Business.Managers
             switch (columnRange.MeasurementType)
             {
                 case MeasurementType.Int:
-
-
                     if ((int)reportElement.Hours == 1)
                     {
-                        var intValuesPerHour = histories.OrderBy(p => p.Date.UtcDateTime.Hour).GroupBy(p => p.Date.UtcDateTime.Minute).Select(p => new
+                        var intValues = histories.OrderBy(p => p.Date.LocalDateTime.Minute).GroupBy(p => p.Date.LocalDateTime.Minute).Select(p => new
                         {
                             Min = p.Min(g => g.IntValue),
                             Max = p.Max(g => g.IntValue),
                             Date = p.Key
                         }).ToList();
-                        foreach (var t in intValuesPerHour)
+
+                        for (int i = 0; i < intValues.Count(); i++)
                         {
-                            columnRange.Dates.Add(t.Date.ToString());
-                            columnRange.MinValues.Add(t.Min.GetValueOrDefault());
-                            columnRange.MaxValues.Add(t.Max.GetValueOrDefault());
+                            if (intValues.Count() == 1 || i == 0)
+                            {
+                                columnRange.Dates.Add(intValues[i].Date.ToString());
+                                columnRange.MinValues.Add(intValues[i].Min.GetValueOrDefault());
+                                columnRange.MaxValues.Add(intValues[i].Max.GetValueOrDefault());
+                                continue;
+                            }
+                            if (i > 0 && !intValues[i].Equals(intValues[i - 1]))
+                            {
+                                columnRange.Dates.Add(intValues[i].Date.ToString());
+                                columnRange.MinValues.Add(intValues[i].Min.GetValueOrDefault());
+                                columnRange.MaxValues.Add(intValues[i].Max.GetValueOrDefault());
+                            }
                         }
+
                         break;
-                    } else if ((int)reportElement.Hours <= 24) 
+                    } else if ((int)reportElement.Hours > 1 && (int)reportElement.Hours <= 24)   
                     {
-                        var intValuesPerDay = histories.OrderBy(p => p.Date.UtcDateTime.Hour).GroupBy(p => p.Date.UtcDateTime.Hour).Select(p => new
+                        var intValues = histories.OrderBy(p => p.Date.LocalDateTime.Hour).GroupBy(p => p.Date.LocalDateTime.Hour).Select(p => new
                         {
                             Min = p.Min(g => g.IntValue),
                             Max = p.Max(g => g.IntValue),
                             Date = p.Key
                         }).ToList();
-                        foreach (var t in intValuesPerDay)
+
+                        for (int i = 0; i < intValues.Count(); i++)
                         {
-                            columnRange.Dates.Add(t.Date.ToString());
-                            columnRange.MinValues.Add(t.Min.GetValueOrDefault());
-                            columnRange.MaxValues.Add(t.Max.GetValueOrDefault());
+                            if (intValues.Count() == 1 || i == 0)
+                            {
+                                columnRange.Dates.Add(intValues[i].Date.ToString());
+                                columnRange.MinValues.Add(intValues[i].Min.GetValueOrDefault());
+                                columnRange.MaxValues.Add(intValues[i].Max.GetValueOrDefault());
+                                continue;
+                            }
+                            if (i > 0 && !intValues[i].Equals(intValues[i - 1]))
+                            {
+                                columnRange.Dates.Add(intValues[i].Date.ToString());
+                                columnRange.MinValues.Add(intValues[i].Min.GetValueOrDefault());
+                                columnRange.MaxValues.Add(intValues[i].Max.GetValueOrDefault());
+                            }
                         }
+
                         break;
                     }
                     else
                     {
-                        var intValues = histories.OrderBy(p => p.Date.UtcDateTime.Hour).GroupBy(p => p.Date.UtcDateTime).Select(p => new
+                        var intValues = histories.OrderBy(p => p.Date.LocalDateTime.Day).GroupBy(p => p.Date.LocalDateTime.Day).Select(p => new
                         {
                             Min = p.Min(g => g.IntValue),
                             Max = p.Max(g => g.IntValue),
                             Date = p.Key
                         }).ToList();
 
-                        foreach (var t in intValues)
+                        for (int i = 0; i < intValues.Count(); i++)
                         {
-                            columnRange.Dates.Add(t.Date.Date.ToShortDateString());
-                            columnRange.MinValues.Add(t.Min.GetValueOrDefault());
-                            columnRange.MaxValues.Add(t.Max.GetValueOrDefault());
+                            if (intValues.Count() == 1 || i == 0)
+                            {
+                                columnRange.Dates.Add(intValues[i].Date.ToString());
+                                columnRange.MinValues.Add(intValues[i].Min.GetValueOrDefault());
+                                columnRange.MaxValues.Add(intValues[i].Max.GetValueOrDefault());
+                                continue;
+                            }
+                            if (i > 0 && !intValues[i].Equals(intValues[i - 1]))
+                            {
+                                columnRange.Dates.Add(intValues[i].Date.ToString());
+                                columnRange.MinValues.Add(intValues[i].Min.GetValueOrDefault());
+                                columnRange.MaxValues.Add(intValues[i].Max.GetValueOrDefault());
+                            }
                         }
+
                         break;
                     }
 
                 case MeasurementType.Double:
                     if ((int)reportElement.Hours == 1) 
                     {
-                        var doubleValuesPerHour = histories.OrderBy(p => p.Date.UtcDateTime.Hour).GroupBy(p => p.Date.UtcDateTime.Minute).Select(p => new
-                        {
-                            Min = p.Min(g => g.DoubleValue),
-                            Max = p.Max(g => g.DoubleValue),
-                            Date = p.Key
-                        }).ToList();
-                        foreach (var t in doubleValuesPerHour)
-                        {
-                            columnRange.Dates.Add(t.Date.ToString());
-                            columnRange.MinValues.Add(t.Min.GetValueOrDefault());
-                            columnRange.MaxValues.Add(t.Max.GetValueOrDefault());
-                        }
-                        break;
-                    } else if ((int)reportElement.Hours <= 24)
-                    {
-                        var doubleValuesPerDay = histories.OrderBy(p => p.Date.UtcDateTime.Hour).GroupBy(p => p.Date.UtcDateTime.Hour).Select(p => new
-                        {
-                            Min = p.Min(g => g.DoubleValue),
-                            Max = p.Max(g => g.DoubleValue),
-                            Date = p.Key
-                        }).ToList();
-                        foreach (var t in doubleValuesPerDay)
-                        {
-                            columnRange.Dates.Add(t.Date.ToString());
-                            columnRange.MinValues.Add(t.Min.GetValueOrDefault());
-                            columnRange.MaxValues.Add(t.Max.GetValueOrDefault());
-                        }
-                        break;
-                    }
-                    else
-                    {
-                        var doubleValues = histories.OrderBy(p => p.Date.UtcDateTime.Hour).GroupBy(p => p.Date.UtcDateTime).Select(p => new
+                        var doubleValues = histories.OrderBy(p => p.Date.LocalDateTime.Minute).GroupBy(p => p.Date.LocalDateTime.Minute).Select(p => new
                         {
                             Min = p.Min(g => g.DoubleValue),
                             Max = p.Max(g => g.DoubleValue),
                             Date = p.Key
                         }).ToList();
 
-                        foreach (var t in doubleValues)
+                        for (int i = 0; i < doubleValues.Count(); i++)
                         {
-                            columnRange.Dates.Add(t.Date.Date.ToShortDateString());
-                            columnRange.MinValues.Add(t.Min.GetValueOrDefault());
-                            columnRange.MaxValues.Add(t.Max.GetValueOrDefault());
+                            if (doubleValues.Count() == 1 || i == 0)
+                            {
+                                columnRange.Dates.Add(doubleValues[i].Date.ToString());
+                                columnRange.MinValues.Add(doubleValues[i].Min.GetValueOrDefault());
+                                columnRange.MaxValues.Add(doubleValues[i].Max.GetValueOrDefault());
+                                continue;
+                            }
+                            if (i > 0 && !doubleValues[i].Equals(doubleValues[i - 1]))
+                            {
+                                columnRange.Dates.Add(doubleValues[i].Date.ToString());
+                                columnRange.MinValues.Add(doubleValues[i].Min.GetValueOrDefault());
+                                columnRange.MaxValues.Add(doubleValues[i].Max.GetValueOrDefault());
+                            }
                         }
+
+                        break;
+                    } else if ((int)reportElement.Hours > 1 && (int)reportElement.Hours <= 24)
+                    {
+                        var doubleValues = histories.OrderBy(p => p.Date.LocalDateTime.Hour).GroupBy(p => p.Date.LocalDateTime.Hour).Select(p => new
+                        {
+                            Min = p.Min(g => g.DoubleValue),
+                            Max = p.Max(g => g.DoubleValue),
+                            Date = p.Key
+                        }).ToList();
+
+                        for (int i = 0; i < doubleValues.Count(); i++)
+                        {
+                            if (doubleValues.Count() == 1 || i == 0)
+                            {
+                                columnRange.Dates.Add(doubleValues[i].Date.ToString());
+                                columnRange.MinValues.Add(doubleValues[i].Min.GetValueOrDefault());
+                                columnRange.MaxValues.Add(doubleValues[i].Max.GetValueOrDefault());
+                                continue;
+                            }
+                            if (i > 0 && !doubleValues[i].Equals(doubleValues[i - 1]))
+                            {
+                                columnRange.Dates.Add(doubleValues[i].Date.ToString());
+                                columnRange.MinValues.Add(doubleValues[i].Min.GetValueOrDefault());
+                                columnRange.MaxValues.Add(doubleValues[i].Max.GetValueOrDefault());
+                            }
+                        }
+
+                        break;
+                    }
+                    else
+                    {
+                        var doubleValues = histories.OrderBy(p => p.Date.LocalDateTime.Day).GroupBy(p => p.Date.LocalDateTime.Day).Select(p => new
+                        {
+                            Min = p.Min(g => g.DoubleValue),
+                            Max = p.Max(g => g.DoubleValue),
+                            Date = p.Key
+                        }).ToList();
+
+                        for (int i = 0; i < doubleValues.Count(); i++)
+                        {
+                            if (doubleValues.Count() == 1 || i == 0) 
+                            {
+                                columnRange.Dates.Add(doubleValues[i].Date.ToString());
+                                columnRange.MinValues.Add(doubleValues[i].Min.GetValueOrDefault());
+                                columnRange.MaxValues.Add(doubleValues[i].Max.GetValueOrDefault());
+                                continue;
+                            }
+                            if (i > 0 && !doubleValues[i].Equals(doubleValues[i - 1]))
+                            {
+                                columnRange.Dates.Add(doubleValues[i].Date.ToString());
+                                columnRange.MinValues.Add(doubleValues[i].Min.GetValueOrDefault());
+                                columnRange.MaxValues.Add(doubleValues[i].Max.GetValueOrDefault());
+                            }
+                        }
+
                         break;
                     }
                 default:
