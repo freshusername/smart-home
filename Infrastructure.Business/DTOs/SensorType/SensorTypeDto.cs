@@ -15,7 +15,7 @@ namespace Infrastructure.Business.DTOs.SensorType
         public string MeasurementName { get; set; }
         public int? IconId { get; set; }
         public string IconPath { get; set; }
-
+		public bool IsControl { get; set; }
 
     }
 }

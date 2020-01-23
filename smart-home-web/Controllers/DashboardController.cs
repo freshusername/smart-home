@@ -20,7 +20,6 @@ namespace smart_home_web.Controllers
 		private readonly IMapper _mapper;
 		private IHostingEnvironment _env;
 		private IDashboardManager _dashboardManager;
-		private ISensorManager _sensorManager;
 		private UserManager<AppUser> _userManager;
 
 		public DashboardController(
@@ -56,9 +55,9 @@ namespace smart_home_web.Controllers
 			var dashboardDtos = await _dashboardManager.GetByUserId(userId);
 			var result = _mapper.Map<IEnumerable<DashboardDto>, IEnumerable<DashboardViewModel>>(dashboardDtos);
 
-			return View(new DashboardIndexViewModel
-			{
-				Dashboards = result
+            return View(new DashboardIndexViewModel
+            {
+                Dashboards = result.Reverse()
 			});
 		}
 
@@ -95,7 +94,8 @@ namespace smart_home_web.Controllers
 			return Ok();
 		}
 
-		public async Task<IActionResult> Delete(int id)
+        [Authorize]
+        public async Task<IActionResult> Delete(int id)
 		{
 			await _dashboardManager.DeleteById(id);
 			return Ok();
