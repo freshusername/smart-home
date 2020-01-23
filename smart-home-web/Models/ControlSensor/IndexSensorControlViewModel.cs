@@ -7,7 +7,7 @@ namespace smart_home_web.Models.ControlSensor
 {
     public class IndexSensorControlViewModel
     {
-        public EditSensorControlViewModel EditModel { get; set; }
+        public EditSensorControlViewModel EditViewModel { get; set; }
         public SensorControlViewModel SensorControl { get; set; }
 
         public List<SensorViewModel.SensorViewModel> ControlSensorsView { get; set; }

@@ -43,7 +43,7 @@ namespace smart_home_web.Controllers
               
             return Ok();
         }
-
+       
         [HttpGet]
         public IActionResult Edit(int id)
         {
@@ -66,6 +66,20 @@ namespace smart_home_web.Controllers
             
         }
 
-       
+        [HttpPost]
+        public IActionResult Edit(IndexSensorControlViewModel index)
+        {
+            if (ModelState.IsValid)
+            {
+                var sensorControl = _mapper.Map<EditSensorControlViewModel, SensorControlDto>(index.EditViewModel);
+                 var result = _sensorControlManager.Update(sensorControl);
+                if (!result.Succeeded) ModelState.AddModelError("", result.Message);
+              
+            }
+
+            return View(index.EditViewModel);
+        }
+
+
     }
 }
