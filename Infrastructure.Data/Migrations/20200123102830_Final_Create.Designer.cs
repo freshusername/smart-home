@@ -3,14 +3,16 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationsDbContext))]
-    partial class ApplicationsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200123102830_Final_Create")]
+    partial class Final_Create
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,18 +67,6 @@ namespace Infrastructure.Data.Migrations
                         .HasName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("Domain.Core.Model.Control", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<Guid>("Token");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Controls");
                 });
 
             modelBuilder.Entity("Domain.Core.Model.Dashboard", b =>
@@ -161,9 +151,11 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<string>("Message");
 
-                    b.Property<int>("NotificationType");
+                    b.Property<string>("NotificationType")
+                        .IsRequired();
 
-                    b.Property<int>("Rule");
+                    b.Property<string>("Rule")
+                        .IsRequired();
 
                     b.Property<int>("SensorId");
 
@@ -239,36 +231,6 @@ namespace Infrastructure.Data.Migrations
                     b.HasIndex("SensorTypeId");
 
                     b.ToTable("Sensors");
-                });
-
-            modelBuilder.Entity("Domain.Core.Model.SensorControl", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("ControlId");
-
-                    b.Property<int>("IconId");
-
-                    b.Property<bool>("IsActive");
-
-                    b.Property<string>("Name");
-
-                    b.Property<int>("SensorId");
-
-                    b.Property<int?>("maxValue");
-
-                    b.Property<int?>("minValue");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ControlId");
-
-                    b.HasIndex("IconId");
-
-                    b.HasIndex("SensorId");
-
-                    b.ToTable("SensorControls");
                 });
 
             modelBuilder.Entity("Domain.Core.Model.SensorType", b =>
@@ -462,24 +424,6 @@ namespace Infrastructure.Data.Migrations
                     b.HasOne("Domain.Core.Model.SensorType", "SensorType")
                         .WithMany("Sensor")
                         .HasForeignKey("SensorTypeId");
-                });
-
-            modelBuilder.Entity("Domain.Core.Model.SensorControl", b =>
-                {
-                    b.HasOne("Domain.Core.Model.Control", "Control")
-                        .WithMany("SensorControls")
-                        .HasForeignKey("ControlId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Domain.Core.Model.Icon", "Icon")
-                        .WithMany()
-                        .HasForeignKey("IconId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Domain.Core.Model.Sensor", "Sensor")
-                        .WithMany("SensorControls")
-                        .HasForeignKey("SensorId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Domain.Core.Model.SensorType", b =>

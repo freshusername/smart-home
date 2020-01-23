@@ -103,7 +103,7 @@ namespace Infrastructure.Business.Managers
             return new OperationDetails(true, "Operation succeed", sensor.Id.ToString());
         }
 
-        public async Task<IEnumerable<SensorDto>> GetSensorsByReportElementType(ReportElementType type, int dashboardId)
+        public async Task<List<SensorDto>> GetSensorsByReportElementType(ReportElementType type, int dashboardId)
         {
             var dashboard = await unitOfWork.DashboardRepo.GetById(dashboardId);
             var sensors = new List<Sensor>();
@@ -113,9 +113,41 @@ namespace Infrastructure.Business.Managers
                 sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.Bool, dashboard.AppUserId));
             if (type == ReportElementType.Clock || type == ReportElementType.Wordcloud)
                 sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.String, dashboard.AppUserId));
-            var res = mapper.Map<IEnumerable<Sensor>, IEnumerable<SensorDto>>(sensors);
+            var res = mapper.Map<List<Sensor>, List<SensorDto>>(sensors);
             return res;
         }
+
+        public SensorDto GetSensorByToken(Guid token)
+        {
+            var sensor = mapper.Map<Sensor, SensorDto>(unitOfWork.SensorRepo.GetByToken(token));
+
+            return sensor;
+        }
+
+
+        public List<SensorDto> GetSensorsToControl()
+        {
+            var sensors = unitOfWork.SensorRepo.GetAll().Result.ToList();
+            var result = mapper.Map<List<Sensor>, List<SensorDto>>(sensors);
+            return result;
+        }
+
+        public List<SensorDto> GetControlSensors()
+        {
+            var tokens = unitOfWork.ControlRepo.GetAll().Result;
+            List<Sensor> sensors = new List<Sensor>();
+
+            foreach (var items in tokens)
+            {
+                 sensors.Add(unitOfWork.SensorRepo.GetByToken(items.Token));
+            }
+
+            var result = mapper.Map<List<Sensor>, List<SensorDto>>(sensors);
+
+            return result;
+        }
+
+
 
     }
 }

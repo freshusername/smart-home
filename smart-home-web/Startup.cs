@@ -4,7 +4,9 @@ using AutoMapper;
 using Domain.Core.Model;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Business.Infrastructure;
+using Infrastructure.Business.Interfaces;
 using Infrastructure.Business.Managers;
+using Infrastructure.Business.Services;
 using Infrastructure.Data;
 using Infrastructure.Data.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -90,6 +92,7 @@ namespace smart_home_web
             services.AddSingleton<IUserIdProvider, SignalRUserIdProvider>();
 
             services.AddTransient<ISensorManager, SensorManager>();
+            services.AddTransient<ISensorControlManager, SensorControlManager>();
             services.AddTransient<IHistoryRepo, HistoryRepo>();
             services.AddTransient<IIconManager, IconManager>();
             services.AddTransient<IHistoryManager, HistoryManager>();
@@ -98,6 +101,7 @@ namespace smart_home_web
             services.AddTransient<INotificationManager, NotificationManager>();
             services.AddTransient<IDashboardManager, DashboardManager>();
             services.AddTransient<IReportElementManager, ReportElementManager>();
+            services.AddTransient<IActionService, ActionService>();
             services.AddTransient<IMessageManager, MessageManager>();
         }
 

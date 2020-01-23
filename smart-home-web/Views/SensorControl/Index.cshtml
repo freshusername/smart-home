@@ -1,0 +1,28 @@
+﻿@using smart_home_web.Models.ControlSensor
+@model List<SensorControlViewModel>;
+<link href="~/css/control.css" rel="stylesheet" />
+
+<div class="container">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <a asp-action="Edit" asp-controller="SensorControl" asp-route-Id="@item.Id" class="pull-right">
+                            <i class="fas fa-cog fa-2x"></i>                          
+                        </a>                     
+                        <img src="https://igenappsfiles.blob.core.windows.net/users/1867624/fa-quick-guide/apple-touch-icon-precomposed.png" width="130" height="130" alt="Alternate Text" class="center-block" />
+                        <h1 class="card-title text-center pull-left">@item.Name</h1>
+                      
+                            <button type="button" class="btn btn-lg btn-toggle" data-toggle="button" aria-pressed="false" autocomplete="off">
+                                <div class="handle"></div>
+                            </button>
+                      
+                    </div>
+                </div>
+
+            </div>
+           }
+    </div>
+</div>

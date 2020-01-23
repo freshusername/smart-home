@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <AssemblyName>smart_home_web</AssemblyName>
     <RootNamespace>smart_home_web</RootNamespace>
+    <UserSecretsId>5134e04a-da0a-436c-98f0-9238a5145ca4</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

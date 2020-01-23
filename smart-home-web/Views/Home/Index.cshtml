@@ -2,3 +2,49 @@
     ViewData["Title"] = "Home Page";
 
 }
+<body>
+    <div class="row">
+        <div class="col-sm">
+            <div class="card">
+                <img class="card-img-top" style="height:70%" src="https://i.imgur.com/PPxdOZf.jpg" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Histories</h5>
+                    <p class="card-text">General table of measurment results for each sensor. </p>
+                    <a asp-controller="History" asp-action="Index" class="btn btn-primary">Open</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm">
+            <div class="card">
+                <img class="card-img-top" style="height:448px" src="https://i.imgur.com/Z3DWXZq.jpg" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Sensors</h5>
+                    <p class="card-text">Info about each sensor that is registered in the system</p>
+                    <a asp-controller="Sensor" asp-action="Index" class="btn btn-primary">Open</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm">
+            <div class="card">
+                <img class="card-img-top" style="height:448px" src="https://i.imgur.com/DFzVS7j.jpg" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Invalid Sensors</h5>
+                    <p class="card-text">List of sensors with invalid tokens</p>
+                    <a asp-controller="History" asp-action="InvalidSensors" class="btn btn-primary">Open</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm">
+            <div class="card">
+                <img class="card-img-top" style="height:448px" src="https://i.imgur.com/ygjpYYN.jpg" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Dashboards</h5>
+                    <p class="card-text">View-desk with info about particular sensors</p>
+                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-primary">Open</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

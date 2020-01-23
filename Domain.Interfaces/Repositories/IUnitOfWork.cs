@@ -12,6 +12,8 @@ namespace Domain.Interfaces.Repositories
         IIconRepo IconRepo { get; }
         IDashboardRepo DashboardRepo { get; }
         IReportElementRepo ReportElementRepo { get; }
+        IControlRepo ControlRepo { get; }
+        ISensorControlRepo SensorControlRepo { get; }
         INotificationRepo NotificationRepo { get; }
         UserManager<AppUser> UserManager { get; }
         RoleManager<IdentityRole> RoleManager { get; }

@@ -5,27 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - smart_home_web</title>
 
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"  rel="stylesheet"/>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="~/css/site.css" rel="stylesheet" />
-    <link href="~/lib/toastr/toastr.css" rel="stylesheet"/>
+    <link href="~/lib/toastr/toastr.css" rel="stylesheet" />
+    <partial name="_NavbarPartial" />
 </head>
 <body>
-    <partial name="_NavbarPartial" />
+ 
 
-    <div class="container body-content">
+    <div class="container body-content pt-5">
         @RenderBody()
-        <hr style="clear: both;" />
-        <footer>
-            <p>&copy; 2019 - smart_home_web</p>
-        </footer>
     </div>
-    <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
-    </environment>
-    <environment exclude="Development">
         <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
                 asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
                 asp-fallback-test="window.jQuery"
@@ -39,8 +34,6 @@
                 integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd">
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
-    </environment>
-    <environment include="Development">
         <script src="~/lib/toastr/toastr.min.js"></script>
         <script>
             // TOASTR OPTIONS
@@ -64,7 +57,6 @@
         </script>
         <script src="~/lib/signalr/dist/browser/signalr.js"></script>
         <script src="~/js/message.js"></script>
-    </environment>
 
     @RenderSection("Scripts", required: false)
 </body>

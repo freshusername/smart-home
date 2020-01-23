@@ -24,6 +24,8 @@ namespace Infrastructure.Data
         private INotificationRepo _notificationRepository;
 		private IDashboardRepo _dashboardRepo;
         private IReportElementRepo _reportElementRepo;
+        private IControlRepo _controlRepo;
+        private ISensorControlRepo _sensorControlRepo;
 
         public UnitOfWork(
             ApplicationsDbContext dbContext,
@@ -107,7 +109,25 @@ namespace Infrastructure.Data
 			}
 		}
 
-		public int Save()
+        public IControlRepo ControlRepo
+        {
+            get
+            {
+                if (_controlRepo == null) _controlRepo = new ControlRepo(context);
+                return _controlRepo;
+            }
+        }
+
+        public ISensorControlRepo SensorControlRepo
+        {
+            get
+            {
+                if (_sensorControlRepo == null) _sensorControlRepo = new SensorControlRepo(context);
+                return _sensorControlRepo;
+            }
+        }
+
+        public int Save()
         {
             return context.SaveChanges();
         }

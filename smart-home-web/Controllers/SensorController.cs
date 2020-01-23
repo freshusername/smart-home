@@ -125,9 +125,9 @@ namespace smart_home_web.Controllers
         public async Task<IActionResult> GetSensorsByReportElementType(ReportElementType type, int dashboardId)
         {
             var res = await _sensorManager.GetSensorsByReportElementType(type, dashboardId);
-            if (res != null)
-                return Ok(res.ToList());
-            return BadRequest();
+            if (res.Count==0)
+                return BadRequest();
+            return Ok(res);
         }
     }
 }
