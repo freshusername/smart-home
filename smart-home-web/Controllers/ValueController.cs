@@ -80,7 +80,8 @@ namespace smart_home_web.Controllers
 		[HttpGet("getaction")]
 		public int GetAction(Guid token)
 		{
-			return (DateTime.Now.Second / 10) % 2;
+			//return (DateTime.Now.Second / 10) % 2;
+			return 0;
 		}
 	}
 }
