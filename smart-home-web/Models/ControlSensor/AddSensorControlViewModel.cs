@@ -10,18 +10,17 @@ using System.Threading.Tasks;
 
 namespace smart_home_web.Models.ControlSensor
 {
-    public class EditSensorControlViewModel
+    public class AddSensorControlViewModel
     {
-        public int Id { get; set; }
-
+       
         [Required]
-        [StringLength(20 , ErrorMessage = "The Name must be at least 2 and at max 20 characters long.", MinimumLength = 2)]
+        [StringLength(20, ErrorMessage = "The Name must be at least 2 and at max 20 characters long.", MinimumLength = 2)]
         public string Name { get; set; }
 
         public int ControlId { get; set; }
-       
+
         public int SensorId { get; set; }
-      
+
         public int? maxValue { get; set; }
 
         public int? minValue { get; set; }
@@ -31,10 +30,6 @@ namespace smart_home_web.Models.ControlSensor
 
         [DisplayName("Icon")]
         public IFormFile IconFile { get; set; }
-       
-        public Sensor Sensor { get; set; }
-      
-        public Sensor ControlSensor { get; set; }
-
+ 
     }
 }

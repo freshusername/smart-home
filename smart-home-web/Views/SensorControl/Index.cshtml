@@ -1,28 +1,31 @@
 ﻿@using smart_home_web.Models.ControlSensor
-@model List<SensorControlViewModel>;
+@model List<SensorControlViewModel>
 <link href="~/css/control.css" rel="stylesheet" />
 
 <div class="container">
     <div class="row">
-        @foreach (var item in Model)
-        {
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <a asp-action="Edit" asp-controller="SensorControl" asp-route-Id="@item.Id" class="pull-right">
-                            <i class="fas fa-cog fa-2x"></i>                          
-                        </a>                     
+@foreach (var item in Model)
+{
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <a asp-action="Edit" asp-controller="SensorControl" asp-route-Id="@item.Id" class="pull-right">
+                        <i class="fas fa-cog fa-2x"></i>
+                    </a>
+                    <form method="post">
+                        <input type="hidden" name="id"  value="@item.Id" />
                         <img src="https://igenappsfiles.blob.core.windows.net/users/1867624/fa-quick-guide/apple-touch-icon-precomposed.png" width="130" height="130" alt="Alternate Text" class="center-block" />
-                        <h1 class="card-title text-center pull-left">@item.Name</h1>
-                      
-                            <button type="button" class="btn btn-lg btn-toggle" data-toggle="button" aria-pressed="false" autocomplete="off">
-                                <div class="handle"></div>
-                            </button>
-                      
-                    </div>
-                </div>
+                        <h1 class="card-title text-center">@item.Name</h1>
 
+                        <button id="btn_@item.Id" type="submit" onclick="set_active(@item.Id)"  data-request-url="@Url.Action("Change", "SensorControl")" class="btn btn-lg btn-toggle bottom @(item.IsActive ? "active" : "")" data-toggle="button" aria-pressed="@(item.IsActive ? "true" : "false")">
+                            <div class="handle"></div>
+                        </button>
+                    </form>
+
+                </div>
             </div>
-           }
-    </div>
+        </div>
+}
 </div>
+</div>
+<script src="~/js/ToggleRequest.js"></script>

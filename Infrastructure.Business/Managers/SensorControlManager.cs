@@ -53,6 +53,15 @@ namespace Infrastructure.Business.Managers
             return new OperationDetails(true , "" , "");
         }
 
+        public OperationDetails Add(SensorControlDto controlDto)
+        {
+            var sensorControl = mapper.Map<SensorControlDto, SensorControl>(controlDto);
+            if (sensorControl == null) return new OperationDetails(false, "", "");
+            unitOfWork.SensorControlRepo.Insert(sensorControl);
+            unitOfWork.Save();
+            return new OperationDetails(true, "", "");
+        }
+
         public OperationDetails UpdateById(int id,bool isActive)
         {
             var sensorControl = unitOfWork.SensorControlRepo.GetById(id).Result;
