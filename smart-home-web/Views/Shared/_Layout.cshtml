@@ -5,20 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - smart_home_web</title>
 
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"  rel="stylesheet"/>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="~/css/site.css" rel="stylesheet" />
-    <link href="~/lib/toastr/toastr.css" rel="stylesheet"/>
+    <link href="~/lib/toastr/toastr.css" rel="stylesheet" />
 </head>
 <body>
     <partial name="_NavbarPartial" />
 
     <div class="container body-content">
         @RenderBody()
-        <hr style="clear: both;" />
-        <footer>
-            <p>&copy; 2019 - smart_home_web</p>
-        </footer>
     </div>
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>

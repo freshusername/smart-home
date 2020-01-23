@@ -55,7 +55,7 @@
                 {
                     <tr>
                         <td scope="row">@history.Id</td>
-                        <td>@history.Date.DateTime.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                        <td>@history.Date.DateTime.ToLocalTime()</td>
                         @{ if (history.Value.ToString() == "False")
                             {
                                 <td>Inactive</td>
