@@ -117,5 +117,37 @@ namespace Infrastructure.Business.Managers
             return res;
         }
 
+        public SensorDto GetSensorByToken(Guid token)
+        {
+            var sensor = mapper.Map<Sensor, SensorDto>(unitOfWork.SensorRepo.GetByToken(token));
+
+            return sensor;
+        }
+
+
+        public List<SensorDto> GetSensorsToControl()
+        {
+            var sensors = unitOfWork.SensorRepo.GetAll().Result.ToList();
+            var result = mapper.Map<List<Sensor>, List<SensorDto>>(sensors);
+            return result;
+        }
+
+        public List<SensorDto> GetControlSensors()
+        {
+            var tokens = unitOfWork.ControlRepo.GetAll().Result;
+            List<Sensor> sensors = new List<Sensor>();
+
+            foreach (var items in tokens)
+            {
+                 sensors.Add(unitOfWork.SensorRepo.GetByToken(items.Token));
+            }
+
+            var result = mapper.Map<List<Sensor>, List<SensorDto>>(sensors);
+
+            return result;
+        }
+
+
+
     }
 }

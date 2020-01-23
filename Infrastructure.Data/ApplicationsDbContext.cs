@@ -19,6 +19,8 @@ namespace Infrastructure.Data
         public DbSet<Dashboard> Dashboards { get; set; }
         public DbSet<ReportElement> ReportElements { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<Control> Controls { get; set; }
+        public DbSet<SensorControl> SensorControls { get; set; }
         public DbQuery<AvgSensorValuePerDay> AvgSensorValuesPerDays { get; set; }
 
         public ApplicationsDbContext(DbContextOptions<ApplicationsDbContext> options) : base(options)
@@ -44,20 +46,6 @@ namespace Infrastructure.Data
             .HasConversion(
             v => v.ToString(),
             v => (ReportElementType)Enum.Parse(typeof(ReportElementType), v));
-
-            modelBuilder
-            .Entity<Notification>()
-            .Property(e => e.Rule)
-            .HasConversion(
-            v => v.ToString(),
-            v => (RuleEnum)Enum.Parse(typeof(RuleEnum), v));
-
-            modelBuilder
-            .Entity<Notification>()
-            .Property(e => e.NotificationType)
-            .HasConversion(
-            v => v.ToString(),
-            v => (ToastTypes)Enum.Parse(typeof(ToastTypes), v));
         }
     }
 }

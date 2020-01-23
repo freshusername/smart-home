@@ -19,6 +19,7 @@ using smart_home_web.Models.Dashboard;
 using smart_home_web.Models.Options;
 using System;
 using Domain.Core.CalculateModel;
+using smart_home_web.Models.ControlSensor;
 
 namespace smart_home_web.AutoMapper
 {
@@ -130,6 +131,30 @@ namespace smart_home_web.AutoMapper
 
             CreateMap<EditReportElementViewModel, ReportElementDto>();
             CreateMap<ReportElementDto, ReportElement>();
+
+
+            CreateMap<SensorControl, SensorControlDto>()
+             .ForMember(gd => gd.Id, map => map.MapFrom(s => s.Id))
+             .ForMember(gd => gd.IsActive, map => map.MapFrom(s => s.IsActive));
+
+
+            CreateMap<SensorControlDto, SensorControlViewModel>()
+             .ForMember(gd => gd.Id, map => map.MapFrom(s => s.Id))
+             .ForMember(gd => gd.IsActive, map => map.MapFrom(s => s.IsActive));
+
+            CreateMap<EditSensorControlViewModel, SensorControlDto>()
+            .ForMember(gd => gd.Name, map => map.MapFrom(s => s.Name))
+            .ForMember(gd => gd.SensorId, map => map.MapFrom(s => s.SensorId))
+            .ForMember(gd => gd.ControlId, map => map.MapFrom(s => s.ControlId));
+
+            CreateMap<SensorControlDto, SensorControl>()
+           .ForMember(gd => gd.Name, map => map.MapFrom(s => s.Name))
+            .ForMember(gd => gd.SensorId, map => map.MapFrom(s => s.SensorId))
+            .ForMember(gd => gd.ControlId, map => map.MapFrom(s => s.ControlId))
+            .ForMember(gd => gd.IconId, map => map.MapFrom(s => s.IconId));
+
+
+
         }
     }
 }

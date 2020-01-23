@@ -6,6 +6,7 @@ using Infrastructure.Business.Infrastructure;
 using Infrastructure.Business.Interfaces;
 using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Identity;
+using Infrastructure.Business.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using System;
@@ -77,11 +78,15 @@ namespace smart_home_web.Controllers
 			return BadRequest(historyResult.Message);
 		}
 
-		[HttpGet("getaction")]
-		public int GetAction(Guid token)
-		{
-			//return (DateTime.Now.Second / 10) % 2;
-			return 0;
-		}
-	}
+        [HttpGet("getaction")]
+        public int GetAction(Guid token)
+        {
+
+            var result = _actionService.CheckStatus(token).Result;
+             if (result.Succeeded) return 1;
+
+
+            return 0;
+        }
+    }
 }

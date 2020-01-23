@@ -120,40 +120,37 @@ namespace Infrastructure.Business.Managers
         }
 
 
-        public SensorDto GetSensorByToken(Guid token)
-        {
-            var sensor = mapper.Map<Sensor,SensorDto>(unitOfWork.SensorRepo.GetByToken(token));
-
-            return sensor;
-        }
+        
 
         public OperationDetails AddHistory(string value , int sensorId)
         {
-            var history = new History
-            {
-                Date = DateTimeOffset.Now,
-                SensorId = sensorId,
-            };
+           
+           var history = new History {          
+             Date = DateTimeOffset.Now,
+           SensorId = sensorId, };              
+          
+            var sensor = unitOfWork.SensorRepo.GetById(sensorId).Result;
+             dynamic valueModel;
 
-            if (history == null)
-                return new OperationDetails(false, "Operation did not succeed!", "");
+            if(sensor.IsActivated)
+              valueModel = ValueParser.Parse(value , sensor.SensorType.MeasurementType);
+            else
+              valueModel = ValueParser.Parse(value);
 
-            var valuemMdel = ValueParser.Parse(value);
-
-            if (valuemMdel is int)
-                history.IntValue = valuemMdel;
+            if (valueModel is int)
+                history.IntValue = valueModel;
              else
-            if (valuemMdel is double)
-                history.DoubleValue = valuemMdel;
+            if (valueModel is double)
+                history.DoubleValue = valueModel;
              else
-            if (valuemMdel is bool)
-                history.BoolValue = valuemMdel;
+            if (valueModel is bool)
+                history.BoolValue = valueModel;
              else
-                history.StringValue = valuemMdel;
+                history.StringValue = valueModel;
 
 
-            if (!CheckValue(history))
-                return new OperationDetails(false, "Operation did not succeed!", "");
+            //if (!CheckValue(history))
+            //    return new OperationDetails(false, "Operation did not succeed!", "");
 
             unitOfWork.HistoryRepo.Insert(history);
             unitOfWork.Save();

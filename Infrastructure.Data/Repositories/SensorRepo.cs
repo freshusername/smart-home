@@ -64,5 +64,6 @@ namespace Infrastructure.Data.Repositories
             return sensors;
         }
 
+       
     }
 }

@@ -18,8 +18,6 @@ namespace Infrastructure.Business.Managers
 
         HistoryDto GetLastHistoryBySensorId(int sensorId);
 
-        SensorDto GetSensorByToken(Guid token);
-
         OperationDetails AddHistory(string value, int sensorId);
 		Task<IEnumerable<HistoryDto>> GetHistoriesBySensorIdAsync(int sensorId);
 
