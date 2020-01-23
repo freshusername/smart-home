@@ -62,53 +62,67 @@
 </body>
 
 @section Scripts {
-    <script src="~/lib/jquery/dist/jquery.js"></script>
-    <script src="~/lib/nice-select/dist/js/jquery.nice-select.min.js"></script>
-    <script>
-        $(document).ready(function () {
-        $('select').niceSelect();
-        function get() {
-            $.ajax({
-                    type: "Get",
-                    url: $(".row").data("save-url"),
-                    data: { type: $("select#type-select").children("option:selected").val(), dashboardId: @(Model.DashboardId)},
-                    success: function (res) {
-                        $('#sensor-select').empty()
-                        $.each(res, function (key, value) {
-                            $('#sensor-select')
-                                .append($("<option></option>")
-                                    .attr("value", value.id)
-                                    .text(value.name));
-                        });
-                        if ($("select#type-select").children("option:selected").val() == "@((int)Domain.Core.Model.Enums.ReportElementType.Heatmap)")
-                        {
-                            $('select#hours-select').attr('disabled', true);
-                            //$('#hours-select').val(//((int)Domain.Core.Model.Enums.ReportElementHours.Hour672)).change();
-                            $('#hours-select').find('option[value="@((int)Domain.Core.Model.Enums.ReportElementHours.Hour672)"]').attr('selected', 'selected');
-                            $('#hours-hidden').val(@((int)Domain.Core.Model.Enums.ReportElementHours.Hour672));
-                            console.log("@Model.Hours");
-                        }
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/lib/nice-select/dist/js/jquery.nice-select.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('select').niceSelect();
 
-                        $('select').niceSelect('update');
-                    },
-                    error: function () {
-                        $('#sensor-select').empty()
-                            $('#sensor-select')
-                                .append($("<option></option>")
-                                .attr("disabled", true)
-                                .attr("selected", true)
-                                .text("There is not suitable sensor"));
-                        $('select').niceSelect('update');
+    function updateInput() {
+        if ($("select#type-select").children("option:selected").val() == "@((int)Domain.Core.Model.Enums.ReportElementType.Heatmap)") {
+            $('select#hours-select').attr('disabled', true);
+            $('#hours-select').find('option[value="@((int)Domain.Core.Model.Enums.ReportElementHours.Hour672)"]').attr('selected', 'selected');
+            $('#hours-hidden').val(@((int) Domain.Core.Model.Enums.ReportElementHours.Hour672));
+        } else {
+            $('#hours-select').children("option:selected").attr('selected', false);
+            $('select#hours-select').find('option[value="@((int)Domain.Core.Model.Enums.ReportElementHours.AllTime)"]').attr('selected', true);
+            $('select#hours-select').attr('disabled', false);
+        }
+        $('select').niceSelect('update');
+        $('#hours-hidden').val($("#hours-select").children("option:selected").val());
+    }
 
-                    }
+    function get() {
+        $.ajax({
+            type: "Get",
+            url: $(".row").data("save-url"),
+            data: {
+                type: $("select#type-select").children("option:selected").val(),
+                dashboardId: @(Model.DashboardId)
+            },
+            success: function(res) {
+                $('#sensor-select').empty()
+                $.each(res, function(key, value) {
+                    $('#sensor-select')
+                        .append($("<option></option>")
+                            .attr("value", value.id)
+                            .text(value.name));
                 });
+                updateInput();
+            },
+            error: function() {
+                $('#sensor-select').empty()
+                $('#sensor-select')
+                    .append($("<option></option>")
+                        .attr("disabled", true)
+                        .attr("selected", true)
+                        .text("There is not suitable sensor"));
+                updateInput();
             }
-        get();
-        $("select#type-select").change(function () {
-            get();
         });
-        });
-    </script>
+    }
 
-    @await Html.PartialAsync("_ValidationScriptsPartial")
+    get();
+
+    $("select#type-select").change(function() {
+        get();
+    });
+    $("#hours-select").change(function() {
+        $('select').niceSelect('update');
+        $('#hours-hidden').val($("#hours-select").children("option:selected").val());
+    });
+});
+</script>
+
+@await Html.PartialAsync("_ValidationScriptsPartial")
 }
