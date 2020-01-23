@@ -2,12 +2,18 @@
 @using Domain.Core.Model.Enums;
 @model GaugeViewModel;
 
-<div>
-        <figure class="highcharts-figure">
-            <div id=@("Gauge"+Model.Id.ToString()) class="chart-container"></div>
-        </figure>
-        <strong id="alertMessage" class="d-none">Selected sensor does not have values to display in the chosen time period.</strong>
-</div>
+    <div>
+        @if (Model.IsValid)
+        {
+            <figure id=@("gauge_figure_" + Model.Id.ToString()) class="highcharts-figure">
+                <div id=@("Gauge" + Model.Id.ToString()) class="chart-container"></div>
+            </figure>
+        }
+        else
+        {   
+            <label id="alertMessage" class="control-label graph-label">There is no gauge for the selected sensor for the chosen time period.</label>
+        }
+    </div>
 
 <script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
 <script type="text/javascript">
@@ -49,10 +55,8 @@
     var gaugeOptions = {
         chart: {
             type: 'solidgauge',
-            height: '50%',
+            height: '75%',
         },
-
-        title: null,
 
         pane: {
             center: ['50%', '85%'],
@@ -112,14 +116,6 @@
             min: @Model.Min,
             max: @Model.Max,
             tickPositions: [@Model.Min, @Model.Max],
-            title: {
-                text: '@Model.SensorName',
-                style: {
-                    fontWeight: 'bold'
-                },
-                floating: true,
-                y: 25
-            },
             labels: {
                 distance: '80%',
                 y: 20,
@@ -128,6 +124,10 @@
                     fontSize: '16px'
                 }
             }
+        },
+
+        title: {
+                text: 'Gauge for ' + @Html.Raw(Json.Serialize(Model.SensorName)) + ' for time period of ' +  '@Html.DisplayFor(model => model.Hours)'
         },
 
         credits: {
@@ -183,7 +183,7 @@
                 }
             }
         });
-    }, 2000);
+    }, 200000);
 
     $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
         var type = 'Gauge';

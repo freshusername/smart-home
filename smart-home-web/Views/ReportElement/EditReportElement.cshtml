@@ -60,7 +60,7 @@
                 <div class="form-group">
                     <label class="control-label">Select sensor name:</label>
                     <div style="margin-bottom:50px">
-                        <select id="sensor-select" asp-for="SensorId" class="col-lg-4 col-md-5 col-sm-6 col-xs-12"></select>
+                        <select id="sensor-select" asp-for="SensorId" class="nice-select wide"></select>
                     </div>
                 </div>
                 <div class="form-group">
@@ -68,7 +68,7 @@
                         Select measurement period:
                     </label>
                     <div style="margin-bottom:50px">
-                        <select asp-for="Hours" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.ReportElementHours>()" class="nice-select col-lg-4 col-md-5 col-sm-6 col-xs-12"></select>
+                        <select asp-for="Hours" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.ReportElementHours>()" class="nice-select wide @(Model.Type == Domain.Core.Model.Enums.ReportElementType.Heatmap ? "disabled" : "")"></select>
                     </div>
                 </div>
 

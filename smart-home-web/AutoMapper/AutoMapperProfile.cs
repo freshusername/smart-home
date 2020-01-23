@@ -32,14 +32,15 @@ namespace smart_home_web.AutoMapper
             CreateMap<LoginViewModel, UserDTO>().ForMember(au => au.UserName, map => map.MapFrom(vm => vm.Email));
             CreateMap<UserDTO, AppUser>().ForMember(au => au.UserName, map => map.MapFrom(vm => vm.Email));
 
+            CreateMap<EditSensorViewModel, SensorDto>().ReverseMap();
             CreateMap<Sensor, SensorDto>()
                 .ForMember(dto => dto.IconPath, map => map.MapFrom(s => (s.IconId.HasValue) ? s.Icon.Path : s.SensorType.Icon.Path))
                 .ForMember(dto => dto.SensorTypeId, map => map.MapFrom(s => s.SensorType.Id))
-                .ForMember(dto => dto.SensorTypeName, map => map.MapFrom(s => s.SensorType.Name))
-                .ReverseMap();
+                .ForMember(dto => dto.SensorTypeName, map => map.MapFrom(s => s.SensorType.Name));
             CreateMap<SensorDto, Sensor>();
             CreateMap<SensorDto, SensorViewModel>();
             CreateMap<CreateSensorViewModel, SensorDto>();
+            CreateMap<SensorViewModel, SensorDto>();
 
             CreateMap<Icon, IconDto>().ReverseMap();
 
@@ -79,7 +80,6 @@ namespace smart_home_web.AutoMapper
             CreateMap<SensorType, SensorTypeDto>()
                 .ForMember(dto => dto.IconPath, map => map.MapFrom(st => st.Icon.Path));
 
-
             CreateMap<ReportElement, GaugeDto>().ReverseMap();
             CreateMap<GaugeDto, GaugeViewModel>().ReverseMap();
             CreateMap<GaugeDto, GaugeUpdateViewModel>()
@@ -94,8 +94,6 @@ namespace smart_home_web.AutoMapper
             CreateMap<ReportElement, GaugeDto>().ReverseMap();
             CreateMap<GaugeDto, GaugeViewModel>().ReverseMap();
 
-            //================= Heatmap ===================
-
             CreateMap<ReportElement, HeatmapDto>().ReverseMap();
             CreateMap<Sensor, HeatmapDto>()
                 .ForMember(gd => gd.SensorId, map => map.MapFrom(s => s.Id))
@@ -106,7 +104,6 @@ namespace smart_home_web.AutoMapper
             CreateMap<HeatmapDto, HeatmapViewModel>().ReverseMap();
 
             CreateMap<AvgSensorValuePerDay, AvgSensorValuePerDayDTO>();
-
 
             CreateMap<Sensor, ReportElementDto>()
                 .ForMember(gd => gd.SensorId, map => map.MapFrom(s => s.Id))
@@ -131,6 +128,6 @@ namespace smart_home_web.AutoMapper
 
             CreateMap<EditReportElementViewModel, ReportElementDto>();
             CreateMap<ReportElementDto, ReportElement>();
-		}
+        }
     }
 }

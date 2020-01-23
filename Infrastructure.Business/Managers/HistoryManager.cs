@@ -165,10 +165,13 @@ namespace Infrastructure.Business.Managers
         public bool CheckValue(History history)
         {
             var lastHistory = unitOfWork.HistoryRepo.GetLastBySensorId(history.SensorId).Result;
-            if (lastHistory.Date.AddMinutes(5) < history.Date)
-                return true;
-            if (lastHistory.BoolValue == history.BoolValue && lastHistory.DoubleValue == history.DoubleValue && lastHistory.IntValue == history.IntValue && lastHistory.StringValue == history.StringValue)
-                return false;
+            if (lastHistory != null)
+            {
+                if (lastHistory.Date.AddMinutes(5) < history.Date)
+                    return true;
+                if (lastHistory.BoolValue == history.BoolValue && lastHistory.DoubleValue == history.DoubleValue && lastHistory.IntValue == history.IntValue && lastHistory.StringValue == history.StringValue)
+                    return false;
+            }
             return true;
         }
 

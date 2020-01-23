@@ -38,32 +38,35 @@
         @foreach (var item in Model)
         {
             <tr height="64">
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Comment)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MeasurementType)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MeasurementName)
-                </td>
-                <td>
-                    @if (item.IconPath != null)
-                    {
-                        <img src="@item.IconPath" width="64" height="64" />
-                    }
-                    else
-                    {
-                        <p>No image was added</p>
-                    }
-                </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Comment)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MeasurementType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MeasurementName)
+            </td>
+            <td>
+                @if (item.IconPath != null)
+                {
+                    <img src="@item.IconPath" width="64" height="64" />
+                }
+                else
+                {
+                    <p>No image was added</p>
+                }
+            </td>
+            @if (User.Identity.IsAuthenticated)
+            {
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                 </td>
+            }
             </tr>
-        }
+         }
     </tbody>
 </table>
