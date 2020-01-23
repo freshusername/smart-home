@@ -52,7 +52,7 @@
                                 @history.SensorName
                             </a>
                         </td>
-                        <td>@history.Date.DateTime.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                        <td>@history.Date.UtcDateTime.ToLocalTime()</td>
 
                         @{
                             if (history.Value.ToString() == "False")
