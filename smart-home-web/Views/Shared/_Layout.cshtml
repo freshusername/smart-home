@@ -10,11 +10,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="~/css/site.css" rel="stylesheet" />
     <link href="~/lib/toastr/toastr.css" rel="stylesheet" />
+    <partial name="_NavbarPartial" />
 </head>
 <body>
-    <partial name="_NavbarPartial" />
+ 
 
-    <div class="container body-content">
+    <div class="container body-content pt-5">
         @RenderBody()
     </div>
     <environment include="Development">

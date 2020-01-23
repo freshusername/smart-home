@@ -32,6 +32,7 @@ namespace smart_home_web.Controllers
 				Notifications = models
 			});
 		}
+
 		public async Task<IActionResult> Read()
 		{
 			var notifications = await _notificationManager.GetAllNotificationsAsync();
