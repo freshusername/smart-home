@@ -7,9 +7,9 @@
 }
 
 <body class="body-content">
-    <div class="row text-center">
+    <div class="d-flex flex-column align-items-center">
         <table class="table table-hover text-center" id="invalidSensorTable">
-            
+
             <thead class="text-center">
                 <tr>
                     <th scope="col" class=" text-center">
@@ -99,7 +99,7 @@
             </tbody>
         </table>
         <br />
-        @await Component.InvokeAsync("Pagination", new { action = "InvalidSensors", controller = "History", filterDto = Model.FilterDto }) 
+        @await Component.InvokeAsync("Pagination", new { action = "InvalidSensors", controller = "History", filterDto = Model.FilterDto })
     </div>
 
 </body>

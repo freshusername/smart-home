@@ -23,14 +23,14 @@
                 <div class="form-group col-lg-6 col-lg-offset-3">
                     <label class="control-label">Select report element type:</label>
                     <div style="margin-bottom:50px">
-                        <select id="type-select" asp-for="Type" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.ReportElementType>()" class="col-lg-4 col-md-5 col-sm-6 col-xs-12">
+                        <select id="type-select" asp-for="Type" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.ReportElementType>()" class="nice-select wide">
                         </select>
                     </div>
                 </div>
                 <div class="form-group col-lg-6 col-lg-offset-3">
                     <label class="control-label">Select report element type:</label>
                     <div style="margin-bottom:50px">
-                        <select id="sensor-select" asp-for="SensorId" class="col-lg-4 col-md-5 col-sm-6 col-xs-12">
+                        <select id="sensor-select" asp-for="SensorId" class="nice-select wide">
                         </select>
                     </div>
                 </div>
@@ -40,7 +40,7 @@
                         Select measurement period:
                     </label>
                     <div>
-                        <select asp-for="Hours" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.ReportElementHours>()" class="nice-select col-lg-4 col-md-5 col-sm-6 col-xs-12">
+                        <select asp-for="Hours" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.ReportElementHours>()" class="nice-select wide">
                             
                         </select>
                     </div>
@@ -76,6 +76,7 @@
                                     .text(value.name));
                         });
                         $('select').niceSelect('update');
+                        
                     },
                     error: function () {
                         $('#sensor-select').empty()
@@ -85,6 +86,7 @@
                                 .attr("selected", true)
                                 .text("There is not suitable sensor"));
                         $('select').niceSelect('update');
+                        
                     }
                 });
             }

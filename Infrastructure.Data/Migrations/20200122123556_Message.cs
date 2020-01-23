@@ -11,11 +11,11 @@ namespace Infrastructure.Data.Migrations
                 IN dateFrom DateTime,
                 IN dateTo DateTime)
                 BEGIN
-	                SELECT Date as WeekDay, CAST(avg(COALESCE(Histories.IntValue, Histories.DoubleValue)) as DECIMAL(10, 2)) as AvgValue
+	                SELECT DATE(Date) as WeekDay, CAST(avg(COALESCE(Histories.IntValue, Histories.DoubleValue)) as DECIMAL(10, 2)) as AvgValue
 		                FROM Histories
 		                WHERE (Histories.Date BETWEEN dateFrom AND dateTo)
 						AND Histories.SensorId = sensorId
-                        GROUP BY Histories.Date;
+                        GROUP BY DATE(Histories.Date);
                 END";
 
             migrationBuilder.Sql(sp);

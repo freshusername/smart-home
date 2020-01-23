@@ -35,7 +35,7 @@ namespace Infrastructure.Data.Repositories
         {
             return await dbSet.ToListAsync();
         }
-		
+
         public async virtual Task<T> GetById(int id)
         {
             return await dbSet.FindAsync(id);
@@ -48,7 +48,15 @@ namespace Infrastructure.Data.Repositories
 
         public async Task Update(T item)
         {
-            dbSet.Update(item);
+            try
+            {
+                dbSet.Attach(item);
+            }
+            catch { }
+            finally
+            {
+                dbSet.Update(item);
+            }
         }
-	}
+    }
 }

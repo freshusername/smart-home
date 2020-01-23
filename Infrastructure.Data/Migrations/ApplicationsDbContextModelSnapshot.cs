@@ -177,6 +177,8 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<int>("Hours");
 
+                    b.Property<bool>("IsLocked");
+
                     b.Property<int>("SensorId");
 
                     b.Property<string>("Type")
