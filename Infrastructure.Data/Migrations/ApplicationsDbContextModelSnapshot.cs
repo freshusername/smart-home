@@ -280,6 +280,8 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<int?>("IconId");
 
+                    b.Property<bool>("IsControl");
+
                     b.Property<string>("MeasurementName");
 
                     b.Property<string>("MeasurementType")
