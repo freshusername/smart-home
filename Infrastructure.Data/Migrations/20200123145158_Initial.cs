@@ -4,11 +4,25 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Infrastructure.Data.Migrations
 {
-    public partial class migrationdb : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
+			var sp = @"CREATE PROCEDURE `GetAvgValuesForSensor`(
+                IN sensorId INT,
+                IN dateFrom DateTime,
+                IN dateTo DateTime)
+                BEGIN            
+                 SELECT DATE(Date) as WeekDay, CAST(avg(COALESCE(Histories.IntValue, Histories.DoubleValue)) as DECIMAL(10, 2)) as AvgValue
+                  FROM Histories
+                  WHERE (Histories.Date BETWEEN dateFrom AND dateTo)
+                AND Histories.SensorId = sensorId
+                        GROUP BY DATE(Histories.Date);
+                END";
+
+			migrationBuilder.Sql(sp);
+
+			migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
                 {
@@ -209,6 +223,7 @@ namespace Infrastructure.Data.Migrations
                     Comment = table.Column<string>(nullable: true),
                     MeasurementType = table.Column<string>(nullable: false),
                     MeasurementName = table.Column<string>(nullable: true),
+                    IsControl = table.Column<bool>(nullable: false),
                     IconId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
