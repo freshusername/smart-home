@@ -12,7 +12,7 @@ else
     <label class="control-label graph-label text-center">@Model.Message <a class="btn btn-success text-center" asp-controller="ReportElement" asp-action="EditReportElement" asp-route-id="@Model.Id"><i class="fas fa-cog"></i></a></label>
 }
 
-    <script>
+<script>
     columnminvalues = JSON.parse('@Html.Raw(Json.Serialize(@Model.MinValues))');
     columnmaxvalues = JSON.parse('@Html.Raw(Json.Serialize(@Model.MaxValues))');
     columndates = JSON.parse('@Html.Raw(Json.Serialize(@Model.Dates))');
@@ -32,24 +32,11 @@ else
         },
 
         xAxis: {
-            minorTickInterval: 'auto',
             title: {
                 style: {
                     textTransform: 'uppercase'
                 },
-                text:
-                @if((int)Model.Hours == 1)
-                {
-                        <text> '<b>Minutes</b>' </text>
-                } else if ((int)Model.Hours > 1 && (int)Model.Hours <= 24)
-                {
-                    <text> '<b>Hours</b>' </text>
-                }
-                else
-                {
-                    <text> '<b>Dates</b>' </text>
-                }
-
+                text: 'dates'
             },
             categories: columndates
         },
@@ -60,7 +47,7 @@ else
                 style: {
                     textTransform: 'uppercase'
                 },
-                text: '<b>values</b>'
+                text: 'values'
             },
             labels: {
                 style: {
@@ -81,7 +68,7 @@ else
         },
 
         series: [{
-            name: 'Values',
+            name: 'Temperatures',
             data: columntemperatures
         }],
         exporting: {
@@ -106,4 +93,4 @@ else
             result.setSize(ui.height, ui.width);
         }
     });
-    </script>
+</script>
