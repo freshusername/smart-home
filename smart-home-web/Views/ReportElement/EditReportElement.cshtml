@@ -63,12 +63,17 @@
                         <select id="sensor-select" asp-for="SensorId" class="nice-select wide"></select>
                     </div>
                 </div>
+
+                <div class="form-group col-lg-6 col-lg-offset-3">
+                    <input id="hours-hidden" hidden asp-for="Hours" />
+                </div>
+
                 <div class="form-group">
                     <label class="control-label">
                         Select measurement period:
                     </label>
                     <div style="margin-bottom:50px">
-                        <select asp-for="Hours" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.ReportElementHours>()" class="nice-select wide @(Model.Type == Domain.Core.Model.Enums.ReportElementType.Heatmap ? "disabled" : "")"></select>
+                        <select id="hours-select" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.ReportElementHours>()" class="nice-select wide"></select>
                     </div>
                 </div>
 
@@ -84,7 +89,8 @@
 @section Scripts {
     <script src="~/lib/nice-select/dist/js/jquery.nice-select.min.js"></script>
     <script>
-       $(document).ready(function (){
+        $(document).ready(function () {
+           $('#hours-select').find('option[value="@((int)Model.Hours)"]').attr('selected', 'selected');
            $('select').niceSelect();
            $.ajax({
                 type: "Get",
@@ -98,6 +104,11 @@
                                 .attr("value", value.id)
                                 .text(value.name));
                     });
+                    if ("@Model.Type" == "@Domain.Core.Model.Enums.ReportElementType.Heatmap") {
+                        $('select#hours-select').attr('disabled', true);
+                            $('#hours-select').find('option[value="@((int)Domain.Core.Model.Enums.ReportElementHours.Hour672)"]').attr('selected', 'selected');
+                            $('#hours-hidden').val(@((int) Domain.Core.Model.Enums.ReportElementHours.Hour672));
+                    }
                     $('#sensor-select').val($('#sensor-id').val());
                     $('select').niceSelect('update');
                 },
@@ -107,8 +118,20 @@
                             .attr("disabled", true)
                             .attr("selected", true)
                             .text("There is not suitable sensor"));
-                     $('select').niceSelect('update');
+                    if ("@Model.Type" == "@Domain.Core.Model.Enums.ReportElementType.Heatmap") {
+                        $('select#hours-select').attr('disabled', true);
+                            $('#hours-select').find('option[value="@((int)Domain.Core.Model.Enums.ReportElementHours.Hour672)"]').attr('selected', 'selected');
+                            $('#hours-hidden').val(@((int) Domain.Core.Model.Enums.ReportElementHours.Hour672));
+                    }
+                    $('#sensor-select').val($('#sensor-id').val());
+                    $('select').niceSelect('update');
+
                 },
+           });
+           $('#hours-hidden').val($("#hours-select").children("option:selected").val());
+           $("#hours-select").change(function () {
+               $('select').niceSelect('update');
+               $('#hours-hidden').val($("#hours-select").children("option:selected").val());
            });
         });
 
