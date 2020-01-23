@@ -1,5 +1,6 @@
 ﻿using Domain.Core.Model;
 using Domain.Core.Model.Enums;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,10 +18,16 @@ namespace Infrastructure.Business.DTOs
         public int? minValue { get; set; }
 
         public int? maxValue { get; set; }
-
-        public Domain.Core.Model.Icon Icon { get; set; }
+        
+        public int SensorId { get; set; }
         public Domain.Core.Model.Sensor Sensor { get; set; }
         public Domain.Core.Model.Sensor ControlSensor { get; set; }
+
+        public int ControlId { get; set; }
         public Control Control { get; set; }
+
+        public int IconId { get; set; }
+        public string IconPath { get; set; }
+        public IFormFile IconFile { get; set; }
     }
 }

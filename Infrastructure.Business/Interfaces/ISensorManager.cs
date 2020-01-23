@@ -16,5 +16,7 @@ namespace Infrastructure.Business.Managers
         OperationDetails AddUnclaimedSensor(Guid token, string value);
         Task<IEnumerable<SensorDto>> GetSensorsByReportElementType(ReportElementType type, int dashboardId);
         SensorDto GetSensorByToken(Guid token);
+        List<SensorDto> GetSensorsToControl();
+        List<SensorDto> GetControlSensors();
     }
 }

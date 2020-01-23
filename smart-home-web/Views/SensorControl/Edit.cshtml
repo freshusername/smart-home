@@ -1,38 +1,39 @@
-﻿@*@using smart_home_web.Models;
-@model EditSensorControlViewModel;
+﻿@using smart_home_web.Models.ControlSensor;
+@model IndexSensorControlViewModel;
+
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="SensorControl.Id" />
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <label asp-for="SensorControl.Name" class="control-label"></label>
+                <input asp-for="SensorControl.Name" class="form-control" />
+                <span asp-validation-for="SensorControl.Name" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="ControlId" class="control-label"></label>
-                <select asp-for="ControlId" asp-items="" class="form-control">
-                    <option value="none" selected disabled hidden>
-                        Select an Option
-                    </option>
-                </select>
-                <span asp-validation-for="" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SensorId" class="control-label"></label>
-                <select asp-for="SensorId" asp-items="" class="form-control">
-                    <option value="none" selected disabled hidden>
-                        Select an Option
-                    </option>
-                </select>
-                <span asp-validation-for="" class="text-danger"></span>
-            </div>
-          
+            @*<div class="form-group">
+                    <label asp-for="ControlId" class="control-label"></label>
+                    <select asp-for="ControlId" asp-items="" class="form-control">
+                        <option value="none" selected disabled hidden>
+                            Select an Option
+                        </option>
+                    </select>
+                    <span asp-validation-for="" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SensorId" class="control-label"></label>
+                    <select asp-for="SensorId" asp-items="" class="form-control">
+                        <option value="none" selected disabled hidden>
+                            Select an Option
+                        </option>
+                    </select>
+                    <span asp-validation-for="" class="text-danger"></span>
+                </div>*@
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />
             </div>
         </form>
     </div>
-</div>*@
+</div>

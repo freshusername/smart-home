@@ -1,4 +1,5 @@
 ﻿using Infrastructure.Business.DTOs;
+using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.Infrastructure;
 using System;
 using System.Collections.Generic;
@@ -11,5 +12,6 @@ namespace Infrastructure.Business.Interfaces
         List<SensorControlDto> GetSensorControls();
         SensorControlDto GetById(int id);
         OperationDetails Update(SensorControlDto controlDto);
+        OperationDetails UpdateById(int id, bool isActive);
     }
 }

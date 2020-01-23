@@ -1,4 +1,4 @@
-﻿@using smart_home_web.Models
+﻿@using smart_home_web.Models.ControlSensor
 @model List<SensorControlViewModel>;
 <link href="~/css/control.css" rel="stylesheet" />
 
@@ -13,7 +13,7 @@
                             <i class="fas fa-cog fa-2x"></i>                          
                         </a>                     
                         <img src="https://igenappsfiles.blob.core.windows.net/users/1867624/fa-quick-guide/apple-touch-icon-precomposed.png" width="130" height="130" alt="Alternate Text" class="center-block" />
-                        <h1 class="card-title text-center pull-left">@item.ToString()</h1>
+                        <h1 class="card-title text-center pull-left">@item.Name</h1>
                       
                             <button type="button" class="btn btn-lg btn-toggle" data-toggle="button" aria-pressed="false" autocomplete="off">
                                 <div class="handle"></div>
