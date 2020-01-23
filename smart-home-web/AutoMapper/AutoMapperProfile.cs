@@ -81,7 +81,9 @@ namespace smart_home_web.AutoMapper
                 .ForMember(dto => dto.IconPath, map => map.MapFrom(st => st.Icon.Path));
 
             CreateMap<ReportElement, GaugeDto>().ReverseMap();
-            CreateMap<GaugeDto, GaugeViewModel>().ReverseMap();
+            CreateMap<GaugeDto, GaugeViewModel>()
+                .ForMember(gu => gu.Min, map => map.MapFrom(gd => gd.Min.HasValue ? (int)Math.Floor(gd.Min.Value) : 0))
+                .ForMember(gu => gu.Max, map => map.MapFrom(gd => gd.Max.HasValue ? (int)Math.Ceiling(gd.Max.Value) : 0));
             CreateMap<GaugeDto, GaugeUpdateViewModel>()
                 .ForMember(gu => gu.Min, map => map.MapFrom(gd => gd.Min.HasValue ? (int)Math.Floor(gd.Min.Value) : 0))
                 .ForMember(gu => gu.Max, map => map.MapFrom(gd => gd.Max.HasValue ? (int)Math.Ceiling(gd.Max.Value) : 0));
