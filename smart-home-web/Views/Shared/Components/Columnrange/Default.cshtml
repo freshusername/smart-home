@@ -36,7 +36,18 @@ else
                 style: {
                     textTransform: 'uppercase'
                 },
-                text: 'dates'
+                text: 
+                @if((int)Model.Hours == 1)
+                {
+                    <text> '<b>Minutes</b>' </text>
+                } else if((int)Model.Hours > 1 && (int)Model.Hours <= 24)
+                {
+                    <text> '<b>Hours</b>' </text>
+                }
+                else
+                {
+                    <text> '<b>Days</b>' </text>
+                }
             },
             categories: columndates
         },
