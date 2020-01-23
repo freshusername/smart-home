@@ -23,6 +23,7 @@
                 <div class="form-group col-lg-6 col-lg-offset-3">
                     <label class="control-label">Select report element type:</label>
                     <div style="margin-bottom:50px">
+                        @*<select id="type-select" class="nice-select wide">*@
                         <select id="type-select" asp-for="Type" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.ReportElementType>()" class="nice-select wide">
                         </select>
                     </div>
@@ -40,10 +41,14 @@
                         Select measurement period:
                     </label>
                     <div>
-                        <select asp-for="Hours" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.ReportElementHours>()" class="nice-select wide">
-                            
+                        <select id="hours-select" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.ReportElementHours>()" class="nice-select wide">
                         </select>
+
                     </div>
+                </div>
+
+                <div class="form-group col-lg-6 col-lg-offset-3">
+                    <input id="hours-hidden" hidden asp-for="Hours" />
                 </div>
 
                 <div class="form-group text-center col-lg-6 col-lg-offset-3" style="margin-top:30px">
@@ -75,8 +80,16 @@
                                     .attr("value", value.id)
                                     .text(value.name));
                         });
+                        if ($("select#type-select").children("option:selected").val() == "@((int)Domain.Core.Model.Enums.ReportElementType.Heatmap)")
+                        {
+                            $('select#hours-select').attr('disabled', true);
+                            //$('#hours-select').val(//((int)Domain.Core.Model.Enums.ReportElementHours.Hour672)).change();
+                            $('#hours-select').find('option[value="@((int)Domain.Core.Model.Enums.ReportElementHours.Hour672)"]').attr('selected', 'selected');
+                            $('#hours-hidden').val(@((int)Domain.Core.Model.Enums.ReportElementHours.Hour672));
+                            console.log("@Model.Hours");
+                        }
+
                         $('select').niceSelect('update');
-                        
                     },
                     error: function () {
                         $('#sensor-select').empty()
@@ -86,7 +99,7 @@
                                 .attr("selected", true)
                                 .text("There is not suitable sensor"));
                         $('select').niceSelect('update');
-                        
+
                     }
                 });
             }
