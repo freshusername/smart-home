@@ -45,6 +45,42 @@ namespace Infrastructure.Business.Managers
             }
             return new OperationDetails(true, "New sensor has been added", "Name");
         }
+        public OperationDetails Update(SensorDto sensorDto)
+        {
+            Sensor sensor = mapper.Map<SensorDto, Sensor>(sensorDto);
+            try
+            {
+                unitOfWork.SensorRepo.Update(sensor);
+                unitOfWork.Save();
+            }
+            catch (Exception ex)
+            {
+                return new OperationDetails(false, ex.Message, "Error");
+            }
+            return new OperationDetails(true, "Sensor has been updated!", "Name");
+        }
+        public OperationDetails Delete(SensorDto sensorDto)
+        {
+            Sensor sensor = mapper.Map<SensorDto, Sensor>(sensorDto);
+            try
+            {
+                unitOfWork.SensorRepo.Delete(sensor);
+                unitOfWork.Save();
+            }
+            catch (Exception ex)
+            {
+                return new OperationDetails(false, ex.Message, "Error");
+            }
+            return new OperationDetails(true, "Sensor has been deleted!", "Name");
+        }
+
+        public async Task<SensorDto> GetSensorByIdAsync(int sensorId)
+        {
+            var sensor = await unitOfWork.SensorRepo.GetById(sensorId);
+            var result = mapper.Map<Sensor, SensorDto>(sensor);
+
+            return result;
+        }
 
         public async Task<IEnumerable<SensorDto>> GetAllSensorsAsync()
         {

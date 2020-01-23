@@ -14,7 +14,7 @@ namespace Infrastructure.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
+                .HasAnnotation("ProductVersion", "2.1.14-servicing-32113")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Domain.Core.Model.AppUser", b =>
@@ -142,6 +142,30 @@ namespace Infrastructure.Data.Migrations
                     b.ToTable("Messages");
                 });
 
+            modelBuilder.Entity("Domain.Core.Model.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Message");
+
+                    b.Property<string>("NotificationType")
+                        .IsRequired();
+
+                    b.Property<string>("Rule")
+                        .IsRequired();
+
+                    b.Property<int>("SensorId");
+
+                    b.Property<string>("Value");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SensorId");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("Domain.Core.Model.ReportElement", b =>
                 {
                     b.Property<int>("Id")
@@ -152,6 +176,8 @@ namespace Infrastructure.Data.Migrations
                     b.Property<int>("Height");
 
                     b.Property<int>("Hours");
+
+                    b.Property<bool>("IsLocked");
 
                     b.Property<int>("SensorId");
 
@@ -216,7 +242,8 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<string>("MeasurementName");
 
-                    b.Property<string>("MeasurementType");
+                    b.Property<string>("MeasurementType")
+                        .IsRequired();
 
                     b.Property<string>("Name");
 
@@ -358,6 +385,14 @@ namespace Infrastructure.Data.Migrations
                     b.HasOne("Domain.Core.Model.History", "History")
                         .WithOne("Message")
                         .HasForeignKey("Domain.Core.Model.Message", "HistoryId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Domain.Core.Model.Notification", b =>
+                {
+                    b.HasOne("Domain.Core.Model.Sensor", "Sensor")
+                        .WithMany("Notifications")
+                        .HasForeignKey("SensorId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

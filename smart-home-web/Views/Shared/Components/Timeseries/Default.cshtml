@@ -25,10 +25,12 @@ else
 
           Highcharts.chart('TimeSeries'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
               chart: {
-                    zoomType: 'x'
+                  zoomType: 'x',
+                  height: 380
                 },
                 title: {
-                    text:  JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))')
+                    text: JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))'),
+                    y: -10
                 },
                 subtitle: {
                     text: document.ontouchstart === undefined ?

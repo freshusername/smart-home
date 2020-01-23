@@ -39,42 +39,56 @@ namespace Infrastructure.Business.Managers
 
         public async Task CreateReportElement(ReportElementDto reportElementDto)
         {
-			var reportElements = await unitOfWork.ReportElementRepo.GetAll();
-			reportElements = reportElements.Where(r => r.DashboardId == reportElementDto.DashboardId);
-			var el = reportElements.OrderByDescending(r => r.Y).First();
-			var maxElements = reportElements.Where(e => e.Y == el.Y);
-			bool rightPos = false;
-			int totalWidth = 0;
-			foreach(var element in maxElements)
-			{
-				if (element.X < 5)
-				{				
-					rightPos = true;
-				}
-				totalWidth += element.Width;
-			}
+            var reportElements = await unitOfWork.ReportElementRepo.GetAll();
+            reportElements = reportElements.Where(r => r.DashboardId == reportElementDto.DashboardId);
+            if (reportElements.Any())
+            {
+                var el = reportElements.OrderByDescending(r => r.Y).First();
+                var maxElements = reportElements.Where(e => e.Y == el.Y);
+                bool rightPos = false;
+                int totalWidth = 0;
+                foreach (var element in maxElements)
+                {
+                    if (element.X < 5)
+                    {
+                        rightPos = true;
+                    }
+                    totalWidth += element.Width;
+                }
 
-			ReportElement reportElement = mapper.Map<ReportElementDto, ReportElement>(reportElementDto);
-			reportElement.Height = 4;
-			reportElement.Width = 4;
-			if (rightPos)
-			{
-				reportElement.X = totalWidth;
-				reportElement.Y = el.Y;
-			}
-			else
-			{
-				reportElement.X = 0;
-				reportElement.Y = el.Y;
-			}
-			
-			await unitOfWork.ReportElementRepo.Insert(reportElement);
-            unitOfWork.Save();
+                ReportElement reportElement = mapper.Map<ReportElementDto, ReportElement>(reportElementDto);
+                reportElement.Height = 6;
+                reportElement.Width = 4;
+                if (rightPos)
+                {
+                    reportElement.X = totalWidth;
+                    reportElement.Y = el.Y;
+                }
+                else
+                {
+                    reportElement.X = 0;
+                    reportElement.Y = el.Y;
+                }
+
+                await unitOfWork.ReportElementRepo.Insert(reportElement);
+                unitOfWork.Save();
+            }
+            else
+            {
+                ReportElement reportElement = mapper.Map<ReportElementDto, ReportElement>(reportElementDto);
+                reportElement.Height = 6;
+                reportElement.Width = 4;
+                reportElement.X = 0;
+                reportElement.Y = 0;
+                await unitOfWork.ReportElementRepo.Insert(reportElement);
+                unitOfWork.Save();
+            }
+
         }
 
-        public async Task<HeatmapDto> GetHeatmapById(int heatmapId)
+        public async Task<HeatmapDto> GetHeatmapById(int reportElementId)
         {
-            ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(heatmapId);
+            ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(reportElementId);
 
             DateTime dateFrom = new DateTime();
             DateTime dateTo = DateTime.Now.AddDays(1);
@@ -92,22 +106,24 @@ namespace Infrastructure.Business.Managers
                 unitOfWork.HistoryRepo.GetAvgSensorsValuesPerDays(reportElement.SensorId, dateFrom, dateTo);
             List<AvgSensorValuePerDay> AvgSensorValuesPerDays = avgSensorValuesPerDays.ToList();
 
-            for(int i = 0; i < daysArray.Length; i++)
+            for (int i = 0; i < daysArray.Length; i++)
             {
                 if (!avgSensorValuesPerDays.Any(a => a.WeekDay.ToString("yyyy-MM-dd") == daysArray[i].ToString("yyyy-MM-dd")))
-                    AvgSensorValuesPerDays.Add(new AvgSensorValuePerDay { WeekDay = daysArray[i], AvgValue = 0 });
+                    AvgSensorValuesPerDays.Add(new AvgSensorValuePerDay { WeekDay = daysArray[i], AvgValue = null });
             }
 
             AvgSensorValuesPerDays = AvgSensorValuesPerDays.OrderBy(d => d.WeekDay).ToList();
 
             if (!avgSensorValuesPerDays.Any())
-                return new HeatmapDto { Id = heatmapId, IsCorrect = false };
+                return new HeatmapDto { Id = reportElementId, IsCorrect = false };
 
             HeatmapDto heatmap = mapper.Map<Sensor, HeatmapDto>(reportElement.Sensor);
 
             heatmap.Id = reportElement.Id;
             heatmap.DashboardName = reportElement.Dashboard.Name;
+            heatmap.DashboardId = reportElement.Dashboard.Id;
             heatmap.AvgSensorValuesPerDays = AvgSensorValuesPerDays;
+            heatmap.Hours = reportElement.Hours;
 
             return heatmap;
         }
@@ -195,7 +211,20 @@ namespace Infrastructure.Business.Managers
                 date = DateTime.Now.AddHours(-(int)reportElement.Hours);
             IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
             if (!histories.Any())
-                return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "No histories in this report element" };
+            {
+                int hours = (int)reportElement.Hours;
+                string strhours;
+                if (hours == 1)
+                    strhours = "1 hour";
+                else if (hours <= 12)
+                    strhours = $"{hours} hours";
+                else if (hours / 24 == 1)
+                    strhours = "1 day";
+                else
+                    strhours = $"{hours / 24} days";
+                return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = $"No histories in this report element per {strhours}" };
+            }
+
 
             ReportElementDto columnRange = mapper.Map<Sensor, ReportElementDto>(reportElement.Sensor);
 
@@ -306,7 +335,7 @@ namespace Infrastructure.Business.Managers
             result.Y = reportElement.Y;
             result.Width = reportElement.Width;
             result.Height = reportElement.Height;
-            unitOfWork.ReportElementRepo.Update(result);
+            await unitOfWork.ReportElementRepo.Update(result);
             unitOfWork.Save();
         }
 
@@ -316,5 +345,12 @@ namespace Infrastructure.Business.Managers
             unitOfWork.Save();
         }
 
+        public async Task Lock(ReportElement reportElement)
+        {
+            ReportElement result = await unitOfWork.ReportElementRepo.GetById(reportElement.Id);
+            result.IsLocked = !reportElement.IsLocked;
+            await unitOfWork.ReportElementRepo.Update(result);
+            unitOfWork.Save();
+        }
     }
 }

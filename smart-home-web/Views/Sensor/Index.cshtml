@@ -6,7 +6,6 @@
     ViewData["Title"] = "Sensors";
 }
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 <h2>Sensors List</h2>
@@ -47,18 +46,45 @@
                     </div>
                     <i class="fa fa-thumbs-up" onclick="toggleAdditionalInfo(this);" style="cursor: help;"></i>
                     <div class="sensor-details-additional" style="display: none;">
-                        <h5>Created: @sensor.CreatedOn</h5>
+                        <h5>Created: @sensor.CreatedOn.Value.UtcDateTime.ToString("dd/MM/yyyy on HH:mm")</h5>
                         <h5>Comment: @sensor.Comment</h5>
-                        <h5>Activated: @sensor.IsActivated</h5>
+                        <h5>
+                            Activated: <i class="fa @(@sensor.IsActivated ? "fa-check-circle" : "fa-times-circle")"></i>
+                        </h5>
                         <h5>Token: @sensor.Token</h5>
+
                     </div>
                 </td>
 
-                <td><a class="btn btn-success text-center" asp-controller="History" asp-action="Graph" asp-route-sensorId="@sensor.Id" asp-route-days="99999"><i class="fa fa-bar-chart"></i></a></td>
+                <td>
+                    <div class="col-xs-3">
+                        <a class="btn btn-sm btn-success text-center"
+                           asp-controller="History"
+                           asp-action="Graph"
+                           asp-route-sensorId="@sensor.Id"
+                           asp-route-days="99999">
+                            <i class="fa fa-bar-chart"></i>
+                        </a>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <a class="btn btn-sm btn-info text-center"
+                               asp-action="Update"
+                               asp-route-sensorId="@sensor.Id">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                            <a class="btn btn-sm btn-danger text-center"
+                               asp-action="Delete"
+                               asp-route-sensorId="@sensor.Id">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                        }
+                    </div>
+                </td>
             </tr>
         }
     </tbody>
 </table>
+
 <script>
     function toggleAdditionalInfo(e) {
         var subRow = e.nextElementSibling;

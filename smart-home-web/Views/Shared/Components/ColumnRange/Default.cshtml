@@ -28,7 +28,7 @@ else
             inverted: true,
         },
         title: {
-            text: 'Column range for ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))') + ' for dashboard ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.DashboardName))')
+            text: 'Column range for <b>' + JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))') + '</b> for <b>' + JSON.parse('@Html.Raw(Json.Serialize(@Model.DashboardName))') + '</b>'
         },
 
         xAxis: {
