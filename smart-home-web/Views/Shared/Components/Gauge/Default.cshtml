@@ -153,14 +153,13 @@
 
     // Bring life to the dials
     setInterval(function () {
-        var point,
-            newVal,
-            inc;
+        var point;
         $.ajax({
         type: "GET",
         url: "/api/Gauge/GetGauge/@Model.Id",
         contentType: "application/json; charset=utf-8",
             success: function (res) {
+                var gaugeChart = Highcharts.charts[$("#@("Gauge" + Model.Id.ToString())").data('highchartsChart')];
                 if (gaugeChart) {
                     if (res.isValid === true) {
                         point = gaugeChart.series[0].points[0];
