@@ -59,7 +59,7 @@ namespace Infrastructure.Business.Services
                          if (min == null) return false;
 
                         var max = _db.HistoryRepo.GetIntMaxValueForPeriod(sensorId, period);
-                         if (min == null) return false;
+                         if (max == null) return false;
 
                         if (min.Value <= minValue || max.Value >= maxValue) return true;
                     }

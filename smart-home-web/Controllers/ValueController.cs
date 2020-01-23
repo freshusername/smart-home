@@ -23,16 +23,19 @@ namespace smart_home_web.Controllers
 		private readonly IHistoryManager _historyManager;
 		private readonly IMessageManager _messageManager;
 		private readonly ISensorManager _sensorManager;
+		private readonly IActionService _actionService;
 		private readonly INotificationManager _notificationManager;
 		private readonly UserManager<AppUser> _userManager;
 		public ValueController(
 			IMessageManager messageManager, 
 			IHistoryManager historyTestManager, 
 			ISensorManager sensorManager, 
+			IActionService actionService, 
 			INotificationManager notificationManager, 
 			UserManager<AppUser> userManager)
 		{
 			_historyManager = historyTestManager;
+            _actionService = actionService;
 			_messageManager = messageManager;
 			_sensorManager = sensorManager;
 			_notificationManager = notificationManager;
@@ -41,7 +44,7 @@ namespace smart_home_web.Controllers
 		[HttpGet("getdata")]
 		public async Task<IActionResult> AddHistory(Guid token, string value)
 		{
-			var sensor = _historyManager.GetSensorByToken(token);
+			var sensor = _sensorManager.GetSensorByToken(token);
 			if (sensor == null)
 			{
 				var result = _sensorManager.AddUnclaimedSensor(token, value);
