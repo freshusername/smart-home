@@ -40,10 +40,10 @@
                     <label class="control-label">
                         Select measurement period:
                     </label>
+
                     <div>
                         <select id="hours-select" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.ReportElementHours>()" class="nice-select wide">
                         </select>
-
                     </div>
                 </div>
 
@@ -83,7 +83,6 @@
                         if ($("select#type-select").children("option:selected").val() == "@((int)Domain.Core.Model.Enums.ReportElementType.Heatmap)")
                         {
                             $('select#hours-select').attr('disabled', true);
-                            //$('#hours-select').val(//((int)Domain.Core.Model.Enums.ReportElementHours.Hour672)).change();
                             $('#hours-select').find('option[value="@((int)Domain.Core.Model.Enums.ReportElementHours.Hour672)"]').attr('selected', 'selected');
                             $('#hours-hidden').val(@((int)Domain.Core.Model.Enums.ReportElementHours.Hour672));
                             console.log("@Model.Hours");
