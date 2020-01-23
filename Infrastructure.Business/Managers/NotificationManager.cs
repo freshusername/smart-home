@@ -44,5 +44,10 @@ namespace Infrastructure.Business.Managers
 			notification.IsRead = notification.IsRead ? false : true;
 			unitOfWork.Save();
 		}
+
+		public async Task Create()
+		{
+
+		}
 	}
 }
