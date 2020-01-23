@@ -47,6 +47,7 @@
                             <img class="img-rounded" id="output" width="64" height="64" style="visibility: hidden" />
                         </div>
 
+                        <input hidden asp-for="@Model.AppUserId" value="@ViewBag.loggedUserId" />
                         <input hidden asp-for="@Model.Token" value="@Guid.NewGuid()" />
                         <input hidden asp-for="@Model.CreatedOn" value="@DateTimeOffset.Now" />
 

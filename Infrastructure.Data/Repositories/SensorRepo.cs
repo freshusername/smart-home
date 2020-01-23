@@ -42,7 +42,7 @@ namespace Infrastructure.Data.Repositories
         public async Task<Sensor> GetSensorById(int id)
         {
             var sensors = await context.Sensors.Include(s => s.SensorType).FirstOrDefaultAsync(e => e.Id == id);
-                                 
+
             return sensors;
         }
 
@@ -55,6 +55,18 @@ namespace Infrastructure.Data.Repositories
             return sensor;
         }
 
+        public async Task<IEnumerable<Sensor>> GetAllSensorsByUserId(string userId)
+        {
+            var sensors = await context.Sensors
+                                    .Include(s => s.SensorType)
+                                        .ThenInclude(st => st.Icon)
+                                    .Include(s => s.Icon)
+                                .Where(s => s.AppUserId == userId)
+                                .ToListAsync();
+
+            return sensors;
+        }
+
         public async Task<IEnumerable<Sensor>> GetSensorsByMeasurementTypeAndUserId(MeasurementType type, string UserId)
         {
             var sensors = await context.Sensors
@@ -64,6 +76,6 @@ namespace Infrastructure.Data.Repositories
             return sensors;
         }
 
-       
+
     }
 }

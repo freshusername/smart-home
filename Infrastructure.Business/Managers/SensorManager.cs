@@ -89,10 +89,16 @@ namespace Infrastructure.Business.Managers
 
             return model;
         }
+        public async Task<IEnumerable<SensorDto>> GetAllSensorsByUserIdAsync(string userId)
+        {
+            var sensors = await unitOfWork.SensorRepo.GetAllSensorsByUserId(userId);
+            var model = mapper.Map<IEnumerable<Sensor>, IEnumerable<SensorDto>>(sensors);
+
+            return model;
+        }
 
         public OperationDetails AddUnclaimedSensor(Guid token, string value)
         {
-
             var sensor = new Sensor { Name = "Unidentified", Token = token, CreatedOn = DateTimeOffset.Now, IsActivated = false };
 
             if (sensor == null)
@@ -139,15 +145,13 @@ namespace Infrastructure.Business.Managers
 
             foreach (var items in tokens)
             {
-                 sensors.Add(unitOfWork.SensorRepo.GetByToken(items.Token));
+                sensors.Add(unitOfWork.SensorRepo.GetByToken(items.Token));
             }
 
             var result = mapper.Map<List<Sensor>, List<SensorDto>>(sensors);
 
             return result;
         }
-
-
 
     }
 }
