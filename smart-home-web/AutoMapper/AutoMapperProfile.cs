@@ -135,29 +135,33 @@ namespace smart_home_web.AutoMapper
 
             CreateMap<SensorControl, SensorControlDto>()
              .ForMember(gd => gd.Id, map => map.MapFrom(s => s.Id))
-             .ForMember(gd => gd.IsActive, map => map.MapFrom(s => s.IsActive));
+             .ForMember(gd => gd.IsActive, map => map.MapFrom(s => s.IsActive))                      
+             .ForMember(gd => gd.MeasurementType, map => map.MapFrom(s => s.Sensor.SensorType.MeasurementType));
 
+            CreateMap<SensorControlDto, SensorControl>();
 
             CreateMap<SensorControlDto, SensorControlViewModel>()
              .ForMember(gd => gd.Id, map => map.MapFrom(s => s.Id))
              .ForMember(gd => gd.IsActive, map => map.MapFrom(s => s.IsActive));
 
+            CreateMap<AddSensorControlViewModel, SensorControlDto>()
+           .ForMember(gd => gd.Name, map => map.MapFrom(s => s.Name))
+           .ForMember(gd => gd.SensorId, map => map.MapFrom(s => s.SensorId))
+           .ForMember(gd => gd.ControlId, map => map.MapFrom(s => s.ControlId));
+
+
+
             CreateMap<EditSensorControlViewModel, SensorControlDto>()
             .ForMember(gd => gd.Name, map => map.MapFrom(s => s.Name))
             .ForMember(gd => gd.SensorId, map => map.MapFrom(s => s.SensorId))
-            .ForMember(gd => gd.ControlId, map => map.MapFrom(s => s.ControlId));
+            .ForMember(gd => gd.ControlId, map => map.MapFrom(s => s.ControlSensorId));
+            
 
             CreateMap<SensorControlDto, EditSensorControlViewModel>()
             .ForMember(gd => gd.Name, map => map.MapFrom(s => s.Name))
             .ForMember(gd => gd.SensorId, map => map.MapFrom(s => s.SensorId))
-            .ForMember(gd => gd.ControlSensor, map => map.MapFrom(s => s.ControlSensor))
-            .ForMember(gd => gd.Sensor, map => map.MapFrom(s => s.Sensor));
-
-            CreateMap<SensorControlDto, SensorControl>()
-           .ForMember(gd => gd.Name, map => map.MapFrom(s => s.Name))
-            .ForMember(gd => gd.SensorId, map => map.MapFrom(s => s.SensorId))
-            .ForMember(gd => gd.ControlId, map => map.MapFrom(s => s.ControlId))
-            .ForMember(gd => gd.IconId, map => map.MapFrom(s => s.IconId));
+            .ForMember(gd => gd.ControlId, map => map.MapFrom(s => s.ControlId));
+           
 
 
 
