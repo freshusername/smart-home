@@ -45,7 +45,12 @@ namespace Infrastructure.Data.Repositories
             return await context.Histories.Where(p => p.Sensor.IsActivated == isActivated).CountAsync();
         }
 
-        public async Task<IEnumerable<History>> GetHistoriesBySensorId(int SensorId)
+		public async Task<int> GetAmountAsync(bool isActivated, string userId)
+		{
+			return await context.Histories.Where(p => p.Sensor.IsActivated == isActivated & p.Sensor.AppUserId == userId).CountAsync();
+		}
+
+		public async Task<IEnumerable<History>> GetHistoriesBySensorId(int SensorId)
         {
             var histories = context.Histories.Include(h => h.Sensor)
                 .ThenInclude(st => st.SensorType)

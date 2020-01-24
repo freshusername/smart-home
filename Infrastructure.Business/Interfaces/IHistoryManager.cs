@@ -26,5 +26,6 @@ namespace Infrastructure.Business.Managers
 		Task<GraphDto> GetGraphBySensorId(int SensorId, int days);
 
 		Task<int> GetAmountAsync(bool isActivated);
+		Task<int> GetAmountOfUserHistoriesAsync(bool isActivated, string userId);
     }
 }

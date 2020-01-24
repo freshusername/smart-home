@@ -164,5 +164,10 @@ namespace Infrastructure.Business.Managers
 		{
 			return await unitOfWork.HistoryRepo.GetAmountAsync(isActivated);
 		}
-    }
+
+		public async Task<int> GetAmountOfUserHistoriesAsync(bool isActivated, string userId)
+		{
+			return await unitOfWork.HistoryRepo.GetAmountAsync(isActivated, userId);
+		}
+	}
 }

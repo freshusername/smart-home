@@ -39,8 +39,9 @@ namespace smart_home_web.Controllers
 		public async Task<IActionResult> Index(FilterDto FilterDTO, bool isActivated=true)
 		{
 			var histories = await _historyManager.GetHistoriesAsync(FilterDTO.PageSize, FilterDTO.CurrentPage, FilterDTO.sortState, isActivated);
-			histories = histories.Where(h => h.UserId == _userManager.GetUserId(User));
-			FilterDTO.Amount = histories.Count();
+			var userId = _userManager.GetUserId(User);
+			histories = histories.Where(h => h.UserId == userId);
+			FilterDTO.Amount = await _historyManager.GetAmountOfUserHistoriesAsync(true, userId);
 			
             var historiesViewModel = _mapper.Map<IEnumerable<HistoryDto>, IEnumerable<HistoryViewModel>>(histories);
 			AllHistoriesViewModel model = new AllHistoriesViewModel
