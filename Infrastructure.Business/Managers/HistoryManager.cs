@@ -1,22 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Domain.Core.Model;
 using Domain.Core.Model.Enums;
-using Domain.Interfaces;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Business.DTOs;
 using Infrastructure.Business.DTOs.History;
-using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.Infrastructure;
-using Infrastructure.Data.Repositories;
 
 namespace Infrastructure.Business.Managers
 {
-    public class HistoryManager : BaseManager, IHistoryManager
+	public class HistoryManager : BaseManager, IHistoryManager
     {
         public HistoryManager(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
@@ -47,7 +43,6 @@ namespace Infrastructure.Business.Managers
 
 			return result;
 		}
-
 
 		public async Task<IEnumerable<HistoryDto>> GetHistoriesBySensorIdAsync(int sensorId)
 		{
@@ -117,14 +112,10 @@ namespace Infrastructure.Business.Managers
             if (!graph.Dates.Any())
                 graph.IsCorrect = false;
             return graph;
-        }
-
-
-        
+        }		
 
         public OperationDetails AddHistory(string value , int sensorId)
-        {
-           
+        {           
            var history = new History {          
              Date = DateTimeOffset.Now,
            SensorId = sensorId, };              
@@ -155,26 +146,28 @@ namespace Infrastructure.Business.Managers
             unitOfWork.HistoryRepo.Insert(history);
             unitOfWork.Save();
 
-            return new OperationDetails(true, "Operation succeed", "");
-        
+            return new OperationDetails(true, "Operation succeed", "");        
         }
 
-        public bool CheckValue(History history)
-        {
-            var lastHistory = unitOfWork.HistoryRepo.GetLastBySensorId(history.SensorId).Result;
+        //public bool CheckValue(History history)
+        //{
+        //    var lastHistory = unitOfWork.HistoryRepo.GetLastBySensorId(history.SensorId).Result;
 
-            if (lastHistory?.Date.AddMinutes(5) < history.Date)
-                return true;
-            if (lastHistory?.BoolValue == history.BoolValue && lastHistory?.DoubleValue == history.DoubleValue && lastHistory?.IntValue == history.IntValue && lastHistory?.StringValue == history.StringValue)
-                return false;
-            return true;
-        }
+        //    if (lastHistory?.Date.AddMinutes(5) < history.Date)
+        //        return true;
+        //    if (lastHistory?.BoolValue == history.BoolValue && lastHistory?.DoubleValue == history.DoubleValue && lastHistory?.IntValue == history.IntValue && lastHistory?.StringValue == history.StringValue)
+        //        return false;
+        //    return true;
+        //}
 
 		public async Task<int> GetAmountAsync(bool isActivated)
 		{
 			return await unitOfWork.HistoryRepo.GetAmountAsync(isActivated);
 		}
-    }
+
+		public async Task<int> GetAmountOfUserHistoriesAsync(bool isActivated, string userId)
+		{
+			return await unitOfWork.HistoryRepo.GetAmountAsync(isActivated, userId);
+		}
+	}
 }
-
-

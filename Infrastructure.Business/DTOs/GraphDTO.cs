@@ -1,11 +1,10 @@
 ﻿using Domain.Core.Model.Enums;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Infrastructure.Business.DTOs
 {
-    public class GraphDto
+	public class GraphDto
     {
         public int SensorId { get; set; }
         public string SensorName { get; set; }

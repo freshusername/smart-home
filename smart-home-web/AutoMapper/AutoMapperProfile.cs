@@ -45,11 +45,12 @@ namespace smart_home_web.AutoMapper
 
             CreateMap<Icon, IconDto>().ReverseMap();
 
-            CreateMap<HistoryDto, History>().ReverseMap()
-                .ForMember(hd => hd.SensorName, map => map.MapFrom(h => h.Sensor.Name))
-                .ForMember(hd => hd.MeasurementName, map => map.MapFrom(vm => vm.Sensor.SensorType.MeasurementName))
-                .ForMember(hd => hd.MeasurementType, map => map.MapFrom(vm => vm.Sensor.SensorType.MeasurementName))
-                .ForMember(hd => hd.SensorId, map => map.MapFrom(vm => vm.Sensor.Id));
+			CreateMap<HistoryDto, History>().ReverseMap()
+				.ForMember(hd => hd.SensorName, map => map.MapFrom(h => h.Sensor.Name))
+				.ForMember(hd => hd.MeasurementName, map => map.MapFrom(vm => vm.Sensor.SensorType.MeasurementName))
+				.ForMember(hd => hd.MeasurementType, map => map.MapFrom(vm => vm.Sensor.SensorType.MeasurementName))
+				.ForMember(hd => hd.SensorId, map => map.MapFrom(vm => vm.Sensor.Id))
+				.ForMember(hd => hd.UserId, map => map.MapFrom(vm => vm.Sensor.AppUserId));
 
             CreateMap<HistoryDto, HistoryViewModel>()
                 .ForMember(hd => hd.Value, map => map.MapFrom(vm => vm.GetStringValue()));
@@ -106,8 +107,6 @@ namespace smart_home_web.AutoMapper
                 .ForAllOtherMembers(c => c.Ignore());
             CreateMap<HeatmapDto, HeatmapViewModel>().ReverseMap();
 
-            CreateMap<AvgSensorValuePerDay, AvgSensorValuePerDayDTO>();
-
             CreateMap<Sensor, ReportElementDto>()
                 .ForMember(gd => gd.SensorId, map => map.MapFrom(s => s.Id))
                 .ForMember(gd => gd.SensorName, map => map.MapFrom(s => s.Name))
@@ -135,23 +134,33 @@ namespace smart_home_web.AutoMapper
 
             CreateMap<SensorControl, SensorControlDto>()
              .ForMember(gd => gd.Id, map => map.MapFrom(s => s.Id))
-             .ForMember(gd => gd.IsActive, map => map.MapFrom(s => s.IsActive));
+             .ForMember(gd => gd.IsActive, map => map.MapFrom(s => s.IsActive));                      
+           
 
+            CreateMap<SensorControlDto, SensorControl>();
 
             CreateMap<SensorControlDto, SensorControlViewModel>()
              .ForMember(gd => gd.Id, map => map.MapFrom(s => s.Id))
              .ForMember(gd => gd.IsActive, map => map.MapFrom(s => s.IsActive));
 
+            CreateMap<AddSensorControlViewModel, SensorControlDto>()
+           .ForMember(gd => gd.Name, map => map.MapFrom(s => s.Name))
+           .ForMember(gd => gd.SensorId, map => map.MapFrom(s => s.SensorId))
+           .ForMember(gd => gd.ControlId, map => map.MapFrom(s => s.ControlId));
+
+
+
             CreateMap<EditSensorControlViewModel, SensorControlDto>()
             .ForMember(gd => gd.Name, map => map.MapFrom(s => s.Name))
             .ForMember(gd => gd.SensorId, map => map.MapFrom(s => s.SensorId))
-            .ForMember(gd => gd.ControlId, map => map.MapFrom(s => s.ControlId));
+            .ForMember(gd => gd.ControlId, map => map.MapFrom(s => s.ControlSensorId));
+            
 
-            CreateMap<SensorControlDto, SensorControl>()
-           .ForMember(gd => gd.Name, map => map.MapFrom(s => s.Name))
+            CreateMap<SensorControlDto, EditSensorControlViewModel>()
+            .ForMember(gd => gd.Name, map => map.MapFrom(s => s.Name))
             .ForMember(gd => gd.SensorId, map => map.MapFrom(s => s.SensorId))
-            .ForMember(gd => gd.ControlId, map => map.MapFrom(s => s.ControlId))
-            .ForMember(gd => gd.IconId, map => map.MapFrom(s => s.IconId));
+            .ForMember(gd => gd.ControlId, map => map.MapFrom(s => s.ControlId));
+           
 
 
 

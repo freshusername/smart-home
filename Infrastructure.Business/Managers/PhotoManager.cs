@@ -1,19 +1,16 @@
 ﻿using AutoMapper;
-using Domain.Interfaces;
 using Domain.Interfaces.Repositories;
 using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Business.Managers
 {
-    public class PhotoManager : BaseManager, IPhotoManager
+	public class PhotoManager : BaseManager, IPhotoManager
     {
         public PhotoManager(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
@@ -43,7 +40,6 @@ namespace Infrastructure.Business.Managers
             }
         }
 
-
         private static bool IsValidImage(IFormFile file) => (file != null);
 
         public async Task<Image> ResizeImage(IFormFile file, int width, int height)
@@ -72,6 +68,5 @@ namespace Infrastructure.Business.Managers
             }
             return res;
         }
-
     }
 }

@@ -54,7 +54,8 @@
                     <span asp-validation-for="IconFile" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <input type="submit" value="Save" class="btn btn-default" />
+                    <input type="submit" value="Save" class="btn btn-success"/>
+                    <a class="btn btn-info" asp-action="Index">Back to List</a>
                 </div>
             </form>
         </div>
@@ -64,9 +65,5 @@
 else
 {
     <h2>Error: Sensor type with such id was not found</h2>
-
 }
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 

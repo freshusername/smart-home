@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace smart_home_web.Models
 {
-    public class LoginViewModel
+	public class LoginViewModel
     {
-
         [Required]
         public string Email { get; set; }
 
@@ -18,6 +13,5 @@ namespace smart_home_web.Models
 
         [Display(Name = "Remember?")]
         public bool RememberMe { get; set; }
-
     }
 }

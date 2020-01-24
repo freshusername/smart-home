@@ -12,7 +12,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-//TODO: Replace manager Interfaces and Implementations in defferent folders
 namespace Infrastructure.Business.Managers
 {
     public class AuthenticationManager : BaseManager, IAuthenticationManager

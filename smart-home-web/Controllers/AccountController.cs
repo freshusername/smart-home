@@ -67,9 +67,7 @@ namespace smart_home_web.Controllers
                 ModelState.AddModelError(result.Property, result.Message);
 
             return View(model);
-
         }
-
 
         public IActionResult Login()
         {
@@ -103,13 +101,13 @@ namespace smart_home_web.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-
         [HttpGet]
         [AllowAnonymous]
         public IActionResult ForgotPassword()
         {
             return View();
         }
+
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -189,7 +187,6 @@ namespace smart_home_web.Controllers
                 return View("Error");
         }
 
-
         [AllowAnonymous]
         public IActionResult SignInGoogle()
         {
@@ -210,6 +207,5 @@ namespace smart_home_web.Controllers
 
             return View("AccessDenied");
         }
-
     }
 }

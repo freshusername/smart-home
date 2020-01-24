@@ -11,7 +11,7 @@
         }
         else
         {   
-            <label id="alertMessage" class="control-label graph-label">There is no gauge for the selected sensor for the chosen time period.</label>
+            <label id=@("alertMessage" + Model.Id.ToString()) class="control-label graph-label">There is no gauge for the selected sensor for the chosen time period.</label>
         }
     </div>
 
@@ -173,11 +173,11 @@
                             tickPositions: gaugeChart.yAxis[0].tickPositions
                         });
                         $('#gauge_figure_'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))')).addClass("d-inline").removeClass("d-none");
-                        $('#alertMessage').addClass("d-none").removeClass("d-inline");
+                        $('#alertMessage'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))')).addClass("d-none").removeClass("d-inline");
                     }
                     else {
                         $('#gauge_figure_'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))')).addClass("d-none").removeClass("d-inline");
-                        $('#alertMessage').addClass("d-inline").removeClass("d-none");
+                        $('#alertMessage'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))')).addClass("d-inline").removeClass("d-none");
                     }
                 }
             }

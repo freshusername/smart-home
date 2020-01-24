@@ -15,6 +15,7 @@ namespace Infrastructure.Business.Managers
     {
         public SensorTypeManager(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
+
         }
 
         public async Task<OperationDetails> Create(SensorTypeDto sensorTypeDto)
@@ -77,6 +78,5 @@ namespace Infrastructure.Business.Managers
 
             return result;
         }
-
     }
 }

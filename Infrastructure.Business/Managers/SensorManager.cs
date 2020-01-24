@@ -45,6 +45,7 @@ namespace Infrastructure.Business.Managers
             }
             return new OperationDetails(true, "New sensor has been added", "Name");
         }
+
         public OperationDetails Update(SensorDto sensorDto)
         {
             Sensor sensor = mapper.Map<SensorDto, Sensor>(sensorDto);
@@ -59,6 +60,7 @@ namespace Infrastructure.Business.Managers
             }
             return new OperationDetails(true, "Sensor has been updated!", "Name");
         }
+
         public OperationDetails Delete(SensorDto sensorDto)
         {
             Sensor sensor = mapper.Map<SensorDto, Sensor>(sensorDto);
@@ -89,10 +91,16 @@ namespace Infrastructure.Business.Managers
 
             return model;
         }
+        public async Task<IEnumerable<SensorDto>> GetAllSensorsByUserIdAsync(string userId)
+        {
+            var sensors = await unitOfWork.SensorRepo.GetAllSensorsByUserId(userId);
+            var model = mapper.Map<IEnumerable<Sensor>, IEnumerable<SensorDto>>(sensors);
+
+            return model;
+        }
 
         public OperationDetails AddUnclaimedSensor(Guid token, string value)
         {
-
             var sensor = new Sensor { Name = "Unidentified", Token = token, CreatedOn = DateTimeOffset.Now, IsActivated = false };
 
             if (sensor == null)
@@ -123,12 +131,19 @@ namespace Infrastructure.Business.Managers
 
             return sensor;
         }
-
-
+      
         public List<SensorDto> GetSensorsToControl()
         {
-            var sensors = unitOfWork.SensorRepo.GetAll().Result.ToList();
+            var allsensors = unitOfWork.SensorRepo.GetAll().Result.ToList();
+             List<Sensor> sensors = new List<Sensor>();
+
+            foreach (var items in allsensors)
+            {
+                if(!items.SensorType.IsControl && ( items.SensorType.MeasurementType == MeasurementType.Bool || items.SensorType.MeasurementType == MeasurementType.Int))
+                 sensors.Add(unitOfWork.SensorRepo.GetByToken(items.Token));
+            }
             var result = mapper.Map<List<Sensor>, List<SensorDto>>(sensors);
+
             return result;
         }
 
@@ -139,15 +154,12 @@ namespace Infrastructure.Business.Managers
 
             foreach (var items in tokens)
             {
-                 sensors.Add(unitOfWork.SensorRepo.GetByToken(items.Token));
+                sensors.Add(unitOfWork.SensorRepo.GetByToken(items.Token));
             }
 
             var result = mapper.Map<List<Sensor>, List<SensorDto>>(sensors);
 
             return result;
         }
-
-
-
     }
 }

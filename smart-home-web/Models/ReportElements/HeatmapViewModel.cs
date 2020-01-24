@@ -1,13 +1,10 @@
 ﻿using Domain.Core.CalculateModel;
 using Domain.Core.Model.Enums;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace smart_home_web.Models.ReportElements
 {
-    public class HeatmapViewModel
+	public class HeatmapViewModel
     {
         public int Id { get; set; }
         public int DashboardId { get; set; }
@@ -21,9 +18,6 @@ namespace smart_home_web.Models.ReportElements
 
         public MeasurementType MeasurementType { get; set; }
         public string MeasurementName { get; set; }
-
-        public List<dynamic> Values { get; set; }
-        public double[] AvgValuesArray { get; set; }
 
         public List<string> Dates { get; set; }
         public List<AvgSensorValuePerDay> AvgSensorValuesPerDays { get; set; }

@@ -15,9 +15,11 @@ namespace Domain.Interfaces.Repositories
         IControlRepo ControlRepo { get; }
         ISensorControlRepo SensorControlRepo { get; }
         INotificationRepo NotificationRepo { get; }
+
         UserManager<AppUser> UserManager { get; }
         RoleManager<IdentityRole> RoleManager { get; }
         SignInManager<AppUser> SignInManager { get; }
+
         int Save();
     }
 }

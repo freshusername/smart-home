@@ -44,7 +44,7 @@
                         <h5>Name: @sensor.Name</h5>
                         <h5>Type: @sensor.SensorTypeName</h5>
                     </div>
-                    <i class="fa fa-thumbs-up" onclick="toggleAdditionalInfo(this);" style="cursor: help;"></i>
+                    <i class="fa fa-eye-slash" onclick="toggleAdditionalInfo(this);" style="cursor: help;"></i>
                     <div class="sensor-details-additional" style="display: none;">
                         <h5>Created: @sensor.CreatedOn.Value.UtcDateTime.ToString("dd/MM/yyyy on HH:mm")</h5>
                         <h5>Comment: @sensor.Comment</h5>
@@ -91,8 +91,8 @@
         subRow.style.display = subRow.style.display === 'none' ? 'inherit' : 'none';
     }
 
-    $('.fa-thumbs-up').click(function () {
-        $(this).toggleClass('fa fa-thumbs-down');
-        $(this).toggleClass('fa fa-thumbs-up');
+    $('.fa-eye-slash').click(function () {
+        $(this).toggleClass('fa fa-eye');
+        $(this).toggleClass('fa fa-eye-slash');
     });
 </script>

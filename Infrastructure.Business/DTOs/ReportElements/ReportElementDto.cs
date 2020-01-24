@@ -1,11 +1,9 @@
 ﻿using Domain.Core.Model.Enums;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Infrastructure.Business.DTOs.ReportElements
 {
-    public class ReportElementDto
+	public class ReportElementDto
     {
         public int Id { get; set; }
 

@@ -38,8 +38,8 @@ namespace Infrastructure.Business.Managers
 
              var result = mapper.Map<SensorControl,SensorControlDto>(sensorControl);
 
-              var sensor = unitOfWork.SensorRepo.GetByToken(result.Control.Token);
-             result.ControlSensor = sensor;
+              var sensor = unitOfWork.SensorRepo.GetByToken(sensorControl.Control.Token);
+             result.ControlSensorId = sensor.Id;
 
             return result;
         }
@@ -48,9 +48,24 @@ namespace Infrastructure.Business.Managers
         {
             var sensorControl = mapper.Map<SensorControlDto, SensorControl>(controlDto);
              if (sensorControl == null) return new OperationDetails(false, "", "");
+
               unitOfWork.SensorControlRepo.Update(sensorControl);
              unitOfWork.Save();
+
             return new OperationDetails(true , "" , "");
+        }
+
+        public OperationDetails Add(SensorControlDto controlDto)
+        {
+            var sensorControl = mapper.Map<SensorControlDto, SensorControl>(controlDto);
+            if (sensorControl == null) return new OperationDetails(false, "", "");
+
+            sensorControl.IsActive = true;
+
+            unitOfWork.SensorControlRepo.Insert(sensorControl);
+            unitOfWork.Save();
+
+            return new OperationDetails(true, "", "");
         }
 
         public OperationDetails UpdateById(int id,bool isActive)
@@ -59,8 +74,8 @@ namespace Infrastructure.Business.Managers
              if (sensorControl == null) return new OperationDetails(false, "", "");
 
               sensorControl.IsActive = isActive;
-
               unitOfWork.SensorControlRepo.Update(sensorControl);
+
              unitOfWork.Save();
             return new OperationDetails(true, "", "");
         }

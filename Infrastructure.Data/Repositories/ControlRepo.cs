@@ -13,7 +13,6 @@ namespace Infrastructure.Data.Repositories
         public ControlRepo(ApplicationsDbContext context) : base(context)
         {
 
-        }
-      
+        }      
     }
 }

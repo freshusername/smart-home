@@ -21,7 +21,7 @@
                     prev.CurrentPage = Model.filterDto.CurrentPage - 1;
                 }
 
-                <a class="page-link" href="@Url.Action(Model.action, Model.controller, prev, null, null, null)"><i class="fas fa-arrow-left"></i></a>
+                <a class="page-link" style="display:inherit" href="@Url.Action(Model.action, Model.controller, prev, null, null, null)"><i class="fas fa-arrow-left"></i></a>
             </li>
 
 
@@ -46,7 +46,7 @@
                     next.CurrentPage = Model.filterDto.CurrentPage + 1;
                 }
 
-                <a class="page-link" href="@Url.Action(Model.action, Model.controller, next, null, null, null)"><i class="fas fa-arrow-right"></i></a>
+                <a class="page-link" style="display:inherit" href="@Url.Action(Model.action, Model.controller, next, null, null, null)"><i class="fas fa-arrow-right"></i></a>
             </li>
 
             <li class="page-item @(!Model.filterDto.HasNext ? "d-none" : "") ">

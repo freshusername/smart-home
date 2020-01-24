@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Domain.Core.Model;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -9,7 +7,7 @@ using Domain.Core.CalculateModel;
 
 namespace Infrastructure.Data
 {
-    public class ApplicationsDbContext : IdentityDbContext<AppUser>
+	public class ApplicationsDbContext : IdentityDbContext<AppUser>
     {
         public DbSet<Sensor> Sensors { get; set; }
         public DbSet<Icon> Icons { get; set; }
@@ -30,7 +28,6 @@ namespace Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             base.OnModelCreating(modelBuilder);
 
             modelBuilder
@@ -46,6 +43,20 @@ namespace Infrastructure.Data
             .HasConversion(
             v => v.ToString(),
             v => (ReportElementType)Enum.Parse(typeof(ReportElementType), v));
+
+            modelBuilder
+            .Entity<Notification>()
+            .Property(e => e.Rule)
+            .HasConversion(
+            v => v.ToString(),
+            v => (RuleEnum)Enum.Parse(typeof(RuleEnum), v));
+
+            modelBuilder
+            .Entity<Notification>()
+            .Property(e => e.NotificationType)
+            .HasConversion(
+            v => v.ToString(),
+            v => (ToastTypes)Enum.Parse(typeof(ToastTypes), v));
         }
     }
 }

@@ -84,11 +84,9 @@ namespace smart_home_web.Controllers
         [HttpGet("getaction")]
         public int GetAction(Guid token)
         {
-
-            var result = _actionService.CheckStatus(token).Result;
-             if (result.Succeeded) return 1;
-
-
+			var result = _actionService.CheckStatus(token).Result;
+            if (result.Succeeded) return 1;
+			 
             return 0;
         }
     }
