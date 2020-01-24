@@ -129,12 +129,19 @@ namespace Infrastructure.Business.Managers
 
             return sensor;
         }
-
-
+      
         public List<SensorDto> GetSensorsToControl()
         {
-            var sensors = unitOfWork.SensorRepo.GetAll().Result.ToList();
+            var allsensors = unitOfWork.SensorRepo.GetAll().Result.ToList();
+             List<Sensor> sensors = new List<Sensor>();
+
+            foreach (var items in allsensors)
+            {
+                if(!items.SensorType.IsControl && ( items.SensorType.MeasurementType == MeasurementType.Bool || items.SensorType.MeasurementType == MeasurementType.Int))
+                 sensors.Add(unitOfWork.SensorRepo.GetByToken(items.Token));
+            }
             var result = mapper.Map<List<Sensor>, List<SensorDto>>(sensors);
+
             return result;
         }
 

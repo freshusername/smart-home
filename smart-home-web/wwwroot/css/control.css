@@ -133,7 +133,7 @@
         line-height: -0.5rem;
         color: #fff;
         letter-spacing: .75px;
-        left: 0.41250000000000003rem;
+        left: 0.412503rem;
         width: 2.325rem;
     }
 
@@ -484,3 +484,23 @@
         .btn-toggle.btn-secondary.active {
             background-color: #ff8300;
         }
+
+.row a {
+    text-decoration: none;
+    color: black;
+    font-size: 16px;
+}
+
+.card-img-center {
+    margin-left : 64px;
+    margin-top : 15px;
+}
+
+.btn.btn-lg.btn-toggle.bottom {
+    margin-left: 132px;
+}
+
+.btn.btn-success {
+    margin-top : 10px;
+}
+

@@ -22,5 +22,6 @@ namespace Infrastructure.Business.Managers
         List<SensorDto> GetSensorsToControl();
         List<SensorDto> GetControlSensors();
         Task<List<SensorDto>> GetSensorsByReportElementType(ReportElementType type, int dashboardId);
+        
     }
 }
