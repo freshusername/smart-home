@@ -26,6 +26,7 @@ namespace smart_home_web.Models.SensorViewModel
         [Required(ErrorMessage = "The Sensor type is required.")]
         [Display(Name = "Sensor type")]
         public int SensorTypeId { get; set; }
+        public string AppUserId { get; set; }
 
         public Guid Token { get; set; }
 

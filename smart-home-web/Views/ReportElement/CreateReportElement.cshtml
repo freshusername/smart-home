@@ -23,7 +23,7 @@
                 <div class="form-group col-lg-6 col-lg-offset-3">
                     <label class="control-label">Select report element type:</label>
                     <div style="margin-bottom:50px">
-                        @*<select id="type-select" class="nice-select wide">*@
+                      
                         <select id="type-select" asp-for="Type" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.ReportElementType>()" class="nice-select wide">
                         </select>
                     </div>
