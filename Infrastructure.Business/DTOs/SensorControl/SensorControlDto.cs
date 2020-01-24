@@ -19,10 +19,10 @@ namespace Infrastructure.Business.DTOs
 
         public int? maxValue { get; set; }
         
-        public int SensorId { get; set; }     
+        public int? SensorId { get; set; }     
         public MeasurementType MeasurementType { get; set; }
-        public int ControlId { get; set; }
-        public int ControlSensorId { get; set; }
+        public int? ControlId { get; set; }
+        public int? ControlSensorId { get; set; }
         public int IconId { get; set; }
         public string IconPath { get; set; }
         public IFormFile IconFile { get; set; }

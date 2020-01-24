@@ -60,6 +60,8 @@ namespace Infrastructure.Business.Managers
             var sensorControl = mapper.Map<SensorControlDto, SensorControl>(controlDto);
             if (sensorControl == null) return new OperationDetails(false, "", "");
 
+            sensorControl.IsActive = true;
+
             unitOfWork.SensorControlRepo.Insert(sensorControl);
             unitOfWork.Save();
 
