@@ -247,8 +247,8 @@ namespace Infrastructure.Business.Managers
                             Date = p.Key.ToString()
                         }).ToList();
                         break;
-
-                    } else if ((int)reportElement.Hours > 1 && (int)reportElement.Hours <= 24)   
+                    }
+                    else if ((int)reportElement.Hours > 1 && (int)reportElement.Hours <= 24)
                     {
                         values = histories.OrderBy(p => p.Date.LocalDateTime).GroupBy(p => p.Date.LocalDateTime.Hour).Select(p => new
                         {
@@ -283,7 +283,8 @@ namespace Infrastructure.Business.Managers
                         }).ToList();
                         break;
 
-                    } else if ((int)reportElement.Hours > 1 && (int)reportElement.Hours <= 24)
+                    } 
+                    else if ((int)reportElement.Hours > 1 && (int)reportElement.Hours <= 24)
                     {
                         values = histories.OrderBy(p => p.Date.LocalDateTime).GroupBy(p => p.Date.LocalDateTime.Hour).Select(p => new
                         {
