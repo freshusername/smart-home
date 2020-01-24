@@ -76,7 +76,8 @@ namespace smart_home_web.Controllers
                 var sensorControl = _mapper.Map<EditSensorControlViewModel, SensorControlDto>(model);
                  var result = _sensorControlManager.Update(sensorControl);
                 if (!result.Succeeded) ModelState.AddModelError("", result.Message);
-              
+
+                return RedirectToAction("Index");
             }
 
             return View(model);
@@ -106,6 +107,7 @@ namespace smart_home_web.Controllers
                 var result = _sensorControlManager.Add(sensorControl);
                 if (!result.Succeeded) ModelState.AddModelError("", result.Message);
 
+                return RedirectToAction("Index");
             }
 
             return View(model);
