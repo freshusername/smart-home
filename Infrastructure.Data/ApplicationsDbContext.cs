@@ -43,6 +43,20 @@ namespace Infrastructure.Data
             .HasConversion(
             v => v.ToString(),
             v => (ReportElementType)Enum.Parse(typeof(ReportElementType), v));
+
+            modelBuilder
+            .Entity<Notification>()
+            .Property(e => e.Rule)
+            .HasConversion(
+            v => v.ToString(),
+            v => (RuleEnum)Enum.Parse(typeof(RuleEnum), v));
+
+            modelBuilder
+            .Entity<Notification>()
+            .Property(e => e.NotificationType)
+            .HasConversion(
+            v => v.ToString(),
+            v => (ToastTypes)Enum.Parse(typeof(ToastTypes), v));
         }
     }
 }
