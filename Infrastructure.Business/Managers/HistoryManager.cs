@@ -138,7 +138,11 @@ namespace Infrastructure.Business.Managers
                 history.BoolValue = valueModel;
              else
                 history.StringValue = valueModel;
-			
+
+
+            if (!CheckValue(history))
+                return new OperationDetails(false, "Operation did not succeed!", "");
+
             unitOfWork.HistoryRepo.Insert(history);
             unitOfWork.Save();
 

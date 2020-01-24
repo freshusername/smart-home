@@ -3,7 +3,9 @@ using Infrastructure.Business.DTOs;
 using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.Interfaces;
 using Infrastructure.Business.Managers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using smart_home_web.Models;
 using smart_home_web.Models.ControlSensor;
 using smart_home_web.Models.SensorViewModel;
@@ -14,6 +16,7 @@ using System.Threading.Tasks;
 
 namespace smart_home_web.Controllers
 {
+    [Route("[controller]/[action]")]
     public class SensorControlController : Controller
     {
         private readonly ISensorControlManager _sensorControlManager;
@@ -27,6 +30,7 @@ namespace smart_home_web.Controllers
             _mapper = mapper;
         }
 
+        [Authorize]
         [HttpGet]
         public IActionResult Index()
         {
@@ -35,6 +39,7 @@ namespace smart_home_web.Controllers
             return View(model);       
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult Change(int id, bool isActive)
         {
@@ -43,7 +48,8 @@ namespace smart_home_web.Controllers
               
             return Ok();
         }
-       
+
+        [Authorize]
         [HttpGet]
         public IActionResult Edit(int id)
         {
@@ -53,31 +59,57 @@ namespace smart_home_web.Controllers
 
              if(sensorControl == null) return View("Error");
 
-            var modelSensorControl = _mapper.Map<SensorControlDto,SensorControlViewModel>(sensorControl);
-             var modelControlSensors = _mapper.Map<List<SensorDto>,List<SensorViewModel>>(controlSensors);
-            var modelSensors = _mapper.Map<List<SensorDto>,List<SensorViewModel>>(sensors);
-           
+            var model = _mapper.Map<SensorControlDto,EditSensorControlViewModel>(sensorControl);
+                                  
+            ViewBag.modelControlSensors = new SelectList(_mapper.Map<List<SensorDto>, List<SensorViewModel>>(controlSensors), "Id", "Name");
+             ViewBag.modelSensors = new SelectList(_mapper.Map<List<SensorDto>, List<SensorViewModel>>(sensors), "Id", "Name");
 
-            return View(new IndexSensorControlViewModel {
-                SensorControl = modelSensorControl,
-                ControlSensorsView = modelControlSensors,
-                SensorsView = modelSensors
-            });;
-            
+            return View(model);                                   
         }
 
+        [Authorize]
         [HttpPost]
-        public IActionResult Edit(IndexSensorControlViewModel index)
+        public IActionResult Edit(EditSensorControlViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var sensorControl = _mapper.Map<EditSensorControlViewModel, SensorControlDto>(index.EditViewModel);
+                var sensorControl = _mapper.Map<EditSensorControlViewModel, SensorControlDto>(model);
                  var result = _sensorControlManager.Update(sensorControl);
                 if (!result.Succeeded) ModelState.AddModelError("", result.Message);
               
             }
 
-            return View(index.EditViewModel);
+            return View(model);
         }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult Add()
+        {
+           
+            var controlSensors = _sensorManager.GetControlSensors();
+             var sensors = _sensorManager.GetSensorsToControl();
+            
+            ViewBag.modelControlSensors = new SelectList(_mapper.Map<List<SensorDto>, List<SensorViewModel>>(controlSensors), "Id", "Name");
+            ViewBag.modelSensors = new SelectList(_mapper.Map<List<SensorDto>, List<SensorViewModel>>(sensors), "Id", "Name");
+
+            return View();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult Add(AddSensorControlViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var sensorControl = _mapper.Map<AddSensorControlViewModel, SensorControlDto>(model);
+                var result = _sensorControlManager.Add(sensorControl);
+                if (!result.Succeeded) ModelState.AddModelError("", result.Message);
+
+            }
+
+            return View(model);
+        }
+    
     }
 }

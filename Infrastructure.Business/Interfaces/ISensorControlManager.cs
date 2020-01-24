@@ -11,6 +11,7 @@ namespace Infrastructure.Business.Interfaces
         SensorControlDto GetById(int id);
 
         OperationDetails Update(SensorControlDto controlDto);
+        OperationDetails Add(SensorControlDto controlDto);
         OperationDetails UpdateById(int id, bool isActive);
     }
 }

@@ -26,7 +26,7 @@ namespace Infrastructure.Business.Services
                 { 
                     if(item.IsActive)
                     {
-                      var result = Verification(item.SensorId, item.minValue,item.maxValue);
+                      var result = Verification(item.SensorId.Value, item.minValue,item.maxValue);
                        if (result) return new OperationDetails(true, "", "");
                     }
                 }
