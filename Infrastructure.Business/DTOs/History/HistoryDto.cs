@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Infrastructure.Business.DTOs.History
 {
@@ -16,6 +14,7 @@ namespace Infrastructure.Business.DTOs.History
 
 		public string SensorName { get; set; }
 		public int SensorId { get; set; } // To pass particular sensor into GetHistoriesBySensorId()
+		public string UserId { get; set; }
 		public string MeasurementName { get; set; }
 		public string MeasurementType { get; set; }
 

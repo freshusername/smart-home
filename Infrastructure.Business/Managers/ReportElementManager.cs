@@ -28,8 +28,7 @@ namespace Infrastructure.Business.Managers
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(id);
             return reportElement;
         }
-
-        //TODO: Check if we are able to update options with this method
+		
         public async Task EditReportElement(ReportElementDto reportElementDTO)
         {
             ReportElement reportElement = mapper.Map<ReportElementDto, ReportElement>(reportElementDTO);

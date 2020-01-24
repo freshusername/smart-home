@@ -1,16 +1,13 @@
-﻿using Domain.Core.Model;
-using Domain.Core.Model.Enums;
+﻿using Domain.Core.Model.Enums;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Business.Infrastructure;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Business.Services
 {
-    public class ActionService : IActionService
+	public class ActionService : IActionService
     {
 
         private readonly IUnitOfWork _db;

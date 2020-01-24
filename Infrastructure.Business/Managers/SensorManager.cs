@@ -45,6 +45,7 @@ namespace Infrastructure.Business.Managers
             }
             return new OperationDetails(true, "New sensor has been added", "Name");
         }
+
         public OperationDetails Update(SensorDto sensorDto)
         {
             Sensor sensor = mapper.Map<SensorDto, Sensor>(sensorDto);
@@ -59,6 +60,7 @@ namespace Infrastructure.Business.Managers
             }
             return new OperationDetails(true, "Sensor has been updated!", "Name");
         }
+
         public OperationDetails Delete(SensorDto sensorDto)
         {
             Sensor sensor = mapper.Map<SensorDto, Sensor>(sensorDto);
@@ -146,8 +148,5 @@ namespace Infrastructure.Business.Managers
 
             return result;
         }
-
-
-
-    }
+	}
 }

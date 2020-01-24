@@ -11,15 +11,20 @@ namespace Infrastructure.Business.Managers
 {
     public interface ISensorManager
     {
-        Task<OperationDetails> Create(SensorDto sensorDto);
-        OperationDetails Update(SensorDto sensorDto);
-        OperationDetails Delete(SensorDto sensorDto);
-        Task<IEnumerable<SensorDto>> GetAllSensorsAsync();
-        Task<SensorDto> GetSensorByIdAsync(int sensorId);
-        OperationDetails AddUnclaimedSensor(Guid token, string value);      
         SensorDto GetSensorByToken(Guid token);
+
+		Task<List<SensorDto>> GetSensorsByReportElementType(ReportElementType type, int dashboardId);
+        Task<SensorDto> GetSensorByIdAsync(int sensorId);
+
+		Task<IEnumerable<SensorDto>> GetAllSensorsAsync();
+
         List<SensorDto> GetSensorsToControl();
-        List<SensorDto> GetControlSensors();
-        Task<List<SensorDto>> GetSensorsByReportElementType(ReportElementType type, int dashboardId);
+		List<SensorDto> GetControlSensors();
+
+        Task<OperationDetails> Create(SensorDto sensorDto);
+
+		OperationDetails Update(SensorDto sensorDto);
+        OperationDetails Delete(SensorDto sensorDto);
+        OperationDetails AddUnclaimedSensor(Guid token, string value);      
     }
 }

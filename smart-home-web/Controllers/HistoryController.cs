@@ -9,32 +9,39 @@ using Microsoft.AspNetCore.Mvc;
 using smart_home_web.Models;
 using smart_home_web.Models.History;
 using Domain.Core.Model;
-using Infrastructure.Business.DTOs.SensorType;
-
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using System.Linq;
 
 namespace smart_home_web.Controllers
 {
-      
+	[Authorize]
     public class HistoryController : Controller
 	{
 		private readonly IHistoryManager _historyManager;
 		private readonly IReportElementManager _reportElementManager;
 		private readonly IMapper _mapper;
+		private readonly UserManager<AppUser> _userManager;
 
-		public HistoryController(IHistoryManager historyTestManager,IReportElementManager reportElementManager , IMapper mapper)
+
+		public HistoryController(
+			IHistoryManager historyTestManager,
+			IReportElementManager reportElementManager, 
+			IMapper mapper,
+			UserManager<AppUser> userManager)
 		{
 			_historyManager = historyTestManager;
             _reportElementManager = reportElementManager;
 			_mapper = mapper;
+			_userManager = userManager;
 		}
 
 		public async Task<IActionResult> Index(FilterDto FilterDTO, bool isActivated=true)
 		{
 			var histories = await _historyManager.GetHistoriesAsync(FilterDTO.PageSize, FilterDTO.CurrentPage, FilterDTO.sortState, isActivated);
+			histories = histories.Where(h => h.UserId == _userManager.GetUserId(User));
+			FilterDTO.Amount = histories.Count();
 			
-            FilterDTO.Amount = await _historyManager.GetAmountAsync(isActivated);
-
-			//TODO: Replace mapper to service
             var historiesViewModel = _mapper.Map<IEnumerable<HistoryDto>, IEnumerable<HistoryViewModel>>(histories);
 			AllHistoriesViewModel model = new AllHistoriesViewModel
 			{
@@ -90,7 +97,6 @@ namespace smart_home_web.Controllers
 		public IActionResult Graph(GraphViewModel model)
 		{
 			return RedirectToAction("Graph", new { sensorId = model.SensorId, days = model.Days == 0 ? 30 : model.Days });
-		}
-      
+		}      
     }
 }

@@ -1,13 +1,10 @@
 ﻿using Domain.Core.CalculateModel;
 using Domain.Core.Model.Enums;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace smart_home_web.Models.ReportElements
 {
-    public class HeatmapViewModel
+	public class HeatmapViewModel
     {
         public int Id { get; set; }
         public int DashboardId { get; set; }

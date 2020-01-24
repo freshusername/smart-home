@@ -79,7 +79,5 @@ namespace smart_home_web.Controllers
 
             return View(index.EditViewModel);
         }
-
-
     }
 }

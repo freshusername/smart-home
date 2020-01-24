@@ -12,7 +12,5 @@ namespace smart_home_web.Models.ControlSensor
 
         public List<SensorViewModel.SensorViewModel> ControlSensorsView { get; set; }
         public List<SensorViewModel.SensorViewModel> SensorsView { get; set; }
-
-
     }
 }

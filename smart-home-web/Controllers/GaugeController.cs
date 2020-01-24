@@ -48,6 +48,5 @@ namespace smart_home_web.Controllers
                 return Ok(ex.Message);
             }
         }
-
     }
 }

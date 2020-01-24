@@ -30,6 +30,5 @@ namespace smart_home_web.Models.ControlSensor
 
         [DisplayName("Icon")]
         public IFormFile IconFile { get; set; }
-
     }
 }

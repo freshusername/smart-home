@@ -1,11 +1,9 @@
 ﻿using Domain.Core.Model.Enums;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Domain.Core.Model
 {
-    public class SensorType
+	public class SensorType
     {
         public int Id { get; set; }
         public string Name { get; set; }

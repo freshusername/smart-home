@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace smart_home_web.Models
 {
-    public class RegisterViewModel
-
+	public class RegisterViewModel
     {
-
         [Required]
         public string FirstName { get; set; }
 
@@ -31,6 +25,5 @@ namespace smart_home_web.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
-
     }
 }

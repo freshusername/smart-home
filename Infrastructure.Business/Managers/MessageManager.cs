@@ -1,21 +1,16 @@
 ﻿using AutoMapper;
-using Domain.Core.Model.Enums;
 using Domain.Interfaces.Repositories;
-using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.Hubs;
 using Infrastructure.Business.Infrastructure;
 using Infrastructure.Business.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Business.Managers
 {
-    public class MessageManager : BaseManager, IMessageManager
+	public class MessageManager : BaseManager, IMessageManager
     {
         protected readonly IHubContext<MessageHub> messageHub;
 

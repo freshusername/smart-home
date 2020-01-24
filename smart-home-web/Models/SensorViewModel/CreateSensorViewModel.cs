@@ -1,14 +1,10 @@
-﻿using Domain.Core.Model;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace smart_home_web.Models.SensorViewModel
 {
-    public class CreateSensorViewModel
+	public class CreateSensorViewModel
     {
         public int Id { get; set; }
 

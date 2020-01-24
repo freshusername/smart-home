@@ -10,7 +10,7 @@ namespace Infrastructure.Business.Managers
         Task<OperationDetails> Login(UserDTO userDTO);
         Task<ConfirmDto> GetPasswordConfirmationToken(string userName);
         Task<ConfirmDto> GetEmailConfirmationToken(string userName);
-        Task Logout();
         Task<OperationDetails> GoogleAuthentication();
-    }
+		Task Logout();
+	}
 }

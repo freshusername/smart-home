@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Domain.Core.Model;
-using Infrastructure.Business.DTOs.Icon;
 
 namespace Infrastructure.Business.DTOs.Sensor
 {
-    public class SensorDto
+	public class SensorDto
     {
         public int Id { get; set; }
         public string Name { get; set; }

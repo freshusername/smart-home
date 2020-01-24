@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Domain.Core.CalculateModel;
 using Domain.Core.Filters;
 using Domain.Core.Model;
 using Domain.Core.Model.Enums;
-using Domain.Interfaces;
 using Domain.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
-using MySql.Data.MySqlClient;
 
 namespace Infrastructure.Data.Repositories
 {
-    public class HistoryRepo : BaseRepository<History>, IHistoryRepo
+	public class HistoryRepo : BaseRepository<History>, IHistoryRepo
     {
         public HistoryRepo(ApplicationsDbContext context) : base(context)
         {
@@ -66,8 +62,8 @@ namespace Infrastructure.Data.Repositories
 
             string query = $"CALL GetAvgValuesForSensor ({sensorId}, '{d_from}', '{d_to}')";
             var avgValues = await context.AvgSensorValuesPerDays
-                .FromSql(query)
-                .ToListAsync();
+				.FromSql(query)
+				.ToListAsync();
 
 
             return avgValues;
@@ -124,7 +120,7 @@ namespace Infrastructure.Data.Repositories
 
             var res = sorted
                 .Skip(count * (page - 1))
-                 .Take(count);
+                .Take(count);
 
             return await res.ToListAsync();
         }
@@ -138,19 +134,6 @@ namespace Infrastructure.Data.Repositories
                                             .Last();
             return histories;
         }
-
-        //public async Task<double?> GetMinValueAfterDate(int SensorId, DateTimeOffset dateTime)
-        //{
-        //	var histories = await GetHistoriesBySensorId(SensorId);
-        //	double? minvalue = null;
-        //	if (histories.Any())
-        //	{
-        //		minvalue = histories
-        //						.Where(h => h.Date > dateTime)
-        //						.Min(h => (h.DoubleValue.HasValue ? h.DoubleValue : h.IntValue));
-        //	}
-        //	return minvalue;
-        //}
 
         public double? GetMinValueForPeriod(int sensorId, int? hours)
         {
@@ -239,7 +222,6 @@ namespace Infrastructure.Data.Repositories
             }
 
             return maxvalue;
-        }
-       
+        }       
     }
 }

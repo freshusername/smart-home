@@ -62,8 +62,6 @@ namespace Infrastructure.Data.Repositories
                 .ToListAsync();
 
             return sensors;
-        }
-
-       
+        }       
     }
 }
