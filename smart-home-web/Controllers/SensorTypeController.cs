@@ -5,12 +5,14 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Infrastructure.Business.DTOs.SensorType;
 using Infrastructure.Business.Managers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using smart_home_web.Models.SensorType;
 
 namespace smart_home_web.Controllers
 {
+    [Authorize]
     public class SensorTypeController : Controller
     {
         private readonly ISensorTypeManager _sensorTypeManager;
