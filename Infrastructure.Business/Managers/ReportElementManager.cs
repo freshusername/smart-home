@@ -265,7 +265,8 @@ namespace Infrastructure.Business.Managers
                         }
 
                         break;
-                    } else if ((int)reportElement.Hours > 1 && (int)reportElement.Hours <= 24)   
+                    }
+                    else if ((int)reportElement.Hours > 1 && (int)reportElement.Hours <= 24)
                     {
                         var intValues = histories.OrderBy(p => p.Date.LocalDateTime.Hour).GroupBy(p => p.Date.LocalDateTime.Hour).Select(p => new
                         {
@@ -323,7 +324,7 @@ namespace Infrastructure.Business.Managers
                     }
 
                 case MeasurementType.Double:
-                    if ((int)reportElement.Hours == 1) 
+                    if ((int)reportElement.Hours == 1)
                     {
                         var doubleValues = histories.OrderBy(p => p.Date.LocalDateTime.Minute).GroupBy(p => p.Date.LocalDateTime.Minute).Select(p => new
                         {
@@ -350,7 +351,8 @@ namespace Infrastructure.Business.Managers
                         }
 
                         break;
-                    } else if ((int)reportElement.Hours > 1 && (int)reportElement.Hours <= 24)
+                    }
+                    else if ((int)reportElement.Hours > 1 && (int)reportElement.Hours <= 24)
                     {
                         var doubleValues = histories.OrderBy(p => p.Date.LocalDateTime.Hour).GroupBy(p => p.Date.LocalDateTime.Hour).Select(p => new
                         {
@@ -389,7 +391,7 @@ namespace Infrastructure.Business.Managers
 
                         for (int i = 0; i < doubleValues.Count(); i++)
                         {
-                            if (doubleValues.Count() == 1 || i == 0) 
+                            if (doubleValues.Count() == 1 || i == 0)
                             {
                                 columnRange.Dates.Add(doubleValues[i].Date.ToString());
                                 columnRange.MinValues.Add(doubleValues[i].Min.GetValueOrDefault());

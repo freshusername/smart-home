@@ -106,8 +106,6 @@ namespace smart_home_web.AutoMapper
                 .ForAllOtherMembers(c => c.Ignore());
             CreateMap<HeatmapDto, HeatmapViewModel>().ReverseMap();
 
-            CreateMap<AvgSensorValuePerDay, AvgSensorValuePerDayDTO>();
-
             CreateMap<Sensor, ReportElementDto>()
                 .ForMember(gd => gd.SensorId, map => map.MapFrom(s => s.Id))
                 .ForMember(gd => gd.SensorName, map => map.MapFrom(s => s.Name))

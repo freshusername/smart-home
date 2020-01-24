@@ -14,7 +14,7 @@
 {
     <script>
         @{
-            List<decimal?> vals = new List<decimal?>();
+            List<decimal?> avgVals = new List<decimal?>();
             List<DateTime> daysList = new List<DateTime>();
             List<string> weeksList = new List<string>();
             List<string> weekDaysList = new List<string>();
@@ -22,7 +22,7 @@
 
             foreach (var c in Model.AvgSensorValuesPerDays)
             {
-                vals.Add(c.AvgValue);
+                avgVals.Add(c.AvgValue);
                 daysList.Add(c.WeekDay);
                 weekDaysList.Add(c.WeekDay.ToString("dd/MM/yyyy"));
             }
@@ -34,7 +34,7 @@
             {
                 dayOfWeekList.Add(daysList[i].DayOfWeek.ToString());
             }
-            decimal?[] valArray = vals.ToArray();
+            decimal?[] valArray = avgVals.ToArray();
             string[] daysArray = weekDaysList.ToArray();
             string[] weeksArray = weeksList.ToArray();
             string[] dayOfWeekArray = dayOfWeekList.ToArray();
@@ -69,7 +69,8 @@
             },
 
             title: {
-                text: 'Average values for ' + '@Html.Raw(Json.Serialize(Model.SensorName))' + ' for the last @Html.Raw(Json.Serialize((int)Model.Hours / 24)) days'
+                text: 'Averages for ' + '@Html.Raw(Json.Serialize(Model.SensorName))' +
+                        ' over the last @Html.Raw(Json.Serialize((int)Model.Hours / 168)) weeks'
             },
 
             xAxis: {
@@ -129,7 +130,7 @@
             tooltip: {
                 formatter: function () {
                     return '<b>' + '</b><br>' + @Html.Raw(Json.Serialize(Model.SensorName))  +
-                        (this.point.value == undefined ? ' has no data' : ' has average: <b>' + this.point.value) +
+                        (this.point.value == undefined ? ' has no data' : ' has average: <b>' + this.point.value + ' ' + @Html.Raw(Json.Serialize(Model.MeasurementName))) +
                             '</b><br> on <b>' + getPointCategoryName(this.point, 'x') + ', ' +
                                 getDateForValue(this.point.index) + '</b>';
                 }
@@ -192,7 +193,7 @@
 }
 else
 {
-    <h4>No Data for Heatmap for this period of time</h4>                        
+    <h4>No Data for Heatmap for this period of time</h4>
 }
 <script>
     $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
