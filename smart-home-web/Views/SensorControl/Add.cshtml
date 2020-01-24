@@ -2,144 +2,49 @@
 @model AddSensorControlViewModel;
 
 
-<body>
-    <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-6 col-md-offset-3 col-sm-12">
-            <div class="text-center">
-                <label style="font-size:20px">Create new SensorControl element</label>
-            </div>
-            <form asp-action="Add" asp-controller="SensorControl" method="post">
-                <div class="form-group col-lg-6 col-lg-offset-3">
-                    <label class="control-label">SensorControl Name</label>
-                    <input asp-for="Name" value="@Model.Name" />
+<div class="container">
+    <div class="row d-flex justify-content-center">
+        <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+            <form asp-action="Add" asp-controller="SensorControl" role="form">
+                <h2 class="text-center">Add SensorControl</h2>
+                <hr class="colorgraph">
+                <div class="form-group">
+                    <input asp-for="Name" class="form-control input-lg" placeholder="Name" tabindex="3">
                 </div>
-                <div asp-validation-summary="All" class="text-danger text-center" style="margin-top:10px;"></div>
-                <div class="form-group col-lg-6 col-lg-offset-3">
-                    <label class="control-label">Select report element type:</label>
-                    <div style="margin-bottom:50px">
-                        <select id="type-select" asp-for="ControlId" asp-items="@ViewBag.modelControlSensors" class="nice-select">
-                            <option value="none">
-                                Select an Option
-                            </option>
-                        </select>
-                    </div>
+                <div class="form-group">
+                    <select id="type-select" asp-for="ControlId" asp-items="@ViewBag.modelControlSensors" class="form-control">
+                        <option value="">
+                            Select an ControlSensor
+                        </option>
+                    </select>
                 </div>
-                <div class="form-group col-lg-6 col-lg-offset-3">
-                    <label class="control-label">
-                        Select measurement period:
-                    </label>
-                    <div>
-                        <select id="type-select" asp-for="SensorId" asp-items="@ViewBag.modelSensors" class="nice-select">
-                            <option value="none">
-                                Select an Option
-                            </option>
-                        </select>
+                <div class="form-group">
+                    <select id="sensorid" asp-for="SensorId" asp-items="@ViewBag.modelSensors" class="form-control">
+                        <option value="">
+                            Select an Sensor
+                        </option>
+                    </select>
+                </div>
+                <div class="row" id="hide">
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <input asp-for="minValue" class="form-control input-lg" placeholder="Min" tabindex="5">
+                        </div>
                     </div>
-                    <div class="form-group col-lg-6 col-lg-offset-3">
-                        <label class="control-label">SensorControl Name</label>
-                        <input asp-for="minValue" value="" />
-                    </div>
-                    <div class="form-group col-lg-6 col-lg-offset-3">
-                        <label class="control-label">SensorControl Name</label>
-                        <input asp-for="maxValue" value="" />
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <input asp-for="maxValue" class="form-control input-lg" placeholder="Max" tabindex="6">
+                        </div>
                     </div>
                 </div>
-                <div class="form-group text-center col-lg-6 col-lg-offset-3" style="margin-top:30px">
-                    <input type="submit" value="Create" class="btn btn-success text-center" style="width:20%" />
-                    <a asp-controller="SensorControl" asp-action="Index" class="btn btn-primary"><em class="glyphicon glyphicon-arrow-left"></em> Back to dashboard</a>
+                <div class="form-group">
+                    <input type="submit" class="btn btn-success text-center center-block" />
                 </div>
             </form>
         </div>
     </div>
-
-</body>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-@*<hr />
-    <div class="row">
-        <div class="col-md-4">
-            <form asp-action="Edit" enctype="multipart/form-data">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input type="hidden" asp-for="SensorControl.Id" />
-                <div class="form-group">
-                        <label class="control-label"></label>
-                        <input asp-for="EditModel.Name" class="form-control" />
-                        <span asp-validation-for="EditModel.Name" class="text-danger"></span>
-                    </div>
-                <div class="form-group">
-                    <label class="control-label"></label>
-                    <select asp-for="EditModel.ControlId" asp-items="@(new SelectList(Model.ControlSensorsView,"Id","Name"))" class="form-control">
-                        <option value="" selected disabled hidden>
-                            Select an Option
-                        </option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="control-label"></label>
-                    <select asp-for="EditModel.ControlId" asp-items="@(new SelectList(Model.SensorsView,"Id","Name"))" class="form-control">
-                        <option value="none" selected disabled hidden>
-                            Select an Option
-                        </option>
-                    </select>
-                </div>
-                @if (Model.SensorControl.Sensor.SensorType.MeasurementType == Domain.Core.Model.Enums.MeasurementType.Int)
-                {
-                    <div class="form-group">
-                        <label class="control-label"></label>
-                        <div class="col-8"><input asp-for="EditModel.minValue" class="form-control pull-right" /></div>
-                        <div class="col-8"> <input asp-for="EditModel.maxValue" class="form-control pull-left" /></div>
-                        <span asp-validation-for="EditModel.Name" class="text-danger"></span>
-                    </div>
-                }
-                <div class="form-group">
-                        <label asp-for="EditModel.IconFile" class="control-label"></label>
-
-                        @if (Model.EditModel.IconPath != null)
-                        {
-                            <img src="@Model.EditModel.IconPath" width="64" height="64" />
-                        }
-                        else
-                        {
-                            <p>No image was added</p>
-                        }
-
-                        <input asp-for="@Model.EditModel.IconId" type="hidden" />
-                        <input asp-for="EditModel.IconFile" class="form-control" type="file" accept="image/*" />
-                        <span asp-validation-for="EditModel.IconFile" class="text-danger"></span>
-                    </div>
-                <div class="form-group">
-                    <input type="submit" value="Save" class="btn btn-default" />
-                </div>
-            </form>
-        </div>
-    </div>*@
+</div>
+<script src="~/lib/jquery/dist/jquery.js"></script>
 
 @section Scripts {
 

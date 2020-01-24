@@ -11,19 +11,19 @@ namespace Domain.Core.Model
 
         public string Name { get; set; }
 
-        public bool IsActive { get; set; } = false;
+        public bool IsActive { get; set; } 
         
         public int? minValue { get; set; }
 
         public int? maxValue { get; set; }
              
-        public int SensorId { get; set; }
+        public int? SensorId { get; set; }
         public virtual Sensor Sensor { get; set; }
 
-        public int ControlId { get; set; }
+        public int? ControlId { get; set; }
         public virtual Control Control { get; set; }
 
-        public int IconId { get; set; }
+        public int? IconId { get; set; }
         public Icon Icon { get; set; }
      
     }
