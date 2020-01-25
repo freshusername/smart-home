@@ -27,6 +27,7 @@ namespace Infrastructure.Business.Managers
 		OperationDetails Update(SensorDto sensorDto);
         OperationDetails Delete(SensorDto sensorDto);
         OperationDetails AddUnclaimedSensor(Guid token, string value);
+        Task SetActive(int id);
         
     }
 }

@@ -12,6 +12,7 @@ namespace Domain.Core.Model
         public Guid Token { get; set; }
         public DateTimeOffset? CreatedOn { get; set; }
         public bool IsActivated { get; set; }
+        public bool IsActive { get; set; }
 
         public string AppUserId { get; set; }
         public int? SensorTypeId { get; set; }

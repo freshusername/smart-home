@@ -149,5 +149,12 @@ namespace smart_home_web.Controllers
                 return BadRequest();
             return Ok(res);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> SetActive(int id)
+        {
+            await _sensorManager.SetActive(id);
+            return Ok();
+        }
     }
 }

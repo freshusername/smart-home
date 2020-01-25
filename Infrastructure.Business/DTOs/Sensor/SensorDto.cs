@@ -15,5 +15,6 @@ namespace Infrastructure.Business.DTOs.Sensor
         public bool IsActivated { get; set; }
         public string IconPath { get; set; }
         public string SensorTypeName { get; set; }
+        public bool IsActive { get; set; }
     }
 }

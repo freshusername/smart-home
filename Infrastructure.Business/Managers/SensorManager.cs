@@ -161,5 +161,13 @@ namespace Infrastructure.Business.Managers
 
             return result;
         }
+
+        public async Task SetActive(int id)
+        {
+            Sensor sensor = await unitOfWork.SensorRepo.GetById(id);
+            sensor.IsActive = !sensor.IsActive;
+            await unitOfWork.SensorRepo.Update(sensor);
+            unitOfWork.Save();
+        }
     }
 }
