@@ -1,4 +1,4 @@
-using Domain.Core.Model;
+﻿using Domain.Core.Model;
 using Domain.Core.Model.Enums;
 using Infrastructure.Business.DTOs.Notification;
 using Infrastructure.Business.Hubs;
@@ -25,6 +25,7 @@ namespace smart_home_web.Controllers
 		private readonly ISensorManager _sensorManager;
 		private readonly IActionService _actionService;
 		private readonly INotificationManager _notificationManager;
+		private readonly IEmailSender _emailSender;
 		private readonly UserManager<AppUser> _userManager;
 		public ValueController(
 			IMessageManager messageManager, 
@@ -32,7 +33,8 @@ namespace smart_home_web.Controllers
 			ISensorManager sensorManager, 
 			IActionService actionService, 
 			INotificationManager notificationManager, 
-			UserManager<AppUser> userManager)
+			UserManager<AppUser> userManager,
+			IEmailSender emailSender)
 		{
 			_historyManager = historyTestManager;
             _actionService = actionService;
@@ -40,6 +42,7 @@ namespace smart_home_web.Controllers
 			_sensorManager = sensorManager;
 			_notificationManager = notificationManager;
 			_userManager = userManager;
+			_emailSender = emailSender;
 		}
 		[HttpGet("getdata")]
 		public async Task<IActionResult> AddHistory(Guid token, string value)
@@ -85,9 +88,12 @@ namespace smart_home_web.Controllers
         public int GetAction(Guid token)
         {
 			var result = _actionService.CheckStatus(token).Result;
-            if (result.Succeeded) return 1;
-			 
-            return 0;
-        }
+			if (!result.Succeeded)
+				return 0;
+			var sensor = _sensorManager.GetSensorByToken(token);
+            var date = DateTime.Now.ToLocalTime();
+            _emailSender.SendEmailAsync(sensor.User.Email, "🏠Smart home", $"<span style=\"font-size: 20px\">Sensor : <b>{sensor.Name}</b>.<br/>Value : <b>true</b>❗.<br/>Date : {date}</span>");
+			return 1;
+		}
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Core.Model;
+using System;
 
 namespace Infrastructure.Business.DTOs.Sensor
 {
@@ -16,5 +17,6 @@ namespace Infrastructure.Business.DTOs.Sensor
         public string IconPath { get; set; }
         public string SensorTypeName { get; set; }
         public bool IsActive { get; set; }
+        public AppUser User { get; set; }
     }
 }

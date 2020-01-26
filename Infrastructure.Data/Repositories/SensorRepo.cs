@@ -50,6 +50,7 @@ namespace Infrastructure.Data.Repositories
         {
             var sensor = context.Sensors
                                     .Include(s => s.SensorType)
+                                    .Include(s => s.User)
                                 .FirstOrDefault(e => e.Token == token);
 
             return sensor;
