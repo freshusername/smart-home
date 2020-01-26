@@ -23,7 +23,8 @@ namespace Infrastructure.Data.Repositories
             var sensors = await context.Sensors
                 .Include(s => s.SensorType)
                     .ThenInclude(st => st.Icon)
-                .Include(s => s.Icon).ToListAsync();
+                .Include(s => s.Icon)
+                .ToListAsync();
 
             return sensors;
         }
@@ -49,8 +50,8 @@ namespace Infrastructure.Data.Repositories
         public Sensor GetByToken(Guid token)
         {
             var sensor = context.Sensors
-                                    .Include(s => s.SensorType)
-                                .FirstOrDefault(e => e.Token == token);
+                .Include(s => s.SensorType)
+                .FirstOrDefault(e => e.Token == token);
 
             return sensor;
         }
@@ -58,11 +59,11 @@ namespace Infrastructure.Data.Repositories
         public async Task<IEnumerable<Sensor>> GetAllSensorsByUserId(string userId)
         {
             var sensors = await context.Sensors
-                                    .Include(s => s.SensorType)
-                                        .ThenInclude(st => st.Icon)
-                                    .Include(s => s.Icon)
-                                .Where(s => s.AppUserId == userId)
-                                .ToListAsync();
+                    .Include(s => s.SensorType)
+                        .ThenInclude(st => st.Icon)
+                    .Include(s => s.Icon)
+                    .Where(s => s.AppUserId == userId)
+                    .ToListAsync();
 
             return sensors;
         }
@@ -74,6 +75,6 @@ namespace Infrastructure.Data.Repositories
                 .ToListAsync();
 
             return sensors;
-        }       
+        }
     }
 }

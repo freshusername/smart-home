@@ -8,32 +8,34 @@
 
 <div class="row">
     <div class="col">
+        @if (User.Identity.IsAuthenticated)
+        {
+            <a class="btn btn-success text-light text-uppercase"
+               data-toggle="toggle" data-target="#create_elem" id="dash_create_button">
+                <span class="glyphicon glyphicon-plus-sign"></span> Add dashboard
+            </a>
 
-        <a class="btn btn-success text-light text-uppercase"
-           data-toggle="toggle" data-target="#create_elem" id="dash_create_button">
-            <span class="glyphicon glyphicon-plus-sign"></span> Add dashboard
-        </a>
+            <div id="create_elem" class="collapse mr-2">
+                <form data-dash-url="@Url.Action("Create", "Dashboard")" method="post" id="dash_create">
+                    <p>
+                        <input id="form_dash_name" placeholder="Enter name" size="14" maxlength="35" required />
+                        <input id="form_dash_isPublic" size="14" type="checkbox" required />
+                        <input type="submit" value="Add" class="btn btn-primary" />
+                    </p>
 
-        <div id="create_elem" class="collapse mr-2">
-            <form data-dash-url="@Url.Action("Create","Dashboard")" method="post" id="dash_create">
-                <p>
-                    <input id="form_dash_name" placeholder="Enter name" size="14" maxlength="35" required />
-                    <input type="submit" value="Add" class="btn btn-primary" />
-                </p>
-
-            </form>
-        </div>
-
+                </form>
+            </div>
+        }
     </div>
 </div>
+
 <div class="row justify-content-center" style="margin-top:40px;">
 
-    <div id="no_dashboards" class="d-none">
-        <h2>No dashboards</h2>
+    <div id="no_dashboards" class="hidden">
+        <h2>No public dashboards.</h2>
     </div>
 
     <div class="d-flex justify-content-center flex-wrap aligh-content-center" id="dashboards">
-
         @foreach (var dashboard in Model.Dashboards)
         {
             <div class="border m-2 dash_element ">
@@ -130,7 +132,8 @@
             $(".dash_name").show();
             $.ajax({
                 url: $(this).data("dash-url"),
-                data: { name: $("#form_dash_name").val() },
+                data: { name: $("#form_dash_name").val(), isPublic: $("#form_dash_isPublic").val() },
+                //TODO: add isPublic parameter to func
                 error: function (result) {
                     console.log(result);
                 },
