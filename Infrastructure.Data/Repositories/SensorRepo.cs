@@ -70,7 +70,7 @@ namespace Infrastructure.Data.Repositories
         public async Task<IEnumerable<Sensor>> GetSensorsByMeasurementTypeAndUserId(MeasurementType type, string UserId)
         {
             var sensors = await context.Sensors
-                .Where(s => s.SensorType.MeasurementType == type && s.AppUserId == UserId)
+                .Where(s => s.SensorType.MeasurementType == type && s.AppUserId == UserId && s.SensorType.IsControl != true)
                 .ToListAsync();
 
             return sensors;

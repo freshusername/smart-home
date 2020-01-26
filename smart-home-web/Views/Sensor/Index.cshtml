@@ -5,7 +5,7 @@
 @{
     ViewData["Title"] = "Sensors";
 }
-
+<link href="~/css/OnOff.css" rel="stylesheet" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 <h2>Sensors List</h2>
@@ -15,10 +15,10 @@
         <a asp-action="Create" class="btn btn-success">Add new sensor</a>
     </div>
 }
-<table class="table">
+<table class="table"  data-save-url="@Url.Action("SetActive", "Sensor")">
     <thead>
         <tr>
-            <th scope="col">Id</th>
+            <th scope="col">On/Off</th>
             <th scope="col">Icon</th>
             <th scope="col">Sensor</th>
             <th scope="col">Actions</th>
@@ -28,7 +28,13 @@
         @foreach (var sensor in Model)
         {
             <tr>
-                <th scope="row">@sensor.Id</th>
+                <td>
+                    <label class="rocker rocker-small">
+                        <input id="@sensor.Id.ToString()" type="checkbox" @Html.Raw(sensor.IsActive ? "checked" : " ")>
+                        <span class="switch-left">On</span>
+                        <span class="switch-right">Off</span>
+                    </label>
+                </td>
                 <td>
                     @if (sensor.IconPath != null)
                     {
@@ -95,4 +101,16 @@
         $(this).toggleClass('fa fa-eye');
         $(this).toggleClass('fa fa-eye-slash');
     });
+
+    $('input').click(function () {
+        $.ajax({
+            type: 'Post',
+            url: $('table').data('save-url'),
+            data: { id: $(this).attr('id') },
+            success: function () {
+                console.log('changed');
+            }
+        });
+    });
+    
 </script>
