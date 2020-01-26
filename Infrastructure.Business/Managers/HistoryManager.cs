@@ -123,7 +123,7 @@ namespace Infrastructure.Business.Managers
             var sensor = unitOfWork.SensorRepo.GetById(sensorId).Result;
              dynamic valueModel;
 
-            if(sensor.IsActivated)
+            if(sensor.IsValid)
               valueModel = ValueParser.Parse(value , sensor.SensorType.MeasurementType);
             else
               valueModel = ValueParser.Parse(value);
@@ -140,7 +140,7 @@ namespace Infrastructure.Business.Managers
                 history.StringValue = valueModel;
 
 
-            if (!CheckValue(history) || sensor.IsActive == false)
+            if (!CheckValue(history) || sensor.IsValid == false)
                 return new OperationDetails(false, "Operation did not succeed!", "");
 
             unitOfWork.HistoryRepo.Insert(history);

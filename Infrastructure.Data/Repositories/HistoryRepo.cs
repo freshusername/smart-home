@@ -42,12 +42,12 @@ namespace Infrastructure.Data.Repositories
 
         public async Task<int> GetAmountAsync(bool isActivated)
         {
-            return await context.Histories.Where(p => p.Sensor.IsActivated == isActivated).CountAsync();
+            return await context.Histories.Where(p => p.Sensor.IsValid == isActivated).CountAsync();
         }
 
 		public async Task<int> GetAmountAsync(bool isActivated, string userId)
 		{
-			return await context.Histories.Where(p => p.Sensor.IsActivated == isActivated & p.Sensor.AppUserId == userId).CountAsync();
+			return await context.Histories.Where(p => p.Sensor.IsValid == isActivated & p.Sensor.AppUserId == userId).CountAsync();
 		}
 
 		public async Task<IEnumerable<History>> GetHistoriesBySensorId(int SensorId)
@@ -114,7 +114,7 @@ namespace Infrastructure.Data.Repositories
                 .ThenInclude(s => s.SensorType);
 
             if (!isActivated)
-                histories = histories.Where(p => p.Sensor.IsActivated == false);
+                histories = histories.Where(p => p.Sensor.IsValid == false);
 
             if (sensorId != 0)
             {

@@ -101,7 +101,7 @@ namespace Infrastructure.Business.Managers
 
         public OperationDetails AddUnclaimedSensor(Guid token, string value)
         {
-            var sensor = new Sensor { Name = "Unidentified", Token = token, CreatedOn = DateTimeOffset.Now, IsActivated = false };
+            var sensor = new Sensor { Name = "Unidentified", Token = token, CreatedOn = DateTimeOffset.Now, IsValid = false };
 
             if (sensor == null)
                 return new OperationDetails(false, "Operation did not succeed!", "");

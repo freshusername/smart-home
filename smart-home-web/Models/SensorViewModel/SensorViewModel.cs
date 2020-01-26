@@ -9,7 +9,6 @@ namespace smart_home_web.Models.SensorViewModel
         public string Comment { get; set; }
         public Guid Token { get; set; }
         public DateTimeOffset? CreatedOn { get; set; }
-        public bool IsActivated { get; set; }
         public bool IsActive { get; set; }
 
         public int SensorTypeId { get; set; }
