@@ -77,5 +77,13 @@ namespace Infrastructure.Data.Repositories
 
             return sensors;
         }
+        public async Task<IEnumerable<Sensor>> GetSensorControls()
+        {
+            var sensorControls = await context.Sensors
+                .Where(s => s.SensorType.IsControl)
+                .ToListAsync();
+
+            return sensorControls;
+        }       
     }
 }

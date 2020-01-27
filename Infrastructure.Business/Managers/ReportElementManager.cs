@@ -124,6 +124,13 @@ namespace Infrastructure.Business.Managers
             return heatmap;
         }
 
+        public async Task<ReportElementDto> GetOnOffById(int ReportElementId)
+        {
+            ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
+            ReportElementDto onOff = mapper.Map<ReportElement, ReportElementDto>(reportElement);
+            return onOff; 
+        }
+
         public async Task<ReportElementDto> GetWordCloudById(int ReportElementId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
