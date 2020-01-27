@@ -11,6 +11,7 @@ namespace Domain.Core.Model.Enums
         Gauge,
         Heatmap,
         TimeSeries,
-        Wordcloud
+        Wordcloud,
+        OnOff
     }
 }

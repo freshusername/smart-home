@@ -13,6 +13,7 @@ namespace Domain.Interfaces.Repositories
         Task<Sensor> GetSensorById(int id);
         Task<IEnumerable<Sensor>> GetAllSensorsByUserId(string userId);
         Task<IEnumerable<Sensor>> GetSensorsByMeasurementTypeAndUserId(MeasurementType type, string UserId);
+        Task<IEnumerable<Sensor>> GetSensorControls();
 
     }
 }
