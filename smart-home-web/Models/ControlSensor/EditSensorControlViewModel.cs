@@ -19,10 +19,10 @@ namespace smart_home_web.Models.ControlSensor
         public string Name { get; set; }
 
         [Required]
-        public int ControlId { get; set; }
+        public int? ControlId { get; set; }
 
         [Required]
-        public int SensorId { get; set; }
+        public int? SensorId { get; set; }
       
         public int? maxValue { get; set; }
 
