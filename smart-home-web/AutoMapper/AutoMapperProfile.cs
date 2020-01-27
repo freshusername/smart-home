@@ -153,7 +153,7 @@ namespace smart_home_web.AutoMapper
             CreateMap<EditSensorControlViewModel, SensorControlDto>()
             .ForMember(gd => gd.Name, map => map.MapFrom(s => s.Name))
             .ForMember(gd => gd.SensorId, map => map.MapFrom(s => s.SensorId))
-            .ForMember(gd => gd.ControlId, map => map.MapFrom(s => s.ControlSensorId));
+            .ForMember(gd => gd.ControlId, map => map.MapFrom(s => s.ControlId));
             
 
             CreateMap<SensorControlDto, EditSensorControlViewModel>()
