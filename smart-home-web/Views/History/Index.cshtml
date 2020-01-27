@@ -11,70 +11,42 @@
 }
 
 <body class="body-content">
-    <div class="d-flex flex-column align-items-center">
-        <table class="table table-hover table">
-            <thead class="text-center">
-                <tr>
-                    <th scope="col" class=" text-center">
-                        @{
-                            var sensor = (FilterDto)Model.FilterDto.Clone();
-                            sensor.sortState = (sensor.sortState == SortState.HistoryAsc) ? SortState.HistoryDesc : SortState.HistoryAsc;
-                        }
-                        <a href="@Url.Action("Index", "History",
-                                        sensor,
-                                        null)">
-                            Id <i class="glyphicon glyphicon-sort"></i>
-                        </a>
-                    </th>
-                    <th class="text-center">SensorName</th>
-                    <th scope="col" class=" text-center">
-                        @{
-                            var date = (FilterDto)Model.FilterDto.Clone();
-                            date.sortState = (date.sortState == SortState.DateAsc) ? SortState.DateDesc : SortState.DateAsc;
-                        }
-                        <a href="@Url.Action("Index", "History",
-                                        date,
-                                        null)">
-                            Date <i class="glyphicon glyphicon-sort"></i>
-                        </a>
-                    </th>
-                    <th class="text-center">Value</th>
-                    <th class="text-center">MeasurementUnit</th>
-                </tr>
-            </thead>
-            <tbody class="text-center">
-                @foreach (var history in Model.Histories)
-                {
-                    <tr>
-                        <td>@history.Id</td>
-                        <td>
-                            <a asp-controller="History" asp-action="Detail" asp-route-sensorId="@history.SensorId">
-                                @history.SensorName
-                            </a>
-                        </td>
-                        <td>@history.Date.UtcDateTime.ToLocalTime()</td>
-
-                        @{
-                            if (history.Value.ToString() == "False")
-                            {
-                                <td>Inactive</td>
-                            }
-                            else if (history.Value.ToString() == "True")
-                            {
-                                <td>Active</td>
-                            }
-                            else
-                            {
-                                <td>@history.Value</td>
-                            }
-                        }
-                        <td>@history.MeasurementName</td>
-                    </tr>
-                }
-            </tbody>
-
-        </table>
-        <br />
-        @await Component.InvokeAsync("Pagination", new { action = "Index", controller = "History", filterDto = Model.FilterDto })
+    @*filters*@
+    <div class="text-center">
+        Last values <input type="checkbox" id="checkboxLastValues" />
+        Invalid sensors <input type="checkbox" id="checkboxInvalidSensors" />
     </div>
+    <div id="table_data">
+        @await Component.InvokeAsync("History", new { model = Model })
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+
+    <script>
+        $(function () {
+            $("#checkboxLastValues, #checkboxInvalidSensors").click(function () {
+                UpdateHistoryTable();
+            });
+
+            function UpdateHistoryTable() {
+                $.ajax({
+                    url:"@Url.Action("UpdateHistoryTable", "History")",
+                    data: {
+                        FilterDTO: JSON.parse('@Html.Raw(Json.Serialize(@Model.FilterDto))'),
+                        isActivated: $("#checkboxInvalidSensors").prop('checked'),
+                        onlyLast: $("#checkboxLastValues").prop('checked')
+                    },
+                    error: function (res) {
+                        console.log(res);
+                    },
+                    success: function (data) {
+                        $("#table_data").html(data);
+                    }
+                });
+            }
+        });
+
+
+
+    </script>
 </body>
