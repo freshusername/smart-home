@@ -3,7 +3,10 @@ using Domain.Core.CalculateModel;
 using Domain.Core.Model;
 using Domain.Core.Model.Enums;
 using Domain.Interfaces.Repositories;
+using Infrastructure.Business.DTOs.History;
 using Infrastructure.Business.DTOs.ReportElements;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +17,12 @@ namespace Infrastructure.Business.Managers
     public class ReportElementManager : BaseManager, IReportElementManager
     {
         protected readonly IHistoryManager historyManager;
+        private readonly UserManager<AppUser> _userManager;
 
-        public ReportElementManager(IHistoryManager historyManager, IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
+        public ReportElementManager(IHistoryManager historyManager, IUnitOfWork unitOfWork, UserManager<AppUser> userManager, IMapper mapper) : base(unitOfWork, mapper)
         {
             this.historyManager = historyManager;
+            _userManager = userManager;
         }
 
         public async Task<ReportElement> GetById(int id)
@@ -406,6 +411,13 @@ namespace Infrastructure.Business.Managers
             result.IsLocked = !reportElement.IsLocked;
             await unitOfWork.ReportElementRepo.Update(result);
             unitOfWork.Save();
+        }
+
+        [Authorize]
+        public Task<IEnumerable<HistoryDto>> GetStatusReport()
+        {
+            //var sensors = unitOfWork.SensorRepo.GetAllSensorsByUserId(_userManager.GetUserId(User)) 
+            return null;
         }
     }
 }

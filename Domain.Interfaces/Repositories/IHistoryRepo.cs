@@ -19,7 +19,7 @@ namespace Domain.Interfaces.Repositories
         int? GetIntMinValueForPeriod(int sensorId, int? minutes);
         int? GetIntMaxValueForPeriod(int sensorId, int? minutes);
 
-        Task<IEnumerable<History>> GetByPage(int count, int page, SortState sortState, bool isActivated, bool onlyLast, int sensorId = 0);
+        Task<IEnumerable<History>> GetByPage(int count, int page, SortState sortState, bool isActivated, int sensorId = 0);
         Task<IEnumerable<History>> GetHistoriesBySensorIdAndDate(int SensorId, DateTimeOffset date);
         Task<IEnumerable<History>> GetHistoriesBySensorIdAndDatePeriod(int SensorId, DateTime dateFrom, DateTime dateTo);
         Task<IEnumerable<AvgSensorValuePerDay>> GetAvgSensorsValuesPerDays(int sensorId, DateTime dateFrom, DateTime dateTo);

@@ -35,9 +35,9 @@ namespace Infrastructure.Business.Managers
             return result;
         }
 
-		public async Task<IEnumerable<HistoryDto>> GetHistoriesAsync(int count, int page, SortState sortState, bool IsActivated, bool onlyLast, int sensorId = 0)
+		public async Task<IEnumerable<HistoryDto>> GetHistoriesAsync(int count, int page, SortState sortState, bool IsActivated, int sensorId = 0)
 		{
-            var histories = await unitOfWork.HistoryRepo.GetByPage(count, page, sortState, IsActivated, onlyLast, sensorId);
+            var histories = await unitOfWork.HistoryRepo.GetByPage(count, page, sortState, IsActivated, sensorId);
 			
 			var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories);
 

@@ -13,9 +13,9 @@
 <body class="body-content">
     @*filters*@
     <div class="text-center">
-        Last values <input type="checkbox" id="checkboxLastValues" />
         Invalid sensors <input type="checkbox" id="checkboxInvalidSensors" />
     </div>
+    <br />
     <div id="table_data">
         @await Component.InvokeAsync("History", new { model = Model })
     </div>
@@ -24,7 +24,7 @@
 
     <script>
         $(function () {
-            $("#checkboxLastValues, #checkboxInvalidSensors").click(function () {
+            $("#checkboxInvalidSensors").click(function () {
                 UpdateHistoryTable();
             });
 

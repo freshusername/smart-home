@@ -36,44 +36,34 @@ namespace smart_home_web.Controllers
 			_userManager = userManager;
 		}
 
-        public async Task<IActionResult> Index(FilterDto FilterDTO, bool isActivated = true, bool onlyLast = false)
+        public async Task<IActionResult> Index(FilterDto FilterDTO, bool isActivated = true)
 		{
-            var histories = await _historyManager.GetHistoriesAsync(FilterDTO.PageSize, FilterDTO.CurrentPage, FilterDTO.sortState, isActivated, onlyLast);
-			//var userId = _userManager.GetUserId(User);
-			//histories = histories.Where(h => h.UserId == userId);
-			//FilterDTO.Amount = await _historyManager.GetAmountOfUserHistoriesAsync(true, userId);
-			
-            var historiesViewModel = _mapper.Map<IEnumerable<HistoryDto>, IEnumerable<HistoryViewModel>>(histories);
-			AllHistoriesViewModel model = new AllHistoriesViewModel
-			{
-				Histories = historiesViewModel,
-				FilterDto = FilterDTO
-			};
-
-
-			return View(!isActivated ? "InvalidSensors" : "Index", model);
+            return View(!isActivated ? "InvalidSensors" : "Index", await GetHistories(FilterDTO, isActivated));
 		}
 
-        public async Task<IActionResult> UpdateHistoryTable(FilterDto FilterDTO, bool isActivated = true, bool onlyLast = false)
+        public async Task<IActionResult> UpdateHistoryTable(FilterDto FilterDTO, bool isActivated)
         {
-            var histories = await _historyManager.GetHistoriesAsync(FilterDTO.PageSize, FilterDTO.CurrentPage, FilterDTO.sortState, isActivated, onlyLast);
-            //var userId = _userManager.GetUserId(User);
-            //histories = histories.Where(h => h.UserId == userId);
-            //FilterDTO.Amount = await _historyManager.GetAmountOfUserHistoriesAsync(true, userId);
+            return ViewComponent("History", new { model = await GetHistories(FilterDTO, isActivated) });
+        }
+
+        private async Task<AllHistoriesViewModel> GetHistories(FilterDto FilterDTO, bool isActivated = true)
+        {
+            var histories = await _historyManager.GetHistoriesAsync(FilterDTO.PageSize, FilterDTO.CurrentPage, FilterDTO.sortState, isActivated);
+            string userId = _userManager.GetUserId(User);
+            histories = histories.Where(h => h.UserId == userId);
+            FilterDTO.Amount = await _historyManager.GetAmountOfUserHistoriesAsync(true, userId);
 
             var historiesViewModel = _mapper.Map<IEnumerable<HistoryDto>, IEnumerable<HistoryViewModel>>(histories);
-            AllHistoriesViewModel model = new AllHistoriesViewModel
+            return new AllHistoriesViewModel
             {
                 Histories = historiesViewModel,
                 FilterDto = FilterDTO
             };
-
-            return ViewComponent("History", new { model = model });
         }
 
 		public async Task<IActionResult> Detail(FilterDto FilterDTO)
 		{
-			var histories = await _historyManager.GetHistoriesAsync(FilterDTO.PageSize, FilterDTO.CurrentPage, FilterDTO.sortState, true, false, FilterDTO.sensorId);
+			var histories = await _historyManager.GetHistoriesAsync(FilterDTO.PageSize, FilterDTO.CurrentPage, FilterDTO.sortState, true, FilterDTO.sensorId);
 			
 			var result = _mapper.Map<IEnumerable<HistoryDto>, IEnumerable<HistoryViewModel>>(histories);
 
