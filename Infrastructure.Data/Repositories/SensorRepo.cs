@@ -23,7 +23,8 @@ namespace Infrastructure.Data.Repositories
             var sensors = await context.Sensors
                 .Include(s => s.SensorType)
                     .ThenInclude(st => st.Icon)
-                .Include(s => s.Icon).ToListAsync();
+                .Include(s => s.Icon)
+                .ToListAsync();
 
             return sensors;
         }
@@ -59,11 +60,11 @@ namespace Infrastructure.Data.Repositories
         public async Task<IEnumerable<Sensor>> GetAllSensorsByUserId(string userId)
         {
             var sensors = await context.Sensors
-                                    .Include(s => s.SensorType)
-                                        .ThenInclude(st => st.Icon)
-                                    .Include(s => s.Icon)
-                                .Where(s => s.AppUserId == userId)
-                                .ToListAsync();
+                    .Include(s => s.SensorType)
+                        .ThenInclude(st => st.Icon)
+                    .Include(s => s.Icon)
+                    .Where(s => s.AppUserId == userId)
+                    .ToListAsync();
 
             return sensors;
         }
@@ -75,6 +76,6 @@ namespace Infrastructure.Data.Repositories
                 .ToListAsync();
 
             return sensors;
-        }       
+        }
     }
 }

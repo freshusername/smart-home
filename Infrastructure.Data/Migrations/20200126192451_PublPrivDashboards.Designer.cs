@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationsDbContext))]
-    [Migration("20200125171714_migration")]
-    partial class migration
+    [Migration("20200126192451_PublPrivDashboards")]
+    partial class PublPrivDashboards
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -87,6 +87,8 @@ namespace Infrastructure.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("AppUserId");
+
+                    b.Property<bool>("IsPublic");
 
                     b.Property<string>("Name");
 

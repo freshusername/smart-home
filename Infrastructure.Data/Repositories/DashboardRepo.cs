@@ -10,31 +10,42 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Data.Repositories
 {
-	public class DashboardRepo : BaseRepository<Dashboard>, IDashboardRepo
-	{
-		public DashboardRepo(ApplicationsDbContext context) : base(context)
-		{
+    public class DashboardRepo : BaseRepository<Dashboard>, IDashboardRepo
+    {
+        public DashboardRepo(ApplicationsDbContext context) : base(context)
+        {
 
-		}
+        }
 
-		public override async Task<IEnumerable<Dashboard>> GetAll()
-		{
-			return await context.Dashboards
-				.Include(d => d.AppUser)
-				.Include(d => d.ReportElements).ToListAsync();
-		}
+        public override async Task<IEnumerable<Dashboard>> GetAll()
+        {
+            return await context.Dashboards
+                .Include(d => d.AppUser)
+                .Include(d => d.ReportElements).ToListAsync();
+        }
 
-		public override async Task DeleteById(int id)
-		{
-			context.Dashboards.Remove(await GetById(id));
-		}
+        public override async Task DeleteById(int id)
+        {
+            context.Dashboards.Remove(await GetById(id));
+        }
 
-		public override async Task<Dashboard> GetById(int id)
-		{
-			return await context.Dashboards
-				.Include(d => d.AppUser)
-				.Include(d => d.ReportElements)
-				.FirstOrDefaultAsync(s => s.Id == id);
-		}
-	}
+        public override async Task<Dashboard> GetById(int id)
+        {
+            return await context.Dashboards
+                .Include(d => d.AppUser)
+                .Include(d => d.ReportElements)
+                .FirstOrDefaultAsync(s => s.Id == id);
+        }
+
+        public async Task<IEnumerable<Dashboard>> GetAllPublic(string userId)
+        {
+            var dashs = await context.Dashboards
+                   .Include(d => d.AppUser)
+                        .Where(i => i.IsPublic == true && i.AppUserId != userId)
+                   .Include(d => d.ReportElements)
+                   .ToListAsync();
+
+            return dashs;
+        }
+    }
 }

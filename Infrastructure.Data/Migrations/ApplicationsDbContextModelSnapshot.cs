@@ -86,6 +86,8 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<string>("AppUserId");
 
+                    b.Property<bool>("IsPublic");
+
                     b.Property<string>("Name");
 
                     b.HasKey("Id");
