@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Business.Services
 {
-	public class ActionService : IActionService
+    public class ActionService : IActionService
     {
 
         private readonly IUnitOfWork _db;
@@ -19,65 +19,71 @@ namespace Infrastructure.Business.Services
 
         public async Task<OperationDetails> CheckStatus(Guid token)
         {
-            var data = await _db.SensorControlRepo.GetByToken(token);          
-             if (data == null || data.Count() == 0) return new OperationDetails(false, "", "");
-           
-                foreach (var item in data)
-                { 
-                    if(item.IsActive)
-                    {
-                      var result = Verification(item.SensorId.Value, item.minValue,item.maxValue);
-                       if (result) return new OperationDetails(true, "", "");
-                    }
+            var data = await _db.SensorControlRepo.GetByToken(token);
+            if (data == null || data.Count() == 0) return new OperationDetails(false, "", "");
+
+            foreach (var item in data)
+            {
+                if (item.IsActive && item.Sensor.SensorType.MeasurementType == MeasurementType.Bool)
+                {
+                    var result = BoolVerification(item.SensorId.Value);
+                    if (result) return new OperationDetails(true, "", "");
                 }
-                     
-            return new OperationDetails(false , "" , "");
+                if (item.IsActive && item.Sensor.SensorType.MeasurementType == MeasurementType.Int)
+                {
+                    var result = IntVerification(item.SensorId.Value, item.minValue, item.maxValue);
+                    if (result) return new OperationDetails(true, "", "");
+                }
+            }
+
+            return new OperationDetails(false, "", "");
         }
 
-        private bool Verification(int sensorId, int? minValue, int? maxValue)
+        private bool BoolVerification(int sensorId)
         {
-            var sensor = _db.SensorRepo.GetById(sensorId).Result;
-             var seconds = DateTimeOffset.Now.AddSeconds(-4);
+
+            var seconds = DateTimeOffset.Now.AddSeconds(-4);
+
+            var lastHistory = _db.HistoryRepo.GetLastHistoryBySensorIdAndDate(sensorId, seconds);
+            if (lastHistory == null) return false;
+            if (lastHistory.BoolValue.Value) return true;
+
+            return false;
+        }
+
+        private bool IntVerification(int sensorId , int? minValue , int? maxValue)
+        {
+          
             var period = 5;
 
-            switch (sensor.SensorType.MeasurementType)
+            if (minValue != null && maxValue != null)
             {
-                case MeasurementType.Bool:
-                    var lastHistory = _db.HistoryRepo.GetLastHistoryBySensorIdAndDate(sensorId, seconds);
-                     if (lastHistory == null) return false;
+                var min = _db.HistoryRepo.GetIntMinValueForPeriod(sensorId, period);
+                if (min == null) return false;
 
-                    if (lastHistory.BoolValue.Value) return true;
-                break;
+                var max = _db.HistoryRepo.GetIntMaxValueForPeriod(sensorId, period);
+                if (max == null) return false;
 
-                case MeasurementType.Int:
-                    if (minValue != null && maxValue != null)
-                    {
-                        var min = _db.HistoryRepo.GetIntMinValueForPeriod(sensorId, period);
-                         if (min == null) return false;
+                if (min.Value <= minValue || max.Value >= maxValue) return true;
+            }
+            else if (minValue != null)
+            {
+                var min = _db.HistoryRepo.GetIntMinValueForPeriod(sensorId, period);
+                if (min == null) return false;
 
-                        var max = _db.HistoryRepo.GetIntMaxValueForPeriod(sensorId, period);
-                         if (max == null) return false;
+                if (min.Value <= minValue) return true;
+            }
+            else if (maxValue != null)
+            {
+                var max = _db.HistoryRepo.GetIntMaxValueForPeriod(sensorId, period);
+                if (max == null) return false;
 
-                        if (min.Value <= minValue || max.Value >= maxValue) return true;
-                    }
-                    else if (minValue != null)
-                    {
-                        var min = _db.HistoryRepo.GetIntMinValueForPeriod(sensorId, period);
-                         if (min == null) return false;
-
-                        if (min.Value <= minValue) return true;
-                    }
-                    else if (maxValue != null)
-                    {
-                        var max = _db.HistoryRepo.GetIntMaxValueForPeriod(sensorId, period);
-                         if (max == null) return false;
-
-                        if (max.Value <= minValue) return true;
-                    }
-                break;
+                if (max.Value <= minValue) return true;
             }
 
             return false;
         }
+
     }
+    
 }
