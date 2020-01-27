@@ -4,7 +4,7 @@
 <div class="col-lg-3 dash_id h-100 " data-dash-id="@Model.Id.ToString()">
     <div class="text-center p-2 h-100 d-flex flex-column justify-content-between" style="width: 18rem;">
         <div>
-            @if (User.Identity.IsAuthenticated && User.Claims.ElementAt(2).ToString() == Model.DashCreatorUserName)
+            @if (User.Identity.IsAuthenticated && User.Claims.ElementAt(1).Value == Model.DashCreatorUserName)
             {
                 <a href="#" class="dash_remove float-right"
                    data-dash-url="@Url.Action("Delete", "Dashboard")">
@@ -16,7 +16,7 @@
 
         </div>
         <div>
-            @if (User.Identity.IsAuthenticated && User.Claims.ElementAt(2).ToString() == Model.DashCreatorUserName)
+            @if (User.Identity.IsAuthenticated && User.Claims.ElementAt(1).Value == Model.DashCreatorUserName)
             {
                 <div class="dash_name_edit mb-2" style="display:none;">
                     <form data-dash-url="@Url.Action("Edit", "Dashboard")" method="post" class="form_edit_name">

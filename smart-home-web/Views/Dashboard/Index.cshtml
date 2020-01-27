@@ -19,10 +19,10 @@
                 <form data-dash-url="@Url.Action("Create", "Dashboard")" method="post" id="dash_create">
                     <p>
                         <input id="form_dash_name" placeholder="Enter name" size="14" maxlength="35" required />
-                        <input id="form_dash_isPublic" size="14" type="checkbox" required />
+                        <label for="form_dash_isPublic">public</label>
+                        <input id="form_dash_isPublic" size="14" type="checkbox" />
                         <input type="submit" value="Add" class="btn btn-primary" />
                     </p>
-
                 </form>
             </div>
         }
@@ -42,7 +42,6 @@
                 @await Component.InvokeAsync("Dashboard", new { model = dashboard })
             </div>
         }
-
     </div>
 
 </div>
@@ -132,8 +131,7 @@
             $(".dash_name").show();
             $.ajax({
                 url: $(this).data("dash-url"),
-                data: { name: $("#form_dash_name").val(), isPublic: $("#form_dash_isPublic").val() },
-                //TODO: add isPublic parameter to func
+                data: { name: $("#form_dash_name").val(), isPublic: $("#form_dash_isPublic").prop('checked') },
                 error: function (result) {
                     console.log(result);
                 },
@@ -158,7 +156,6 @@
             });
 
         }
-
 
         $("#dash_create_button").click(toggle_icon);
         $("[data-toggle='toggle']").click(collapse_button);
