@@ -107,6 +107,8 @@ namespace Infrastructure.Data.DbInitialize
                     await _unitOfWork.IconRepo.Insert(i);
                 }
             }
+
+            _unitOfWork.Save();
         }
 
         public async Task SeedSensorTypes()
@@ -133,6 +135,8 @@ namespace Infrastructure.Data.DbInitialize
                     await _unitOfWork.SensorTypeRepo.Insert(st);
                 }
             }
+
+            _unitOfWork.Save();
         }
 
         public async Task SeedSensors()
@@ -163,10 +167,12 @@ namespace Infrastructure.Data.DbInitialize
                 foreach (var s in sensorsInsert)
                 {
                     await _unitOfWork.SensorRepo.Insert(s);
+                    _unitOfWork.Save();
                 }
             }
-        }
 
+            _unitOfWork.Save();
+        }
 
         protected virtual void Dispose(bool disposing)
         {
@@ -176,8 +182,8 @@ namespace Infrastructure.Data.DbInitialize
             if (disposing)
             {
                 _handle.Dispose();
-                // Free any other managed objects here.
-                //
+                //Free any other managed objects here.
+
             }
 
             _disposed = true;
@@ -186,7 +192,7 @@ namespace Infrastructure.Data.DbInitialize
         public void Dispose()
         {
             Dispose(true);
-            // Suppress finalization.
+            //Suppress finalization.
             GC.SuppressFinalize(this);
         }
     }
