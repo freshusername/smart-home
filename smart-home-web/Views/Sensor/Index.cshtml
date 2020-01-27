@@ -15,7 +15,7 @@
         <a asp-action="Create" class="btn btn-success">Add new sensor</a>
     </div>
 }
-<table class="table"  data-save-url="@Url.Action("SetActive", "Sensor")">
+<table class="table" data-save-url="@Url.Action("SetActive", "Sensor")">
     <thead>
         <tr>
             <th scope="col">On/Off</th>
@@ -55,7 +55,7 @@
                         <h5>Created: @sensor.CreatedOn.Value.UtcDateTime.ToString("dd/MM/yyyy on HH:mm")</h5>
                         <h5>Comment: @sensor.Comment</h5>
                         <h5>
-                            Activated: <i class="fa @(@sensor.IsActivated ? "fa-check-circle" : "fa-times-circle")"></i>
+                            Activated: <i class="fa @(@sensor.IsValid ? "fa-check-circle" : "fa-times-circle")"></i>
                         </h5>
                         <h5>Token: @sensor.Token</h5>
 
@@ -112,5 +112,5 @@
             }
         });
     });
-    
+
 </script>

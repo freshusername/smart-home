@@ -21,10 +21,10 @@ namespace smart_home_web
                 var services = scope.ServiceProvider;
                 try
                 {
-                    var userManager = services.GetRequiredService<UserManager<AppUser>>();
-                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-					var unitOfWork = services.GetRequiredService<IUnitOfWork>();
-                    DbInitializer.SeedData(userManager, roleManager);
+                    using (var dbInitializer = new DbInitializer(services))
+                    {
+                        dbInitializer.SeedData().Wait();
+                    }
                 }
                 catch (Exception ex)
                 {
