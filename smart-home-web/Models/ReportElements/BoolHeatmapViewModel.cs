@@ -23,6 +23,6 @@ namespace smart_home_web.Models.ReportElements
         public string MeasurementName { get; set; }
 
         public List<string> Dates { get; set; }
-        public List<BoolValuePerHour> BoolValuesPerHours { get; set; }
+        public List<BoolValuePercentagePerHour> BoolValuePercentagesPerHours { get; set; }
     }
 }

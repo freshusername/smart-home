@@ -8,11 +8,40 @@
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
 <figure class="highcharts-figure">
-    <div id=@("Heatmap" + Model.Id.ToString())></div>
+    <div id=@("BoolHeatmap" + Model.Id.ToString())></div>
 </figure>
 @if (Model.IsCorrect)
 {
     <script>
+        @{
+            List<DateTime> daysList = new List<DateTime>();
+            List<int?> hoursList = new List<int?>();
+            List<int> trueFalseCounts = new List<int>();
+            List<int> trueCounts = new List<int>();
+            List<decimal?> truePercentages = new List<decimal?>();
+            List<string> hoursPeriods = new List<string>();
+            List<string> timesOfDayList = new List<string>();
+
+            foreach (var tp in Model.BoolValuePercentagesPerHours)
+            {
+                truePercentages.Add(tp.TruePercentage);
+                hoursList.Add(tp.HourTime);
+            }
+
+            for (int i = 0; i < 24; i += 6)
+            {
+                hoursPeriods.Add(hoursList[i].ToString() + " - " + hoursList[i + 5].ToString());
+            }
+
+            for (int i = 0; i < 24; i += 4)
+            {
+                timesOfDayList.Add(hoursList[i].ToString()); //TODO: fix
+            }
+
+            decimal?[] valArray = truePercentages.ToArray();
+            string[] hoursPeriodsArray = hoursPeriods.ToArray();
+            string[] timesOfDayArray = timesOfDayList.ToArray();
+        }
 
         function getPointCategoryName(point, dimension) {
             var series = point.series,
@@ -21,17 +50,18 @@
             return axis.categories[point[isY ? 'y' : 'x']];
         }
 
-        function getDateForValue(index) {
-            var currDate = '';
+        var arr = @Html.Raw(Json.Serialize(hoursList));
+        function getHourForValue(index) {
+            var hourTime = '';
                 for (var i = 0; i < arr.length; i++) {
                     if (i == index) {
-                         currDate =  arr[i];
+                         hourTime =  arr[i];
                     }
                 }
-            return currDate;
+            return hourTime;
         }
 
-        Highcharts.chart("Heatmap"+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
+        Highcharts.chart("BoolHeatmap"+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
 
             chart: {
                 type: 'heatmap',
@@ -41,18 +71,32 @@
             },
 
             title: {
-                text: 'Averages for ' + '@Html.Raw(Json.Serialize(Model.SensorName))' +
-                        ' over the last @Html.Raw(Json.Serialize((int)Model.Hours / 168)) weeks'
+                text: 'True percentage for ' + '@Html.Raw(Json.Serialize(Model.SensorName))' +
+                        ' on *Particular date* '
             },
 
             xAxis: {
                 categories:
-                    []
+                    [
+                        @for (int i = 0; i < timesOfDayArray.Length; i++)
+                        {
+                            <text>
+                                @Html.Raw(Json.Serialize(timesOfDayArray[i])) ,
+                            </text>
+                        }
+                    ]
             },
 
             yAxis: {
                 categories:
-                    [],
+                    [
+                        @for (int i = 0; i < hoursPeriodsArray.Length; i++)
+                        {
+                            <text>
+                                @Html.Raw(Json.Serialize(hoursPeriodsArray[i])) ,
+                            </text>
+                        }
+                    ],
 
                 title: null,
                 reversed: true
@@ -88,17 +132,26 @@
             tooltip: {
                 formatter: function () {
                     return '<b>' + '</b><br>' + @Html.Raw(Json.Serialize(Model.SensorName))  +
-                        (this.point.value == undefined ? ' has no data' : ' has average: <b>' + this.point.value + ' ' + @Html.Raw(Json.Serialize(Model.MeasurementName))) +
-                            '</b><br> on <b>' + getPointCategoryName(this.point, 'x') + ', ' +
-                                getDateForValue(this.point.index) + '</b>';
+                        (this.point.value == undefined ? ' has no bool data' : ' has true percentage: <b>' + this.point.value + "% ") +
+                            '</b><br> at <b>' + getPointCategoryName(this.point, 'x') + ', ' +
+                             (getHourForValue(this.point.index) == undefined ? ' uncorr res of func' : getHourForValue(this.point.index)) + ' </b>';
                 }
             },
 
             series: [{
-                name: 'Average sensor values per weekday',
+                name: 'True percentage per hours for bool sensor',
                 borderWidth: 1,
                 data: [
-                    
+                    @{int h = 0;}
+                    @for (int i = 0; i < 4; i++)
+                    {
+                        @for (int j = 0; j < 6; j++)
+                        {
+                            <text>
+                                [@Html.Raw(Json.Serialize(j)), @Html.Raw(Json.Serialize(i)), @Html.Raw(Json.Serialize(valArray[h++]))],
+                            </text>
+                        }
+                    }
                 ],
 
                 dataLabels: {
@@ -142,11 +195,11 @@
 }
 else
 {
-    <h4>No Data for heatmap for this period of time</h4>
+    <h4>No Data for bool heatmap for this period of time</h4>
 }
 <script>
     $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
-        var type = 'Heatmap';
+        var type = 'BoolHeatmap';
         try {
             var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
         }

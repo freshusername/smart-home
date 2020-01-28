@@ -7,7 +7,7 @@ using Domain.Core.CalculateModel;
 
 namespace Infrastructure.Data
 {
-	public class ApplicationsDbContext : IdentityDbContext<AppUser>
+    public class ApplicationsDbContext : IdentityDbContext<AppUser>
     {
         public DbSet<Sensor> Sensors { get; set; }
         public DbSet<Icon> Icons { get; set; }
@@ -20,7 +20,7 @@ namespace Infrastructure.Data
         public DbSet<Control> Controls { get; set; }
         public DbSet<SensorControl> SensorControls { get; set; }
         public DbQuery<AvgSensorValuePerDay> AvgSensorValuesPerDays { get; set; }
-        public DbQuery<BoolValuePerHour> BoolValuesPerHours { get; set; }
+        public DbQuery<BoolValuePercentagePerHour> BoolValuePercentagesPerHours { get; set; }
 
         public ApplicationsDbContext(DbContextOptions<ApplicationsDbContext> options) : base(options)
         {

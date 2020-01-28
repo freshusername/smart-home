@@ -73,19 +73,18 @@ namespace Infrastructure.Data.Repositories
             return avgValues;
         }
 
-        public async Task<IEnumerable<BoolValuePerHour>> GetBoolValuesPerHours
-            (int sensorId, DateTime date)
+        public async Task<IEnumerable<BoolValuePercentagePerHour>> GetBoolValuePercentagesPerHours
+            (int sensorId, DateTime dateFrom, DateTime dateTo)
         {
-            var d = date.ToString("yyyy-MM-dd");
-            var hoursFrom = date.ToString("");
-            //var hoursTo = 
+            var d_from = dateFrom.ToString("yyyy-MM-dd");
+            var d_to = dateTo.ToString("yyyy-MM-dd");
 
-            string query = $"CALL GetBoolValuesPerHours ({sensorId}, '{d}')";
-            var boolValues = await context.BoolValuesPerHours
+            string query = $"CALL GetTruePercentagePerHours ({sensorId}, '{d_from}', '{d_to}')";
+            var truePercentages = await context.BoolValuePercentagesPerHours
                 .FromSql(query)
                 .ToListAsync();
 
-            return boolValues;
+            return truePercentages;
         }
 
 

@@ -21,6 +21,6 @@ namespace Infrastructure.Business.DTOs.ReportElements
         public MeasurementType MeasurementType { get; set; }
         public string MeasurementName { get; set; }
 
-        public List<BoolValuePerHour> BoolValuesPerHours { get; set; }
+        public List<BoolValuePercentagePerHour> BoolValuePercentagesPerHours { get; set; }
     }
 }
