@@ -51,7 +51,6 @@ namespace Infrastructure.Data.Repositories
         {
             var sensor = context.Sensors
                                     .Include(s => s.SensorType)
-                                    .Include(s => s.User)
                                 .FirstOrDefault(e => e.Token == token);
 
             return sensor;
@@ -73,6 +72,15 @@ namespace Infrastructure.Data.Repositories
         {
             var sensors = await context.Sensors
                 .Where(s => s.SensorType.MeasurementType == type && s.AppUserId == UserId && s.SensorType.IsControl != true)
+                .ToListAsync();
+
+            return sensors;
+        }
+        
+        public async Task<IEnumerable<Sensor>> GetSensorControlsByMeasurementTypeAndUserId(MeasurementType type, string UserId)
+        {
+            var sensors = await context.Sensors
+                .Where(s => s.SensorType.MeasurementType == type && s.AppUserId == UserId && s.SensorType.IsControl != false)
                 .ToListAsync();
 
             return sensors;
