@@ -1,0 +1,160 @@
+﻿@model smart_home_web.Models.ReportElements.BoolHeatmapViewModel;
+@using Domain.Core.Model.Enums;
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/heatmap.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+<figure class="highcharts-figure">
+    <div id=@("Heatmap" + Model.Id.ToString())></div>
+</figure>
+@if (Model.IsCorrect)
+{
+    <script>
+
+        function getPointCategoryName(point, dimension) {
+            var series = point.series,
+                isY = dimension === 'y',
+                axis = series[isY ? 'yAxis' : 'xAxis'];
+            return axis.categories[point[isY ? 'y' : 'x']];
+        }
+
+        function getDateForValue(index) {
+            var currDate = '';
+                for (var i = 0; i < arr.length; i++) {
+                    if (i == index) {
+                         currDate =  arr[i];
+                    }
+                }
+            return currDate;
+        }
+
+        Highcharts.chart("Heatmap"+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
+
+            chart: {
+                type: 'heatmap',
+                marginTop: 40,
+                marginBottom: 80,
+                plotBorderWidth: 1
+            },
+
+            title: {
+                text: 'Averages for ' + '@Html.Raw(Json.Serialize(Model.SensorName))' +
+                        ' over the last @Html.Raw(Json.Serialize((int)Model.Hours / 168)) weeks'
+            },
+
+            xAxis: {
+                categories:
+                    []
+            },
+
+            yAxis: {
+                categories:
+                    [],
+
+                title: null,
+                reversed: true
+            },
+
+            accessibility: {
+                point: {
+                    descriptionFormatter: function (point) {
+                var ix = point.index + 1,
+                    xName = getPointCategoryName(point, 'x'),
+                    yName = getPointCategoryName(point, 'y'),
+                    val = point.value;
+                return ix + '. ' + xName + ' sales ' + yName + ', ' + val + '.';
+                    }
+                }
+            },
+
+            colorAxis: {
+                min: 0,
+                minColor: '#FFFFFF',
+                maxColor: Highcharts.getOptions().colors[0]
+            },
+
+            legend: {
+                align: 'right',
+                layout: 'vertical',
+                margin: 0,
+                verticalAlign: 'top',
+                y: 25,
+                symbolHeight: 280
+            },
+
+            tooltip: {
+                formatter: function () {
+                    return '<b>' + '</b><br>' + @Html.Raw(Json.Serialize(Model.SensorName))  +
+                        (this.point.value == undefined ? ' has no data' : ' has average: <b>' + this.point.value + ' ' + @Html.Raw(Json.Serialize(Model.MeasurementName))) +
+                            '</b><br> on <b>' + getPointCategoryName(this.point, 'x') + ', ' +
+                                getDateForValue(this.point.index) + '</b>';
+                }
+            },
+
+            series: [{
+                name: 'Average sensor values per weekday',
+                borderWidth: 1,
+                data: [
+                    
+                ],
+
+                dataLabels: {
+                    enabled: true,
+                    color: '#000000'
+                }
+            }],
+
+            exporting: {
+                buttons: {
+                    contextButton: {
+                        enabled: false,
+                    }
+                }
+            },
+
+            responsive: {
+                rules: [{
+                    condition: {
+                        maxWidth: 500
+                    },
+                    chartOptions: {
+                        yAxis: {
+                            labels: {
+                                formatter: function () {
+                                    try {
+                                        return this.value.charAt(0);
+                                    }
+                                    catch (error) {
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }]
+            }
+
+        });
+    </script>
+}
+else
+{
+    <h4>No Data for heatmap for this period of time</h4>
+}
+<script>
+    $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
+        var type = 'Heatmap';
+        try {
+            var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
+        }
+        catch (error) {
+
+        }
+        if (typeof result !== 'undefined') {
+            result.setSize(ui.height, ui.width);
+        }
+    });
+</script>

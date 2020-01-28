@@ -124,6 +124,50 @@ namespace Infrastructure.Business.Managers
             return heatmap;
         }
 
+        public async Task<BoolHeatmapDto> GetBoolHeatmapById(int reportElementId)
+        {
+            ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(reportElementId);
+
+            DateTime date = new DateTime();
+            DateTime[] daysArray = new DateTime[28];
+
+            //TODO: select boolValues for just one day
+
+            if (reportElement.Hours != 0)
+                date = DateTime.Now.AddHours(-(int)reportElement.Hours).Date.AddDays(1);
+
+            for (int i = 0; i < daysArray.Length; i++)
+            {
+                daysArray[i] = date.AddDays(i);
+            }
+
+            IEnumerable<BoolValuePerHour> boolValuesPerHours = await
+                unitOfWork.HistoryRepo.GetBoolValuesPerHours(reportElement.SensorId, date);
+            List<BoolValuePerHour> BoolValuesPerHours = boolValuesPerHours.ToList();
+
+            for (int i = 0; i < daysArray.Length; i++)
+            {
+                if (!boolValuesPerHours.Any(a => a.HourOfDay.ToString("yyyy-MM-dd HH:mm") == daysArray[i].ToString("yyyy-MM-dd HH:mm")))
+                    BoolValuesPerHours.Add(new BoolValuePerHour { HourOfDay = daysArray[i], Value = false });
+            }
+
+            BoolValuesPerHours = BoolValuesPerHours.OrderBy(d => d.HourOfDay).ToList();
+
+            if (boolValuesPerHours.Count() == 0)
+                return new BoolHeatmapDto { Id = reportElementId, IsCorrect = false };
+
+            BoolHeatmapDto heatmap = mapper.Map<Sensor, BoolHeatmapDto>(reportElement.Sensor);
+
+            heatmap.Id = reportElement.Id;
+            heatmap.DashboardName = reportElement.Dashboard.Name;
+            heatmap.DashboardId = reportElement.Dashboard.Id;
+            heatmap.BoolValuesPerHours = BoolValuesPerHours;
+            heatmap.Hours = reportElement.Hours;
+
+            return heatmap;
+
+        }
+
         public async Task<ReportElementDto> GetOnOffById(int ReportElementId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);

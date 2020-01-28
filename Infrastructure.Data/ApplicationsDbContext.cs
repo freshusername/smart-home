@@ -20,6 +20,7 @@ namespace Infrastructure.Data
         public DbSet<Control> Controls { get; set; }
         public DbSet<SensorControl> SensorControls { get; set; }
         public DbQuery<AvgSensorValuePerDay> AvgSensorValuesPerDays { get; set; }
+        public DbQuery<BoolValuePerHour> BoolValuesPerHours { get; set; }
 
         public ApplicationsDbContext(DbContextOptions<ApplicationsDbContext> options) : base(options)
         {

@@ -70,14 +70,25 @@ namespace Infrastructure.Data.Repositories
                 .FromSql(query)
                 .ToListAsync();
 
-
             return avgValues;
         }
 
-        public Task<IEnumerable<History>> GetHistoriesBySensorIdAndDatePeriod(int SensorId, DateTime dateFrom, DateTime dateTo)
+        public async Task<IEnumerable<BoolValuePerHour>> GetBoolValuesPerHours
+            (int sensorId, DateTime date)
         {
-            throw new NotImplementedException();
+            var d = date.ToString("yyyy-MM-dd");
+            var hoursFrom = date.ToString("");
+            //var hoursTo = 
+
+            string query = $"CALL GetBoolValuesPerHours ({sensorId}, '{d}')";
+            var boolValues = await context.BoolValuesPerHours
+                .FromSql(query)
+                .ToListAsync();
+
+            return boolValues;
         }
+
+
         public async Task<IEnumerable<History>> GetHistoriesBySensorIdAndDatePeriod
             (int sensorId, DateTimeOffset dateFrom, DateTimeOffset dateTo)
         {

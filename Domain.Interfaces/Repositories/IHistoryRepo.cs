@@ -21,8 +21,8 @@ namespace Domain.Interfaces.Repositories
 
         Task<IEnumerable<History>> GetByPage(int count, int page, SortState sortState, bool isActivated = true, int sensorId = 0);
         Task<IEnumerable<History>> GetHistoriesBySensorIdAndDate(int SensorId, DateTimeOffset date);
-        Task<IEnumerable<History>> GetHistoriesBySensorIdAndDatePeriod(int SensorId, DateTime dateFrom, DateTime dateTo);
         Task<IEnumerable<AvgSensorValuePerDay>> GetAvgSensorsValuesPerDays(int sensorId, DateTime dateFrom, DateTime dateTo);
+        Task<IEnumerable<BoolValuePerHour>> GetBoolValuesPerHours(int sensorId, DateTime date);
 
         Task<int> GetAmountAsync(bool isActivated);
         Task<int> GetAmountAsync(bool isActivated, string userId);
