@@ -17,6 +17,8 @@ namespace Infrastructure.Business.DTOs.ReportElements
         public ReportElementType Type { get; set; }
         public bool IsCorrect { get; set; } = true;
 
+        public bool IsActive { get; set; }
+
         public MeasurementType MeasurementType { get; set; }
         public string MeasurementName { get; set; }
 

@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationsDbContext))]
-    [Migration("20200125171714_migration")]
-    partial class migration
+    [Migration("20200127183918_IsValid")]
+    partial class IsValid
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -87,6 +87,8 @@ namespace Infrastructure.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("AppUserId");
+
+                    b.Property<bool>("IsPublic");
 
                     b.Property<string>("Name");
 
@@ -226,9 +228,9 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<int?>("IconId");
 
-                    b.Property<bool>("IsActivated");
-
                     b.Property<bool>("IsActive");
+
+                    b.Property<bool>("IsValid");
 
                     b.Property<string>("Name");
 

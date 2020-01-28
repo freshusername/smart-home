@@ -45,12 +45,12 @@ namespace smart_home_web.AutoMapper
 
             CreateMap<Icon, IconDto>().ReverseMap();
 
-			CreateMap<HistoryDto, History>().ReverseMap()
-				.ForMember(hd => hd.SensorName, map => map.MapFrom(h => h.Sensor.Name))
-				.ForMember(hd => hd.MeasurementName, map => map.MapFrom(vm => vm.Sensor.SensorType.MeasurementName))
-				.ForMember(hd => hd.MeasurementType, map => map.MapFrom(vm => vm.Sensor.SensorType.MeasurementName))
-				.ForMember(hd => hd.SensorId, map => map.MapFrom(vm => vm.Sensor.Id))
-				.ForMember(hd => hd.UserId, map => map.MapFrom(vm => vm.Sensor.AppUserId));
+            CreateMap<HistoryDto, History>().ReverseMap()
+                .ForMember(hd => hd.SensorName, map => map.MapFrom(h => h.Sensor.Name))
+                .ForMember(hd => hd.MeasurementName, map => map.MapFrom(vm => vm.Sensor.SensorType.MeasurementName))
+                .ForMember(hd => hd.MeasurementType, map => map.MapFrom(vm => vm.Sensor.SensorType.MeasurementName))
+                .ForMember(hd => hd.SensorId, map => map.MapFrom(vm => vm.Sensor.Id))
+                .ForMember(hd => hd.UserId, map => map.MapFrom(vm => vm.Sensor.AppUserId));
 
             CreateMap<HistoryDto, HistoryViewModel>()
                 .ForMember(hd => hd.Value, map => map.MapFrom(vm => vm.GetStringValue()));
@@ -93,7 +93,8 @@ namespace smart_home_web.AutoMapper
             CreateMap<ReportElement, ClockDto>().ReverseMap();
 
             CreateMap<Dashboard, DashboardDto>().ReverseMap();
-            CreateMap<DashboardDto, DashboardViewModel>();
+            CreateMap<DashboardDto, DashboardViewModel>()
+                .ForMember(dvm => dvm.DashCreatorUserName, map => map.MapFrom(dto => dto.AppUser.UserName));
 
             CreateMap<ReportElement, GaugeDto>().ReverseMap();
             CreateMap<GaugeDto, GaugeViewModel>().ReverseMap();
@@ -120,7 +121,8 @@ namespace smart_home_web.AutoMapper
                 .ForMember(gd => gd.MeasurementName, map => map.MapFrom(re => re.Sensor.SensorType.MeasurementName))
                 .ForMember(gd => gd.MeasurementType, map => map.MapFrom(re => re.Sensor.SensorType.MeasurementType))
                 .ForMember(gd => gd.Type, map => map.MapFrom(re => re.Type))
-                .ForMember(gd => gd.SensorType, map => map.MapFrom(re => re.Sensor.SensorType.Name));
+                .ForMember(gd => gd.SensorType, map => map.MapFrom(re => re.Sensor.SensorType.Name))
+                .ForMember(gd => gd.IsActive, map => map.MapFrom(re => re.Sensor.IsActive));
 
             CreateMap<ReportElementDto, ReportElementViewModel>();
             CreateMap<CreateReportElementViewModel, ReportElementDto>();
@@ -134,8 +136,8 @@ namespace smart_home_web.AutoMapper
 
             CreateMap<SensorControl, SensorControlDto>()
              .ForMember(gd => gd.Id, map => map.MapFrom(s => s.Id))
-             .ForMember(gd => gd.IsActive, map => map.MapFrom(s => s.IsActive));                      
-           
+             .ForMember(gd => gd.IsActive, map => map.MapFrom(s => s.IsActive));
+
 
             CreateMap<SensorControlDto, SensorControl>();
 
@@ -153,14 +155,14 @@ namespace smart_home_web.AutoMapper
             CreateMap<EditSensorControlViewModel, SensorControlDto>()
             .ForMember(gd => gd.Name, map => map.MapFrom(s => s.Name))
             .ForMember(gd => gd.SensorId, map => map.MapFrom(s => s.SensorId))
-            .ForMember(gd => gd.ControlId, map => map.MapFrom(s => s.ControlSensorId));
+            .ForMember(gd => gd.ControlId, map => map.MapFrom(s => s.ControlId));
             
 
             CreateMap<SensorControlDto, EditSensorControlViewModel>()
             .ForMember(gd => gd.Name, map => map.MapFrom(s => s.Name))
             .ForMember(gd => gd.SensorId, map => map.MapFrom(s => s.SensorId))
             .ForMember(gd => gd.ControlId, map => map.MapFrom(s => s.ControlId));
-           
+
 
 
 

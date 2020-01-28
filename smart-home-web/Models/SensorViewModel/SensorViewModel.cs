@@ -2,14 +2,14 @@
 
 namespace smart_home_web.Models.SensorViewModel
 {
-	public class SensorViewModel
+    public class SensorViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public string Comment { get; set; }
         public Guid Token { get; set; }
         public DateTimeOffset? CreatedOn { get; set; }
-        public bool IsActivated { get; set; }
+        public bool IsValid { get; set; }
         public bool IsActive { get; set; }
 
         public int SensorTypeId { get; set; }
