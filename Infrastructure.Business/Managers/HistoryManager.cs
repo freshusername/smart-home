@@ -12,7 +12,7 @@ using Infrastructure.Business.Infrastructure;
 
 namespace Infrastructure.Business.Managers
 {
-	public class HistoryManager : BaseManager, IHistoryManager
+    public class HistoryManager : BaseManager, IHistoryManager
     {
         public HistoryManager(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
@@ -35,22 +35,22 @@ namespace Infrastructure.Business.Managers
             return result;
         }
 
-		public async Task<IEnumerable<HistoryDto>> GetHistoriesAsync(int count, int page, SortState sortState, bool isActivated = true, int sensorId = 0)
-		{
-			var histories = await unitOfWork.HistoryRepo.GetByPage(count, page, sortState, isActivated, sensorId);
-			
-			var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories);
+        public async Task<IEnumerable<HistoryDto>> GetHistoriesAsync(int count, int page, SortState sortState, bool isActivated = true, int sensorId = 0)
+        {
+            var histories = await unitOfWork.HistoryRepo.GetByPage(count, page, sortState, isActivated, sensorId);
 
-			return result;
-		}
+            var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories);
 
-		public async Task<IEnumerable<HistoryDto>> GetHistoriesBySensorIdAsync(int sensorId)
-		{
-			var histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorId(sensorId);
-			var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories);
+            return result;
+        }
 
-			return result;
-		}
+        public async Task<IEnumerable<HistoryDto>> GetHistoriesBySensorIdAsync(int sensorId)
+        {
+            var histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorId(sensorId);
+            var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories);
+
+            return result;
+        }
 
         public HistoryDto GetLastHistoryBySensorId(int sensorId)
         {
@@ -66,7 +66,7 @@ namespace Infrastructure.Business.Managers
         }
         public double? GetMaxValueForPeriod(int sensorId, int? hours)
         {
-            return unitOfWork.HistoryRepo.GetMaxValueForPeriod(sensorId, hours);;
+            return unitOfWork.HistoryRepo.GetMaxValueForPeriod(sensorId, hours); ;
         }
 
         public async Task<GraphDto> GetGraphBySensorId(int SensorId, int days)
@@ -89,54 +89,56 @@ namespace Infrastructure.Business.Managers
                 switch (graph.MeasurementType)
                 {
                     case MeasurementType.Int when history.IntValue.HasValue:
-                            graph.Dates.Add(history.Date);
-                            graph.Values.Add(history.IntValue.Value);
+                        graph.Dates.Add(history.Date);
+                        graph.Values.Add(history.IntValue.Value);
                         break;
 
                     case MeasurementType.Double when history.DoubleValue.HasValue:
-                            graph.Dates.Add(history.Date);
-                            graph.Values.Add(history.DoubleValue.Value);
+                        graph.Dates.Add(history.Date);
+                        graph.Values.Add(history.DoubleValue.Value);
                         break;
 
                     case MeasurementType.Bool when history.BoolValue.HasValue:
-                            graph.Dates.Add(history.Date);
-                            graph.Values.Add(history.BoolValue.Value ? 1 : 0);
+                        graph.Dates.Add(history.Date);
+                        graph.Values.Add(history.BoolValue.Value ? 1 : 0);
                         break;
 
                     case MeasurementType.String when !String.IsNullOrEmpty(history.StringValue):
-                            graph.Dates.Add(history.Date);
-                            graph.Values.Add(history.StringValue);
+                        graph.Dates.Add(history.Date);
+                        graph.Values.Add(history.StringValue);
                         break;
                 }
             }
             if (!graph.Dates.Any())
                 graph.IsCorrect = false;
             return graph;
-        }		
+        }
 
-        public OperationDetails AddHistory(string value , int sensorId)
-        {           
-           var history = new History {          
-             Date = DateTimeOffset.Now,
-           SensorId = sensorId, };              
-          
+        public OperationDetails AddHistory(string value, int sensorId)
+        {
+            var history = new History
+            {
+                Date = DateTimeOffset.Now,
+                SensorId = sensorId,
+            };
+
             var sensor = unitOfWork.SensorRepo.GetById(sensorId).Result;
-             dynamic valueModel;
+            dynamic valueModel;
 
-            if(sensor.IsActivated)
-              valueModel = ValueParser.Parse(value , sensor.SensorType.MeasurementType);
+            if (sensor.IsValid)
+                valueModel = ValueParser.Parse(value, sensor.SensorType.MeasurementType);
             else
-              valueModel = ValueParser.Parse(value);
+                valueModel = ValueParser.Parse(value);
 
             if (valueModel is int)
                 history.IntValue = valueModel;
-             else
+            else
             if (valueModel is double)
                 history.DoubleValue = valueModel;
-             else
+            else
             if (valueModel is bool)
                 history.BoolValue = valueModel;
-             else
+            else
                 history.StringValue = valueModel;
 
 
@@ -146,7 +148,7 @@ namespace Infrastructure.Business.Managers
             unitOfWork.HistoryRepo.Insert(history);
             unitOfWork.Save();
 
-            return new OperationDetails(true, "Operation succeed", "");        
+            return new OperationDetails(true, "Operation succeed", "");
         }
 
         public bool CheckValue(History history)
@@ -161,13 +163,13 @@ namespace Infrastructure.Business.Managers
         }
 
         public async Task<int> GetAmountAsync(bool isActivated)
-		{
-			return await unitOfWork.HistoryRepo.GetAmountAsync(isActivated);
-		}
+        {
+            return await unitOfWork.HistoryRepo.GetAmountAsync(isActivated);
+        }
 
-		public async Task<int> GetAmountOfUserHistoriesAsync(bool isActivated, string userId)
-		{
-			return await unitOfWork.HistoryRepo.GetAmountAsync(isActivated, userId);
-		}
-	}
+        public async Task<int> GetAmountOfUserHistoriesAsync(bool isActivated, string userId)
+        {
+            return await unitOfWork.HistoryRepo.GetAmountAsync(isActivated, userId);
+        }
+    }
 }

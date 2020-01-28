@@ -12,7 +12,7 @@ namespace smart_home_web.Models.ControlSensor
 {
     public class AddSensorControlViewModel
     {
-       
+
         [Required]
         [StringLength(20, ErrorMessage = "The Name must be at least 2 and at max 20 characters long.", MinimumLength = 2)]
         public string Name { get; set; }
@@ -32,9 +32,8 @@ namespace smart_home_web.Models.ControlSensor
 
         [DisplayName("Icon")]
         public IFormFile IconFile { get; set; }
-      
+
         public bool IsActive { get; set; } = true;
- 
 
     }
 }

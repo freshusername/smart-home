@@ -25,7 +25,7 @@ namespace Infrastructure.Business.Managers
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(id);
             return reportElement;
         }
-		
+
         public async Task EditReportElement(ReportElementDto reportElementDTO)
         {
             ReportElement reportElement = mapper.Map<ReportElementDto, ReportElement>(reportElementDTO);
@@ -229,7 +229,6 @@ namespace Infrastructure.Business.Managers
                 return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = $"No histories in this report element per {strhours}" };
             }
 
-
             ReportElementDto columnRange = mapper.Map<Sensor, ReportElementDto>(reportElement.Sensor);
 
             columnRange.Id = ReportElementId;
@@ -278,8 +277,8 @@ namespace Infrastructure.Business.Managers
                     }
 
                 case MeasurementType.Double:
-                    
-                    if ((int)reportElement.Hours == 1) 
+
+                    if ((int)reportElement.Hours == 1)
                     {
                         values = histories.OrderBy(p => p.Date.LocalDateTime).GroupBy(p => p.Date.LocalDateTime.Minute).Select(p => new
                         {
@@ -289,7 +288,7 @@ namespace Infrastructure.Business.Managers
                         }).ToList();
                         break;
 
-                    } 
+                    }
                     else if ((int)reportElement.Hours > 1 && (int)reportElement.Hours <= 24)
                     {
                         values = histories.OrderBy(p => p.Date.LocalDateTime).GroupBy(p => p.Date.LocalDateTime.Hour).Select(p => new
@@ -299,7 +298,7 @@ namespace Infrastructure.Business.Managers
                             Date = p.Key.ToString()
                         }).ToList();
                         break;
-                        
+
                     }
                     else
                     {
@@ -317,7 +316,7 @@ namespace Infrastructure.Business.Managers
             }
 
             List<dynamic> items = values.ToList();
-            for (int i = 0; i < items.Count(); i++) 
+            for (int i = 0; i < items.Count(); i++)
             {
                 if (values.Count() == 1 || i == 0)
                 {
@@ -326,7 +325,7 @@ namespace Infrastructure.Business.Managers
                     columnRange.MaxValues.Add(items[i].Max);
                     continue;
                 }
-                if (i > 0 && !items[i].Equals(items[i - 1])) 
+                if (i > 0 && !items[i].Equals(items[i - 1]))
                 {
                     columnRange.Dates.Add(items[i].Date);
                     columnRange.MinValues.Add(items[i].Min);

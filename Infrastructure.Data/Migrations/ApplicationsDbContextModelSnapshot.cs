@@ -226,9 +226,9 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<int?>("IconId");
 
-                    b.Property<bool>("IsActivated");
-
                     b.Property<bool>("IsActive");
+
+                    b.Property<bool>("IsValid");
 
                     b.Property<string>("Name");
 
