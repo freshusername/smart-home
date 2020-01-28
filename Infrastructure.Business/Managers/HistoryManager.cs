@@ -8,6 +8,7 @@ using Domain.Core.Model.Enums;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Business.DTOs;
 using Infrastructure.Business.DTOs.History;
+using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.Infrastructure;
 
 namespace Infrastructure.Business.Managers
@@ -35,11 +36,11 @@ namespace Infrastructure.Business.Managers
             return result;
         }
 
-        public async Task<IEnumerable<HistoryDto>> GetHistoriesAsync(int count, int page, SortState sortState, bool isActivated = true, int sensorId = 0)
-        {
-            var histories = await unitOfWork.HistoryRepo.GetByPage(count, page, sortState, isActivated, sensorId);
-
-            var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories);
+		public async Task<IEnumerable<HistoryDto>> GetHistoriesAsync(int count, int page, SortState sortState, bool IsActivated, int sensorId = 0)
+		{
+            var histories = await unitOfWork.HistoryRepo.GetByPage(count, page, sortState, IsActivated, sensorId);
+			
+			var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories);
 
             return result;
         }
@@ -167,9 +168,17 @@ namespace Infrastructure.Business.Managers
             return await unitOfWork.HistoryRepo.GetAmountAsync(isActivated);
         }
 
-        public async Task<int> GetAmountOfUserHistoriesAsync(bool isActivated, string userId)
+		public async Task<int> GetAmountOfUserHistoriesAsync(bool isActivated, string userId)
+		{
+			return await unitOfWork.HistoryRepo.GetAmountAsync(isActivated, userId);
+		}
+
+        public async Task<SensorDto> GetLastSensorByUserId(string userId)
         {
-            return await unitOfWork.HistoryRepo.GetAmountAsync(isActivated, userId);
+            Sensor sensor = await unitOfWork.SensorRepo.GetLastSensorByUserId(userId);
+
+            return mapper.Map<Sensor, SensorDto>(sensor);
+
         }
     }
 }

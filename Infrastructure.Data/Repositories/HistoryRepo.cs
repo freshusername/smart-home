@@ -116,6 +116,7 @@ namespace Infrastructure.Data.Repositories
             if (!isValid)
                 histories = histories.Where(p => p.Sensor.IsValid == false);
 
+
             if (sensorId != 0)
             {
                 histories = histories.Where(h => h.Sensor.Id == sensorId);

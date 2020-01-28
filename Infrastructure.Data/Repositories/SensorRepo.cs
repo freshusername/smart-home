@@ -93,5 +93,17 @@ namespace Infrastructure.Data.Repositories
 
             return sensorControls;
         }       
+        
+
+        public async Task<Sensor> GetLastSensorByUserId(string userId)
+        {
+            var sensor = await context.Sensors
+                                   .Include(s => s.SensorType)
+                                       .ThenInclude(st => st.Icon)
+                                   .Include(s => s.Icon)
+                               .LastOrDefaultAsync(s => s.AppUserId == userId);
+
+            return sensor;
+        }
     }
 }
