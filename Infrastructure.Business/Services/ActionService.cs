@@ -110,6 +110,8 @@ namespace Infrastructure.Business.Services
              if (sensorControl == null) return new OperationDetails(false, "", "");
 
             sensorControl.IsActive = isActive;
+             _db.SensorControlRepo.Update(sensorControl);
+            _db.Save();
 
             return new OperationDetails(true , "", "");
         }

@@ -98,7 +98,7 @@ namespace smart_home_web.Controllers
         }
 
         [HttpGet("alexaresponse")]
-        public  IActionResult GetResponse(Guid controlToken , Guid sensorToken , bool isActive)
+        public  IActionResult GetResponse(Guid controlToken, Guid sensorToken , bool isActive)
         {
 
             var result = _actionService.Activate(controlToken , sensorToken, isActive);
