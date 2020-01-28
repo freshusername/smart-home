@@ -79,5 +79,16 @@ namespace Infrastructure.Business.Managers
              unitOfWork.Save();
             return new OperationDetails(true, "", "");
         }
+
+        public OperationDetails Delete(int id)
+        {
+            var sensorControl = unitOfWork.SensorControlRepo.GetById(id).Result;
+            if (sensorControl == null) return new OperationDetails(false, "", "");
+          
+            unitOfWork.SensorControlRepo.Delete(sensorControl);
+
+            unitOfWork.Save();
+            return new OperationDetails(true, "", "");
+        }
     }
 }

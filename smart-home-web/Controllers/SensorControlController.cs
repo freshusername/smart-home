@@ -50,6 +50,16 @@ namespace smart_home_web.Controllers
         }
 
         [Authorize]
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            var result = _sensorControlManager.Delete(id);
+            if (!result.Succeeded) return BadRequest();
+
+            return Ok();
+        }
+
+        [Authorize]
         [HttpGet]
         public IActionResult Edit(int id)
         {   
