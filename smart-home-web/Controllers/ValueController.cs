@@ -92,8 +92,9 @@ namespace smart_home_web.Controllers
                 return 0;
 
             var sensor = _sensorManager.GetSensorByToken(token);
-             var date = DateTime.Now.ToLocalTime();
-            _emailSender.SendEmailAsync(sensor.User.Email, "🏠Smart home", $"<span style=\"font-size: 20px\">Sensor : <b>{sensor.Name}</b>.<br/>Value : <b>true</b>❗.<br/>Date : {date}</span>");
+             var userEmail = _userManager.FindByIdAsync(sensor.AppUserId).Result.Email;
+            var date = DateTime.Now.ToLocalTime();
+             _emailSender.SendEmailAsync(userEmail, "🏠Smart home", $"<span style=\"font-size: 20px\">Sensor : <b>{sensor.Name}</b>.<br/>Value : <b>true</b>❗.<br/>Date : {date}</span>");
             return 1;
         }
 
