@@ -50,6 +50,11 @@ namespace smart_home_web.Controllers
             if (model.Type == ReportElementType.StatusReport)
             {
                 SensorDto sensor = await _reportElementManager.GetLastSensorByUserId(userId);
+                if (sensor == null)
+                {
+                    ModelState.AddModelError("", "There is not such sensor");
+                    return View(model);
+                }
                 model.SensorId = sensor.Id;
                 model.Hours = (int)ReportElementHours.AllTime;
             }
