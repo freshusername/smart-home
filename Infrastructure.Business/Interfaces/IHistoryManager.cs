@@ -20,7 +20,10 @@ namespace Infrastructure.Business.Managers
 		HistoryDto GetLastHistoryBySensorId(int sensorId);
         OperationDetails AddHistory(string value, int sensorId);
 
-		double? GetMinValueForPeriod(int sensorId, int? hours);
+        Task<SensorDto> GetLastSensorByUserId(string userId);
+
+
+        double? GetMinValueForPeriod(int sensorId, int? hours);
 		double? GetMaxValueForPeriod(int sensorId, int? hours);
 
 		Task<GraphDto> GetGraphBySensorId(int SensorId, int days);

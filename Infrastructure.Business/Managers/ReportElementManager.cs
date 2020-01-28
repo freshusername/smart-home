@@ -5,6 +5,7 @@ using Domain.Core.Model.Enums;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Business.DTOs.History;
 using Infrastructure.Business.DTOs.ReportElements;
+using Infrastructure.Business.DTOs.Sensor;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -17,12 +18,11 @@ namespace Infrastructure.Business.Managers
     public class ReportElementManager : BaseManager, IReportElementManager
     {
         protected readonly IHistoryManager historyManager;
-        private readonly UserManager<AppUser> _userManager;
+        private string UserId;
 
-        public ReportElementManager(IHistoryManager historyManager, IUnitOfWork unitOfWork, UserManager<AppUser> userManager, IMapper mapper) : base(unitOfWork, mapper)
+        public ReportElementManager(IHistoryManager historyManager, IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
             this.historyManager = historyManager;
-            _userManager = userManager;
         }
 
         public async Task<ReportElement> GetById(int id)
@@ -31,15 +31,17 @@ namespace Infrastructure.Business.Managers
             return reportElement;
         }
 		
-        public async Task EditReportElement(ReportElementDto reportElementDTO)
+        public async Task EditReportElement(ReportElementDto reportElementDTO, string userId)
         {
+            UserId = userId;
             ReportElement reportElement = mapper.Map<ReportElementDto, ReportElement>(reportElementDTO);
             await unitOfWork.ReportElementRepo.Update(reportElement);
             unitOfWork.Save();
         }
 
-        public async Task CreateReportElement(ReportElementDto reportElementDto)
+        public async Task CreateReportElement(ReportElementDto reportElementDto, string userId)
         {
+            UserId = userId;
             var reportElements = await unitOfWork.ReportElementRepo.GetAll();
             reportElements = reportElements.Where(r => r.DashboardId == reportElementDto.DashboardId);
             if (reportElements.Any())
@@ -413,11 +415,51 @@ namespace Infrastructure.Business.Managers
             unitOfWork.Save();
         }
 
-        [Authorize]
-        public Task<IEnumerable<HistoryDto>> GetStatusReport()
+        public async Task<ReportElementDto> GetStatusReport(int ReportElementId)
         {
-            //var sensors = unitOfWork.SensorRepo.GetAllSensorsByUserId(_userManager.GetUserId(User)) 
-            return null;
+            ReportElement reportElementt = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
+            if (reportElementt == null)
+                return new ReportElementDto { IsCorrect = false, Message = "Invalid report element" };
+
+            ReportElementDto reportElement = mapper.Map<Sensor, ReportElementDto>(reportElementt.Sensor);
+            IEnumerable<Sensor> sensors = await unitOfWork.SensorRepo.GetAllSensorsByUserId(UserId);
+
+            foreach(Sensor sensor in sensors)
+            {
+                reportElement.Dates.Add(sensor.Name);
+                History history = unitOfWork.HistoryRepo.GetLastHistoryBySensorId(sensor.Id);
+                dynamic value = null;
+                switch (reportElement.MeasurementType)
+                { 
+                    case MeasurementType.Int:
+                        value = history.IntValue.GetValueOrDefault();
+                        break;
+                    case MeasurementType.Bool:
+                        value = history.BoolValue.GetValueOrDefault();
+                        if (value == true)
+                            value = "Active";
+                        else
+                            value = "Inactive";
+
+                        break;
+                    case MeasurementType.Double:
+                        value = Math.Round(history.DoubleValue.GetValueOrDefault(),2);
+                        break;
+                    case MeasurementType.String:
+                        value = history.StringValue;
+                        break;
+                    default:
+                        return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "Incorrect sensor type for this element" };
+                }
+                reportElement.Values.Add(value);
+            }
+
+            return reportElement;
+        }
+
+        public Task<SensorDto> GetLastSensorByUserId(string userId)
+        {
+            return historyManager.GetLastSensorByUserId(userId);
         }
     }
 }

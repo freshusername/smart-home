@@ -8,6 +8,7 @@ using Domain.Core.Model.Enums;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Business.DTOs;
 using Infrastructure.Business.DTOs.History;
+using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.Infrastructure;
 
 namespace Infrastructure.Business.Managers
@@ -169,5 +170,13 @@ namespace Infrastructure.Business.Managers
 		{
 			return await unitOfWork.HistoryRepo.GetAmountAsync(isActivated, userId);
 		}
-	}
+
+        public async Task<SensorDto> GetLastSensorByUserId(string userId)
+        {
+            Sensor sensor = await unitOfWork.SensorRepo.GetLastSensorByUserId(userId);
+
+            return mapper.Map<Sensor, SensorDto>(sensor);
+
+        }
+    }
 }

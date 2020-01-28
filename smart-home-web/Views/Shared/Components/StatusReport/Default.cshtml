@@ -1,9 +1,7 @@
-﻿@model smart_home_web.Models.History.AllHistoriesViewModel
-@using Infrastructure.Business.DTOs;
-@using Domain.Core.Model.Enums;
+﻿@model smart_home_web.Models.ReportElements.ReportElementViewModel;
 
 <div class="text-center d-flex flex-column align-items-center">
-    <table class="table table-hover">
+    <table class="table table-hover table-responsive">
         <thead class="text-center">
             <tr>
                 <th>Name</th>
@@ -11,31 +9,22 @@
             </tr>
         </thead>
         <tbody class="text-center">
-            @foreach(var history in Model.Histories)
+            @if (!Model.Dates.Any())
             {
-            <tr>
-                <td>@history.SensorName</td>
-                @{
-                    if (history.Value.ToString() == "False")
-                    {
-                        <td>Inactive</td>
-                    }
-                    else if (history.Value.ToString() == "True")
-                    {
-                        <td>Active</td>
-                    }
-                    else
-                    {
-                        <td>@history.Value</td>
-                    }
+                <tr>
+                    <td colspan="2">No Values</td>
+                </tr>
+            }
+            else
+            {
+                @for (int i = 0; i < Model.Dates.Count(); i++)
+                {
+                    <tr>
+                        <td> @Model.Dates[i] </td>
+                        <td> @Model.Values[i] </td>
+                    </tr>
                 }
-            </tr>
             }
         </tbody>
     </table>
-    <div>
-        <br />
-        @await Component.InvokeAsync("Pagination", new { action = "Index", controller = "History", filterDto = Model.FilterDto })
-    </div>
-
 </div>
