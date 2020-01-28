@@ -52,7 +52,7 @@ namespace smart_home_web.Controllers
         [Authorize]
         [HttpGet]
         public IActionResult Edit(int id)
-        {
+        {   
             var sensorControl = _sensorControlManager.GetById(id);
              var controlSensors = _sensorManager.GetControlSensors();
             var sensors = _sensorManager.GetSensorsToControl();

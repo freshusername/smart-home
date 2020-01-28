@@ -14,6 +14,7 @@ namespace smart_home_web.Models.ReportElements
         public string Message { get; set; }
         public ReportElementType Type { get; set; }
         public bool IsCorrect { get; set; } = true;
+        public bool IsActive { get; set; }
 
         public MeasurementType MeasurementType { get; set; }
         public string MeasurementName { get; set; }

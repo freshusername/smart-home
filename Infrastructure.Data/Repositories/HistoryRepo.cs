@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data.Repositories
 {
-	public class HistoryRepo : BaseRepository<History>, IHistoryRepo
+    public class HistoryRepo : BaseRepository<History>, IHistoryRepo
     {
         public HistoryRepo(ApplicationsDbContext context) : base(context)
         {
@@ -40,17 +40,17 @@ namespace Infrastructure.Data.Repositories
             return history;
         }
 
-        public async Task<int> GetAmountAsync(bool isActivated)
+        public async Task<int> GetAmountAsync(bool isValid)
         {
-            return await context.Histories.Where(p => p.Sensor.IsActivated == isActivated).CountAsync();
+            return await context.Histories.Where(p => p.Sensor.IsValid == isValid).CountAsync();
         }
 
-		public async Task<int> GetAmountAsync(bool isActivated, string userId)
-		{
-			return await context.Histories.Where(p => p.Sensor.IsActivated == isActivated & p.Sensor.AppUserId == userId).CountAsync();
-		}
+        public async Task<int> GetAmountAsync(bool isActivated, string userId)
+        {
+            return await context.Histories.Where(p => p.Sensor.IsValid == isActivated & p.Sensor.AppUserId == userId).CountAsync();
+        }
 
-		public async Task<IEnumerable<History>> GetHistoriesBySensorId(int SensorId)
+        public async Task<IEnumerable<History>> GetHistoriesBySensorId(int SensorId)
         {
             var histories = context.Histories.Include(h => h.Sensor)
                 .ThenInclude(st => st.SensorType)
@@ -67,8 +67,8 @@ namespace Infrastructure.Data.Repositories
 
             string query = $"CALL GetAvgValuesForSensor ({sensorId}, '{d_from}', '{d_to}')";
             var avgValues = await context.AvgSensorValuesPerDays
-				.FromSql(query)
-				.ToListAsync();
+                .FromSql(query)
+                .ToListAsync();
 
 
             return avgValues;
@@ -103,18 +103,18 @@ namespace Infrastructure.Data.Repositories
             if (histories == null) return null;
 
             var lasthistory = histories.OrderByDescending(e => e.Date).FirstOrDefault();
-                 
+
             return lasthistory;
         }
 
-        public async Task<IEnumerable<History>> GetByPage(int count, int page, SortState sortState, bool isActivated,  int sensorId = 0)
+        public async Task<IEnumerable<History>> GetByPage(int count, int page, SortState sortState, bool isValid = true, int sensorId = 0)
         {
             IQueryable<History> histories = context.Histories
                 .Include(h => h.Sensor)
                 .ThenInclude(s => s.SensorType);
 
-            if (!isActivated)
-                histories = histories.Where(p => p.Sensor.IsActivated == false);
+            if (!isValid)
+                histories = histories.Where(p => p.Sensor.IsValid == false);
 
 
             if (sensorId != 0)
@@ -228,6 +228,6 @@ namespace Infrastructure.Data.Repositories
             }
 
             return maxvalue;
-        }       
+        }
     }
 }

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Infrastructure.Data.Migrations
 {
-    public partial class migration : Migration
+    public partial class IsValid : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -186,6 +186,7 @@ namespace Infrastructure.Data.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true),
+                    IsPublic = table.Column<bool>(nullable: false),
                     AppUserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -233,7 +234,7 @@ namespace Infrastructure.Data.Migrations
                     Comment = table.Column<string>(nullable: true),
                     Token = table.Column<Guid>(nullable: false),
                     CreatedOn = table.Column<DateTimeOffset>(nullable: true),
-                    IsActivated = table.Column<bool>(nullable: false),
+                    IsValid = table.Column<bool>(nullable: false),
                     IsActive = table.Column<bool>(nullable: false),
                     AppUserId = table.Column<string>(nullable: true),
                     SensorTypeId = table.Column<int>(nullable: true),

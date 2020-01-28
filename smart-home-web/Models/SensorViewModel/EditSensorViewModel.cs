@@ -3,7 +3,7 @@ using System;
 
 namespace smart_home_web.Models.SensorViewModel
 {
-	public class EditSensorViewModel
+    public class EditSensorViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -13,7 +13,7 @@ namespace smart_home_web.Models.SensorViewModel
         public int SensorTypeId { get; set; }
         public string AppUserId { get; set; }
         public DateTimeOffset CreatedOn { get; set; }
-        public bool IsActivated { get; set; }
+        public bool IsValid { get; set; }
         public string IconPath { get; set; }
         public string SensorTypeName { get; set; }
         public IFormFile IconFile { get; set; }
