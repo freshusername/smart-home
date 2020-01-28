@@ -40,11 +40,7 @@ namespace Infrastructure.Business.Services
                     var result = IntVerification(item.SensorId.Value, item.minValue, item.maxValue);
                     if (result) return new OperationDetails(true, "", "");
                 }
-                if(item.Sensor.SensorType.IsControl)
-                {
-                    var result = VoiceControl(item.SensorId.Value, token);
-                    if (result) return new OperationDetails(true, "", "");
-                }
+                
             }
 
             return new OperationDetails(false, "", "");
@@ -107,7 +103,7 @@ namespace Infrastructure.Business.Services
 
         public OperationDetails Activate(Guid controlToken , Guid sensorToken , bool isActive)
         {
-            var control = _db.ControlRepo.GetByToken(controlToken);
+            var control = _db.ControlRepo.GetByToken(controlToken); // TODO Get from sensors
              var sensor = _db.SensorRepo.GetByToken(sensorToken);
 
             if(control == null || sensor == null) return new OperationDetails(false, "", "");
