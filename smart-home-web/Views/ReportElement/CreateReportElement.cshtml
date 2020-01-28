@@ -71,6 +71,7 @@ $(document).ready(function() {
     function updateInput() {
         if ($("select#type-select").children("option:selected").val() == "@((int)Domain.Core.Model.Enums.ReportElementType.Heatmap)") {
             $('select#hours-select').attr('disabled', true);
+            $('select#sensor-select').attr('disabled', false);
             $('#hours-select').find('option[value="@((int)Domain.Core.Model.Enums.ReportElementHours.Hour672)"]').attr('selected', 'selected');
             $('#hours-hidden').val(@((int) Domain.Core.Model.Enums.ReportElementHours.Hour672));
         } else if ($("select#type-select").children("option:selected").val() == "@((int)Domain.Core.Model.Enums.ReportElementType.StatusReport)") {

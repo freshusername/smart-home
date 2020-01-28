@@ -25,9 +25,13 @@
                     <div class="text-center btn-control-icon report-button text-center" onclick=remove(@report.Id)>
                         <span><i class="fas fa-times"></i></span>
                     </div>
-                    <div class="text-center btn-control-icon text-center">
-                        <a asp-controller="ReportElement" asp-action="EditReportElement" asp-route-id="@report.Id"><i class="fas fa-cog report-button"></i></a>
-                    </div>
+                    @if (report.Type != Domain.Core.Model.Enums.ReportElementType.StatusReport)
+                    {
+                        <div class="text-center btn-control-icon text-center">
+                            <a asp-controller="ReportElement" asp-action="EditReportElement" asp-route-id="@report.Id"><i class="fas fa-cog report-button"></i></a>
+                        </div>
+                    }
+
                     <div class="text-center btn-control-icon text-center" onclick=lock(@report.Id)>
                         <i class="fas report-button i-button"></i>
                     </div>
