@@ -2,49 +2,68 @@
     ViewData["Title"] = "Home Page";
 
 }
+
 <body>
-    <div class="row">
-        <div class="col-lg-3">
-            <div class="card">
-                <img class="card-img-top" style="height:70%" src="https://i.imgur.com/PPxdOZf.jpg" alt="Card image cap">
-                <div class="card-body">
-                    <h5 class="card-title">Histories</h5>
-                    <p class="card-text">General table of measurment results for each sensor. </p>
-                    <a asp-controller="History" asp-action="Index" class="btn btn-primary">Open</a>
-                </div>
-            </div>
-        </div>
+            <div class="app-main__outer">
+                <div class="app-main__inner">
+                    <div class="header-mobile-wrapper">
+                        <div class="app-header__logo">
+                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="" class="logo-src"><i class="fab fa-phoenix-framework"></i></a>
+                            <button type="button" class="hamburger hamburger--elastic mobile-toggle-sidebar-nav">
+                                <span class="hamburger-box">
+                                    <span class="hamburger-inner"></span>
+                                </span>
+                            </button>
+                            <div class="app-header__menu">
+                                <span>
+                                    <button type="button" class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav">
+                                        <span class="btn-icon-wrapper">
+                                            <i class="fa fa-ellipsis-v fa-w-6"></i>
+                                        </span>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="app-header">
 
-            <div class="col-sm">
-                <div class="card">
-                    <img class="card-img-top" style="height:448px" src="https://i.imgur.com/Z3DWXZq.jpg" alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title">Sensors</h5>
-                        <p class="card-text">Info about each sensor that is registered in the system</p>
-                        <a asp-controller="Sensor" asp-action="Index" class="btn btn-primary">Open</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="card">
-                    <img class="card-img-top" style="height:448px" src="https://i.imgur.com/DFzVS7j.jpg" alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title">Invalid Sensors</h5>
-                        <p class="card-text">List of sensors with invalid tokens</p>
-                        <a asp-controller="History" asp-action="InvalidSensors" class="btn btn-primary">Open</a>
-                    </div>
-                </div>
-            </div>
+                        <div class="app-header-right">
+@*REMOVE LATER*@            <div class="search-wrapper" style="width: 49rem; border: brown; border-style: dashed;">
+                                <i class="search-icon-wrapper typcn typcn-zoom-outline"></i>
+                                <input type="text" placeholder="Search...">
+                            </div>
+                            <div class="header-btn-lg pr-0">
+                                <div class="header-dots">
 
-            <div class="col-lg-3">
-                <div class="card">
-                    <img class="card-img-top" style="height:448px" src="https://i.imgur.com/ygjpYYN.jpg" alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title">Dashboards</h5>
-                        <p class="card-text">View-desk with info about particular sensors</p>
-                        <a asp-controller="Dashboard" asp-action="Index" class="btn btn-primary">Open</a>
+                                    <div class="dropdown">
+                                        <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="p-0 btn btn-link">
+                                            <i class="typcn typcn-bell"></i>
+                                            <span class="badge badge-dot badge-dot-sm badge-danger">Notifications</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="header-btn-lg pr-0">
+                                <div class="widget-content p-0">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left">
+                                            <div class="btn-group">
+                                                <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="p-0 btn">
+                                                    <img width="42" class="rounded" src="/assets/images/avatars/3.jpg" alt="">
+                                                    <i class="fa fa-angle-down ml-2 opacity-8"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="app-header-overlay d-none animated fadeIn"></div>
                     </div>
                 </div>
             </div>
-        </div>
+        
+        <script src="/lib/jquery/dist/jquery.js"></script>
+        <script src="/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="/js/site.js?v=4q1jwFhaPaZgr8WAUSrux6hAuh0XDg9kPS3xIVq36I0"></script>
 </body>
