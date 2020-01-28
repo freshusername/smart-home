@@ -10,5 +10,6 @@ namespace Infrastructure.Business.Services
     public interface IActionService
     {
         Task<OperationDetails> CheckStatus(Guid token);
+        OperationDetails Activate(Guid controlToken, Guid sensorToken, bool isActive);
     }
 }

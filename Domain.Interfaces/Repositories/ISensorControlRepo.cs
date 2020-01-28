@@ -10,5 +10,6 @@ namespace Domain.Interfaces.Repositories
     public interface ISensorControlRepo : IGenericRepository<SensorControl>
     {
         Task<IEnumerable<SensorControl>> GetByToken(Guid token);
+        SensorControl GetByControlIdAndSensorId(int controlId, int sensorId);
     }
 }
