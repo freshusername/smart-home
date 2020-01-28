@@ -3,47 +3,59 @@
 @{
     ViewData["Title"] = "Dashboards";
 }
-
+//TODO Relocate from bootstrap
 <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+<div class="app-main">
+    <div class="app-main__outer">
+        <div class="app-inner-layout app-inner-layout-page">            
+            <div class="app-inner-layout__wrapper">  
+                <div class="app-inner-layout__content">
+                    <div class="tab-content">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col">
+                                    <a class="btn btn-success text-light text-uppercase"
+                                       data-toggle="toggle" data-target="#create_elem" id="dash_create_button">
+                                        <span class="glyphicon glyphicon-plus-sign"></span> Add dashboard
+                                    </a>
 
-<div class="row">
-    <div class="col">
+                                    <div id="create_elem" class="collapse mr-2">
+                                        <form data-dash-url="@Url.Action("Create","Dashboard")" method="post" id="dash_create">
+                                            <p>
+                                                <input id="form_dash_name" placeholder="Enter name" size="14" maxlength="35" required />
+                                                <input type="submit" value="Add" class="btn btn-primary" />
+                                            </p>
+                                        </form>
+                                    </div>
 
-        <a class="btn btn-success text-light text-uppercase"
-           data-toggle="toggle" data-target="#create_elem" id="dash_create_button">
-            <span class="glyphicon glyphicon-plus-sign"></span> Add dashboard
-        </a>
+                                </div>
+                            </div>
 
-        <div id="create_elem" class="collapse mr-2">
-            <form data-dash-url="@Url.Action("Create","Dashboard")" method="post" id="dash_create">
-                <p>
-                    <input id="form_dash_name" placeholder="Enter name" size="14" maxlength="35" required />
-                    <input type="submit" value="Add" class="btn btn-primary" />
-                </p>
-            </form>
-        </div>
+                            <div class="row justify-content-center" style="margin-top:40px;">
 
-    </div>
-</div>
-<div class="row justify-content-center" style="margin-top:40px;">
+                                <div id="no_dashboards" class="d-none">
+                                    <h2>No dashboards</h2>
+                                </div>
 
-    <div id="no_dashboards" class="d-none">
-        <h2>No dashboards</h2>
-    </div>
+                                <div class="d-flex justify-content-center flex-row flex-wrap aligh-content-center" id="dashboards">
 
-    <div class="d-flex justify-content-center flex-wrap aligh-content-center" id="dashboards">
+                                    @foreach (var dashboard in Model.Dashboards)
+                                    {
+                                        <div class="col col-sm-6 col-md-4 col-lg-3 dash_element">
+                                            @await Component.InvokeAsync("Dashboard", new { model = dashboard })
+                                        </div>
+                                    }
 
-        @foreach (var dashboard in Model.Dashboards)
-        {
-            <div class="border m-2 dash_element ">
-                @await Component.InvokeAsync("Dashboard", new { model = dashboard })
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        }
-
+        </div>      
     </div>
-
 </div>
-
 <script src="~/lib/jquery/dist/jquery.js"></script>
 <script>
 
@@ -134,7 +146,7 @@
                     console.log(result);
                 },
                 success: function (data) {
-                    let element = $("<div  class='border m-2 dash_element' >" + data + "</div>");
+                    let element = $("<div  class='col col-sm-6 col-md-4 col-lg-3 dash_element' >" + data + "</div>");
                     element.hide();
                     $('#dashboards').prepend(element);
                     element.show(500);
