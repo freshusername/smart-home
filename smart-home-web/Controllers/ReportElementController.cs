@@ -78,21 +78,13 @@ namespace smart_home_web.Controllers
         {
             if (!ModelState.IsValid)
                 return View(model);
-            string userId = _userManager.GetUserId(User);
-
-            if (model.Type == ReportElementType.StatusReport)
-            {
-                SensorDto sensor = await _reportElementManager.GetLastSensorByUserId(userId);
-                model.SensorId = sensor.Id;
-                model.Hours = (int)ReportElementHours.AllTime;
-            }
             if (model.SensorId == 0)
             {
                 ModelState.AddModelError("", "There is not such sensor");
                 return View(model);
             }
             ReportElementDto reportElement = _mapper.Map<EditReportElementViewModel, ReportElementDto>(model);
-            await _reportElementManager.EditReportElement(reportElement, userId);
+            await _reportElementManager.EditReportElement(reportElement);
             return RedirectToAction("Detail", "Dashboard", new { id = model.DashboardId });
         }
 

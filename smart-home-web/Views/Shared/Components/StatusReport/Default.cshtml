@@ -1,30 +1,42 @@
 ﻿@model smart_home_web.Models.ReportElements.ReportElementViewModel;
 
-<div class="text-center d-flex flex-column align-items-center">
-    <table class="table table-hover table-responsive">
-        <thead class="text-center">
-            <tr>
-                <th>Name</th>
-                <th>Value</th>
-            </tr>
-        </thead>
-        <tbody class="text-center">
-            @if (!Model.Dates.Any())
-            {
-                <tr>
-                    <td colspan="2">No Values</td>
-                </tr>
-            }
-            else
-            {
-                @for (int i = 0; i < Model.Dates.Count(); i++)
-                {
-                    <tr>
-                        <td> @Model.Dates[i] </td>
-                        <td> @Model.Values[i] </td>
-                    </tr>
-                }
-            }
-        </tbody>
-    </table>
-</div>
+
+@if (Model.IsCorrect)
+{
+    <figure class="highcharts-figure d-flex align-items-center justify-content-center h-100">
+        <div id="@("StatusReport"+Model.Id.ToString())">
+            <div class="text-center">
+                <table class="table table-hover table-responsive">
+                    <thead class="text-center">
+                        <tr>
+                            <th>Name</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                        @if (!Model.Dates.Any())
+                        {
+                            <tr>
+                                <td colspan="2">No Values</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @for (int i = 0; i < Model.Dates.Count(); i++)
+                            {
+                                <tr>
+                                    <td> @Model.Dates[i] </td>
+                                    <td> @Model.Values[i] </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </figure>
+}
+else
+{
+    <label class="control-label graph-label text-center">@Model.Message</label>
+}

@@ -31,9 +31,8 @@ namespace Infrastructure.Business.Managers
             return reportElement;
         }
 		
-        public async Task EditReportElement(ReportElementDto reportElementDTO, string userId)
+        public async Task EditReportElement(ReportElementDto reportElementDTO)
         {
-            UserId = userId;
             ReportElement reportElement = mapper.Map<ReportElementDto, ReportElement>(reportElementDTO);
             await unitOfWork.ReportElementRepo.Update(reportElement);
             unitOfWork.Save();

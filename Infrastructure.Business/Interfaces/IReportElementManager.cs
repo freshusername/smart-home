@@ -21,7 +21,7 @@ namespace Infrastructure.Business.Managers
 
         Task CreateReportElement(ReportElementDto reportElementDto,string userId);
         Task UpdateReportElementHours(int gaugeId, int hours);
-        Task EditReportElement(ReportElementDto wordCloud, string userId);
+        Task EditReportElement(ReportElementDto wordCloud);
 		Task Update(ReportElement reportElement);
 		Task Lock(ReportElement reportElement);
 		Task Delete(ReportElement reportElement);
