@@ -129,7 +129,7 @@ namespace Infrastructure.Business.Managers
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(reportElementId);
 
             DateTime dateFrom = new DateTime();
-            DateTime dateTo = DateTime.Now.AddHours(1);
+            DateTime dateTo = DateTime.Now.AddMinutes(1);
             //DateTime[] daysArray = new DateTime[24];
             int[] hoursArray = new int[24];
 
@@ -143,76 +143,44 @@ namespace Infrastructure.Business.Managers
 
             IEnumerable<BoolValuePercentagePerHour> boolValuePercentagesPerHours = await
                 unitOfWork.HistoryRepo.GetBoolValuePercentagesPerHours(reportElement.SensorId, dateFrom, dateTo);
-            List<BoolValuePercentagePerHour> BoolValuePercentagesPerHours = boolValuePercentagesPerHours.ToList();
+            //List<BoolValuePercentagePerHour> BoolValuePercentagesPerHours = boolValuePercentagesPerHours.ToList();
+            List<BoolValuePercentagePerHour> BoolValuePercentagesPerHours = new List<BoolValuePercentagePerHour>();
 
+            int w = 0;
             for (int j = 0; j < hoursArray.Length; j++)
             {
                 int k = hoursArray[j];
                 if (!boolValuePercentagesPerHours.Any(a => a.HourTime == hoursArray[j]))
                 {
-                    if (k == 0)
+
+                    BoolValuePercentagesPerHours.Add(
+                    new BoolValuePercentagePerHour
                     {
-                        dateFrom = dateFrom.AddHours(1);
-                        BoolValuePercentagesPerHours.Add(
-                        new BoolValuePercentagePerHour
-                        {
-                            DayDate = dateFrom, //TODO: if(currDate) else(lastday)
-                            HourTime = hoursArray[j],
-                            TrueCount = null,
-                            TrueFalseCount = null,
-                            TruePercentage = null
-                        });
-                    }
-                    else
-                    {
-                        BoolValuePercentagesPerHours.Add(
-                        new BoolValuePercentagePerHour
-                        {
-                            DayDate = dateFrom, //TODO: if(currDate) else(lastday)
-                            HourTime = hoursArray[j],
-                            TrueCount = null,
-                            TrueFalseCount = null,
-                            TruePercentage = null
-                        });
-                        dateFrom = dateFrom.AddHours(1);
-                    }
+                        DayDate = dateFrom,
+                        HourTime = hoursArray[j],
+                        TrueCount = null,
+                        TrueFalseCount = null,
+                        TruePercentage = null
+                    });
+                    dateFrom = dateFrom.AddHours(1);
+
                 }
                 else
                 {
-                    //TODO: some logic
+                    BoolValuePercentagesPerHours.Add(
+                        new BoolValuePercentagePerHour
+                        {
+                            DayDate = dateFrom,
+                            HourTime = hoursArray[j],
+                            TrueCount = boolValuePercentagesPerHours.ElementAt(w).TrueCount,
+                            TrueFalseCount = boolValuePercentagesPerHours.ElementAt(w).TrueFalseCount,
+                            TruePercentage = boolValuePercentagesPerHours.ElementAt(w).TruePercentage
+                        });
+                    w++;
+                    dateFrom = dateFrom.AddHours(1);
                 }
             }
 
-            var Part1Append = new List<BoolValuePercentagePerHour>();
-            var Part2Append = new List<BoolValuePercentagePerHour>();
-            var FinalPart = new List<BoolValuePercentagePerHour>();
-
-            BoolValuePercentagesPerHours = BoolValuePercentagesPerHours.OrderBy(d => d.DayDate).ToList();
-            foreach (var bvp in BoolValuePercentagesPerHours)
-            {
-                if (bvp.DayDate == DateTime.Now.Date)
-                {
-                    Part2Append.Add(bvp);
-                }
-                else
-                {
-                    Part1Append.Add(bvp);
-                }
-            }
-            Part1Append = Part1Append.OrderBy(d => d.HourTime).ToList();
-            Part2Append = Part2Append.OrderBy(d => d.HourTime).ToList();
-            //foreach (var t1 in Part1Append)
-            //{
-            //    FinalPart.Prepend(t1);
-            //}
-            //foreach (var t2 in Part2Append)
-            //{
-            //    FinalPart.Append(t2);
-            //}
-            FinalPart.AddRange(Part1Append);
-            FinalPart.AddRange(Part2Append);
-
-            var test = FinalPart;
             if (boolValuePercentagesPerHours.Count() == 0)
                 return new BoolHeatmapDto { Id = reportElementId, IsCorrect = false };
 
@@ -221,7 +189,7 @@ namespace Infrastructure.Business.Managers
             heatmap.Id = reportElement.Id;
             heatmap.DashboardName = reportElement.Dashboard.Name;
             heatmap.DashboardId = reportElement.Dashboard.Id;
-            heatmap.BoolValuePercentagesPerHours = test;
+            heatmap.BoolValuePercentagesPerHours = BoolValuePercentagesPerHours;
             heatmap.Hours = reportElement.Hours;
 
             return heatmap;

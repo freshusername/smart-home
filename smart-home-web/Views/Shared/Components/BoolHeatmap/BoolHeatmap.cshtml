@@ -30,7 +30,9 @@
 
             for (int i = 0; i < 24; i += 6)
             {
-                hoursPeriods.Add(hoursList[i].ToString() + " - " + hoursList[i + 5].ToString());
+                int? temp = hoursList[i + 5];
+                temp++;
+                hoursPeriods.Add(hoursList[i].ToString() + " - " + temp.ToString());
             }
 
             for (int i = 0; i < 24; i += 4)
@@ -51,14 +53,17 @@
         }
 
         var arr = @Html.Raw(Json.Serialize(hoursList));
+        //var arr = hoursList;
         function getHourForValue(index) {
             var hourTime = '';
-                for (var i = 0; i < arr.length; i++) {
-                    if (i == index) {
-                         hourTime =  arr[i];
-                    }
+            for (var i = 0; i < arr.length; i++) {
+                if (i == index) {
+                    hourTime = arr[i];
                 }
-            return hourTime;
+            }
+            var k = parseInt(hourTime);
+            k++;
+            return hourTime + ":00 - " + k + ":00";
         }
 
         Highcharts.chart("BoolHeatmap"+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
@@ -134,7 +139,7 @@
                     return '<b>' + '</b><br>' + @Html.Raw(Json.Serialize(Model.SensorName))  +
                         (this.point.value == undefined ? ' has no bool data' : ' has true percentage: <b>' + this.point.value + "% ") +
                             '</b><br> at <b>' + getPointCategoryName(this.point, 'x') + ', ' +
-                             (getHourForValue(this.point.index) == undefined ? ' uncorr res of func' : getHourForValue(this.point.index)) + ' </b>';
+                             getHourForValue(this.point.index) + ' </b>';
                 }
             },
 
