@@ -15,7 +15,7 @@
         <a asp-action="Create" class="btn btn-success">Add new sensor</a>
     </div>
 }
-<table class="table" data-save-url="@Url.Action("SetActive", "Sensor")">
+<table class="table text-center"  data-save-url="@Url.Action("SetActive", "Sensor")">
     <thead>
         <tr>
             <th scope="col">On/Off</th>
@@ -45,7 +45,7 @@
                         <p>No image was added</p>
                     }
                 </td>
-                <td>
+                <td class="text-left">
                     <div id="sensor-details">
                         <h5>Name: @sensor.Name</h5>
                         <h5>Type: @sensor.SensorTypeName</h5>
@@ -105,8 +105,10 @@
             type: 'Post',
             url: $('table').data('save-url'),
             data: { id: $(this).attr('id') },
-            success: function () {
+            beforeSend: function () {
                 $(".sensor-activated").toggleClass("fa-check-circle fa-times-circle");
+            },
+            success: function () {      
                 console.log('changed');
             }
         });
