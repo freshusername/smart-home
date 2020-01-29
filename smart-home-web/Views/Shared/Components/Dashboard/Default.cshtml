@@ -1,43 +1,126 @@
 ﻿@model smart_home_web.Models.Dashboard.DashboardViewModel
 
-
-<div class="col-lg-3 dash_id h-100" data-dash-id="@Model.Id.ToString()">
-    <div class="text-center p-2 h-100 d-flex flex-column justify-content-between"  style="width: 18rem;">
-        <div>
-            <a href="#" class="dash_remove float-right"
-               data-dash-url="@Url.Action("Delete","Dashboard")">
-                <span class="glyphicon glyphicon-remove"></span>
-
-            </a>
-            <img class="card-img-top m-2" src="https://miro.medium.com/max/3440/0*8UNAgR_1_4SMV4BY.png" alt="Card image cap">
-        </div>
-        <div>
-            <div class="dash_name_edit mb-2" style="display:none;">
-                <form data-dash-url="@Url.Action("Edit","Dashboard")" method="post" class="form_edit_name">
-                    <input class="form_dash_name" placeholder="Enter name" size="15" maxlength="35" required value="@Model.Name" />
-                    <button type="submit" class="dash_edit d-inline">
-                        <span class="glyphicon glyphicon-ok dash_icon"></span>
-                    </button>
-                </form>
-
-            </div>
-            <div class="dash_name m-2">
-                <h3 class="d-inline name_header" style="word-wrap: break-word;">@Model.Name </h3>
-                <a href="#" class="d-inline">
-                    <span class="glyphicon glyphicon-pencil dash_icon"></span>
-                </a>
-                <br />
-            </div>
-
+@*<div class="col-lg-3 dash_id h-100" data-dash-id="@Model.Id.ToString()">
+        <div class="text-center p-2 h-100 d-flex flex-column justify-content-between"  style="width: 18rem;">
             <div>
-                <p>
-                    <span class="badge badge-light">@Model.ReportElements.Count()</span> report element@(Model.ReportElements.Count() != 1 ? "s" : "")
-                </p>
+                <a href="#" class="dash_remove float-right"
+                   data-dash-url="@Url.Action("Delete","Dashboard")">
+                    <span class="glyphicon glyphicon-remove"></span>
+
+                </a>
+                <img class="card-img-top m-2" src="https://miro.medium.com/max/3440/0*8UNAgR_1_4SMV4BY.png" alt="Card image cap">
+            </div>
+            <div>
+                <div class="dash_name_edit mb-2" style="display:none;">
+                    <form data-dash-url="@Url.Action("Edit","Dashboard")" method="post" class="form_edit_name">
+                        <input class="form_dash_name" placeholder="Enter name" size="15" maxlength="35" required value="@Model.Name" />
+                        <button type="submit" class="dash_edit d-inline">
+                            <span class="glyphicon glyphicon-ok dash_icon"></span>
+                        </button>
+                    </form>
+
+                </div>
+                <div class="dash_name m-2">
+                    <h3 class="d-inline name_header" style="word-wrap: break-word;">@Model.Name </h3>
+                    <a href="#" class="d-inline">
+                        <span class="glyphicon glyphicon-pencil dash_icon"></span>
+                    </a>
+                    <br />
+                </div>
+
+                <div>
+                    <p>
+                        <span class="badge badge-light">@Model.ReportElements.Count()</span> report element@(Model.ReportElements.Count() != 1 ? "s" : "")
+                    </p>
+                </div>
+            </div>
+
+            <div class="m-3">
+                <a asp-controller="Dashboard" asp-action="Detail" asp-route-id="@Model.Id" class="btn btn-primary dash_open">OPEN</a>
             </div>
         </div>
+    </div>*@
 
-        <div class="m-3">
-            <a asp-controller="Dashboard" asp-action="Detail" asp-route-id="@Model.Id" class="btn btn-primary dash_open">OPEN</a>
+<div class="mb-3 card">
+    <div class="card-header-tab card-header">
+        <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
+            <i class="header-icon lnr-shirt mr-3 text-muted opacity-6"> </i>
+            Top Sellers
         </div>
+        <div class="btn-actions-pane-right actions-icon-btn">
+            <div class="btn-group dropdown">
+                <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn-icon btn-icon-only btn btn-link">
+                    <i class="pe-7s-menu btn-icon-wrapper"></i>
+                </button>
+                <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu-shadow dropdown-menu-hover-link dropdown-menu">
+                    <h6 tabindex="-1" class="dropdown-header">Header</h6>
+                    <button type="button" tabindex="0" class="dropdown-item">
+                        <i class="dropdown-icon lnr-inbox"> </i><span>Menus</span>
+                    </button>
+                    <button type="button" tabindex="0" class="dropdown-item">
+                        <i class="dropdown-icon lnr-file-empty"> </i><span>Settings</span>
+                    </button>
+                    <button type="button" tabindex="0" class="dropdown-item">
+                        <i class="dropdown-icon lnr-book"> </i><span>Actions</span>
+                    </button>
+                    <div tabindex="-1" class="dropdown-divider"></div>
+                    <div class="p-1 text-right">
+                        <button class="mr-2 btn-shadow btn-sm btn btn-link">
+                            View
+                            Details
+                        </button>
+                        <button class="mr-2 btn-shadow btn-sm btn btn-primary">
+                            Action
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="widget-chart widget-chart2 text-left p-0">
+        <div class="widget-chat-wrapper-outer">
+            <div class="widget-chart-content widget-chart-content-lg">
+                <div class="widget-chart-flex">
+                    <div class="widget-title opacity-5 text-muted text-uppercase">
+                        New accounts since 2018
+                    </div>
+                </div>
+                <div class="widget-numbers">
+                    <div class="widget-chart-flex">
+                        <div>
+                            <span class="opacity-10 text-success pr-2">
+                                <i class="fa fa-angle-up"></i>
+                            </span>
+                            <span>9</span>
+                            <small class="opacity-5 pl-1">%</small>
+                        </div>
+                        <div class="widget-title ml-2 font-size-lg font-weight-normal text-muted">
+                            <span class="text-danger pl-2">+14% failed</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="widget-chart-wrapper widget-chart-wrapper-xlg opacity-10 m-0">  
+                <div class="resize-triggers">
+                    <div class="expand-trigger">
+                        <div style="width: 303px; height: 161px;">
+                        </div>
+                    </div>
+                    <div class="contract-trigger">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="pt-2 pb-0 card-body">
+
+    </div>
+    <div class="d-block text-center rm-border card-footer">
+        <button class="btn btn-primary">
+            View complete report
+            <span class="text-white pl-2 opacity-3">
+                <i class="fa fa-arrow-right"></i>
+            </span>
+        </button>
     </div>
 </div>
