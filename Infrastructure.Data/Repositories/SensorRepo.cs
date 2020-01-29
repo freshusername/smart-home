@@ -50,8 +50,8 @@ namespace Infrastructure.Data.Repositories
         public Sensor GetByToken(Guid token)
         {
             var sensor = context.Sensors
+                                .Include(s => s.User)
                                     .Include(s => s.SensorType)
-                                    .Include(s => s.User)
                                 .FirstOrDefault(e => e.Token == token);
 
             return sensor;
@@ -77,6 +77,15 @@ namespace Infrastructure.Data.Repositories
 
             return sensors;
         }
+        
+        public async Task<IEnumerable<Sensor>> GetSensorControlsByMeasurementTypeAndUserId(MeasurementType type, string UserId)
+        {
+            var sensors = await context.Sensors
+                .Where(s => s.SensorType.MeasurementType == type && s.AppUserId == UserId && s.SensorType.IsControl != false)
+                .ToListAsync();
+
+            return sensors;
+        }
         public async Task<IEnumerable<Sensor>> GetSensorControls()
         {
             var sensorControls = await context.Sensors
@@ -85,5 +94,17 @@ namespace Infrastructure.Data.Repositories
 
             return sensorControls;
         }       
+        
+
+        public async Task<Sensor> GetLastSensorByUserId(string userId)
+        {
+            var sensor = await context.Sensors
+                                   .Include(s => s.SensorType)
+                                       .ThenInclude(st => st.Icon)
+                                   .Include(s => s.Icon)
+                               .LastOrDefaultAsync(s => s.AppUserId == userId);
+
+            return sensor;
+        }
     }
 }

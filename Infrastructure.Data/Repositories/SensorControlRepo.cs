@@ -45,5 +45,12 @@ namespace Infrastructure.Data.Repositories
 
             return sensorControl;
         }
+
+        public SensorControl GetByControlIdAndSensorId(int controlId , int sensorId)
+        {
+            var sensorControl = context.SensorControls.FirstOrDefault(e => e.ControlId == controlId && e.SensorId == sensorId);
+
+            return sensorControl;
+        }
     }
 }

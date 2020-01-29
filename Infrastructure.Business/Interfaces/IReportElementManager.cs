@@ -1,5 +1,8 @@
 ﻿using Domain.Core.Model;
+using Infrastructure.Business.DTOs.History;
 using Infrastructure.Business.DTOs.ReportElements;
+using Infrastructure.Business.DTOs.Sensor;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Business.Managers
@@ -8,6 +11,7 @@ namespace Infrastructure.Business.Managers
     {
 		Task<ReportElementDto> GetWordCloudById(int ReportElementId);
 		Task<ReportElementDto> GetColumnRangeById(int ReportElementId);
+        Task<ReportElementDto> GetStatusReport(int ReportElementId);
 		Task<ReportElementDto> GetDataForTimeSeries(int id);
 		Task<ReportElementDto> GetOnOffById(int id);
 
@@ -15,8 +19,9 @@ namespace Infrastructure.Business.Managers
         Task<HeatmapDto> GetHeatmapById(int ReportElementId);
         Task<BoolHeatmapDto> GetBoolHeatmapById(int ReportElementId);
         Task<GaugeDto> GetGaugeById(int gaugeId);
+        Task<SensorDto> GetLastSensorByUserId(string userId);
 
-        Task CreateReportElement(ReportElementDto reportElementDto);
+        Task CreateReportElement(ReportElementDto reportElementDto,string userId);
         Task UpdateReportElementHours(int gaugeId, int hours);
         Task EditReportElement(ReportElementDto wordCloud);
 		Task Update(ReportElement reportElement);

@@ -13,6 +13,7 @@ namespace Domain.Core.Model.Enums
         BoolHeatmap,
         TimeSeries,
         Wordcloud,
-        OnOff
+        OnOff,
+        StatusReport
     }
 }

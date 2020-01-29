@@ -20,20 +20,27 @@ namespace Infrastructure.Business.Services
         public async Task<OperationDetails> CheckStatus(Guid token)
         {
             var data = await _db.SensorControlRepo.GetByToken(token);
-            if (data == null || data.Count() == 0) return new OperationDetails(false, "", "");
-
+             if (data == null || data.Count() == 0) return new OperationDetails(false, "", "");
+           
             foreach (var item in data)
             {
-                if (item.IsActive && item.Sensor.SensorType.MeasurementType == MeasurementType.Bool)
+
+                if (item.Sensor.SensorType.IsControl)
+                {
+                    var result = VoiceControl(item.SensorId.Value, token);
+                    if (result) return new OperationDetails(true, "", "");
+                }
+                else if (item.IsActive && item.Sensor.SensorType.MeasurementType == MeasurementType.Bool)
                 {
                     var result = BoolVerification(item.SensorId.Value);
                     if (result) return new OperationDetails(true, "", "");
                 }
-                if (item.IsActive && item.Sensor.SensorType.MeasurementType == MeasurementType.Int)
+                else if (item.IsActive && item.Sensor.SensorType.MeasurementType == MeasurementType.Int)
                 {
                     var result = IntVerification(item.SensorId.Value, item.minValue, item.maxValue);
                     if (result) return new OperationDetails(true, "", "");
                 }
+                
             }
 
             return new OperationDetails(false, "", "");
@@ -52,8 +59,7 @@ namespace Infrastructure.Business.Services
         }
 
         private bool IntVerification(int sensorId , int? minValue , int? maxValue)
-        {
-          
+        {          
             var period = 5;
 
             if (minValue != null && maxValue != null)
@@ -82,6 +88,34 @@ namespace Infrastructure.Business.Services
             }
 
             return false;
+        }
+
+        private bool VoiceControl(int sensorId , Guid token)
+        {
+            var control = _db.ControlRepo.GetByToken(token);
+             var sensorControl = _db.SensorControlRepo.GetByControlIdAndSensorId(control.Id, sensorId);
+
+            if (sensorControl == null) return false;
+             if (sensorControl.IsActive) return true;
+
+            return false;
+        }
+
+        public OperationDetails Activate(Guid controlToken , Guid sensorToken , bool isActive)
+        {
+            var control = _db.ControlRepo.GetByToken(controlToken); // TODO Get from sensors
+             var sensor = _db.SensorRepo.GetByToken(sensorToken);
+
+            if(control == null || sensor == null) return new OperationDetails(false, "", "");
+
+            var sensorControl = _db.SensorControlRepo.GetByControlIdAndSensorId(control.Id, sensor.Id);
+             if (sensorControl == null) return new OperationDetails(false, "", "");
+
+            sensorControl.IsActive = isActive;
+             _db.SensorControlRepo.Update(sensorControl);
+            _db.Save();
+
+            return new OperationDetails(true , "", "");
         }
 
     }

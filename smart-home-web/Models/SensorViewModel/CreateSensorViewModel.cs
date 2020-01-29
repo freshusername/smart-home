@@ -27,6 +27,7 @@ namespace smart_home_web.Models.SensorViewModel
         public Guid Token { get; set; }
 
         public DateTimeOffset? CreatedOn { get; set; }
+        public bool IsActive { get; set; }
         public bool IsValid { get; set; }
         public IFormFile IconFile { get; set; }
 
