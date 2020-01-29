@@ -72,7 +72,8 @@
                 type: 'heatmap',
                 marginTop: 40,
                 marginBottom: 80,
-                plotBorderWidth: 1
+                plotBorderWidth: 1,
+                borderRadius: 72
             },
 
             title: {
@@ -145,7 +146,9 @@
 
             series: [{
                 name: 'True percentage per hours for bool sensor',
-                borderWidth: 1,
+                borderWidth: 0.1,
+                colsize: 0.35,
+                rowsize: 0.35,
                 data: [
                     @{int h = 0;}
                     @for (int i = 0; i < 4; i++)
