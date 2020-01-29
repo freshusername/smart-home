@@ -53,7 +53,7 @@ namespace Infrastructure.Business.Managers
             try
             {
                 SensorType sensorType = await unitOfWork.SensorTypeRepo.GetById(id);
-                unitOfWork.SensorTypeRepo.Delete(sensorType);
+                await unitOfWork.SensorTypeRepo.Delete(sensorType);
                 unitOfWork.Save();
             }
             catch (Exception ex)

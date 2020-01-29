@@ -112,17 +112,19 @@
     });
 
     $(".sensor-delete").click(function () {
-        let parent = $(this).closest(".sensor-row");
-        $.ajax({
-            url:  '@Url.Action("Delete","Sensor")',
-            data: { sensorId: $(this).data("sensorid") },
-            beforeSend: function () {
-                parent.hide(800, function () {
-                    parent.remove();
-                })
-                return true;
-            }
-        });
+        if (confirm("Are you sure?")) {
+            let parent = $(this).closest(".sensor-row");
+            $.ajax({
+                url:  '@Url.Action("Delete","Sensor")',
+                data: { sensorId: $(this).data("sensorid") },
+                beforeSend: function () {
+                    parent.hide(800, function () {
+                        parent.remove();
+                    })
+                    return true;
+                }
+            });
+        }
     });
 
 

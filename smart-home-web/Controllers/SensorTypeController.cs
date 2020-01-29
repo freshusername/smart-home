@@ -95,27 +95,14 @@ namespace smart_home_web.Controllers
             }
         }
 
-        // GET: SensorType/Delete/5
-        public async Task<ActionResult> Delete(int id)
-        {
-            var sensorTypeDto = await _sensorTypeManager.GetSensorTypeByIdAsync(id);
-            SensorTypeViewModel sensorTypeViewModel = _mapper.Map<SensorTypeDto, SensorTypeViewModel>(sensorTypeDto);
-            return View(sensorTypeViewModel);
-        }
-
-        // POST: SensorType/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(int sensorTypeId)
         {
             try
             {
-                var res = _sensorTypeManager.Delete(id).Result;
-                if (res.Succeeded)
-                    return RedirectToAction(nameof(Index));
-                else
+                var res = await _sensorTypeManager.Delete(sensorTypeId);
+                if (!res.Succeeded)
                     ModelState.AddModelError(res.Property, res.Message);
-                return View();
+                return Ok();
             }
             catch
             {

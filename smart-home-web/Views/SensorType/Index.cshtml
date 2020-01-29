@@ -37,7 +37,7 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr height="64">
+        <tr height="64" class="sensor-type-row">
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
@@ -68,9 +68,7 @@
                            asp-route-id="@item.Id">
                             <i class="fa fa-edit"></i>
                         </a>
-                        <a class="btn btn-sm btn-danger text-center"
-                           asp-action="Delete"
-                           asp-route-id="@item.Id">
+                        <a class="btn btn-sm btn-danger text-center sensor-type-delete" data-sensor-type-id="@item.Id">
                             <i class="fa fa-trash"></i>
                         </a>
                     </td>
@@ -79,3 +77,24 @@
          }
     </tbody>
 </table>
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script>
+    $(function () {
+        $(".sensor-type-delete").click(function () {
+            if (confirm("Are you sure?")) {
+                let parent = $(this).closest(".sensor-type-row");
+                $.ajax({
+                    url: '@Url.Action("Delete","SensorType")',
+                    data: { sensorTypeId: $(this).data("sensor-type-id") },
+                    beforeSend: function () {
+                        parent.hide(800, function () {
+                            parent.remove();
+                        })
+                        return true;
+                    }
+                });
+            }
+        });
+    });
+</script>
