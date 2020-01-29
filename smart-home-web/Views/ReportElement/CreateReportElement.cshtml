@@ -71,12 +71,19 @@ $(document).ready(function() {
     function updateInput() {
         if ($("select#type-select").children("option:selected").val() == "@((int)Domain.Core.Model.Enums.ReportElementType.Heatmap)") {
             $('select#hours-select').attr('disabled', true);
+            $('select#sensor-select').attr('disabled', false);
             $('#hours-select').find('option[value="@((int)Domain.Core.Model.Enums.ReportElementHours.Hour672)"]').attr('selected', 'selected');
             $('#hours-hidden').val(@((int) Domain.Core.Model.Enums.ReportElementHours.Hour672));
+        } else if ($("select#type-select").children("option:selected").val() == "@((int)Domain.Core.Model.Enums.ReportElementType.StatusReport)") {
+            $('select#hours-select').attr('disabled', true);
+            $('select#sensor-select').attr('disabled', true);
+            $('#hours-select').find('option[value="@((int)Domain.Core.Model.Enums.ReportElementHours.AllTime)"]').attr('selected', 'selected');
+            $('#hours-hidden').val(@((int) Domain.Core.Model.Enums.ReportElementHours.AllTime));
         } else {
             $('#hours-select').children("option:selected").attr('selected', false);
             $('select#hours-select').find('option[value="@((int)Domain.Core.Model.Enums.ReportElementHours.AllTime)"]').attr('selected', true);
             $('select#hours-select').attr('disabled', false);
+            $('select#sensor-select').attr('disabled', false);
         }
         $('select').niceSelect('update');
         $('#hours-hidden').val($("#hours-select").children("option:selected").val());

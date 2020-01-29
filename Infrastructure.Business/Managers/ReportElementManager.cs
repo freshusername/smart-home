@@ -3,7 +3,11 @@ using Domain.Core.CalculateModel;
 using Domain.Core.Model;
 using Domain.Core.Model.Enums;
 using Domain.Interfaces.Repositories;
+using Infrastructure.Business.DTOs.History;
 using Infrastructure.Business.DTOs.ReportElements;
+using Infrastructure.Business.DTOs.Sensor;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +18,7 @@ namespace Infrastructure.Business.Managers
     public class ReportElementManager : BaseManager, IReportElementManager
     {
         protected readonly IHistoryManager historyManager;
+        private string UserId;
 
         public ReportElementManager(IHistoryManager historyManager, IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
@@ -25,7 +30,7 @@ namespace Infrastructure.Business.Managers
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(id);
             return reportElement;
         }
-		
+
         public async Task EditReportElement(ReportElementDto reportElementDTO)
         {
             ReportElement reportElement = mapper.Map<ReportElementDto, ReportElement>(reportElementDTO);
@@ -33,8 +38,9 @@ namespace Infrastructure.Business.Managers
             unitOfWork.Save();
         }
 
-        public async Task CreateReportElement(ReportElementDto reportElementDto)
+        public async Task CreateReportElement(ReportElementDto reportElementDto, string userId)
         {
+            UserId = userId;
             var reportElements = await unitOfWork.ReportElementRepo.GetAll();
             reportElements = reportElements.Where(r => r.DashboardId == reportElementDto.DashboardId);
             if (reportElements.Any())
@@ -122,6 +128,13 @@ namespace Infrastructure.Business.Managers
             heatmap.Hours = reportElement.Hours;
 
             return heatmap;
+        }
+
+        public async Task<ReportElementDto> GetOnOffById(int ReportElementId)
+        {
+            ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
+            ReportElementDto onOff = mapper.Map<ReportElement, ReportElementDto>(reportElement);
+            return onOff; 
         }
 
         public async Task<ReportElementDto> GetWordCloudById(int ReportElementId)
@@ -222,7 +235,6 @@ namespace Infrastructure.Business.Managers
                 return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = $"No histories in this report element per {strhours}" };
             }
 
-
             ReportElementDto columnRange = mapper.Map<Sensor, ReportElementDto>(reportElement.Sensor);
 
             columnRange.Id = ReportElementId;
@@ -271,8 +283,8 @@ namespace Infrastructure.Business.Managers
                     }
 
                 case MeasurementType.Double:
-                    
-                    if ((int)reportElement.Hours == 1) 
+
+                    if ((int)reportElement.Hours == 1)
                     {
                         values = histories.OrderBy(p => p.Date.LocalDateTime).GroupBy(p => p.Date.LocalDateTime.Minute).Select(p => new
                         {
@@ -282,7 +294,7 @@ namespace Infrastructure.Business.Managers
                         }).ToList();
                         break;
 
-                    } 
+                    }
                     else if ((int)reportElement.Hours > 1 && (int)reportElement.Hours <= 24)
                     {
                         values = histories.OrderBy(p => p.Date.LocalDateTime).GroupBy(p => p.Date.LocalDateTime.Hour).Select(p => new
@@ -292,7 +304,7 @@ namespace Infrastructure.Business.Managers
                             Date = p.Key.ToString()
                         }).ToList();
                         break;
-                        
+
                     }
                     else
                     {
@@ -310,7 +322,7 @@ namespace Infrastructure.Business.Managers
             }
 
             List<dynamic> items = values.ToList();
-            for (int i = 0; i < items.Count(); i++) 
+            for (int i = 0; i < items.Count(); i++)
             {
                 if (values.Count() == 1 || i == 0)
                 {
@@ -319,7 +331,7 @@ namespace Infrastructure.Business.Managers
                     columnRange.MaxValues.Add(items[i].Max);
                     continue;
                 }
-                if (i > 0 && !items[i].Equals(items[i - 1])) 
+                if (i > 0 && !items[i].Equals(items[i - 1]))
                 {
                     columnRange.Dates.Add(items[i].Date);
                     columnRange.MinValues.Add(items[i].Min);
@@ -406,6 +418,53 @@ namespace Infrastructure.Business.Managers
             result.IsLocked = !reportElement.IsLocked;
             await unitOfWork.ReportElementRepo.Update(result);
             unitOfWork.Save();
+        }
+
+        public async Task<ReportElementDto> GetStatusReport(int ReportElementId)
+        {
+            ReportElement reportElementt = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
+            if (reportElementt == null)
+                return new ReportElementDto { IsCorrect = false, Message = "Invalid report element" };
+
+            ReportElementDto reportElement = mapper.Map<Sensor, ReportElementDto>(reportElementt.Sensor);
+            IEnumerable<Sensor> sensors = await unitOfWork.SensorRepo.GetAllSensorsByUserId(UserId);
+
+            foreach(Sensor sensor in sensors)
+            {
+                reportElement.Dates.Add(sensor.Name);
+                History history = unitOfWork.HistoryRepo.GetLastHistoryBySensorId(sensor.Id);
+                dynamic value = null;
+                switch (reportElement.MeasurementType)
+                { 
+                    case MeasurementType.Int:
+                        value = history.IntValue.GetValueOrDefault();
+                        break;
+                    case MeasurementType.Bool:
+                        value = history.BoolValue.GetValueOrDefault();
+                        if (value == true)
+                            value = "Active";
+                        else
+                            value = "Inactive";
+
+                        break;
+                    case MeasurementType.Double:
+                        value = Math.Round(history.DoubleValue.GetValueOrDefault(),2);
+                        break;
+                    case MeasurementType.String:
+                        value = history.StringValue;
+                        break;
+                    default:
+                        return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "Incorrect sensor type for this element" };
+                }
+                reportElement.Values.Add(value);
+            }
+
+            return reportElement;
+        }
+
+        public Task<SensorDto> GetLastSensorByUserId(string userId)
+        {
+            return historyManager.GetLastSensorByUserId(userId);
         }
     }
 }

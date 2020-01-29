@@ -23,7 +23,8 @@ namespace Infrastructure.Data.Repositories
             var sensors = await context.Sensors
                 .Include(s => s.SensorType)
                     .ThenInclude(st => st.Icon)
-                .Include(s => s.Icon).ToListAsync();
+                .Include(s => s.Icon)
+                .ToListAsync();
 
             return sensors;
         }
@@ -49,6 +50,7 @@ namespace Infrastructure.Data.Repositories
         public Sensor GetByToken(Guid token)
         {
             var sensor = context.Sensors
+                                .Include(s => s.User)
                                     .Include(s => s.SensorType)
                                 .FirstOrDefault(e => e.Token == token);
 
@@ -58,11 +60,11 @@ namespace Infrastructure.Data.Repositories
         public async Task<IEnumerable<Sensor>> GetAllSensorsByUserId(string userId)
         {
             var sensors = await context.Sensors
-                                    .Include(s => s.SensorType)
-                                        .ThenInclude(st => st.Icon)
-                                    .Include(s => s.Icon)
-                                .Where(s => s.AppUserId == userId)
-                                .ToListAsync();
+                    .Include(s => s.SensorType)
+                        .ThenInclude(st => st.Icon)
+                    .Include(s => s.Icon)
+                    .Where(s => s.AppUserId == userId)
+                    .ToListAsync();
 
             return sensors;
         }
@@ -74,6 +76,35 @@ namespace Infrastructure.Data.Repositories
                 .ToListAsync();
 
             return sensors;
+        }
+        
+        public async Task<IEnumerable<Sensor>> GetSensorControlsByMeasurementTypeAndUserId(MeasurementType type, string UserId)
+        {
+            var sensors = await context.Sensors
+                .Where(s => s.SensorType.MeasurementType == type && s.AppUserId == UserId && s.SensorType.IsControl != false)
+                .ToListAsync();
+
+            return sensors;
+        }
+        public async Task<IEnumerable<Sensor>> GetSensorControls()
+        {
+            var sensorControls = await context.Sensors
+                .Where(s => s.SensorType.IsControl)
+                .ToListAsync();
+
+            return sensorControls;
         }       
+        
+
+        public async Task<Sensor> GetLastSensorByUserId(string userId)
+        {
+            var sensor = await context.Sensors
+                                   .Include(s => s.SensorType)
+                                       .ThenInclude(st => st.Icon)
+                                   .Include(s => s.Icon)
+                               .LastOrDefaultAsync(s => s.AppUserId == userId);
+
+            return sensor;
+        }
     }
 }

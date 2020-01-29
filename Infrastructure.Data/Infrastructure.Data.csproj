@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200126191810_Proc.cs" />
+    <Compile Remove="Migrations\20200126191810_Proc.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.1.1" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.1.1" />
   </ItemGroup>

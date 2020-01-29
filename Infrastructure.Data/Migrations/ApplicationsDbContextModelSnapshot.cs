@@ -86,6 +86,8 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<string>("AppUserId");
 
+                    b.Property<bool>("IsPublic");
+
                     b.Property<string>("Name");
 
                     b.HasKey("Id");
@@ -224,9 +226,9 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<int?>("IconId");
 
-                    b.Property<bool>("IsActivated");
-
                     b.Property<bool>("IsActive");
+
+                    b.Property<bool>("IsValid");
 
                     b.Property<string>("Name");
 

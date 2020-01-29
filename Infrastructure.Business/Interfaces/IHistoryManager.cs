@@ -14,13 +14,16 @@ namespace Infrastructure.Business.Managers
 		Task<HistoryDto> GetHistoryByIdAsync(int id);
 
 		Task<IEnumerable<HistoryDto>> GetAllHistoriesAsync();
-		Task<IEnumerable<HistoryDto>> GetHistoriesAsync(int count, int page, SortState sortState, bool IsActivated = true, int sensorId = 0);
+		Task<IEnumerable<HistoryDto>> GetHistoriesAsync(int count, int page, SortState sortState, bool IsActivated, int sensorId = 0);
 		Task<IEnumerable<HistoryDto>> GetHistoriesBySensorIdAsync(int sensorId);
 
 		HistoryDto GetLastHistoryBySensorId(int sensorId);
         OperationDetails AddHistory(string value, int sensorId);
 
-		double? GetMinValueForPeriod(int sensorId, int? hours);
+        Task<SensorDto> GetLastSensorByUserId(string userId);
+
+
+        double? GetMinValueForPeriod(int sensorId, int? hours);
 		double? GetMaxValueForPeriod(int sensorId, int? hours);
 
 		Task<GraphDto> GetGraphBySensorId(int SensorId, int days);

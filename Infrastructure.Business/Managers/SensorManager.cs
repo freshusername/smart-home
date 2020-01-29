@@ -101,7 +101,7 @@ namespace Infrastructure.Business.Managers
 
         public OperationDetails AddUnclaimedSensor(Guid token, string value)
         {
-            var sensor = new Sensor { Name = "Unidentified", Token = token, CreatedOn = DateTimeOffset.Now, IsActivated = false };
+            var sensor = new Sensor { Name = "Unidentified", Token = token, CreatedOn = DateTimeOffset.Now, IsValid = false };
 
             if (sensor == null)
                 return new OperationDetails(false, "Operation did not succeed!", "");
@@ -115,12 +115,18 @@ namespace Infrastructure.Business.Managers
         {
             var dashboard = await unitOfWork.DashboardRepo.GetById(dashboardId);
             var sensors = new List<Sensor>();
-            sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.Int, dashboard.AppUserId));
-            sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.Double, dashboard.AppUserId));
-            if (type == ReportElementType.TimeSeries || type == ReportElementType.Clock)
-                sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.Bool, dashboard.AppUserId));
-            if (type == ReportElementType.Clock || type == ReportElementType.Wordcloud)
-                sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.String, dashboard.AppUserId));
+            if (type == ReportElementType.OnOff)
+                foreach (var sensorControl in Enum.GetValues(typeof(MeasurementType)))
+                    sensors.AddRange(await unitOfWork.SensorRepo.GetSensorControlsByMeasurementTypeAndUserId(MeasurementType.Int, dashboard.AppUserId));
+            else
+            {
+                sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.Int, dashboard.AppUserId));
+                sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.Double, dashboard.AppUserId));
+                if (type == ReportElementType.TimeSeries || type == ReportElementType.Clock)
+                    sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.Bool, dashboard.AppUserId));
+                if (type == ReportElementType.Clock || type == ReportElementType.Wordcloud)
+                    sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.String, dashboard.AppUserId));
+            }
             var res = mapper.Map<List<Sensor>, List<SensorDto>>(sensors);
             return res;
         }
@@ -131,16 +137,16 @@ namespace Infrastructure.Business.Managers
 
             return sensor;
         }
-      
+
         public List<SensorDto> GetSensorsToControl()
         {
             var allsensors = unitOfWork.SensorRepo.GetAll().Result.ToList();
-             List<Sensor> sensors = new List<Sensor>();
+            List<Sensor> sensors = new List<Sensor>();
 
             foreach (var items in allsensors)
             {
-                if(!items.SensorType.IsControl && ( items.SensorType.MeasurementType == MeasurementType.Bool || items.SensorType.MeasurementType == MeasurementType.Int))
-                 sensors.Add(unitOfWork.SensorRepo.GetByToken(items.Token));
+                if (!items.SensorType.IsControl && (items.SensorType.MeasurementType == MeasurementType.Bool || items.SensorType.MeasurementType == MeasurementType.Int))
+                    sensors.Add(unitOfWork.SensorRepo.GetByToken(items.Token));
             }
             var result = mapper.Map<List<Sensor>, List<SensorDto>>(sensors);
 
