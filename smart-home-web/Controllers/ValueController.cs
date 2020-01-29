@@ -21,14 +21,14 @@ namespace smart_home_web.Controllers
     public class ValueController : ControllerBase
     {
         private readonly IHistoryManager _historyManager;
-        private readonly IMessageManager _messageManager;
+        private readonly IToastManager _messageManager;
         private readonly ISensorManager _sensorManager;
         private readonly IActionService _actionService;
         private readonly INotificationManager _notificationManager;
         private readonly IEmailSender _emailSender;
         private readonly UserManager<AppUser> _userManager;
         public ValueController(
-            IMessageManager messageManager,
+            IToastManager messageManager,
             IHistoryManager historyTestManager,
             ISensorManager sensorManager,
             IActionService actionService,

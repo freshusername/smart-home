@@ -64,7 +64,7 @@
 
                 <td>
                     <div class="col-xs-3">
-                        <a class="btn btn-sm btn-success text-center"
+                        <a class="btn btn-sm btn-success text-center"  title="Graph"
                            asp-controller="History"
                            asp-action="Graph"
                            asp-route-sensorId="@sensor.Id"
@@ -73,15 +73,21 @@
                         </a>
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <a class="btn btn-sm btn-info text-center"
+                            <a class="btn btn-sm btn-info text-center"  title="Edit"
                                asp-action="Update"
                                asp-route-sensorId="@sensor.Id">
                                 <i class="fa fa-edit"></i>
                             </a>
-                            <a class="btn btn-sm btn-danger text-center"
+                            <a class="btn btn-sm btn-danger text-center"  title="Delete"
                                asp-action="Delete"
                                asp-route-sensorId="@sensor.Id">
                                 <i class="fa fa-trash"></i>
+                            </a>
+                            <a class="btn btn-sm btn-warning text-center" title="Notifications"
+                               asp-controller="Toast"
+                               asp-action="Index"
+                               asp-route-sensorId="@sensor.Id">
+                                <i class="fas fa-exclamation"></i>
                             </a>
                         }
                     </div>

@@ -60,6 +60,10 @@ namespace smart_home_web.AutoMapper
                 .ForMember(nd => nd.Date, map => map.MapFrom(h => h.History.Date));
             CreateMap<NotificationDto, NotificationViewModel>().ReverseMap();
 
+            CreateMap<Notification, ToastDto>().ReverseMap();
+            CreateMap<ToastViewModel, ToastDto>().ReverseMap();
+            CreateMap<CreateToastViewModel, ToastDto>().ReverseMap();
+
             CreateMap<Sensor, GraphDto>()
                .ForMember(gd => gd.SensorId, map => map.MapFrom(s => s.Id))
                .ForMember(gd => gd.SensorName, map => map.MapFrom(s => s.Name))
