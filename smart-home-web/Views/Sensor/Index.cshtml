@@ -55,7 +55,7 @@
                         <h5>Created: @sensor.CreatedOn.Value.UtcDateTime.ToString("dd/MM/yyyy on HH:mm")</h5>
                         <h5>Comment: @sensor.Comment</h5>
                         <h5>
-                            Activated: <i class="fa @(@sensor.IsActive ? "fa-check-circle" : "fa-times-circle")"></i>
+                            Activated: <i class="fa @(@sensor.IsActive ? "fa-check-circle" : "fa-times-circle") sensor-activated"></i>
                         </h5>
                         <h5>Token: @sensor.Token</h5>
 
@@ -106,6 +106,7 @@
             url: $('table').data('save-url'),
             data: { id: $(this).attr('id') },
             success: function () {
+                $(".sensor-activated").toggleClass("fa-check-circle fa-times-circle");
                 console.log('changed');
             }
         });
