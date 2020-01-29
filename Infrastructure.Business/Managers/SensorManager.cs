@@ -159,7 +159,7 @@ namespace Infrastructure.Business.Managers
             List<Sensor> sensors = new List<Sensor>();
 
             foreach (var items in tokens)
-            {
+            {                
                 sensors.Add(unitOfWork.SensorRepo.GetByToken(items.Token));
             }
 

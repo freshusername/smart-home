@@ -39,7 +39,7 @@ namespace Infrastructure.Business.Managers
              var result = mapper.Map<SensorControl,SensorControlDto>(sensorControl);
 
               var sensor = unitOfWork.SensorRepo.GetByToken(sensorControl.Control.Token);
-             result.ControlSensorId = sensor.Id;
+            
 
             return result;
         }
