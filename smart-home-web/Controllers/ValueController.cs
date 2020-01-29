@@ -75,11 +75,12 @@ namespace smart_home_web.Controllers
 
             var historyResult = _historyManager.AddHistory(value, sensor.Id);
 
-            if (historyResult.Succeeded)
-            {
-                await _messageManager.ShowMessage(token, value);
-                return Ok(historyResult.Message);
-            }
+			if (historyResult.Succeeded)
+			{
+                await _historyManager.UpdateGraph(token, value);
+				await _messageManager.ShowMessage(token, value);
+				return Ok(historyResult.Message);
+			}
 
             return BadRequest(historyResult.Message);
         }
