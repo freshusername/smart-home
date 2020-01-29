@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace smart_home_web.Components
+namespace smart_home_web.Components.ReportElements
 {
     public class TimeSeriesViewComponent : ViewComponent
     {
