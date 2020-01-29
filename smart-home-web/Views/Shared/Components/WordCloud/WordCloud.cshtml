@@ -64,6 +64,28 @@ else
             }
         },
     });
+    var type = 'Wordcloud';
+    function UpdateWordcloud(sensorId, value) {
+        if (sensorId ==@Model.SensorId) {
+            try {
+                var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + @Model.Id).toString());
+            }
+            catch (error) {
+
+            }
+            if (typeof result !== 'undefined') {
+                var series = result.series[0];
+                var element = series.data.find(ar => ar.name == JSON.parse(value));
+                if (typeof element !== 'undefined') {
+                    element.weight++;
+                    series.addPoint();
+                }
+                else {
+                    series.addPoint({ name: JSON.parse(value), weight: 1 });
+                }
+            }
+        }
+    }
 </script>
 
 <script>
@@ -79,4 +101,6 @@ else
             result.setSize(ui.height, ui.width);
         }
     });
+
+    
 </script>
