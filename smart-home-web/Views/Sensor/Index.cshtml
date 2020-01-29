@@ -27,7 +27,7 @@
     <tbody>
         @foreach (var sensor in Model)
         {
-            <tr>
+            <tr class="sensor-row">
                 <td>
                     <label class="rocker rocker-small">
                         <input id="@sensor.Id.ToString()" type="checkbox" @Html.Raw(sensor.IsActive ? "checked" : " ")>
@@ -78,9 +78,7 @@
                                asp-route-sensorId="@sensor.Id">
                                 <i class="fa fa-edit"></i>
                             </a>
-                            <a class="btn btn-sm btn-danger text-center"
-                               asp-action="Delete"
-                               asp-route-sensorId="@sensor.Id">
+                            <a class="btn btn-sm btn-danger text-center sensor-delete" data-sensorId="@sensor.Id">
                                 <i class="fa fa-trash"></i>
                             </a>
                         }
@@ -112,5 +110,20 @@
             }
         });
     });
+
+    $(".sensor-delete").click(function () {
+        let parent = $(this).closest(".sensor-row");
+        $.ajax({
+            url:  '@Url.Action("Delete","Sensor")',
+            data: { sensorId: $(this).data("sensorid") },
+            beforeSend: function () {
+                parent.hide(800, function () {
+                    parent.remove();
+                })
+                return true;
+            }
+        });
+    });
+
 
 </script>
