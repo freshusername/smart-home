@@ -76,8 +76,8 @@ namespace Infrastructure.Data.Repositories
         public async Task<IEnumerable<BoolValuePercentagePerHour>> GetBoolValuePercentagesPerHours
             (int sensorId, DateTime dateFrom, DateTime dateTo)
         {
-            var d_from = dateFrom.ToString("yyyy-MM-dd");
-            var d_to = dateTo.ToString("yyyy-MM-dd");
+            var d_from = dateFrom.ToString("yyyy-MM-dd HH:mm");
+            var d_to = dateTo.ToString("yyyy-MM-dd HH:mm");
 
             string query = $"CALL GetTruePercentagePerHours ({sensorId}, '{d_from}', '{d_to}')";
             var truePercentages = await context.BoolValuePercentagesPerHours

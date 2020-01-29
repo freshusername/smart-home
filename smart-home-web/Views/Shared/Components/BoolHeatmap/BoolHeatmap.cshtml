@@ -14,7 +14,7 @@
 {
     <script>
         @{
-            List<DateTime> daysList = new List<DateTime>();
+            List<string> daysList = new List<string>();
             List<int?> hoursList = new List<int?>();
             List<int> trueFalseCounts = new List<int>();
             List<int> trueCounts = new List<int>();
@@ -26,6 +26,7 @@
             {
                 truePercentages.Add(tp.TruePercentage);
                 hoursList.Add(tp.HourTime);
+                daysList.Add(tp.DayDate.ToString("dd/MM/yyyy"));
             }
 
             for (int i = 0; i < 24; i += 6)
@@ -43,6 +44,7 @@
             decimal?[] valArray = truePercentages.ToArray();
             string[] hoursPeriodsArray = hoursPeriods.ToArray();
             string[] timesOfDayArray = timesOfDayList.ToArray();
+            string[] daydates = daysList.ToArray();
         }
 
         function getPointCategoryName(point, dimension) {
@@ -84,10 +86,10 @@
             xAxis: {
                 categories:
                     [
-                        @for (int i = 0; i < timesOfDayArray.Length; i++)
+                        @for (int i = 0; i < daydates.Length; i++)
                         {
                             <text>
-                                @Html.Raw(Json.Serialize(timesOfDayArray[i])) ,
+                                @Html.Raw(Json.Serialize(daydates[i])) ,
                             </text>
                         }
                     ]
