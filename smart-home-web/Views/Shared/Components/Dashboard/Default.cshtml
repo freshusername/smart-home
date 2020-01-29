@@ -1,146 +1,43 @@
 ﻿@model smart_home_web.Models.Dashboard.DashboardViewModel
-@*<div class="app-main">
-        <div class="app-main__outer">
-            <div class="card bg-dark text-white">
-                <img class="card-img" src="https://images.pexels.com/photos/450035/pexels-photo-450035.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" alt="Card image">
-                <div class="card-img-overlay">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                    <p class="card-text">Last updated 3 mins ago</p>
-                </div>
-            </div>
-        </div>
-    </div>*@
 
-    @*<div class="card border-radius-15">
-        <div class="card-header">
-            Dash
-        </div>
-        <img class="card-img-top" style="300px" src="https://i.imgur.com/ygjpYYN.jpg" alt="Card image cap">
-        <div class="card-body">
-            <h5 class="card-title">Dashboards</h5>
-            <p class="card-text">View-desk with info about particular sensors</p>
-            <a asp-controller="Dashboard" asp-action="Index" class="btn btn-primary">Open</a>
-        </div>
-    </div>*@
 
-    <div class="mb-3 card">
-        <div class="card-header-tab card-header">
-            <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
-                <i class="header-icon lnr-shirt mr-3 text-muted opacity-6"> </i>
-                Top Sellers
-            </div>
-            <div class="btn-actions-pane-right actions-icon-btn">
-                <div class="btn-group dropdown">
-                    <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn-icon btn-icon-only btn btn-link">
-                        <i class="pe-7s-menu btn-icon-wrapper"></i>
+<div class="col-lg-3 dash_id h-100" data-dash-id="@Model.Id.ToString()">
+    <div class="text-center p-2 h-100 d-flex flex-column justify-content-between"  style="width: 18rem;">
+        <div>
+            <a href="#" class="dash_remove float-right"
+               data-dash-url="@Url.Action("Delete","Dashboard")">
+                <span class="glyphicon glyphicon-remove"></span>
+
+            </a>
+            <img class="card-img-top m-2" src="https://miro.medium.com/max/3440/0*8UNAgR_1_4SMV4BY.png" alt="Card image cap">
+        </div>
+        <div>
+            <div class="dash_name_edit mb-2" style="display:none;">
+                <form data-dash-url="@Url.Action("Edit","Dashboard")" method="post" class="form_edit_name">
+                    <input class="form_dash_name" placeholder="Enter name" size="15" maxlength="35" required value="@Model.Name" />
+                    <button type="submit" class="dash_edit d-inline">
+                        <span class="glyphicon glyphicon-ok dash_icon"></span>
                     </button>
-                    <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu-shadow dropdown-menu-hover-link dropdown-menu">
-                        <h6 tabindex="-1" class="dropdown-header">Header</h6>
-                        <button type="button" tabindex="0" class="dropdown-item">
-                            <i class="dropdown-icon lnr-inbox"> </i><span>Menus</span>
-                        </button>
-                        <button type="button" tabindex="0" class="dropdown-item">
-                            <i class="dropdown-icon lnr-file-empty"> </i><span>Settings</span>
-                        </button>
-                        <button type="button" tabindex="0" class="dropdown-item">
-                            <i class="dropdown-icon lnr-book"> </i><span>Actions</span>
-                        </button>
-                        <div tabindex="-1" class="dropdown-divider"></div>
-                        <div class="p-1 text-right">
-                            <button class="mr-2 btn-shadow btn-sm btn btn-link">
-                                View
-                                Details
-                            </button>
-                            <button class="mr-2 btn-shadow btn-sm btn btn-primary">
-                                Action
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                </form>
+
+            </div>
+            <div class="dash_name m-2">
+                <h3 class="d-inline name_header" style="word-wrap: break-word;">@Model.Name </h3>
+                <a href="#" class="d-inline">
+                    <span class="glyphicon glyphicon-pencil dash_icon"></span>
+                </a>
+                <br />
+            </div>
+
+            <div>
+                <p>
+                    <span class="badge badge-light">@Model.ReportElements.Count()</span> report element@(Model.ReportElements.Count() != 1 ? "s" : "")
+                </p>
             </div>
         </div>
-        <div class="widget-chart widget-chart2 text-left p-0">
-            <div class="widget-chat-wrapper-outer">
-                <div class="widget-chart-content widget-chart-content-lg">
-                    <div class="widget-chart-flex">
-                        <div class="widget-title opacity-5 text-muted text-uppercase">
-                            New accounts since 2018
-                        </div>
-                    </div>
-                    <div class="widget-numbers">
-                        <div class="widget-chart-flex">
-                            <div>
-                                <span class="opacity-10 text-success pr-2">
-                                    <i class="fa fa-angle-up"></i>
-                                </span>
-                                <span>9</span>
-                                <small class="opacity-5 pl-1">%</small>
-                            </div>
-                            <div class="widget-title ml-2 font-size-lg font-weight-normal text-muted">
-                                <span class="text-danger pl-2">+14% failed</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="widget-chart-wrapper widget-chart-wrapper-xlg opacity-10 m-0">
-                    <div id="dashboard-sparkline-3" style="min-height: 152px;"><div id="apexchartsmtuy24ry" class="apexcharts-canvas apexchartsmtuy24ry light" style="width: 302px; height: 152px;"><svg id="SvgjsSvg1197" width="302" height="152" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" class="apexcharts-svg" xmlns:data="ApexChartsNS" transform="translate(0, 0)" style="background: transparent;"><g id="SvgjsG1199" class="apexcharts-inner apexcharts-graphical" transform="translate(0, 0)"><defs id="SvgjsDefs1198"><clipPath id="gridRectMaskmtuy24ry"><rect id="SvgjsRect1204" width="307" height="157" x="-2.5" y="-2.5" rx="0" ry="0" fill="#ffffff" opacity="1" stroke-width="0" stroke="none" stroke-dasharray="0"></rect></clipPath><clipPath id="gridRectMarkerMaskmtuy24ry"><rect id="SvgjsRect1205" width="342" height="192" x="-20" y="-20" rx="0" ry="0" fill="#ffffff" opacity="1" stroke-width="0" stroke="none" stroke-dasharray="0"></rect></clipPath><linearGradient id="SvgjsLinearGradient1211" x1="0" y1="0" x2="0" y2="1"><stop id="SvgjsStop1212" stop-opacity="0.7" stop-color="rgba(58,196,125,0.7)" offset="0"></stop><stop id="SvgjsStop1213" stop-opacity="0.9" stop-color="rgba(255,255,255,0.9)" offset="0.9"></stop><stop id="SvgjsStop1214" stop-opacity="0.9" stop-color="rgba(255,255,255,0.9)" offset="1"></stop></linearGradient></defs><line id="SvgjsLine1203" x1="0" y1="0" x2="0" y2="152" stroke="#b6b6b6" stroke-dasharray="3" class="apexcharts-xcrosshairs" x="0" y="0" width="1" height="152" fill="#b1b9c4" filter="none" fill-opacity="0.9" stroke-width="1"></line><g id="SvgjsG1217" class="apexcharts-xaxis" transform="translate(0, 0)"><g id="SvgjsG1218" class="apexcharts-xaxis-texts-g" transform="translate(0, 1.875)"></g></g><g id="SvgjsG1221" class="apexcharts-grid"><line id="SvgjsLine1223" x1="0" y1="152" x2="302" y2="152" stroke="transparent" stroke-dasharray="0"></line><line id="SvgjsLine1222" x1="0" y1="1" x2="0" y2="152" stroke="transparent" stroke-dasharray="0"></line></g><g id="SvgjsG1207" class="apexcharts-area-series apexcharts-plot-series"><g id="SvgjsG1208" class="apexcharts-series seriesx1" data:longestSeries="true" rel="1" data:realIndex="0"><path id="apexcharts-area-0" d="M 0 152L 0 90.69700103412617C 4.595652173913043 90.69700103412617 8.534782608695652 81.26577042399173 13.130434782608695 81.26577042399173C 17.72608695652174 81.26577042399173 21.665217391304346 84.40951396070321 26.26086956521739 84.40951396070321C 30.856521739130436 84.40951396070321 34.79565217391304 67.11892450879007 39.391304347826086 67.11892450879007C 43.98695652173913 67.11892450879007 47.926086956521736 96.98448810754911 52.52173913043478 96.98448810754911C 57.11739130434783 96.98448810754911 61.05652173913044 92.2688728024819 65.65217391304348 92.2688728024819C 70.24782608695652 92.2688728024819 74.18695652173913 54.543950361944155 78.78260869565217 54.543950361944155C 83.37826086956522 54.543950361944155 87.31739130434784 114.27507755946226 91.91304347826087 114.27507755946226C 96.50869565217391 114.27507755946226 100.44782608695652 87.55325749741469 105.04347826086956 87.55325749741469C 109.6391304347826 87.55325749741469 113.57826086956521 56.115822130299904 118.17391304347827 56.115822130299904C 122.76956521739132 56.115822130299904 126.70869565217393 78.12202688728024 131.30434782608697 78.12202688728024C 135.9 78.12202688728024 139.83913043478262 68.69079627714581 144.43478260869566 68.69079627714581C 149.0304347826087 68.69079627714581 152.9695652173913 79.69389865563599 157.56521739130434 79.69389865563599C 162.16086956521738 79.69389865563599 166.1 109.55946225439504 170.69565217391303 109.55946225439504C 175.29130434782607 109.55946225439504 179.2304347826087 109.55946225439504 183.82608695652175 109.55946225439504C 188.4217391304348 109.55946225439504 192.3608695652174 5.815925542916233 196.95652173913044 5.815925542916233C 201.55217391304348 5.815925542916233 205.4913043478261 103.27197518097208 210.08695652173913 103.27197518097208C 214.68260869565216 103.27197518097208 218.62173913043478 49.82833505687694 223.2173913043478 49.82833505687694C 227.81304347826085 49.82833505687694 231.7521739130435 71.83453981385729 236.34782608695653 71.83453981385729C 240.94347826086957 71.83453981385729 244.88260869565218 96.98448810754911 249.47826086956522 96.98448810754911C 254.07391304347826 96.98448810754911 258.0130434782609 63.97518097207859 262.60869565217394 63.97518097207859C 267.204347826087 63.97518097207859 271.1434782608696 67.11892450879007 275.7391304347826 67.11892450879007C 280.33478260869566 67.11892450879007 284.2739130434783 93.84074457083764 288.8695652173913 93.84074457083764C 293.46521739130435 93.84074457083764 297.40434782608696 122.13443640124095 302 122.13443640124095C 302 122.13443640124095 302 122.13443640124095 302 152M 302 122.13443640124095z" fill="url(#SvgjsLinearGradient1211)" fill-opacity="1" stroke-opacity="1" stroke-linecap="butt" stroke-width="0" stroke-dasharray="0" class="apexcharts-area" index="0" clip-path="url(#gridRectMaskmtuy24ry)" pathTo="M 0 152L 0 90.69700103412617C 4.595652173913043 90.69700103412617 8.534782608695652 81.26577042399173 13.130434782608695 81.26577042399173C 17.72608695652174 81.26577042399173 21.665217391304346 84.40951396070321 26.26086956521739 84.40951396070321C 30.856521739130436 84.40951396070321 34.79565217391304 67.11892450879007 39.391304347826086 67.11892450879007C 43.98695652173913 67.11892450879007 47.926086956521736 96.98448810754911 52.52173913043478 96.98448810754911C 57.11739130434783 96.98448810754911 61.05652173913044 92.2688728024819 65.65217391304348 92.2688728024819C 70.24782608695652 92.2688728024819 74.18695652173913 54.543950361944155 78.78260869565217 54.543950361944155C 83.37826086956522 54.543950361944155 87.31739130434784 114.27507755946226 91.91304347826087 114.27507755946226C 96.50869565217391 114.27507755946226 100.44782608695652 87.55325749741469 105.04347826086956 87.55325749741469C 109.6391304347826 87.55325749741469 113.57826086956521 56.115822130299904 118.17391304347827 56.115822130299904C 122.76956521739132 56.115822130299904 126.70869565217393 78.12202688728024 131.30434782608697 78.12202688728024C 135.9 78.12202688728024 139.83913043478262 68.69079627714581 144.43478260869566 68.69079627714581C 149.0304347826087 68.69079627714581 152.9695652173913 79.69389865563599 157.56521739130434 79.69389865563599C 162.16086956521738 79.69389865563599 166.1 109.55946225439504 170.69565217391303 109.55946225439504C 175.29130434782607 109.55946225439504 179.2304347826087 109.55946225439504 183.82608695652175 109.55946225439504C 188.4217391304348 109.55946225439504 192.3608695652174 5.815925542916233 196.95652173913044 5.815925542916233C 201.55217391304348 5.815925542916233 205.4913043478261 103.27197518097208 210.08695652173913 103.27197518097208C 214.68260869565216 103.27197518097208 218.62173913043478 49.82833505687694 223.2173913043478 49.82833505687694C 227.81304347826085 49.82833505687694 231.7521739130435 71.83453981385729 236.34782608695653 71.83453981385729C 240.94347826086957 71.83453981385729 244.88260869565218 96.98448810754911 249.47826086956522 96.98448810754911C 254.07391304347826 96.98448810754911 258.0130434782609 63.97518097207859 262.60869565217394 63.97518097207859C 267.204347826087 63.97518097207859 271.1434782608696 67.11892450879007 275.7391304347826 67.11892450879007C 280.33478260869566 67.11892450879007 284.2739130434783 93.84074457083764 288.8695652173913 93.84074457083764C 293.46521739130435 93.84074457083764 297.40434782608696 122.13443640124095 302 122.13443640124095C 302 122.13443640124095 302 122.13443640124095 302 152M 302 122.13443640124095z" pathFrom="M -1 152L -1 152L 13.130434782608695 152L 26.26086956521739 152L 39.391304347826086 152L 52.52173913043478 152L 65.65217391304348 152L 78.78260869565217 152L 91.91304347826087 152L 105.04347826086956 152L 118.17391304347827 152L 131.30434782608697 152L 144.43478260869566 152L 157.56521739130434 152L 170.69565217391303 152L 183.82608695652175 152L 196.95652173913044 152L 210.08695652173913 152L 223.2173913043478 152L 236.34782608695653 152L 249.47826086956522 152L 262.60869565217394 152L 275.7391304347826 152L 288.8695652173913 152L 302 152"></path><path id="apexcharts-area-0" d="M 0 90.69700103412617C 4.595652173913043 90.69700103412617 8.534782608695652 81.26577042399173 13.130434782608695 81.26577042399173C 17.72608695652174 81.26577042399173 21.665217391304346 84.40951396070321 26.26086956521739 84.40951396070321C 30.856521739130436 84.40951396070321 34.79565217391304 67.11892450879007 39.391304347826086 67.11892450879007C 43.98695652173913 67.11892450879007 47.926086956521736 96.98448810754911 52.52173913043478 96.98448810754911C 57.11739130434783 96.98448810754911 61.05652173913044 92.2688728024819 65.65217391304348 92.2688728024819C 70.24782608695652 92.2688728024819 74.18695652173913 54.543950361944155 78.78260869565217 54.543950361944155C 83.37826086956522 54.543950361944155 87.31739130434784 114.27507755946226 91.91304347826087 114.27507755946226C 96.50869565217391 114.27507755946226 100.44782608695652 87.55325749741469 105.04347826086956 87.55325749741469C 109.6391304347826 87.55325749741469 113.57826086956521 56.115822130299904 118.17391304347827 56.115822130299904C 122.76956521739132 56.115822130299904 126.70869565217393 78.12202688728024 131.30434782608697 78.12202688728024C 135.9 78.12202688728024 139.83913043478262 68.69079627714581 144.43478260869566 68.69079627714581C 149.0304347826087 68.69079627714581 152.9695652173913 79.69389865563599 157.56521739130434 79.69389865563599C 162.16086956521738 79.69389865563599 166.1 109.55946225439504 170.69565217391303 109.55946225439504C 175.29130434782607 109.55946225439504 179.2304347826087 109.55946225439504 183.82608695652175 109.55946225439504C 188.4217391304348 109.55946225439504 192.3608695652174 5.815925542916233 196.95652173913044 5.815925542916233C 201.55217391304348 5.815925542916233 205.4913043478261 103.27197518097208 210.08695652173913 103.27197518097208C 214.68260869565216 103.27197518097208 218.62173913043478 49.82833505687694 223.2173913043478 49.82833505687694C 227.81304347826085 49.82833505687694 231.7521739130435 71.83453981385729 236.34782608695653 71.83453981385729C 240.94347826086957 71.83453981385729 244.88260869565218 96.98448810754911 249.47826086956522 96.98448810754911C 254.07391304347826 96.98448810754911 258.0130434782609 63.97518097207859 262.60869565217394 63.97518097207859C 267.204347826087 63.97518097207859 271.1434782608696 67.11892450879007 275.7391304347826 67.11892450879007C 280.33478260869566 67.11892450879007 284.2739130434783 93.84074457083764 288.8695652173913 93.84074457083764C 293.46521739130435 93.84074457083764 297.40434782608696 122.13443640124095 302 122.13443640124095" fill="none" fill-opacity="1" stroke="#3ac47d" stroke-opacity="1" stroke-linecap="butt" stroke-width="5" stroke-dasharray="0" class="apexcharts-area" index="0" clip-path="url(#gridRectMaskmtuy24ry)" pathTo="M 0 90.69700103412617C 4.595652173913043 90.69700103412617 8.534782608695652 81.26577042399173 13.130434782608695 81.26577042399173C 17.72608695652174 81.26577042399173 21.665217391304346 84.40951396070321 26.26086956521739 84.40951396070321C 30.856521739130436 84.40951396070321 34.79565217391304 67.11892450879007 39.391304347826086 67.11892450879007C 43.98695652173913 67.11892450879007 47.926086956521736 96.98448810754911 52.52173913043478 96.98448810754911C 57.11739130434783 96.98448810754911 61.05652173913044 92.2688728024819 65.65217391304348 92.2688728024819C 70.24782608695652 92.2688728024819 74.18695652173913 54.543950361944155 78.78260869565217 54.543950361944155C 83.37826086956522 54.543950361944155 87.31739130434784 114.27507755946226 91.91304347826087 114.27507755946226C 96.50869565217391 114.27507755946226 100.44782608695652 87.55325749741469 105.04347826086956 87.55325749741469C 109.6391304347826 87.55325749741469 113.57826086956521 56.115822130299904 118.17391304347827 56.115822130299904C 122.76956521739132 56.115822130299904 126.70869565217393 78.12202688728024 131.30434782608697 78.12202688728024C 135.9 78.12202688728024 139.83913043478262 68.69079627714581 144.43478260869566 68.69079627714581C 149.0304347826087 68.69079627714581 152.9695652173913 79.69389865563599 157.56521739130434 79.69389865563599C 162.16086956521738 79.69389865563599 166.1 109.55946225439504 170.69565217391303 109.55946225439504C 175.29130434782607 109.55946225439504 179.2304347826087 109.55946225439504 183.82608695652175 109.55946225439504C 188.4217391304348 109.55946225439504 192.3608695652174 5.815925542916233 196.95652173913044 5.815925542916233C 201.55217391304348 5.815925542916233 205.4913043478261 103.27197518097208 210.08695652173913 103.27197518097208C 214.68260869565216 103.27197518097208 218.62173913043478 49.82833505687694 223.2173913043478 49.82833505687694C 227.81304347826085 49.82833505687694 231.7521739130435 71.83453981385729 236.34782608695653 71.83453981385729C 240.94347826086957 71.83453981385729 244.88260869565218 96.98448810754911 249.47826086956522 96.98448810754911C 254.07391304347826 96.98448810754911 258.0130434782609 63.97518097207859 262.60869565217394 63.97518097207859C 267.204347826087 63.97518097207859 271.1434782608696 67.11892450879007 275.7391304347826 67.11892450879007C 280.33478260869566 67.11892450879007 284.2739130434783 93.84074457083764 288.8695652173913 93.84074457083764C 293.46521739130435 93.84074457083764 297.40434782608696 122.13443640124095 302 122.13443640124095" pathFrom="M -1 152L -1 152L 13.130434782608695 152L 26.26086956521739 152L 39.391304347826086 152L 52.52173913043478 152L 65.65217391304348 152L 78.78260869565217 152L 91.91304347826087 152L 105.04347826086956 152L 118.17391304347827 152L 131.30434782608697 152L 144.43478260869566 152L 157.56521739130434 152L 170.69565217391303 152L 183.82608695652175 152L 196.95652173913044 152L 210.08695652173913 152L 223.2173913043478 152L 236.34782608695653 152L 249.47826086956522 152L 262.60869565217394 152L 275.7391304347826 152L 288.8695652173913 152L 302 152"></path><g id="SvgjsG1209" class="apexcharts-series-markers-wrap"><g class="apexcharts-series-markers"><circle id="SvgjsCircle1229" r="0" cx="0" cy="90.69700103412617" class="apexcharts-marker w3ihktgdr no-pointer-events" stroke="#ffffff" fill="#3ac47d" fill-opacity="1" stroke-width="2" stroke-opacity="0.9" default-marker-size="0"></circle></g></g><g id="SvgjsG1210" class="apexcharts-datalabels"></g></g></g><line id="SvgjsLine1224" x1="0" y1="0" x2="302" y2="0" stroke="#b6b6b6" stroke-dasharray="0" stroke-width="1" class="apexcharts-ycrosshairs"></line><line id="SvgjsLine1225" x1="0" y1="0" x2="302" y2="0" stroke-dasharray="0" stroke-width="0" class="apexcharts-ycrosshairs-hidden"></line><g id="SvgjsG1226" class="apexcharts-yaxis-annotations"></g><g id="SvgjsG1227" class="apexcharts-xaxis-annotations"></g><g id="SvgjsG1228" class="apexcharts-point-annotations"></g></g><rect id="SvgjsRect1202" width="0" height="0" x="0" y="0" rx="0" ry="0" fill="#fefefe" opacity="1" stroke-width="0" stroke="none" stroke-dasharray="0"></rect><g id="SvgjsG1219" class="apexcharts-yaxis" rel="0" transform="translate(-21, 0)"><g id="SvgjsG1220" class="apexcharts-yaxis-texts-g"></g></g></svg><div class="apexcharts-legend"></div><div class="apexcharts-tooltip light" style="left: 11px; top: 93px;"><div class="apexcharts-tooltip-series-group active" style="display: flex;"><span class="apexcharts-tooltip-marker" style="background-color: rgb(58, 196, 125); display: none;"></span><div class="apexcharts-tooltip-text" style="font-family: Helvetica, Arial, sans-serif; font-size: 12px;"><div class="apexcharts-tooltip-y-group"><span class="apexcharts-tooltip-text-label"></span><span class="apexcharts-tooltip-text-value">39</span></div><div class="apexcharts-tooltip-z-group"><span class="apexcharts-tooltip-text-z-label"></span><span class="apexcharts-tooltip-text-z-value"></span></div></div></div></div></div></div>
-                    <div class="resize-triggers"><div class="expand-trigger"><div style="width: 303px; height: 161px;"></div></div><div class="contract-trigger"></div></div>
-                </div>
-            </div>
-        </div>
-        <div class="pt-2 pb-0 card-body">
-           
-        </div>
-        <div class="d-block text-center rm-border card-footer">
-            <button class="btn btn-primary">
-                View complete report
-                <span class="text-white pl-2 opacity-3">
-                    <i class="fa fa-arrow-right"></i>
-                </span>
-            </button>
+
+        <div class="m-3">
+            <a asp-controller="Dashboard" asp-action="Detail" asp-route-id="@Model.Id" class="btn btn-primary dash_open">OPEN</a>
         </div>
     </div>
-
-
-
-@*<div class="col-lg-3 dash_id h-100" data-dash-id="@Model.Id.ToString()">
-        <div class="text-center p-2 h-100 d-flex flex-column justify-content-between"  style="width: 18rem;">
-            <div>
-                <a href="#" class="dash_remove float-right"
-                   data-dash-url="@Url.Action("Delete","Dashboard")">
-                    <span class="glyphicon glyphicon-remove"></span>
-
-                </a>
-                <img class="card-img-top m-2" src="https://miro.medium.com/max/3440/0*8UNAgR_1_4SMV4BY.png" alt="Card image cap">
-            </div>
-            <div>
-                <div class="dash_name_edit mb-2" style="display:none;">
-                    <form data-dash-url="@Url.Action("Edit","Dashboard")" method="post" class="form_edit_name">
-                        <input class="form_dash_name" placeholder="Enter name" size="15" maxlength="35" required value="@Model.Name" />
-                        <button type="submit" class="dash_edit d-inline">
-                            <span class="glyphicon glyphicon-ok dash_icon"></span>
-                        </button>
-                    </form>
-
-                </div>
-                <div class="dash_name m-2">
-                    <h3 class="d-inline name_header" style="word-wrap: break-word;">@Model.Name </h3>
-                    <a href="#" class="d-inline">
-                        <span class="glyphicon glyphicon-pencil dash_icon"></span>
-                    </a>
-                    <br />
-                </div>
-
-                <div>
-                    <p>
-                        <span class="badge badge-light">@Model.ReportElements.Count()</span> report element@(Model.ReportElements.Count() != 1 ? "s" : "")
-                    </p>
-                </div>
-            </div>
-
-            <div class="m-3">
-                <a asp-controller="Dashboard" asp-action="Detail" asp-route-id="@Model.Id" class="btn btn-primary dash_open">OPEN</a>
-            </div>
-        </div>
-    </div>*@
+</div>
