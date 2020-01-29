@@ -1,5 +1,5 @@
 ﻿@{
-    Layout = "_DashboardLayout";
+    Layout = "_Layout";
 }
 @using smart_home_web.Models.Dashboard;
 @using smart_home_web.Components;
@@ -10,39 +10,79 @@
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gridstack@0.6.0/dist/gridstack.all.js"></script>
 
-<h1>@Model.Name Dashboard<a class="btn text-center" asp-controller="ReportElement" asp-action="CreateReportElement" asp-route-dashboardId="@Model.Id"><i style="font-size:25px;" class="fa fa-plus-circle" aria-hidden="true"></i></a></h1>
-
-<div class="grid-stack" data-save-url="@Url.Action("UpdateOptions", "DashboardOptions")">
-    @foreach (var report in Model.ReportElements)
-    {
-        <div id="@report.Id" class="grid-stack-item d-flex flex-column" 
-             data-identifier="@report.Id"  data-locked="@report.IsLocked" 
-             data-gs-min-height="6" data-gs-min-width="4"
-             data-gs-width="@report.Width" data-gs-height="@report.Height"
-             data-gs-x="@report.X" data-gs-y="@report.Y" 
-        >
-            <div class="grid-stack-item-content card">
-                <div class="d-flex flex-row">
-                    <div class="text-center btn-control-icon report-button text-center" onclick=remove(@report.Id)>
-                        <span><i class="fas fa-times"></i></span>
-                    </div>
-                    @if (report.Type != Domain.Core.Model.Enums.ReportElementType.StatusReport)
-                    {
-                        <div class="text-center btn-control-icon text-center">
-                            <a asp-controller="ReportElement" asp-action="EditReportElement" asp-route-id="@report.Id"><i class="fas fa-cog report-button"></i></a>
+<div class="app-main">
+    <div class="app-main__outer">
+        <div class="app-inner-layout app-inner-layout-page">
+            <div class="app-inner-layout__wrapper">
+                <div class="app-inner-layout__content">
+                    <div class="app-header">
+                        <div class="page-title-heading">
+                            @Model.Name
+                            <div class="page-title-subheading">
+                                Press to add <span style="color: coral">report element</span>
+                                <a class="btn text-center" style="color: coral" asp-controller="ReportElement" asp-action="CreateReportElement" asp-route-dashboardId="@Model.Id">
+                                    <i class="pe-7s-plus fsize-3" aria-hidden="true"></i>
+                                </a>
+                            </div>
                         </div>
-                    }
+                
+                    </div>
+                    <div class="tab-content">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="grid-stack" data-save-url="@Url.Action("UpdateOptions", "DashboardOptions")">
+                                    @foreach (var report in Model.ReportElements)
+                                    {
+                                        <div id="@report.Id" class="grid-stack-item d-flex flex-column"
+                                             data-identifier="@report.Id" data-locked="@report.IsLocked"
+                                             data-gs-min-height="6" data-gs-min-width="4"
+                                             data-gs-width="@report.Width" data-gs-height="@report.Height"
+                                             data-gs-x="@report.X" data-gs-y="@report.Y">
+                                            <div class="grid-stack-item-content card">
+                                                <div class="d-flex flex-row">
+                                                    <div class="text-center btn-control-icon report-button text-center" onclick=remove(@report.Id)>
+                                                        <span><i class="fas fa-times"></i></span>
+                                                    </div>
+                                                    @if (report.Type != Domain.Core.Model.Enums.ReportElementType.StatusReport)
+                                                    {
+                                                        <div class="text-center btn-control-icon text-center">
+                                                            <a asp-controller="ReportElement" asp-action="EditReportElement" asp-route-id="@report.Id"><i class="fas fa-cog report-button"></i></a>
+                                                        </div>
+                                                    }
 
-                    <div class="text-center btn-control-icon text-center" onclick=lock(@report.Id)>
-                        <i class="fas report-button i-button"></i>
+                                                    <div class="text-center btn-control-icon text-center" onclick=lock(@report.Id)>
+                                                        <i class="fas report-button i-button"></i>
+                                                    </div>
+                                                </div>
+                                                <div>@await Component.InvokeAsync(report.Type.ToString(), new { reportElementId = report.Id })</div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+
+                                <div class="main-card mb-3 card">
+                                    <div class="rm-border card-header">
+                                        <div>
+                                            <h6 class="menu-header-title text-capitalize text-primary">
+                                                Monthly
+                                                Statistics
+                                            </h6>
+                                        </div>
+                                    </div>
+                                    <div class="pl-3 pr-3 pb-2 slick-slider-md slick-slider-hover">
+                                        <div class="slick-slider-3 slick-initialized slick-slider slick-dotted">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div>@await Component.InvokeAsync(report.Type.ToString(), new { reportElementId = report.Id })</div>
             </div>
         </div>
-    }
+    </div>
 </div>
-
 <script>
 $(".grid-stack").gridstack();
 
@@ -108,7 +148,7 @@ $(".grid-stack").gridstack();
             });
 
 
-            
+
         }
     }
 
