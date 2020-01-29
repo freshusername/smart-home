@@ -4,7 +4,15 @@
     ViewData["Title"] = "SensorTypes";
 }
 
+<style>
+    .modal-backdrop.in {
+        opacity: 0.5 !important;
+    }
+</style>
+
 <h2>List of sensor types</h2>
+
+
 
 @if (User.Identity.IsAuthenticated)
 {
@@ -37,50 +45,125 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr height="64" class="sensor-type-row">
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Comment)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MeasurementType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MeasurementName)
-            </td>
-            <td>
-                @if (item.IconPath != null)
-                {
-                    <img src="@item.IconPath" width="64" height="64" />
-                }
-                else
-                {
-                    <p>No image was added</p>
-                }
-            </td>
+            <tr height="64" class="sensor-type-row">
+                <td>@item.Name</td>
+                
+                <td>@item.Comment</td>
+
+                <td>@item.MeasurementType</td>
+
+                <td>@item.MeasurementName</td>
+                <td>
+                    @if (item.IconPath != null)
+                    {
+                        <img src="@item.IconPath" width="64" height="64" />
+                    }
+                    else
+                    {
+                        <p>No image was added</p>
+                    }
+                </td>
                 @if (User.Identity.IsAuthenticated)
                 {
                     <td>
-                        <a class="btn btn-sm btn-info text-center"
-                           asp-action="Edit"
-                           asp-route-id="@item.Id">
+                        <a class="btn btn-sm btn-info text-center sensor-type-edit"
+                           data-sensor-type-id="@item.Id"
+                           data-toggle="modal" data-target="#myModal">
                             <i class="fa fa-edit"></i>
                         </a>
-                        <a class="btn btn-sm btn-danger text-center sensor-type-delete" data-sensor-type-id="@item.Id">
+                        <a class="btn btn-sm btn-danger text-center sensor-type-delete"
+                           data-sensor-type-id="@item.Id">
                             <i class="fa fa-trash"></i>
                         </a>
                     </td>
                 }
-        </tr>
-         }
+            </tr>
+        }
     </tbody>
 </table>
+
+
+@*class 'fade' don't working in Bootstrap 4*@
+<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">Edit sensor type</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <form asp-action="Edit" method="post" id="modal-form">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <input type="hidden" name="Id" />
+                    <div class="form-group">
+                        <label class="control-label">Name</label>
+                        <input name="Name" class="form-control" required data-st-name=""/>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Comment</label>
+                        <input name="Comment" class="form-control" data-st-comment=""/>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Measurement Type</label>
+                        <select name="MeasurementType"
+                                asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.MeasurementType>()" 
+                                class="form-control" required data-st-measurementtype="">
+                            <option value="none" selected disabled hidden>
+                                Select an Option
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Measurement Name</label>
+                        <input name="MeasurementName" class="form-control" data-st-measurementtype=""/>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Icon</label>
+                        @*@if (Model.IconPath != null)
+                            {
+                                <img name="IconPath" src="@Model.IconPath" width="64" height="64" />
+                            }
+                            else
+                            {
+                                <p>No image was added</p>
+                            }*@
+                        <input name="IconId" type="hidden" data-st-iconid=""/>
+                        <input name="IconFile" class="form-control" type="file" accept="image/*" data-st-iconfile=""/>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
 
 <script src="~/lib/jquery/dist/jquery.js"></script>
 <script>
     $(function () {
+        $(".sensor-type-edit").click(function () {
+            let parent = $(this).closest("sensor-type-row");
+            let form = $("#modal-form");
+
+            form.find("input[name ='Name']").val(parent.children("td:eq(0)").text());
+            form.find("input[name ='Comment']").val(parent.children("td:eq(1)").text());
+            form.find("input[name ='Name']").val(parent.children("td:eq(2)").text());
+            form.find("input[name ='Name']").val(parent.children("td:eq(3)").text());
+            $("#myModal").fadeIn(600);
+        });
+
+        $('#myModal').on('hidden.bs.modal', function (e) {
+            
+        });
+
+
         $(".sensor-type-delete").click(function () {
             if (confirm("Are you sure?")) {
                 let parent = $(this).closest(".sensor-type-row");
