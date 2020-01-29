@@ -36,7 +36,8 @@ namespace Infrastructure.Business.Managers
                         message = message.Replace("$Value$", value + sensor.SensorType.MeasurementName);
                         message = message.Replace("$SensorName$", sensor.Name);
 
-                        await messageHub.Clients.All.SendAsync("ShowToastMessage", toasttype, message);
+                        await messageHub.Clients.User(sensor.User.UserName)
+                            .SendAsync("ShowToastMessage", toasttype, message);
                     }
                 }
             }
