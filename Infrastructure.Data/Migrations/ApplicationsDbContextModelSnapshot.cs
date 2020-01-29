@@ -86,6 +86,8 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<string>("AppUserId");
 
+                    b.Property<int?>("IconId");
+
                     b.Property<bool>("IsPublic");
 
                     b.Property<string>("Name");
@@ -93,6 +95,8 @@ namespace Infrastructure.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AppUserId");
+
+                    b.HasIndex("IconId");
 
                     b.ToTable("Dashboards");
                 });
@@ -414,6 +418,10 @@ namespace Infrastructure.Data.Migrations
                     b.HasOne("Domain.Core.Model.AppUser", "AppUser")
                         .WithMany("Dashboards")
                         .HasForeignKey("AppUserId");
+
+                    b.HasOne("Domain.Core.Model.Icon", "Icon")
+                        .WithMany()
+                        .HasForeignKey("IconId");
                 });
 
             modelBuilder.Entity("Domain.Core.Model.History", b =>

@@ -43,6 +43,12 @@ namespace smart_home_web.AutoMapper
             CreateMap<CreateSensorViewModel, SensorDto>();
             CreateMap<SensorViewModel, SensorDto>();
 
+            CreateMap<Dashboard, DashboardDto>()
+                .ForMember(dto => dto.IconPath, map => map.MapFrom(s => s.Icon.Path));
+            CreateMap<SensorDto, Sensor>();
+            CreateMap<DashboardDto, DashboardViewModel>()
+                .ForMember(dvm => dvm.DashCreatorUserName, map => map.MapFrom(dto => dto.AppUser.UserName));
+
             CreateMap<Icon, IconDto>().ReverseMap();
 
             CreateMap<HistoryDto, History>().ReverseMap()
@@ -91,10 +97,6 @@ namespace smart_home_web.AutoMapper
                 .ForMember(gu => gu.Max, map => map.MapFrom(gd => gd.Max.HasValue ? (int)Math.Ceiling(gd.Max.Value) : 0));
 
             CreateMap<ReportElement, ClockDto>().ReverseMap();
-
-            CreateMap<Dashboard, DashboardDto>().ReverseMap();
-            CreateMap<DashboardDto, DashboardViewModel>()
-                .ForMember(dvm => dvm.DashCreatorUserName, map => map.MapFrom(dto => dto.AppUser.UserName));
 
             CreateMap<ReportElement, GaugeDto>().ReverseMap();
             CreateMap<GaugeDto, GaugeViewModel>().ReverseMap();

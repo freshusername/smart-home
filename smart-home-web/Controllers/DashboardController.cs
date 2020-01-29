@@ -5,6 +5,7 @@ using Infrastructure.Business.Infrastructure;
 using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using smart_home_web.Models.Dashboard;
@@ -21,17 +22,20 @@ namespace smart_home_web.Controllers
         private IHostingEnvironment _env;
         private IDashboardManager _dashboardManager;
         private UserManager<AppUser> _userManager;
+        private readonly IIconManager _iconManager;
 
         public DashboardController(
             IMapper mapper,
             IHostingEnvironment env,
             IDashboardManager dashboardManager,
-            UserManager<AppUser> userManager)
+            UserManager<AppUser> userManager,
+            IIconManager iconManager)
         {
             _mapper = mapper;
             _env = env;
             _dashboardManager = dashboardManager;
             _userManager = userManager;
+            _iconManager = iconManager;
         }
 
         public async Task<IActionResult> Detail(int id)
@@ -84,13 +88,14 @@ namespace smart_home_web.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Create(string name, bool isPublic)
+        public async Task<IActionResult> Create(string name, bool isPublic, IFormFile IconFile)
         {
             DashboardDto dashboardDto = new DashboardDto()
             {
                 Name = name,
                 AppUserId = _userManager.GetUserId(User),
-                IsPublic = isPublic
+                IsPublic = isPublic,
+                IconId = await _iconManager.CreateAndGetIconId(IconFile)
             };
 
             OperationDetails result = await _dashboardManager.Create(dashboardDto);

@@ -1,0 +1,48 @@
+﻿@model smart_home_web.Models.Dashboard.DashboardViewModel
+
+
+<div class="col-lg-3 dash_id h-100 " data-dash-id="@Model.Id.ToString()">
+    <div class="text-center p-2 h-100 d-flex flex-column justify-content-between" style="width: 18rem;">
+        <div>
+            @if (User.Identity.IsAuthenticated && User.Claims.ElementAt(1).Value == Model.DashCreatorUserName)
+            {
+                <a href="#" class="dash_remove float-right"
+                   data-dash-url="@Url.Action("Delete", "Dashboard")">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </a>
+            }
+            <img class="card-img-top m-2 w-100" src="@Model.IconFile" alt="Card image cap">
+            <h3 class="d-inline name_header" style="word-wrap: break-word;">@Model.Name </h3>
+
+        </div>
+        <div>
+            @if (User.Identity.IsAuthenticated && User.Claims.ElementAt(1).Value == Model.DashCreatorUserName)
+            {
+                <div class="dash_name_edit mb-2" style="display:none;">
+                    <form data-dash-url="@Url.Action("Edit", "Dashboard")" method="post" class="form_edit_name">
+                        <input class="form_dash_name" placeholder="Enter name" size="15" maxlength="35" required value="@Model.Name" />
+                        <button type="submit" class="dash_edit d-inline">
+                            <span class="glyphicon glyphicon-ok dash_icon"></span>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="dash_name m-2">
+                    <a href="#" class="d-inline">
+                        <span class="glyphicon glyphicon-pencil dash_icon"></span>
+                    </a>
+                    <br />
+                </div>
+            }
+            <div>
+                <p>
+                    <span class="badge badge-light">@Model.ReportElements.Count()</span> report element@(Model.ReportElements.Count() != 1 ? "s" : "")
+                </p>
+            </div>
+        </div>
+
+        <div class="m-3">
+            <a asp-controller="Dashboard" asp-action="Detail" asp-route-id="@Model.Id" class="btn btn-primary dash_open">OPEN</a>
+        </div>
+    </div>
+</div>

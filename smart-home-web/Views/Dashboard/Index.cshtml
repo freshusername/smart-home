@@ -5,7 +5,6 @@
 }
 
 <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
-
 <div class="row">
     <div class="col">
         @if (User.Identity.IsAuthenticated)
@@ -17,10 +16,11 @@
 
             <div id="create_elem" class="collapse mr-2">
                 <form data-dash-url="@Url.Action("Create", "Dashboard")" method="post" id="dash_create">
-                    <p>
+                    <p class="d-flex flex-row">
                         <input id="form_dash_name" placeholder="Enter name" size="14" maxlength="35" required />
                         <label for="form_dash_isPublic">public</label>
                         <input id="form_dash_isPublic" size="14" type="checkbox" />
+                        <input onchange="loadFile(event)" type="file" accept=".jpg, .jpeg, .png" />
                         <input type="submit" value="Add" class="btn btn-primary" />
                     </p>
                 </form>
@@ -39,7 +39,7 @@
         @foreach (var dashboard in Model.Dashboards)
         {
             <div class="border m-2 dash_element ">
-                @await Component.InvokeAsync("Dashboard", new { model = dashboard })
+                @await Component.InvokeAsync("DashboardCard", new { model = dashboard })
             </div>
         }
     </div>
@@ -48,6 +48,15 @@
 
 <script src="~/lib/jquery/dist/jquery.js"></script>
 <script>
+    var loadFile = function (event) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var output = document.getElementById('output');
+            output.src = reader.result;
+            output.style.visibility = "visible";
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    };
 
     $(function () {
 
