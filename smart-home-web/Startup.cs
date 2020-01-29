@@ -129,6 +129,7 @@ namespace smart_home_web
             app.UseSignalR(routes =>
             {
                 routes.MapHub<MessageHub>("/messages");
+                routes.MapHub<GraphHub>("/graphs");
             });
 
             app.UseMvc(routes =>

@@ -87,11 +87,11 @@
         });
     </script>
     <script>
-        $('#container').highcharts({
+         $('#container').highcharts({
             title: {
-                text: 'Graph of measurements (for '
-                    + (@Model.Days== 99999 ? ' all time' : @Model.Days== 1 ? JSON.parse('@Html.Raw(Json.Serialize(@Model.Days))') + ' day' : JSON.parse('@Html.Raw(Json.Serialize(@Model.Days))') + ' days')
-                    + ') of a sensor with name : ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))'),
+                text: 'Graph of measurements (for ' +
+                    (@Model.Days == 99999 ? ' all time' : @Model.Days == 1 ? JSON.parse('@Html.Raw(Json.Serialize(@Model.Days))') + ' day' : JSON.parse('@Html.Raw(Json.Serialize(@Model.Days))') + ' days') +
+                    ') of a sensor with name : ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))'),
                 x: -20 //center
             },
             subtitle: {
@@ -101,7 +101,7 @@
             xAxis: {
                 categories: JSON.parse('@Html.Raw(Json.Serialize(@Model.longDates))'),
                 labels: {
-                    formatter: function () {
+                    formatter: function() {
                         return new Date(this.value).toLocaleString();
                     }
                 }
@@ -112,34 +112,31 @@
                 },
             },
             tooltip: {
-                formatter: function () {
+                formatter: function() {
                     var date = new Date(this.x).toLocaleString();
-                    @switch (Model.MeasurementType)
-                    {
-                        case MeasurementType.Int:
-                        case MeasurementType.Double:
+                    @switch(Model.MeasurementType) {
+                    case MeasurementType.Int:
+                    case MeasurementType.Double:
+                    <text >
+                        var result = '<b>' + date + '</b><br>' + this.series.name + ': <b>' + this.y + ' ' +
+                        JSON.parse('@Html.Raw(Json.Serialize(@Model.MeasurementName))') + '</b><br>'
+                        return result;
+                    </text>
+                    break;
 
-                            <text>
-                    var result = '<b>' + date + '</b><br>' + this.series.name + ': <b>' + this.y + ' '
-                        + JSON.parse('@Html.Raw(Json.Serialize(@Model.MeasurementName))') + '</b><br>'
-                    return result;
-                            </text>
-                            break;
+                case MeasurementType.Bool:
+                    <text >
+                        var values = JSON.parse('@Html.Raw(Json.Serialize(@Model.Values))')
+                        var value = values[this.point.index] ? 'true' : 'false'
+                        var result = '<b>' + date + '</b><br>' + this.series.name + ': <b>' + value + '</b><br>'
+                        return result;
+                    </text>
+                break;
 
-                        case MeasurementType.Bool:
-
-                            <text>
-                    var values = JSON.parse('@Html.Raw(Json.Serialize(@Model.Values))')
-                    var value = values[this.point.index] ? 'true' : 'false'
-                    var result = '<b>' + date + '</b><br>' + this.series.name + ': <b>' + value + '</b><br>'
-                    return result;
-                            </text>
-                            break;
-
-                        default:
-                            break;
+                default:
+                break;
                      }
-                }
+                }   
             },
             legend: {
                 layout: 'vertical',
@@ -159,5 +156,18 @@
                 }
             },
         });
+
+        var chart = Highcharts.charts;
+        var xAxis = chart[0].xAxis[0];
+        var categories = xAxis.categories;
+        var series = chart[0].series[0];
+
+        function UpdateChart(sensorId, value, date) {
+            if (sensorId == @Model.SensorId) {
+                categories.push(date);
+                xAxis.setCategories(categories);
+                series.addPoint({y: JSON.parse(value)}, true);
+            }       
+        };
     </script>
 }

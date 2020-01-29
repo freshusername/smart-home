@@ -8,15 +8,19 @@ using Domain.Core.Model.Enums;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Business.DTOs;
 using Infrastructure.Business.DTOs.History;
+using Infrastructure.Business.Hubs;
 using Infrastructure.Business.Infrastructure;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Infrastructure.Business.Managers
 {
 	public class HistoryManager : BaseManager, IHistoryManager
     {
-        public HistoryManager(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
-        {
+        protected readonly IHubContext<GraphHub> graphHub;
 
+        public HistoryManager(IUnitOfWork unitOfWork, IMapper mapper, IHubContext<GraphHub> hubContext) : base(unitOfWork, mapper)
+        {
+            graphHub = hubContext;
         }
 
         public async Task<HistoryDto> GetHistoryByIdAsync(int id)
@@ -123,7 +127,7 @@ namespace Infrastructure.Business.Managers
             var sensor = unitOfWork.SensorRepo.GetById(sensorId).Result;
              dynamic valueModel;
 
-            if(sensor.IsActivated)
+            if(sensor.IsValid)
               valueModel = ValueParser.Parse(value , sensor.SensorType.MeasurementType);
             else
               valueModel = ValueParser.Parse(value);
@@ -169,5 +173,14 @@ namespace Infrastructure.Business.Managers
 		{
 			return await unitOfWork.HistoryRepo.GetAmountAsync(isActivated, userId);
 		}
-	}
+
+        public async Task UpdateGraph(Guid token, string value)
+        {
+            var sensor = unitOfWork.SensorRepo.GetByToken(token);
+            DateTimeOffset unixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            var dateNow = DateTimeOffset.Now;
+            var longDate = (long)dateNow.Subtract(unixEpoch).TotalMilliseconds;
+            await graphHub.Clients.All.SendAsync("UpdateGraph", sensor.Id, value, longDate);
+        }
+    }
 }

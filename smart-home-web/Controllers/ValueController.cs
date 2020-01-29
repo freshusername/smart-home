@@ -77,6 +77,7 @@ namespace smart_home_web.Controllers
 
 			if (historyResult.Succeeded)
 			{
+                await _historyManager.UpdateGraph(token, value);
 				await _messageManager.ShowMessage(token, value);
 				return Ok(historyResult.Message);
 			}
