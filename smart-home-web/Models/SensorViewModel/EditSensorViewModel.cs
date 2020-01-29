@@ -14,6 +14,7 @@ namespace smart_home_web.Models.SensorViewModel
         public string AppUserId { get; set; }
         public DateTimeOffset CreatedOn { get; set; }
         public bool IsValid { get; set; }
+        public bool IsActive { get; set; }
         public string IconPath { get; set; }
         public string SensorTypeName { get; set; }
         public IFormFile IconFile { get; set; }
