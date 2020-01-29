@@ -42867,3 +42867,8 @@ span.multiselect-native-select select {
 .after-img {
     max-width: 100%
 }
+
+.dash_element {
+    min-width: 390px !important;
+    max-width: 390px !important;
+}
