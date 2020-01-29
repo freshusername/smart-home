@@ -8,7 +8,7 @@
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
 <figure class="highcharts-figure">
-    <div id=@("BoolHeatmap" + Model.Id.ToString())></div>
+    <div id=@("BoolHeatmap" + Model.Id.ToString()) style="height: 20em; width: 20em; margin: 0 auto"></div>
 </figure>
 @if (Model.IsCorrect)
 {
@@ -74,13 +74,11 @@
                 type: 'heatmap',
                 marginTop: 40,
                 marginBottom: 80,
-                plotBorderWidth: 1,
-                borderRadius: 72
+                plotBorderWidth: 0,
             },
 
             title: {
-                text: 'True percentage for ' + '@Html.Raw(Json.Serialize(Model.SensorName))' +
-                        ' on *Particular date* '
+                text: ''//'True percentage for ' + 'Html.Raw(Json.Serialize(Model.SensorName))' + ' on *Particular date* '
             },
 
             xAxis: {
@@ -92,7 +90,8 @@
                                 @Html.Raw(Json.Serialize(daydates[i])) ,
                             </text>
                         }
-                    ]
+                    ],
+                visible: false
             },
 
             yAxis: {
@@ -107,34 +106,33 @@
                     ],
 
                 title: null,
-                reversed: true
-            },
-
-            accessibility: {
-                point: {
-                    descriptionFormatter: function (point) {
-                var ix = point.index + 1,
-                    xName = getPointCategoryName(point, 'x'),
-                    yName = getPointCategoryName(point, 'y'),
-                    val = point.value;
-                return ix + '. ' + xName + ' sales ' + yName + ', ' + val + '.';
-                    }
-                }
+                reversed: true,
+                visible: false
             },
 
             colorAxis: {
                 min: 0,
+                max: 100,
                 minColor: '#FFFFFF',
-                maxColor: Highcharts.getOptions().colors[0]
+                maxColor: '#000000'
             },
 
             legend: {
-                align: 'right',
-                layout: 'vertical',
-                margin: 0,
-                verticalAlign: 'top',
-                y: 25,
-                symbolHeight: 280
+            title: {
+                text: 'movings/vibration frecuency'
+            },
+            accessibility: {
+                keyboardNavigation: {
+                    enabled: true
+                },
+            },
+            align: 'right',
+            verticalAlign: 'bottom',
+            y: 10,
+            floating: true,
+            borderWidth: 0,
+            backgroundColor: 'transparent',
+            width: 'auto'
             },
 
             tooltip: {
@@ -148,9 +146,12 @@
 
             series: [{
                 name: 'True percentage per hours for bool sensor',
-                borderWidth: 0.1,
-                colsize: 0.35,
-                rowsize: 0.35,
+                borderWidth: 0,
+                borderHeight: 0,
+                colsize: 0.85,
+                rowsize: 0.85,
+                pointPadding: 1,
+                hide: true,
                 data: [
                     @{int h = 0;}
                     @for (int i = 0; i < 4; i++)
@@ -163,11 +164,6 @@
                         }
                     }
                 ],
-
-                dataLabels: {
-                    enabled: true,
-                    color: '#000000'
-                }
             }],
 
             exporting: {
@@ -181,7 +177,7 @@
             responsive: {
                 rules: [{
                     condition: {
-                        maxWidth: 500
+                        maxWidth: 100
                     },
                     chartOptions: {
                         yAxis: {
@@ -199,7 +195,6 @@
                     }
                 }]
             }
-
         });
     </script>
 }
