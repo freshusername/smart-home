@@ -42,3 +42,34 @@ function UpdateTimeSeries(sensorId, sensorValue, date) {
         }
     });
 }
+
+function UpdateGauge(sensorId, sensorValue) {
+    $.each($("div[id^='Gauge']"), function (key, value) {
+        if (sensorId == $(value).data("save-sensorid")) {
+            try {
+                var result = Highcharts.charts.find(chart => chart.renderTo.id == $(value).attr("id"));
+            }
+            catch (error) {
+
+            }
+            if (typeof result !== 'undefined') {
+                var series = result.series[0];
+                series.points[0].update(JSON.parse(sensorValue));
+                if (JSON.parse(sensorValue) < result.yAxis[0].min) {
+                    result.yAxis[0].update({
+                        min: JSON.parse(sensorValue)
+                    });
+                }
+                else if (JSON.parse(sensorValue) > result.yAxis[0].max) {
+                    result.yAxis[0].update({
+                        max: JSON.parse(sensorValue) 
+                    });
+                }
+                result.yAxis[0].tickPositions = [result.yAxis[0].min, result.yAxis[0].max];
+                result.yAxis[0].update({
+                    tickPositions: result.yAxis[0].tickPositions
+                });
+            }
+        }
+    });
+}
