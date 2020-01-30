@@ -110,26 +110,11 @@
     $(function () {
         let parent = null;
         let modal = $("#modalWindow");
-        $(".sensor-type-edit").click(function () {
-            parent = $(this).closest(".sensor-type-row");
-            $.ajax({
-                url: '@Url.Action("Edit","SensorType")',
-                data: { id: parent.data("sensor-type-row-id") },
-                beforeSend: function () {
-                    modal.fadeIn(600);
-                    return true;
-                },
-                success: function (data) {
-                    modal.find(".modal-title").text("Edit Sensor Type");
-                    modal.find(".modal-body").append(data);
-                    modal.on("submit", ".modal-form-edit", ModalFormEditSubmit);
-                    modal.on("click", ".back-to-list", HideModal);
-                    modal.modal();
-                }
-            });
-        });
+        $(".sensor-type-edit").click(SensorTypeEdit);
+        $(".sensor-type-create").click(SensorTypeCreate);
+        $(".sensor-type-delete").click(SensorTypeDelete);
 
-        $(".sensor-type-create").click(function () {
+        function SensorTypeCreate() {
             $.ajax({
                 url: '@Url.Action("Create","SensorType")',
                 beforeSend: function () {
@@ -144,10 +129,10 @@
                     modal.modal();
                 }
             });
-        });
+        }
 
         function ModalFormCreateSubmit() {
-                event.preventDefault();
+            event.preventDefault();
             $.ajax({
                 url: '@Url.Action("Create","SensorType")',
                 method: "POST",
@@ -159,10 +144,31 @@
                 success: function (data) {
                     let tbody = $("tbody");
                     tbody.prepend(data);
+                    tbody.on("click", ".sensor-type-edit", SensorTypeEdit);
+                    tbody.on("click", ".sensor-type-create", SensorTypeCreate);
                     tbody.show(500);
                 },
                 error: function (res) {
                     console.log(res);
+                }
+            });
+        }
+
+        function SensorTypeEdit() {
+            parent = $(this).closest(".sensor-type-row");
+            $.ajax({
+                url: '@Url.Action("Edit","SensorType")',
+                data: { id: parent.data("sensor-type-row-id") },
+                beforeSend: function () {
+                    modal.fadeIn(600);
+                    return true;
+                },
+                success: function (data) {
+                    modal.find(".modal-title").text("Edit Sensor Type");
+                    modal.find(".modal-body").append(data);
+                    modal.on("submit", ".modal-form-edit", ModalFormEditSubmit);
+                    modal.on("click", ".back-to-list", HideModal);
+                    modal.modal();
                 }
             });
         }
@@ -182,6 +188,9 @@
                 success: function (data) {
                     parent.replaceWith(data);
                     parent.show(800);
+                    let tbody = $("tbody");
+                    tbody.on("click", ".sensor-type-edit", SensorTypeEdit);
+                    tbody.on("click", ".sensor-type-create", SensorTypeCreate);
                 }
             })
         }
@@ -190,12 +199,7 @@
             $("#modalWindow").modal("hide");
         }
 
-        $('#modalWindow').on('hidden.bs.modal', function (e) {
-            $(this).find(".modal-body").empty();
-            $(this).find(".modal-title").empty();
-        });
-
-        $(".sensor-type-delete").click(function () {
+        function SensorTypeDelete() {
             if (confirm("Are you sure?")) {
                 let parent = $(this).closest(".sensor-type-row");
                 $.ajax({
@@ -209,6 +213,13 @@
                     }
                 });
             }
+        }
+
+        $('#modalWindow').on('hidden.bs.modal', function (e) {
+            $(this).find(".modal-body").empty();
+            $(this).find(".modal-title").empty();
         });
+
+        
     });
 </script>

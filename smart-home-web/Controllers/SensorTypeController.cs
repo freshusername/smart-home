@@ -58,7 +58,11 @@ namespace smart_home_web.Controllers
             var res = _sensorTypeManager.Create(sensorTypeDto).Result;
 
             if (res.Succeeded)
-                return ViewComponent("SensorTypeElement", _mapper.Map<SensorTypeDto, SensorTypeViewModel>(sensorTypeDto));
+            {
+                SensorTypeDto sensorTypefromDB = await _sensorTypeManager.GetSensorTypeByIdAsync(sensorTypeDto.Id);
+                return ViewComponent("SensorTypeElement", _mapper.Map<SensorTypeDto, SensorTypeViewModel>(sensorTypefromDB));
+            }
+                
             else
                 ModelState.AddModelError(res.Property, res.Message);
 
