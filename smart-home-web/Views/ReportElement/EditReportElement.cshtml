@@ -108,6 +108,11 @@
                         $('select#hours-select').attr('disabled', true);
                             $('#hours-select').find('option[value="@((int)Domain.Core.Model.Enums.ReportElementHours.Hour672)"]').attr('selected', 'selected');
                             $('#hours-hidden').val(@((int) Domain.Core.Model.Enums.ReportElementHours.Hour672));
+                    } else if ($("select#type-select").children("option:selected").val() == "@((int)Domain.Core.Model.Enums.ReportElementType.StatusReport)") {
+                        $('select#hours-select').attr('disabled', true);
+                        $('select#sensor-select').attr('disabled', true);
+                        $('#hours-select').find('option[value="@((int)Domain.Core.Model.Enums.ReportElementHours.AllTime)"]').attr('selected', 'selected');
+                        $('#hours-hidden').val(@((int) Domain.Core.Model.Enums.ReportElementHours.AllTime));
                     }
                     $('#sensor-select').val($('#sensor-id').val());
                     $('select').niceSelect('update');

@@ -17,9 +17,9 @@ else
     columnmaxvalues = JSON.parse('@Html.Raw(Json.Serialize(@Model.MaxValues))');
     columndates = JSON.parse('@Html.Raw(Json.Serialize(@Model.Dates))');
 
-    let columntemperatures = [];
+    let column_values = [];
     for (let i = 0; i < columndates.length;i++) {
-        columntemperatures.push([columnminvalues[i],columnmaxvalues[i]])
+        column_values.push([columnminvalues[i],columnmaxvalues[i]])
     }
     Highcharts.chart('Columnrange'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
 
@@ -79,8 +79,8 @@ else
         },
 
         series: [{
-            name: 'Temperatures',
-            data: columntemperatures
+            name: 'Values',
+            data: column_values
         }],
         exporting: {
             buttons: {

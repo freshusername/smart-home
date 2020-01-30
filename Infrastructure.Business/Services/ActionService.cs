@@ -24,7 +24,13 @@ namespace Infrastructure.Business.Services
            
             foreach (var item in data)
             {
-                if (item.IsActive && item.Sensor.SensorType.MeasurementType == MeasurementType.Bool)
+
+                if (item.Sensor.SensorType.IsControl)
+                {
+                    var result = VoiceControl(item.SensorId.Value, token);
+                    if (result) return new OperationDetails(true, "", "");
+                }
+                else if (item.IsActive && item.Sensor.SensorType.MeasurementType == MeasurementType.Bool)
                 {
                     var result = BoolVerification(item.SensorId.Value);
                     if (result) return new OperationDetails(true, "", "");
@@ -34,11 +40,7 @@ namespace Infrastructure.Business.Services
                     var result = IntVerification(item.SensorId.Value, item.minValue, item.maxValue);
                     if (result) return new OperationDetails(true, "", "");
                 }
-                else if(item.Sensor.SensorType.IsControl)
-                {
-                    var result = VoiceControl(item.SensorId.Value, token);
-                    if (result) return new OperationDetails(true, "", "");
-                }
+                
             }
 
             return new OperationDetails(false, "", "");
@@ -101,7 +103,7 @@ namespace Infrastructure.Business.Services
 
         public OperationDetails Activate(Guid controlToken , Guid sensorToken , bool isActive)
         {
-            var control = _db.ControlRepo.GetByToken(controlToken);
+            var control = _db.ControlRepo.GetByToken(controlToken); 
              var sensor = _db.SensorRepo.GetByToken(sensorToken);
 
             if(control == null || sensor == null) return new OperationDetails(false, "", "");
