@@ -36,7 +36,7 @@ namespace smart_home_web.Controllers
         // GET: SensorType/Create
         public ActionResult Create()
         {
-            return View();
+            return ViewComponent("SensorTypeCreate");
         }
 
         // POST: SensorType/Create
@@ -58,7 +58,7 @@ namespace smart_home_web.Controllers
             var res = _sensorTypeManager.Create(sensorTypeDto).Result;
 
             if (res.Succeeded)
-                return RedirectToAction(nameof(Index));
+                return ViewComponent("SensorTypeElement", _mapper.Map<SensorTypeDto, SensorTypeViewModel>(sensorTypeDto));
             else
                 ModelState.AddModelError(res.Property, res.Message);
 
@@ -70,7 +70,7 @@ namespace smart_home_web.Controllers
         {
             var sensorTypeDto = await _sensorTypeManager.GetSensorTypeByIdAsync(id);
             EditSensorTypeViewModel sensorTypeViewModel = _mapper.Map<SensorTypeDto, EditSensorTypeViewModel>(sensorTypeDto);
-            return View(sensorTypeViewModel);
+            return ViewComponent("SensorTypeEdit", sensorTypeViewModel);
         }
 
         // POST: SensorType/Edit/5
@@ -86,8 +86,8 @@ namespace smart_home_web.Controllers
             try
             {
                 _sensorTypeManager.Update(sensorTypeDto);
-
-                return RedirectToAction(nameof(Index));
+                SensorTypeDto sensorTypefromDB = await _sensorTypeManager.GetSensorTypeByIdAsync(sensorTypeDto.Id);
+                return ViewComponent("SensorTypeElement", _mapper.Map<SensorTypeDto, SensorTypeViewModel>(sensorTypefromDB));
             }
             catch
             {

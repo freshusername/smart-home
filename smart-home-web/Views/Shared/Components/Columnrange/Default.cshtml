@@ -13,14 +13,15 @@ else
 }
 
 <script>
-    columnminvalues = JSON.parse('@Html.Raw(Json.Serialize(@Model.MinValues))');
-    columnmaxvalues = JSON.parse('@Html.Raw(Json.Serialize(@Model.MaxValues))');
-    columndates = JSON.parse('@Html.Raw(Json.Serialize(@Model.Dates))');
+    let columnminvalues = JSON.parse('@Html.Raw(Json.Serialize(@Model.MinValues))');
+    let columnmaxvalues = JSON.parse('@Html.Raw(Json.Serialize(@Model.MaxValues))');
+    let columndates = JSON.parse('@Html.Raw(Json.Serialize(@Model.Dates))');
 
     let column_values = [];
     for (let i = 0; i < columndates.length;i++) {
         column_values.push([columnminvalues[i],columnmaxvalues[i]])
     }
+    
     Highcharts.chart('Columnrange'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
 
         chart: {
@@ -104,4 +105,9 @@ else
             result.setSize(ui.height, ui.width);
         }
     });
+
+    columnmaxvalues = null;
+    columnminvalues = null;
+    columndates = null;
+    column_values = null;
 </script>

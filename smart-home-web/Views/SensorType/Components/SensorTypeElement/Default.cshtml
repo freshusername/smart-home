@@ -1,0 +1,41 @@
+﻿@model smart_home_web.Models.SensorType.SensorTypeViewModel
+
+    <tr height="64" class="sensor-type-row" data-sensor-type-row-id="@Model.Id">
+        <td>
+            @Html.DisplayFor(modelItem => Model.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => Model.Comment)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => Model.MeasurementType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => Model.MeasurementName)
+        </td>
+
+        <td>
+            @if (Model.IconPath != null)
+            {
+                <img src="@Model.IconPath" width="64" height="64" />
+            }
+            else
+            {
+                <p>No image was added</p>
+            }
+        </td>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <td>
+                <a class="btn btn-sm btn-info text-center sensor-type-edit"
+                   data-sensor-type-id="@Model.Id"
+                   data-toggle="modal" data-target="#myModal">
+                    <i class="fa fa-edit"></i>
+                </a>
+                <a class="btn btn-sm btn-danger text-center sensor-type-delete"
+                   data-sensor-type-id="@Model.Id">
+                    <i class="fa fa-trash"></i>
+                </a>
+            </td>
+        }
+    </tr>

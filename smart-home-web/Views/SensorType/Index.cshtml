@@ -17,7 +17,7 @@
 @if (User.Identity.IsAuthenticated)
 {
     <div class="button-center">
-        <a asp-action="Create" class="btn btn-success">Create New</a>
+        <a class="btn btn-success sensor-type-create">Create New</a>
     </div>
 }
 
@@ -45,14 +45,20 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr height="64" class="sensor-type-row">
-                <td>@item.Name</td>
-                
-                <td>@item.Comment</td>
+            <tr height="64" class="sensor-type-row" data-sensor-type-row-id="@item.Id">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Comment)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MeasurementType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MeasurementName)
+                </td>
 
-                <td>@item.MeasurementType</td>
-
-                <td>@item.MeasurementName</td>
                 <td>
                     @if (item.IconPath != null)
                     {
@@ -84,63 +90,17 @@
 
 
 @*class 'fade' don't working in Bootstrap 4*@
-<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal" id="modalWindow" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
         <div class="modal-content">
 
             <div class="modal-header">
-                <h4 class="modal-title">Edit sensor type</h4>
+                <h4 class="modal-title"></h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-
             <div class="modal-body">
-                <form asp-action="Edit" method="post" id="modal-form">
-                    <div asp-validation-summary="All" class="text-danger"></div>
-                    <input type="hidden" name="Id" />
-                    <div class="form-group">
-                        <label class="control-label">Name</label>
-                        <input name="Name" class="form-control" required data-st-name=""/>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Comment</label>
-                        <input name="Comment" class="form-control" data-st-comment=""/>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Measurement Type</label>
-                        <select name="MeasurementType"
-                                asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.MeasurementType>()" 
-                                class="form-control" required data-st-measurementtype="">
-                            <option value="none" selected disabled hidden>
-                                Select an Option
-                            </option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Measurement Name</label>
-                        <input name="MeasurementName" class="form-control" data-st-measurementtype=""/>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Icon</label>
-                        @*@if (Model.IconPath != null)
-                            {
-                                <img name="IconPath" src="@Model.IconPath" width="64" height="64" />
-                            }
-                            else
-                            {
-                                <p>No image was added</p>
-                            }*@
-                        <input name="IconId" type="hidden" data-st-iconid=""/>
-                        <input name="IconFile" class="form-control" type="file" accept="image/*" data-st-iconfile=""/>
-                    </div>
-                    <div class="form-group">
-                        <input type="submit" value="Save" class="btn btn-primary" />
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div>
-                </form>
+
             </div>
-
-
-
         </div>
     </div>
 </div>
@@ -148,21 +108,92 @@
 <script src="~/lib/jquery/dist/jquery.js"></script>
 <script>
     $(function () {
+        let parent = null;
+        let modal = $("#modalWindow");
         $(".sensor-type-edit").click(function () {
-            let parent = $(this).closest("sensor-type-row");
-            let form = $("#modal-form");
-
-            form.find("input[name ='Name']").val(parent.children("td:eq(0)").text());
-            form.find("input[name ='Comment']").val(parent.children("td:eq(1)").text());
-            form.find("input[name ='Name']").val(parent.children("td:eq(2)").text());
-            form.find("input[name ='Name']").val(parent.children("td:eq(3)").text());
-            $("#myModal").fadeIn(600);
+            parent = $(this).closest(".sensor-type-row");
+            $.ajax({
+                url: '@Url.Action("Edit","SensorType")',
+                data: { id: parent.data("sensor-type-row-id") },
+                beforeSend: function () {
+                    modal.fadeIn(600);
+                    return true;
+                },
+                success: function (data) {
+                    modal.find(".modal-title").text("Edit Sensor Type");
+                    modal.find(".modal-body").append(data);
+                    modal.on("submit", ".modal-form-edit", ModalFormEditSubmit);
+                    modal.on("click", ".back-to-list", HideModal);
+                    modal.modal();
+                }
+            });
         });
 
-        $('#myModal').on('hidden.bs.modal', function (e) {
-            
+        $(".sensor-type-create").click(function () {
+            $.ajax({
+                url: '@Url.Action("Create","SensorType")',
+                beforeSend: function () {
+                    modal.fadeIn(600);
+                    return true;
+                },
+                success: function (data) {
+                    modal.find(".modal-title").text("Create Sensor Type");
+                    modal.find(".modal-body").append(data);
+                    modal.on("submit", ".modal-form-create", ModalFormCreateSubmit);
+                    modal.on("click", ".back-to-list", HideModal);
+                    modal.modal();
+                }
+            });
         });
 
+        function ModalFormCreateSubmit() {
+                event.preventDefault();
+            $.ajax({
+                url: '@Url.Action("Create","SensorType")',
+                method: "POST",
+                data: $(".modal-form-create").serialize(),
+                beforeSend: function () {
+                    modal.modal("hide");
+                    return true;
+                },
+                success: function (data) {
+                    let tbody = $("tbody");
+                    tbody.prepend(data);
+                    tbody.show(500);
+                },
+                error: function (res) {
+                    console.log(res);
+                }
+            });
+        }
+
+        function ModalFormEditSubmit() {
+            event.preventDefault();
+            let SensorTypeId = $(this).data("sensor-type-id");
+            $.ajax({
+                url: '@Url.Action("Edit","SensorType")',
+                method: "POST",
+                data: $(this).serialize(),
+                beforeSend: function () {
+                    modal.modal("hide");
+                    parent.hide(800);
+                    return true;
+                },
+                success: function (data) {
+                    parent.replaceWith(data);
+                    parent.show(800);
+                }
+            })
+        }
+
+        function HideModal() {
+            $("#modalWindow").modal("hide");
+        }
+
+        $('#modalWindow').on('hidden.bs.modal', function (e) {
+            $(this).find(".modal-body").empty();
+            $(this).find(".modal-title").empty();
+        });
 
         $(".sensor-type-delete").click(function () {
             if (confirm("Are you sure?")) {
