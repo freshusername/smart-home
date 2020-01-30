@@ -20,3 +20,25 @@
         }
     });
 }
+
+
+function UpdateTimeSeries(sensorId, sensorValue, date) {
+    $.each($("div[id^='TimeSeries']"), function (key, value) {
+        if (sensorId == $(value).data("save-sensorid")) {
+            try {
+                var result = Highcharts.charts.find(chart => chart.renderTo.id == $(value).attr("id"));
+            }
+            catch (error) {
+
+            }
+            if (typeof result !== 'undefined') {
+                var xAxis = result.xAxis[0];
+                var categories = xAxis.categories
+                var series = result.series[0];
+                categories.push(date);
+                xAxis.setCategories(categories);
+                series.addPoint({ y: JSON.parse(sensorValue)},true);
+            }
+        }
+    });
+}
