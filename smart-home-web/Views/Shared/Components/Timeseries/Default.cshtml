@@ -15,7 +15,7 @@
 else
 {
     <figure class="highcharts-figure">
-        <div id=@("TimeSeries"+Model.Id.ToString())></div>
+        <div id=@("TimeSeries"+Model.Id.ToString()) data-save-sensorid="@Model.SensorId"></div>
     </figure>
 }
 <script>

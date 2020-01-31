@@ -37,7 +37,7 @@
                 }
                 else
                 {
-                    <div id="container" style="min-width:310px; height:400px; margin:0 auto"></div>
+                    <div id="Graph" style="min-width:310px; height:400px; margin:0 auto"></div>
                 }
             }
             else
@@ -87,7 +87,7 @@
         });
     </script>
     <script>
-         $('#container').highcharts({
+         $('#Graph').highcharts({
             title: {
                 text: 'Graph of measurements (for ' +
                     (@Model.Days == 99999 ? ' all time' : @Model.Days == 1 ? JSON.parse('@Html.Raw(Json.Serialize(@Model.Days))') + ' day' : JSON.parse('@Html.Raw(Json.Serialize(@Model.Days))') + ' days') +
