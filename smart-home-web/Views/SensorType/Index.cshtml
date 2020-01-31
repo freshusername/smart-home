@@ -45,45 +45,7 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr height="64" class="sensor-type-row" data-sensor-type-row-id="@item.Id">
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Comment)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MeasurementType)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MeasurementName)
-                </td>
-
-                <td>
-                    @if (item.IconPath != null)
-                    {
-                        <img src="@item.IconPath" width="64" height="64" />
-                    }
-                    else
-                    {
-                        <p>No image was added</p>
-                    }
-                </td>
-                @if (User.Identity.IsAuthenticated)
-                {
-                    <td>
-                        <a class="btn btn-sm btn-info text-center sensor-type-edit"
-                           data-sensor-type-id="@item.Id"
-                           data-toggle="modal" data-target="#myModal">
-                            <i class="fa fa-edit"></i>
-                        </a>
-                        <a class="btn btn-sm btn-danger text-center sensor-type-delete"
-                           data-sensor-type-id="@item.Id">
-                            <i class="fa fa-trash"></i>
-                        </a>
-                    </td>
-                }
-            </tr>
+            @await Component.InvokeAsync("SensorTypeElement", item)
         }
     </tbody>
 </table>
@@ -98,37 +60,42 @@
                 <h4 class="modal-title"></h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-            <div class="modal-body">
-
-            </div>
+            <div class="modal-body"></div>
         </div>
     </div>
+</div>
+
+<div id="modal-delete-confirm">
+    <a class="btn btn-primary" id="modal-delete-button" data-sensor-type-id="">Delete</a>
+    <a class="btn btn-secondary" data-dismiss="modal">Cancel</a>
 </div>
 
 <script src="~/lib/jquery/dist/jquery.js"></script>
 <script>
     $(function () {
-        let parent = null;
-        let modal = $("#modalWindow");
+        let currentRow = null;
+        const modal = $("#modalWindow");
+        const modalBody = modal.find(".modal-body");
+        $("#modal-delete-confirm").hide(0);
         $(".sensor-type-edit").click(SensorTypeEdit);
         $(".sensor-type-create").click(SensorTypeCreate);
-        $(".sensor-type-delete").click(SensorTypeDelete);
+        $(".sensor-type-delete").click(SensorTypeDeleteConfirm);
 
         function SensorTypeEdit() {
-            parent = $(this).closest(".sensor-type-row");
+            currentRow = $(this).closest(".sensor-type-row");
             $.ajax({
                 url: '@Url.Action("Edit","SensorType")',
-                data: { id: parent.data("sensor-type-row-id") },
+                data: { id: currentRow.data("sensor-type-row-id") },
                 beforeSend: function () {
                     modal.fadeIn(600);
                     return true;
                 },
                 success: function (data) {
                     modal.find(".modal-title").text("Edit Sensor Type");
-                    modal.find(".modal-body").append(data);
-                    modal.on("submit", ".modal-form-edit", ModalFormEditSubmit);
-                    modal.on("click", ".back-to-list", HideModal);
-                    modal.modal();
+                    modalBody.prepend(data);
+                    modalBody.on("submit", ".modal-form-edit", ModalFormCreateSubmit);
+                    modalBody.on("click", ".back-to-list", HideModal);
+                    modal.modal("show");
                 }
             });
         }
@@ -142,28 +109,54 @@
                 },
                 success: function (data) {
                     modal.find(".modal-title").text("Create Sensor Type");
-                    modal.find(".modal-body").append(data);
-                    modal.on("submit", ".modal-form-create", ModalFormCreateSubmit);
-                    modal.on("click", ".back-to-list", HideModal);
-                    modal.modal();
+                    modalBody.prepend(data);
+                    modalBody.on("submit", ".modal-form-create", ModalFormCreateSubmit);
+                    modalBody.on("click", ".back-to-list", HideModal);
+                    modal.modal("show");
                 }
             });
         }
 
+        function SensorTypeDeleteConfirm() {
+            currentRow = $(this).closest(".sensor-type-row");
+            modal.find(".modal-title").text("Are you sure ?");
+            $("#modal-delete-confirm").clone().prependTo(modalBody);
+            $("#modal-delete-confirm").show(0);
+            $("#modal-delete-button").data("sensor-type-id", currentRow.data("sensor-type-row-id"));
+            modalBody.on("click", "#modal-delete-button", SensorTypeDelete);
+            modal.fadeIn(600);
+            modal.modal("show");
+        }
+
         function SensorTypeDelete() {
-            if (confirm("Are you sure?")) {
-                let parent = $(this).closest(".sensor-type-row");
-                $.ajax({
-                    url: '@Url.Action("Delete","SensorType")',
-                    data: { sensorTypeId: $(this).data("sensor-type-id") },
-                    beforeSend: function () {
-                        parent.hide(800, function () {
-                            parent.remove();
-                        })
-                        return true;
-                    }
-                });
-            }
+            $.ajax({
+                url: '@Url.Action("Delete","SensorType")',
+                data: { Id: $(this).data("sensor-type-id") },
+                beforeSend: function () {
+                    modal.modal("hide");
+                    currentRow.hide(800, function () {
+                        currentRow.remove();
+                    });
+                    currentRow = null;
+                    return true;
+                },
+                success: function () {
+                    alert(true);
+                },
+                error: function (res) {
+                    alert(false);
+                    console.log(res);
+                }
+            });
+        }
+        
+
+        function RenderModalBody(text,data) {
+            modal.find(".modal-title").text(text);
+            modalBody.prepend(data);
+            modalBody.on("submit", ".modal-form-create", ModalFormCreateSubmit);
+            modalBody.on("click", ".back-to-list", HideModal);
+            modal.modal();
         }
 
         function ModalFormCreateSubmit() {
@@ -179,12 +172,8 @@
                 success: function (data) {
                     let tbody = $("tbody");
                     tbody.prepend(data);
-                    tbody.on("click", ".sensor-type-edit", SensorTypeEdit);
-                    tbody.on("click", ".sensor-type-create", SensorTypeCreate);
-                    tbody.show(500);
-                },
-                error: function (res) {
-                    console.log(res);
+                    data.on("click", ".sensor-type-edit", SensorTypeEdit);
+                    data.on("click", ".sensor-type-create", SensorTypeCreate);
                 }
             });
         }
@@ -197,13 +186,13 @@
                 method: "POST",
                 data: $(this).serialize(),
                 beforeSend: function () {
-                    HideModal();
-                    parent.hide(800);
+                    modal.modal("hide");;
+                    currentRow.hide(800);
                     return true;
                 },
                 success: function (data) {
-                    parent.replaceWith(data);
-                    parent.show(800);
+                    currentRow.replaceWith(data);
+                    currentRow.show(800);
                     let tbody = $("tbody");
                     tbody.on("click", ".sensor-type-edit", SensorTypeEdit);
                     tbody.on("click", ".sensor-type-create", SensorTypeCreate);
@@ -215,11 +204,9 @@
             modal.modal("hide");
         }
 
-        modal.on('hidden.bs.modal', function (e) {
-            $(this).find(".modal-body").empty();
+        modal.on('hidden.bs.modal', function () {
+            modalBody.empty();
             $(this).find(".modal-title").empty();
-        });
-
-        
+        });  
     });
 </script>

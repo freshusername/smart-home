@@ -78,5 +78,11 @@ namespace Infrastructure.Business.Managers
 
             return result;
         }
+
+        public async Task<SensorTypeDto> GetLastSensorType()
+        {
+            var sensorType = await unitOfWork.SensorTypeRepo.GetLastSensorType();
+            return mapper.Map<SensorType, SensorTypeDto>(sensorType);
+        }
     }
 }

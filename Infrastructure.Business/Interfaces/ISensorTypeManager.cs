@@ -15,7 +15,9 @@ namespace Infrastructure.Business.Managers
         OperationDetails Update(SensorTypeDto sensorTypeDto);
 
 		Task<SensorTypeDto> GetSensorTypeByIdAsync(int id);
+        Task<SensorTypeDto> GetLastSensorType();
 
-		Task<IEnumerable<SensorTypeDto>> GetAllSensorTypesAsync();
+
+        Task<IEnumerable<SensorTypeDto>> GetAllSensorTypesAsync();
     }
 }

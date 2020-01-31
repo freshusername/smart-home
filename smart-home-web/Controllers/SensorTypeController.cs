@@ -30,7 +30,7 @@ namespace smart_home_web.Controllers
         public async Task<ActionResult> Index()
         {
             var sensortypes = _mapper.Map<IEnumerable<SensorTypeViewModel>>(await _sensorTypeManager.GetAllSensorTypesAsync());
-            return View(sensortypes);
+            return View(sensortypes.Reverse());
         }
 
         // GET: SensorType/Create
@@ -59,7 +59,7 @@ namespace smart_home_web.Controllers
 
             if (res.Succeeded)
             {
-                SensorTypeDto sensorTypefromDB = await _sensorTypeManager.GetSensorTypeByIdAsync(sensorTypeDto.Id);
+                SensorTypeDto sensorTypefromDB = await _sensorTypeManager.GetLastSensorType();
                 return ViewComponent("SensorTypeElement", _mapper.Map<SensorTypeDto, SensorTypeViewModel>(sensorTypefromDB));
             }
                 
@@ -99,13 +99,16 @@ namespace smart_home_web.Controllers
             }
         }
 
-        public async Task<ActionResult> Delete(int sensorTypeId)
+        public async Task<ActionResult> Delete(int Id)
         {
             try
             {
-                var res = await _sensorTypeManager.Delete(sensorTypeId);
-                if (!res.Succeeded)
+                var res = await _sensorTypeManager.Delete(Id);
+                if (!res.Succeeded) {
                     ModelState.AddModelError(res.Property, res.Message);
+                    return View();
+                }
+                    
                 return Ok();
             }
             catch
