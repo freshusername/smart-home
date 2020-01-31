@@ -41,7 +41,8 @@
             <p>No image was added</p>
         }
         <input asp-for="@Model.IconId" type="hidden" />
-        <input asp-for="IconFile" class="form-control" type="file" accept="image/*" />
+        <input asp-for="@Model.IconFile" class="form-control" onchange="loadFile(event)" type="file" accept=".jpg, .jpeg, .png" />
+        <img class="img-rounded" id="modal-form-edit-output" width="64" height="64" style="visibility: hidden" />
         <span asp-validation-for="IconFile" class="text-danger"></span>
     </div>
 
@@ -54,7 +55,7 @@
         var loadFile = function (event) {
             var reader = new FileReader();
             reader.onload = function () {
-                var output = document.getElementById('output');
+                var output = document.getElementById('modal-form-edit-output');
                 output.src = reader.result;
                 output.style.visibility = "visible";
             };
