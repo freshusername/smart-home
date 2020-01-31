@@ -39,7 +39,7 @@ namespace Infrastructure.Business.Managers
              var result = mapper.Map<SensorControl,SensorControlDto>(sensorControl);
 
               var sensor = unitOfWork.SensorRepo.GetByToken(sensorControl.Control.Token);
-             result.ControlSensorId = sensor.Id;
+            
 
             return result;
         }
@@ -77,6 +77,17 @@ namespace Infrastructure.Business.Managers
               unitOfWork.SensorControlRepo.Update(sensorControl);
 
              unitOfWork.Save();
+            return new OperationDetails(true, "", "");
+        }
+
+        public OperationDetails Delete(int id)
+        {
+            var sensorControl = unitOfWork.SensorControlRepo.GetById(id).Result;
+            if (sensorControl == null) return new OperationDetails(false, "", "");
+          
+            unitOfWork.SensorControlRepo.Delete(sensorControl);
+
+            unitOfWork.Save();
             return new OperationDetails(true, "", "");
         }
     }

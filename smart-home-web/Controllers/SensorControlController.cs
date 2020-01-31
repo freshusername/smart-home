@@ -35,10 +35,10 @@ namespace smart_home_web.Controllers
         public IActionResult Index()
         {
             var data = _sensorControlManager.GetSensorControls();
-             var model = _mapper.Map<List<SensorControlDto>,List<SensorControlViewModel>>(data);
-            return View(model);       
+            var model = _mapper.Map<List<SensorControlDto>, List<SensorControlViewModel>>(data);
+            return View(model);
         }
-
+       
         [Authorize]
         [HttpPost]
         public IActionResult Change(int id, bool isActive)
@@ -46,6 +46,16 @@ namespace smart_home_web.Controllers
             var result = _sensorControlManager.UpdateById(id,isActive);
             if (!result.Succeeded) return BadRequest();
               
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            var result = _sensorControlManager.Delete(id);
+            if (!result.Succeeded) return BadRequest();
+
             return Ok();
         }
 
