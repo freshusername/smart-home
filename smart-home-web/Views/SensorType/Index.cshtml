@@ -114,6 +114,25 @@
         $(".sensor-type-create").click(SensorTypeCreate);
         $(".sensor-type-delete").click(SensorTypeDelete);
 
+        function SensorTypeEdit() {
+            parent = $(this).closest(".sensor-type-row");
+            $.ajax({
+                url: '@Url.Action("Edit","SensorType")',
+                data: { id: parent.data("sensor-type-row-id") },
+                beforeSend: function () {
+                    modal.fadeIn(600);
+                    return true;
+                },
+                success: function (data) {
+                    modal.find(".modal-title").text("Edit Sensor Type");
+                    modal.find(".modal-body").append(data);
+                    modal.on("submit", ".modal-form-edit", ModalFormEditSubmit);
+                    modal.on("click", ".back-to-list", HideModal);
+                    modal.modal();
+                }
+            });
+        }
+
         function SensorTypeCreate() {
             $.ajax({
                 url: '@Url.Action("Create","SensorType")',
@@ -129,6 +148,22 @@
                     modal.modal();
                 }
             });
+        }
+
+        function SensorTypeDelete() {
+            if (confirm("Are you sure?")) {
+                let parent = $(this).closest(".sensor-type-row");
+                $.ajax({
+                    url: '@Url.Action("Delete","SensorType")',
+                    data: { sensorTypeId: $(this).data("sensor-type-id") },
+                    beforeSend: function () {
+                        parent.hide(800, function () {
+                            parent.remove();
+                        })
+                        return true;
+                    }
+                });
+            }
         }
 
         function ModalFormCreateSubmit() {
@@ -154,25 +189,6 @@
             });
         }
 
-        function SensorTypeEdit() {
-            parent = $(this).closest(".sensor-type-row");
-            $.ajax({
-                url: '@Url.Action("Edit","SensorType")',
-                data: { id: parent.data("sensor-type-row-id") },
-                beforeSend: function () {
-                    modal.fadeIn(600);
-                    return true;
-                },
-                success: function (data) {
-                    modal.find(".modal-title").text("Edit Sensor Type");
-                    modal.find(".modal-body").append(data);
-                    modal.on("submit", ".modal-form-edit", ModalFormEditSubmit);
-                    modal.on("click", ".back-to-list", HideModal);
-                    modal.modal();
-                }
-            });
-        }
-
         function ModalFormEditSubmit() {
             event.preventDefault();
             let SensorTypeId = $(this).data("sensor-type-id");
@@ -181,7 +197,7 @@
                 method: "POST",
                 data: $(this).serialize(),
                 beforeSend: function () {
-                    modal.modal("hide");
+                    HideModal();
                     parent.hide(800);
                     return true;
                 },
@@ -192,30 +208,14 @@
                     tbody.on("click", ".sensor-type-edit", SensorTypeEdit);
                     tbody.on("click", ".sensor-type-create", SensorTypeCreate);
                 }
-            })
+            });
         }
 
         function HideModal() {
-            $("#modalWindow").modal("hide");
+            modal.modal("hide");
         }
 
-        function SensorTypeDelete() {
-            if (confirm("Are you sure?")) {
-                let parent = $(this).closest(".sensor-type-row");
-                $.ajax({
-                    url: '@Url.Action("Delete","SensorType")',
-                    data: { sensorTypeId: $(this).data("sensor-type-id") },
-                    beforeSend: function () {
-                        parent.hide(800, function () {
-                            parent.remove();
-                        })
-                        return true;
-                    }
-                });
-            }
-        }
-
-        $('#modalWindow').on('hidden.bs.modal', function (e) {
+        modal.on('hidden.bs.modal', function (e) {
             $(this).find(".modal-body").empty();
             $(this).find(".modal-title").empty();
         });
