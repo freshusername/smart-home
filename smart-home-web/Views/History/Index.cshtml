@@ -5,48 +5,219 @@
 
 @model AllHistoriesViewModel;
 
-
+@{
+    Layout = "_HistoryLayout";
+}
 @{
     ViewData["Title"] = "Histories";
 }
 
-<body class="body-content">
-    @*filters*@
-    <div class="text-center">
+@*<div class="text-center">
         Invalid sensors <input type="checkbox" id="checkboxInvalidSensors" />
     </div>
     <br />
     <div id="table_data">
         @await Component.InvokeAsync("History", new { model = Model })
+    </div>*@
+
+
+<div class="app-main">
+    <div class="app-main__outer">
+        <div class="app-main__inner">
+            <div class="app-header">
+                <div class="page-title-heading">
+                    All Histories
+                    <div class="page-title-subheading">
+                        Invalid sensors 
+                        <button type="button" id="checkboxInvalidSensors">Inv sensors</button>
+                    </div>
+                </div>
+            </div>
+            <div class="app-inner-layout app-inner-layout-page">
+                <div class="app-inner-layout__wrapper">
+                    <div class="app-inner-layout__content pt-1">
+                        <div class="tab-content">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="main-card mb-3 card">
+                                            <div class="card-body">
+                                                <div id="example_wrapper" class="dataTables_wrapper dt-bootstrap4">
+
+                                                    @*TO ADD COUNT ON PAGE AND SEARCH*@
+
+                                                    @*<div class="row">
+                                                            <div class="col-sm-12 col-md-6">
+                                                                <div class="dataTables_length" id="example_length">
+                                                                    <label>
+                                                                        Show <select name="example_length" aria-controls="example" class="custom-select custom-select-sm form-control form-control-sm">
+                                                                            <option value="10">
+                                                                                10
+                                                                            </option>
+                                                                            <option value="25">
+                                                                                25
+                                                                            </option>
+                                                                            <option value="50">
+                                                                                50
+                                                                            </option>
+                                                                            <option value="100">
+                                                                                100
+                                                                            </option>
+                                                                        </select> entries
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-12 col-md-6">
+                                                                <div id="example_filter" class="dataTables_filter">
+                                                                    <label>
+                                                                        Search:
+                                                                        <input type="search"
+                                                                               class="form-control form-control-sm"
+                                                                               placeholder=""
+                                                                               aria-controls="example">
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>*@
+                                                    <div class="row">
+                                                        <div class="col-sm-12">
+                                                            <table style="width: 100%;" id="example" class="table table-hover table-bordered dataTable dtr-inline" role="grid" aria-describedby="example_info">
+                                                                <thead>
+                                                                    @*ADD class = "sorting" TO EANDLE ARROWS*@
+                                                                    <tr role="row">
+                                                                        <th 
+                                                                            tabindex="0" 
+                                                                            aria-controls="example" 
+                                                                            rowspan="1" colspan="1" 
+                                                                            aria-sort="ascending">
+                                                                            ID
+                                                                        </th>
+                                                                        <th
+                                                                            tabindex="0"
+                                                                            aria-controls="example"
+                                                                            rowspan="1" colspan="1">
+                                                                            Name
+                                                                        </th>
+                                                                        <th
+                                                                            tabindex="0"
+                                                                            aria-controls="example"
+                                                                            rowspan="1" colspan="1">
+                                                                            Date
+                                                                        </th>
+                                                                        <th 
+                                                                            tabindex="0"
+                                                                            aria-controls="example"
+                                                                            rowspan="1" colspan="1">
+                                                                            Value
+                                                                        </th>
+                                                                        <th 
+                                                                            tabindex="0"
+                                                                            aria-controls="example"
+                                                                            rowspan="1" colspan="1">
+                                                                            Measurement Unit
+                                                                        </th>
+                                                                </thead>
+                                                                @await Component.InvokeAsync("History", new { model = Model })
+                                                                <tfoot>
+                                                                    <tr role="row">
+                                                                        <th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending">
+                                                                            ID
+                                                                        </th>
+                                                                        <th class="sorting"
+                                                                            tabindex="0"
+                                                                            aria-controls="example"
+                                                                            rowspan="1" colspan="1">
+                                                                            Name
+                                                                        </th>
+                                                                        <th class="sorting"
+                                                                            tabindex="0"
+                                                                            aria-controls="example"
+                                                                            rowspan="1" colspan="1">
+                                                                            Date
+                                                                        </th>
+                                                                        <th class="sorting"
+                                                                            tabindex="0"
+                                                                            aria-controls="example"
+                                                                            rowspan="1" colspan="1">
+                                                                            Value
+                                                                        </th>
+                                                                        <th class="sorting"
+                                                                            tabindex="0"
+                                                                            aria-controls="example"
+                                                                            rowspan="1" colspan="1">
+                                                                            Measurement Unit
+                                                                        </th>
+                                                                </tfoot>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-sm-12 col-md-5">
+                                                            <div class="dataTables_info" id="example_info" role="status" aria-live="polite">
+  
+                                                                Showing
+                                                                @{
+                                                                    var show = (Model.FilterDto.CurrentPage - 1) * Model.FilterDto.PageSize;
+                                                                }
+                                                                @show
+                                                                to
+                                                                @{
+                                                                    var to = (Model.FilterDto.CurrentPage - 1) * Model.FilterDto.PageSize + Model.FilterDto.PageSize;
+                                                                }
+                                                                @to
+                                                                of
+                                                                @Model.FilterDto.Amount
+                                                                entries
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-12 col-md-7">
+                                                            <div class="dataTables_paginate paging_simple_numbers" id="example_paginate">
+                                                                @await Component.InvokeAsync("Pagination", new { action = "Index", controller = "History", filterDto = Model.FilterDto })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
-    <script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/lib/jquery/dist/jquery.js"></script>
 
-    <script>
-        $(function () {
-            $("#checkboxInvalidSensors").click(function () {
-                UpdateHistoryTable();
-            });
+<script>
+    
+    $(document).ready(function () {
+        $("#checkboxInvalidSensors").click(UpdateHistoryTable);
+    });
 
-            function UpdateHistoryTable() {
-                $.ajax({
-                    url:"@Url.Action("UpdateHistoryTable", "History")",
-                    data: {
-                        FilterDTO: JSON.parse('@Html.Raw(Json.Serialize(@Model.FilterDto))'),
-                        isActivated: $("#checkboxInvalidSensors").prop('checked'),
-                        onlyLast: $("#checkboxLastValues").prop('checked')
-                    },
-                    error: function (res) {
-                        console.log(res);
-                    },
-                    success: function (data) {
-                        $("#table_data").html(data);
-                    }
-                });
+    let UpdateHistoryTable = () => {
+        
+        $.ajax({
+            url:"@Url.Action("UpdateHistoryTable", "History")",
+            data: {
+                FilterDTO: JSON.parse('@Html.Raw(Json.Serialize(@Model.FilterDto))'),
+                isActivated: $("#checkboxInvalidSensors").prop('checked'),
+                onlyLast: $("#checkboxLastValues").prop('checked')
+            },
+            error: function (res) {
+                console.log(res);
+            },
+            success: function (data) {
+                console.log(data);
+                //$(this).text(htmlString)
+                //$("#table_data").html(data);
+                //$("tbody").replaceWith(data);
             }
         });
+    }
 
 
-
-    </script>
-</body>
+</script>

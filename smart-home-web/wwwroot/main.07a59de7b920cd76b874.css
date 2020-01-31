@@ -12789,7 +12789,7 @@ a, button, .btn {
     transition: all .2s;
     background: #fff;
     border-radius: .35rem;
-    height: 100%
+    /*height: 100%*/
 }
 
 .app-sidebar.sidebar-shadow, .app-inner-layout .app-inner-layout__wrapper .sidebar-shadow.app-inner-layout__sidebar.card {
@@ -12797,7 +12797,7 @@ a, button, .btn {
 }
 
 .app-sidebar .app-sidebar__inner, .app-inner-layout .app-inner-layout__wrapper .app-inner-layout__sidebar.card .app-sidebar__inner {
-    padding: 2px 1.5rem calc((1.5rem) + 70px)
+    padding: 2px 1.5rem 1.5rem
 }
 
 .app-sidebar .scrollbar-sidebar, .app-inner-layout .app-inner-layout__wrapper .app-inner-layout__sidebar.card .scrollbar-sidebar {
@@ -22146,7 +22146,7 @@ legend {
 
 .scrollbar-sidebar, .scrollbar-container {
     position: relative;
-    height: 100%
+    /*height: 100%*/
 }
 
 .scroll-area {
