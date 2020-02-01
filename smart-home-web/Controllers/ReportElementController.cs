@@ -46,23 +46,6 @@ namespace smart_home_web.Controllers
                 return View(model);
 
             string userId = _userManager.GetUserId(User);
-
-            if (model.Type == ReportElementType.StatusReport)
-            {
-                SensorDto sensor = await _reportElementManager.GetLastSensorByUserId(userId);
-                if (sensor == null)
-                {
-                    ModelState.AddModelError("", "There is not such sensor");
-                    return View(model);
-                }
-                model.SensorId = sensor.Id;
-                model.Hours = (int)ReportElementHours.AllTime;
-            }
-            if (model.SensorId == 0)
-            {
-                ModelState.AddModelError("", "There is not such sensor");
-                return View(model);
-            }
             ReportElementDto reportElement = _mapper.Map<CreateReportElementViewModel, ReportElementDto>(model);
             await _reportElementManager.CreateReportElement(reportElement, userId);
             return RedirectToAction("Detail", "Dashboard", new { id = model.DashboardId});
@@ -83,11 +66,6 @@ namespace smart_home_web.Controllers
         {
             if (!ModelState.IsValid)
                 return View(model);
-            if (model.SensorId == 0)
-            {
-                ModelState.AddModelError("", "There is not such sensor");
-                return View(model);
-            }
             ReportElementDto reportElement = _mapper.Map<EditReportElementViewModel, ReportElementDto>(model);
             await _reportElementManager.EditReportElement(reportElement);
             return RedirectToAction("Detail", "Dashboard", new { id = model.DashboardId });

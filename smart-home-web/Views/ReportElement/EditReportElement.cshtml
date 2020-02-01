@@ -7,7 +7,7 @@
 <link href="~/lib/nice-select/dist/css/nice-select.css" rel="stylesheet" />
 
 <body>
-    <div class="row" data-save-url="@Url.Action("GetSensorsByReportElementType", "Sensor")">
+    <div class="row" data-save-url="@Url.Action("GetSensorsByReportElementType", "Sensor")" data-save-dashboardid="@Model.DashboardId">
 
         <div class="col-lg-8 col-lg-offset-2 col-md-6 col-md-offset-3 col-sm-12">
             <div class="text-center">
@@ -55,7 +55,7 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label">Report element type: </label>
-                    <input id="sensor-name" type="text" disabled="disabled" asp-for="Type" value="@Model.Type" class="form-control" />
+                    <input id="type" type="text" disabled="disabled" asp-for="Type" value="@Model.Type" class="form-control" />
                 </div>
                 <div class="form-group">
                     <label class="control-label">Select sensor name:</label>
@@ -72,7 +72,7 @@
                     <label class="control-label">
                         Select measurement period:
                     </label>
-                    <div style="margin-bottom:50px">
+                    <div id="hours" style="margin-bottom:50px" data-save-hours="@((int)Model.Hours)">
                         <select id="hours-select" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.ReportElementHours>()" class="nice-select wide"></select>
                     </div>
                 </div>
@@ -88,58 +88,6 @@
 </body>
 @section Scripts {
     <script src="~/lib/nice-select/dist/js/jquery.nice-select.min.js"></script>
-    <script>
-        $(document).ready(function () {
-           $('#hours-select').find('option[value="@((int)Model.Hours)"]').attr('selected', 'selected');
-           $('select').niceSelect();
-           $.ajax({
-                type: "Get",
-                url: $(".row").data("save-url"),
-                data: { type: $("input#sensor-name").val(), dashboardId: @(Model.DashboardId)},
-                success: function (res) {
-                    $('#sensor-select').empty()
-                    $.each(res, function (key, value) {
-                        $('#sensor-select')
-                            .append($("<option></option>")
-                                .attr("value", value.id)
-                                .text(value.name));
-                    });
-                    if ("@Model.Type" == "@Domain.Core.Model.Enums.ReportElementType.Heatmap") {
-                        $('select#hours-select').attr('disabled', true);
-                            $('#hours-select').find('option[value="@((int)Domain.Core.Model.Enums.ReportElementHours.Hour672)"]').attr('selected', 'selected');
-                            $('#hours-hidden').val(@((int) Domain.Core.Model.Enums.ReportElementHours.Hour672));
-                    } else if ($("select#type-select").children("option:selected").val() == "@((int)Domain.Core.Model.Enums.ReportElementType.StatusReport)") {
-                        $('select#hours-select').attr('disabled', true);
-                        $('select#sensor-select').attr('disabled', true);
-                        $('#hours-select').find('option[value="@((int)Domain.Core.Model.Enums.ReportElementHours.AllTime)"]').attr('selected', 'selected');
-                        $('#hours-hidden').val(@((int) Domain.Core.Model.Enums.ReportElementHours.AllTime));
-                    }
-                    $('#sensor-select').val($('#sensor-id').val());
-                    $('select').niceSelect('update');
-                },
-                error: function () {
-                    $('#sensor-select')
-                        .append($("<option></option>")
-                            .attr("disabled", true)
-                            .attr("selected", true)
-                            .text("There is not suitable sensor"));
-                    if ("@Model.Type" == "@Domain.Core.Model.Enums.ReportElementType.Heatmap") {
-                        $('select#hours-select').attr('disabled', true);
-                            $('#hours-select').find('option[value="@((int)Domain.Core.Model.Enums.ReportElementHours.Hour672)"]').attr('selected', 'selected');
-                            $('#hours-hidden').val(@((int) Domain.Core.Model.Enums.ReportElementHours.Hour672));
-                    }
-                    $('#sensor-select').val($('#sensor-id').val());
-                    $('select').niceSelect('update');
-
-                },
-           });
-           $('#hours-hidden').val($("#hours-select").children("option:selected").val());
-           $("#hours-select").change(function () {
-               $('select').niceSelect('update');
-               $('#hours-hidden').val($("#hours-select").children("option:selected").val());
-           });
-        });
-
-    </script>
+    <script src="~/js/edit-report-element.js"></script>
     @await Html.PartialAsync("_ValidationScriptsPartial")
 }

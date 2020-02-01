@@ -2,6 +2,7 @@
     Layout = "_DashboardLayout";
 }
 @using smart_home_web.Models.Dashboard;
+@using Domain.Core.Model.Enums;
 @using smart_home_web.Components;
 @model DashboardViewModel;
 
@@ -26,7 +27,7 @@
                     <div class="text-center btn-control-icon report-button text-center" onclick=remove(@report.Id)>
                         <span><i class="fas fa-times"></i></span>
                     </div>
-                    @if (report.Type != Domain.Core.Model.Enums.ReportElementType.StatusReport)
+                    @if (report.Type != ReportElementType.StatusReport && report.Type != ReportElementType.Clock)
                     {
                         <div class="text-center btn-control-icon text-center">
                             <a asp-controller="ReportElement" asp-action="EditReportElement" asp-route-id="@report.Id"><i class="fas fa-cog report-button"></i></a>

@@ -105,7 +105,7 @@ namespace Infrastructure.Business.Managers
             }
 
             IEnumerable<AvgSensorValuePerDay> avgSensorValuesPerDays = await
-                unitOfWork.HistoryRepo.GetAvgSensorsValuesPerDays(reportElement.SensorId, dateFrom, dateTo);
+                unitOfWork.HistoryRepo.GetAvgSensorsValuesPerDays(reportElement.SensorId.Value, dateFrom, dateTo);
             List<AvgSensorValuePerDay> AvgSensorValuesPerDays = avgSensorValuesPerDays.ToList();
 
             for (int i = 0; i < daysArray.Length; i++)
@@ -143,7 +143,7 @@ namespace Infrastructure.Business.Managers
             DateTime date = new DateTime(1970, 1, 1, 0, 0, 0);
             if (reportElement.Hours != 0)
                 date = DateTime.Now.AddHours(-(int)reportElement.Hours);
-            IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
+            IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId.Value, date);
 
             if (!histories.Any())
                 return new ReportElementDto { Id = ReportElementId, IsCorrect = false };
@@ -180,11 +180,11 @@ namespace Infrastructure.Business.Managers
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(gaugeId);
             GaugeDto gaugeDto = mapper.Map<ReportElement, GaugeDto>(reportElement);
 
-            gaugeDto.Min = historyManager.GetMinValueForPeriod(reportElement.SensorId, (int)gaugeDto.Hours);
-            gaugeDto.Max = historyManager.GetMaxValueForPeriod(reportElement.SensorId, (int)gaugeDto.Hours);
+            gaugeDto.Min = historyManager.GetMinValueForPeriod(reportElement.SensorId.Value, (int)gaugeDto.Hours);
+            gaugeDto.Max = historyManager.GetMaxValueForPeriod(reportElement.SensorId.Value, (int)gaugeDto.Hours);
             if (gaugeDto.Min.HasValue && gaugeDto.Max.HasValue)
             {
-                var value = historyManager.GetLastHistoryBySensorId(reportElement.SensorId);
+                var value = historyManager.GetLastHistoryBySensorId(reportElement.SensorId.Value);
                 gaugeDto.Value = value.DoubleValue.HasValue ? value.DoubleValue : value.IntValue;
                 gaugeDto.SensorName = reportElement.Sensor.Name;
                 gaugeDto.MeasurementName = reportElement.Sensor.SensorType.MeasurementName;
@@ -217,7 +217,7 @@ namespace Infrastructure.Business.Managers
             DateTime date = new DateTime(1970, 1, 1, 0, 0, 0);
             if (reportElement.Hours != 0)
                 date = DateTime.Now.AddHours(-(int)reportElement.Hours);
-            IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
+            IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId.Value, date);
             if (!histories.Any())
             {
                 int hours = (int)reportElement.Hours;
@@ -351,7 +351,7 @@ namespace Infrastructure.Business.Managers
             if (reportElement.Hours != 0)
                 date = DateTimeOffset.Now.AddHours(-(int)reportElement.Hours);
 
-            var histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
+            var histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId.Value, date);
             if (histories.Count() == 0 || histories == null)
                 return new ReportElementDto
                 {
