@@ -52,7 +52,7 @@ namespace Infrastructure.Business.Managers
         {
             try
             {
-                SensorType sensorType = await unitOfWork.SensorTypeRepo.GetById(id);
+                SensorType sensorType = unitOfWork.SensorTypeRepo.GetById(id).Result;
                 await unitOfWork.SensorTypeRepo.Delete(sensorType);
                 unitOfWork.Save();
             }

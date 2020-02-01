@@ -74,6 +74,7 @@
         let currentRow = null;
         const modal = $("#modalWindow");
         const modalBody = modal.find(".modal-body");
+        const tableBody = $("table").find("tbody");
         $("#modal-delete-confirm").hide(0);
         $(".sensor-type-edit").click(SensorTypeEdit);
         $(".sensor-type-create").click(SensorTypeCreate);
@@ -81,6 +82,7 @@
 
         function SensorTypeEdit() {
             currentRow = $(this).closest(".sensor-type-row");
+            modal.modal("hide");
             $.ajax({
                 url: '@Url.Action("Edit","SensorType")',
                 data: { id: currentRow.data("sensor-type-row-id") },
@@ -91,9 +93,12 @@
                 success: function (data) {
                     modal.find(".modal-title").text("Edit Sensor Type");
                     modalBody.prepend(data);
-                    modalBody.on("submit", ".modal-form-edit", ModalFormCreateSubmit);
+                    modalBody.on("submit", "#modal-form-edit", ModalFormEditSubmit);
                     modalBody.on("click", ".back-to-list", HideModal);
                     modal.modal("show");
+                },
+                error: function (res) {
+                    console.log(res);
                 }
             });
         }
@@ -108,9 +113,12 @@
                 success: function (data) {
                     modal.find(".modal-title").text("Create Sensor Type");
                     modalBody.prepend(data);
-                    modalBody.on("submit", ".modal-form-create", ModalFormCreateSubmit);
+                    modalBody.on("submit", "#modal-form-create", ModalFormCreateSubmit);
                     modalBody.on("click", ".back-to-list", HideModal);
                     modal.modal("show");
+                },
+                error: function (res) {
+                    console.log(res);
                 }
             });
         }
@@ -135,54 +143,54 @@
                     currentRow.hide(800, function () {
                         currentRow.remove();
                     });
-                    currentRow = null;
                     return true;
                 },
-                success: function () {
-                    alert(true);
-                },
                 error: function (res) {
-                    alert(false);
                     console.log(res);
                 }
             });
         }
-        
-
-        function RenderModalBody(text,data) {
-            modal.find(".modal-title").text(text);
-            modalBody.prepend(data);
-            modalBody.on("submit", ".modal-form-create", ModalFormCreateSubmit);
-            modalBody.on("click", ".back-to-list", HideModal);
-            modal.modal();
-        }
 
         function ModalFormCreateSubmit() {
             event.preventDefault();
+            var inputFile = $(this).find(".modal-form-file");
+            var form = document.getElementById($(this).attr("id"));
+            var fd = new FormData(form);
+            fd.append('IconFile', inputFile.prop('files')[0]);
             $.ajax({
                 url: '@Url.Action("Create","SensorType")',
                 method: "POST",
-                data: $(".modal-form-create").serialize(),
+                processData: false,
+                contentType: false,
+                data: fd,
                 beforeSend: function () {
                     modal.modal("hide");
                     return true;
                 },
                 success: function (data) {
-                    let tbody = $("tbody");
-                    tbody.prepend(data);
-                    data.on("click", ".sensor-type-edit", SensorTypeEdit);
-                    data.on("click", ".sensor-type-create", SensorTypeCreate);
+                    tableBody.prepend(data);
+                    tableBody.on("click", ".sensor-type-edit", SensorTypeEdit);
+                    tableBody.on("click", ".sensor-type-delete", SensorTypeDeleteConfirm);
+                },
+                error: function (res) {
+                    console.log(res);
                 }
             });
         }
 
         function ModalFormEditSubmit() {
             event.preventDefault();
-            let SensorTypeId = $(this).data("sensor-type-id");
+            var inputFile = $(this).find(".modal-form-file");
+            var form = document.getElementById($(this).attr("id"));
+            var fd = new FormData(form);
+            fd.append('IconFile', inputFile.prop('files')[0]);
+
             $.ajax({
                 url: '@Url.Action("Edit","SensorType")',
                 method: "POST",
-                data: $(this).serialize(),
+                processData: false,
+                contentType: false,
+                data: fd,
                 beforeSend: function () {
                     modal.modal("hide");;
                     currentRow.hide(800);
@@ -191,9 +199,11 @@
                 success: function (data) {
                     currentRow.replaceWith(data);
                     currentRow.show(800);
-                    let tbody = $("tbody");
-                    tbody.on("click", ".sensor-type-edit", SensorTypeEdit);
-                    tbody.on("click", ".sensor-type-create", SensorTypeCreate);
+                    tableBody.on("click", ".sensor-type-edit", SensorTypeEdit);
+                    tableBody.on("click", ".sensor-type-delete", SensorTypeDeleteConfirm);
+                },
+                error: function (res) {
+                    console.log(res);
                 }
             });
         }
