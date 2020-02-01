@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using smart_home_web.Models.ReportElements;
 using System.Threading.Tasks;
 
-namespace smart_home_web.Components
+namespace smart_home_web.Components.ReportElements
 {
     public class StatusReportViewComponent : BaseViewComponent
     {

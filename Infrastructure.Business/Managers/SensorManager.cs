@@ -61,12 +61,12 @@ namespace Infrastructure.Business.Managers
             return new OperationDetails(true, "Sensor has been updated!", "Name");
         }
 
-        public OperationDetails Delete(SensorDto sensorDto)
+        public async Task<OperationDetails> Delete(int sensorId)
         {
-            Sensor sensor = mapper.Map<SensorDto, Sensor>(sensorDto);
+            Sensor sensor = await unitOfWork.SensorRepo.GetById(sensorId);
             try
             {
-                unitOfWork.SensorRepo.Delete(sensor);
+                await unitOfWork.SensorRepo.Delete(sensor);
                 unitOfWork.Save();
             }
             catch (Exception ex)
@@ -175,5 +175,6 @@ namespace Infrastructure.Business.Managers
             await unitOfWork.SensorRepo.Update(sensor);
             unitOfWork.Save();
         }
+
     }
 }

@@ -15,7 +15,7 @@
         <a asp-action="Create" class="btn btn-success">Add new sensor</a>
     </div>
 }
-<table class="table" data-save-url="@Url.Action("SetActive", "Sensor")">
+<table class="table text-center"  data-save-url="@Url.Action("SetActive", "Sensor")">
     <thead>
         <tr>
             <th scope="col">On/Off</th>
@@ -27,7 +27,7 @@
     <tbody>
         @foreach (var sensor in Model)
         {
-            <tr>
+            <tr class="sensor-row">
                 <td>
                     <label class="rocker rocker-small">
                         <input id="@sensor.Id.ToString()" type="checkbox" @Html.Raw(sensor.IsActive ? "checked" : " ")>
@@ -45,7 +45,7 @@
                         <p>No image was added</p>
                     }
                 </td>
-                <td>
+                <td class="text-left">
                     <div id="sensor-details">
                         <h5>Name: @sensor.Name</h5>
                         <h5>Type: @sensor.SensorTypeName</h5>
@@ -55,7 +55,7 @@
                         <h5>Created: @sensor.CreatedOn.Value.UtcDateTime.ToString("dd/MM/yyyy on HH:mm")</h5>
                         <h5>Comment: @sensor.Comment</h5>
                         <h5>
-                            Activated: <i class="fa @(@sensor.IsActive ? "fa-check-circle" : "fa-times-circle")"></i>
+                            Activated: <i class="fa @(@sensor.IsActive ? "fa-check-circle" : "fa-times-circle") sensor-activated"></i>
                         </h5>
                         <h5>Token: @sensor.Token</h5>
 
@@ -78,9 +78,7 @@
                                asp-route-sensorId="@sensor.Id">
                                 <i class="fa fa-edit"></i>
                             </a>
-                            <a class="btn btn-sm btn-danger text-center"
-                               asp-action="Delete"
-                               asp-route-sensorId="@sensor.Id">
+                            <a class="btn btn-sm btn-danger text-center sensor-delete" data-sensorId="@sensor.Id">
                                 <i class="fa fa-trash"></i>
                             </a>
                         }
@@ -107,10 +105,30 @@
             type: 'Post',
             url: $('table').data('save-url'),
             data: { id: $(this).attr('id') },
-            success: function () {
+            beforeSend: function () {
+                $(".sensor-activated").toggleClass("fa-check-circle fa-times-circle");
+            },
+            success: function () {      
                 console.log('changed');
             }
         });
     });
+
+    $(".sensor-delete").click(function () {
+        if (confirm("Are you sure?")) {
+            let parent = $(this).closest(".sensor-row");
+            $.ajax({
+                url:  '@Url.Action("Delete","Sensor")',
+                data: { sensorId: $(this).data("sensorid") },
+                beforeSend: function () {
+                    parent.hide(800, function () {
+                        parent.remove();
+                    })
+                    return true;
+                }
+            });
+        }
+    });
+
 
 </script>

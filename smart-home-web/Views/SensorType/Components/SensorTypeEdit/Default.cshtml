@@ -1,0 +1,71 @@
+﻿@model smart_home_web.Models.SensorType.EditSensorTypeViewModel
+
+@if (Model != null)
+{
+<form method="post" id="modal-form-edit" data-sensor-type-id="@Model.Id" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control" required />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Comment" class="control-label"></label>
+        <input asp-for="Comment" class="form-control" />
+        <span asp-validation-for="Comment" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="MeasurementType" class="control-label"></label>
+        <select asp-for="MeasurementType" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.MeasurementType>()"
+                class="form-control" required>
+            <option value="none" selected disabled hidden>
+                Select an Option
+            </option>
+        </select>
+        <span asp-validation-for="MeasurementType" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="MeasurementName" class="control-label"></label>
+        <input asp-for="MeasurementName" class="form-control" required />
+        <span asp-validation-for="MeasurementName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="IconFile" class="control-label"></label>
+        @if (Model.IconPath != null)
+        {
+            <img src="@Model.IconPath" width="64" height="64" />
+        }
+        else
+        {
+            <p>No image was added</p>
+        }
+        <input asp-for="@Model.IconId" type="hidden" />
+        <input asp-for="@Model.IconFile" class="form-control modal-form-file" onchange="loadFile(event)" type="file" accept=".jpg, .jpeg, .png"/>
+        <img class="img-rounded" id="modal-form-edit-output" width="64" height="64" style="visibility: hidden" />
+        <span asp-validation-for="IconFile" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-success" />
+        <a class="btn btn-primary back-to-list">Back to List</a>
+    </div>
+</form>
+    <script>
+        var loadFile = function (event) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                var output = document.getElementById('modal-form-edit-output');
+                output.src = reader.result;
+                output.style.visibility = "visible";
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        };
+    </script>
+
+    
+}
+else
+{
+    <h2>Error: Sensor type with such id was not found</h2>
+}

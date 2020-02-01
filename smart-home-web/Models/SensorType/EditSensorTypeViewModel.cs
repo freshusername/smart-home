@@ -23,6 +23,7 @@ namespace smart_home_web.Models.SensorType
         public string MeasurementName { get; set; }
 
         public int IconId { get; set; }
+
         public string IconPath { get; set; }
 
         [DisplayName("Icon")]

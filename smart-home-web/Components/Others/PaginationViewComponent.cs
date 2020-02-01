@@ -1,13 +1,8 @@
-﻿
-using Infrastructure.Business.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Infrastructure.Business.DTOs;
 using smart_home_web.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace smart_home_web.Components
+namespace smart_home_web.Components.Others
 {
     public class PaginationViewComponent:ViewComponent
     {

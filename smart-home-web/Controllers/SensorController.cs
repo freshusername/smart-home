@@ -91,13 +91,13 @@ namespace smart_home_web.Controllers
             return View("Update", sensorViewModel);
         }
 
-        [Authorize]
+        /*[Authorize]
         public async Task<ActionResult> Delete(int sensorId)
         {
             var sensorDto = await _sensorManager.GetSensorByIdAsync(sensorId);
             SensorViewModel sensorViewModel = _mapper.Map<SensorDto, SensorViewModel>(sensorDto);
             return View("Delete", sensorViewModel);
-        }
+        }*/
 
         [HttpPost]
         [Authorize]
@@ -121,23 +121,12 @@ namespace smart_home_web.Controllers
             }
         }
 
-        [HttpPost]
         [Authorize]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(SensorViewModel sensorViewModel)
+        public async Task<ActionResult> Delete(int sensorId)
         {
-            SensorDto sensorDto = _mapper.Map<SensorViewModel, SensorDto>(sensorViewModel);
+            var result = await _sensorManager.Delete(sensorId);
 
-            try
-            {
-                _sensorManager.Delete(sensorDto);
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View("Delete");
-            }
+            return Ok();
         }
 
         [HttpGet]

@@ -30,13 +30,13 @@ namespace smart_home_web.Controllers
         public async Task<ActionResult> Index()
         {
             var sensortypes = _mapper.Map<IEnumerable<SensorTypeViewModel>>(await _sensorTypeManager.GetAllSensorTypesAsync());
-            return View(sensortypes);
+            return View(sensortypes.Reverse());
         }
 
         // GET: SensorType/Create
         public ActionResult Create()
         {
-            return View();
+            return ViewComponent("SensorTypeCreate");
         }
 
         // POST: SensorType/Create
@@ -58,7 +58,11 @@ namespace smart_home_web.Controllers
             var res = _sensorTypeManager.Create(sensorTypeDto).Result;
 
             if (res.Succeeded)
-                return RedirectToAction(nameof(Index));
+            {
+                SensorTypeDto sensorTypefromDB = await _sensorTypeManager.GetLastSensorType();
+                return ViewComponent("SensorTypeElement", _mapper.Map<SensorTypeDto, SensorTypeViewModel>(sensorTypefromDB));
+            }
+                
             else
                 ModelState.AddModelError(res.Property, res.Message);
 
@@ -70,7 +74,7 @@ namespace smart_home_web.Controllers
         {
             var sensorTypeDto = await _sensorTypeManager.GetSensorTypeByIdAsync(id);
             EditSensorTypeViewModel sensorTypeViewModel = _mapper.Map<SensorTypeDto, EditSensorTypeViewModel>(sensorTypeDto);
-            return View(sensorTypeViewModel);
+            return ViewComponent("SensorTypeEdit", sensorTypeViewModel);
         }
 
         // POST: SensorType/Edit/5
@@ -86,8 +90,8 @@ namespace smart_home_web.Controllers
             try
             {
                 _sensorTypeManager.Update(sensorTypeDto);
-
-                return RedirectToAction(nameof(Index));
+                SensorTypeDto sensorTypefromDB = await _sensorTypeManager.GetSensorTypeByIdAsync(sensorTypeDto.Id);
+                return ViewComponent("SensorTypeElement", _mapper.Map<SensorTypeDto, SensorTypeViewModel>(sensorTypefromDB));
             }
             catch
             {
@@ -95,27 +99,17 @@ namespace smart_home_web.Controllers
             }
         }
 
-        // GET: SensorType/Delete/5
-        public async Task<ActionResult> Delete(int id)
-        {
-            var sensorTypeDto = await _sensorTypeManager.GetSensorTypeByIdAsync(id);
-            SensorTypeViewModel sensorTypeViewModel = _mapper.Map<SensorTypeDto, SensorTypeViewModel>(sensorTypeDto);
-            return View(sensorTypeViewModel);
-        }
-
-        // POST: SensorType/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(int Id)
         {
             try
             {
-                var res = _sensorTypeManager.Delete(id).Result;
-                if (res.Succeeded)
-                    return RedirectToAction(nameof(Index));
-                else
+                var res = await _sensorTypeManager.Delete(Id);
+                if (!res.Succeeded) {
                     ModelState.AddModelError(res.Property, res.Message);
-                return View();
+                    return View();
+                }
+                    
+                return Ok();
             }
             catch
             {
