@@ -71,7 +71,7 @@ namespace smart_home_web.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult> AddSensor(CreateSensorViewModel sensor)
+        public async Task<ActionResult> Create(CreateSensorViewModel sensor)
         {
             SensorDto sensorDto = _mapper.Map<CreateSensorViewModel, SensorDto>(sensor);
             if (sensor.IconFile != null)
