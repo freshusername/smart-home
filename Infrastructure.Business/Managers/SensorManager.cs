@@ -12,14 +12,17 @@ using System.Text;
 using System.Threading.Tasks;
 using Infrastructure.Business.DTOs.SensorType;
 using Domain.Interfaces.Repositories;
+using Microsoft.AspNetCore.SignalR;
+using Infrastructure.Business.Hubs;
 
 namespace Infrastructure.Business.Managers
 {
     public class SensorManager : BaseManager, ISensorManager
     {
-        public SensorManager(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
+        protected readonly IHubContext<GraphHub> graphHub;
+        public SensorManager(IUnitOfWork unitOfWork, IMapper mapper, IHubContext<GraphHub> hubContext) : base(unitOfWork, mapper)
         {
-
+            graphHub = hubContext;
         }
 
         public async Task<OperationDetails> Create(SensorDto sensorDto)
@@ -172,6 +175,7 @@ namespace Infrastructure.Business.Managers
         {
             Sensor sensor = await unitOfWork.SensorRepo.GetById(id);
             sensor.IsActive = !sensor.IsActive;
+            await graphHub.Clients.All.SendAsync("UpdateOnOff", id, sensor.IsActive);
             await unitOfWork.SensorRepo.Update(sensor);
             unitOfWork.Save();
         }

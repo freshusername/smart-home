@@ -30,7 +30,7 @@
             <tr class="sensor-row">
                 <td>
                     <label class="rocker rocker-small">
-                        <input id="@sensor.Id.ToString()" type="checkbox" @Html.Raw(sensor.IsActive ? "checked" : " ")>
+                        <input id=@("OnOff" + sensor.Id) data-save-sensorid="@sensor.Id" type="checkbox" @Html.Raw(sensor.IsActive ? "checked" : " ")>
                         <span class="switch-left">On</span>
                         <span class="switch-right">Off</span>
                     </label>
@@ -100,19 +100,20 @@
         $(this).toggleClass('fa fa-eye-slash');
     });
 
-    $('input').click(function () {
+    $('input[id^="OnOff"]').click(function () {
         $.ajax({
             type: 'Post',
-            url: $('table').data('save-url'),
-            data: { id: $(this).attr('id') },
+            url: $("table").data("save-url"),
+            data: { id: $(this).data("save-sensorid") },
             beforeSend: function () {
                 $(".sensor-activated").toggleClass("fa-check-circle fa-times-circle");
             },
-            success: function () {      
+            success: function () {
                 console.log('changed');
             }
         });
     });
+    
 
     $(".sensor-delete").click(function () {
         if (confirm("Are you sure?")) {
