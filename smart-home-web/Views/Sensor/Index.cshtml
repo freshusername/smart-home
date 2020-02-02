@@ -6,16 +6,21 @@
     ViewData["Title"] = "Sensors";
 }
 <link href="~/css/OnOff.css" rel="stylesheet" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<style>
+    .modal-backdrop.in {
+        opacity: 0.5 !important;
+    }
+</style>
+@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>*@
 
 <h2>Sensors List</h2>
 @if (User.Identity.IsAuthenticated)
 {
     <div class="button-center">
-        <a asp-action="Create" class="btn btn-success">Add new sensor</a>
+        <a class="btn btn-success sensor-create">Add new sensor</a>
     </div>
 }
-<table class="table" data-save-url="@Url.Action("SetActive", "Sensor")">
+<table class="table text-center" data-save-url="@Url.Action("SetActive", "Sensor")">
     <thead>
         <tr>
             <th scope="col">On/Off</th>
@@ -25,92 +30,209 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var sensor in Model)
+        @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    <label class="rocker rocker-small">
-                        <input id="@sensor.Id.ToString()" type="checkbox" @Html.Raw(sensor.IsActive ? "checked" : " ")>
-                        <span class="switch-left">On</span>
-                        <span class="switch-right">Off</span>
-                    </label>
-                </td>
-                <td>
-                    @if (sensor.IconPath != null)
-                    {
-                        <img src="@sensor.IconPath" width="64" height="64" />
-                    }
-                    else
-                    {
-                        <p>No image was added</p>
-                    }
-                </td>
-                <td>
-                    <div id="sensor-details">
-                        <h5>Name: @sensor.Name</h5>
-                        <h5>Type: @sensor.SensorTypeName</h5>
-                    </div>
-                    <i class="fa fa-eye-slash" onclick="toggleAdditionalInfo(this);" style="cursor: help;"></i>
-                    <div class="sensor-details-additional" style="display: none;">
-                        <h5>Created: @sensor.CreatedOn.Value.UtcDateTime.ToString("dd/MM/yyyy on HH:mm")</h5>
-                        <h5>Comment: @sensor.Comment</h5>
-                        <h5>
-                            Activated: <i class="fa @(@sensor.IsValid ? "fa-check-circle" : "fa-times-circle")"></i>
-                        </h5>
-                        <h5>Token: @sensor.Token</h5>
-
-                    </div>
-                </td>
-
-                <td>
-                    <div class="col-xs-3">
-                        <a class="btn btn-sm btn-success text-center"
-                           asp-controller="History"
-                           asp-action="Graph"
-                           asp-route-sensorId="@sensor.Id"
-                           asp-route-days="99999">
-                            <i class="fas fa-chart-bar"></i>
-                        </a>
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            <a class="btn btn-sm btn-info text-center"
-                               asp-action="Update"
-                               asp-route-sensorId="@sensor.Id">
-                                <i class="fa fa-edit"></i>
-                            </a>
-                            <a class="btn btn-sm btn-danger text-center"
-                               asp-action="Delete"
-                               asp-route-sensorId="@sensor.Id">
-                                <i class="fa fa-trash"></i>
-                            </a>
-                        }
-                    </div>
-                </td>
-            </tr>
+            @await Component.InvokeAsync("SensorElement", item)
         }
     </tbody>
 </table>
 
+@*class 'fade' don't working in Bootstrap 4*@
+<div class="modal" id="modalWindow" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title"></h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body"></div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-delete-confirm">
+    <a class="btn btn-primary" id="modal-delete-button" data-sensor-id="">Delete</a>
+    <a class="btn btn-secondary" data-dismiss="modal">Cancel</a>
+</div>
+
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
 <script>
-    function toggleAdditionalInfo(e) {
-        var subRow = e.nextElementSibling;
-        subRow.style.display = subRow.style.display === 'none' ? 'inherit' : 'none';
-    }
+    $(function () {
+        let currentRow = null;
+        const modal = $("#modalWindow");
+        const modalBody = modal.find(".modal-body");
+        const tableBody = $("table").find("tbody");
+        $("#modal-delete-confirm").hide(0);
+        $(".sensor-edit").click(SensorEdit);
+        $(".sensor-create").click(SensorCreate);
+        $(".sensor-delete").click(SensorDeleteConfirm);
 
-    $('.fa-eye-slash').click(function () {
-        $(this).toggleClass('fa fa-eye');
-        $(this).toggleClass('fa fa-eye-slash');
-    });
+        function SensorEdit() {
+            currentRow = $(this).closest(".sensor-row");
+            modal.modal("hide");
+            $.ajax({
+                url: '@Url.Action("Edit","Sensor")',
+                data: { id: currentRow.data("sensor-row-id") },
+                beforeSend: function () {
+                    modal.fadeIn(600);
+                    return true;
+                },
+                success: function (data) {
+                    modal.find(".modal-title").text("Edit Sensor");
+                    modalBody.prepend(data);
+                    modalBody.on("submit", "#modal-form-edit", ModalFormEditSubmit);
+                    modalBody.on("click", ".back-to-list", HideModal);
+                    modal.modal("show");
+                },
+                error: function (res) {
+                    console.log(res);
+                }
+            });
+        }
 
-    $('input').click(function () {
-        $.ajax({
-            type: 'Post',
-            url: $('table').data('save-url'),
-            data: { id: $(this).attr('id') },
-            success: function () {
-                console.log('changed');
-            }
+        function SensorCreate() {
+            $.ajax({
+                url: '@Url.Action("Create","Sensor")',
+                beforeSend: function () {
+                    modal.fadeIn(600);
+                    return true;
+                },
+                success: function (data) {
+                    modal.find(".modal-title").text("Create Sensor");
+                    modalBody.prepend(data);
+                    modalBody.on("submit", "#modal-form-create", ModalFormCreateSubmit);
+                    modalBody.on("click", ".back-to-list", HideModal);
+                    modal.modal("show");
+                },
+                error: function (res) {
+                    console.log(res);
+                }
+            });
+        }
+
+        function SensorDeleteConfirm() {
+            currentRow = $(this).closest(".sensor-row");
+            modal.find(".modal-title").text("Are you sure ?");
+            $("#modal-delete-confirm").clone().prependTo(modalBody);
+            $("#modal-delete-confirm").show(0);
+            $("#modal-delete-button").data("sensor-type-id", currentRow.data("sensor-row-id"));
+            modalBody.on("click", "#modal-delete-button", SensorTypeDelete);
+            modal.fadeIn(600);
+            modal.modal("show");
+        }
+
+        function SensorTypeDelete() {
+            $.ajax({
+                url: '@Url.Action("Delete","Sensor")',
+                data: { Id: $(this).data("sensor-id") },
+                beforeSend: function () {
+                    modal.modal("hide");
+                    currentRow.hide(800, function () {
+                        currentRow.remove();
+                    });
+                    return true;
+                },
+                error: function (res) {
+                    console.log(res);
+                }
+            });
+        }
+
+        function ModalFormCreateSubmit() {
+            event.preventDefault();
+            var inputFile = $(this).find(".modal-form-file");
+            var form = document.getElementById($(this).attr("id"));
+            var fd = new FormData(form);
+            fd.append('IconFile', inputFile.prop('files')[0]);
+            $.ajax({
+                url: '@Url.Action("Create","Sensor")',
+                method: "POST",
+                processData: false,
+                contentType: false,
+                data: fd,
+                beforeSend: function () {
+                    modal.modal("hide");
+                    return true;
+                },
+                success: function (data) {
+                    tableBody.prepend(data);
+                    tableBody.on("click", ".sensor-edit", SensorEdit);
+                    tableBody.on("click", ".sensor-delete", SensorDeleteConfirm);
+                    tableBody.on("click", ".fa-eye-slash", toggleEyeIcon);
+                    tableBody.on("click", ".input-set-active", SetActiveAjax);
+                },
+                error: function (res) {
+                    console.log(res);
+                }
+            });
+        }
+
+        function ModalFormEditSubmit() {
+            event.preventDefault();
+            var inputFile = $(this).find(".modal-form-file");
+            var form = document.getElementById($(this).attr("id"));
+            var fd = new FormData(form);
+            fd.append('IconFile', inputFile.prop('files')[0]);
+
+            $.ajax({
+                url: '@Url.Action("Edit","Sensor")',
+                method: "POST",
+                processData: false,
+                contentType: false,
+                data: fd,
+                beforeSend: function () {
+                    modal.modal("hide");;
+                    currentRow.hide(800);
+                    return true;
+                },
+                success: function (data) {
+                    currentRow.replaceWith(data);
+                    currentRow.show(800);
+                    tableBody.on("click", ".sensor-edit", SensorEdit);
+                    tableBody.on("click", ".sensor-delete", SensorDeleteConfirm);
+                    tableBody.on("click", ".fa-eye-slash", toggleEyeIcon);
+                    tableBody.on("click", ".input-set-active", SetActiveAjax);
+                },
+                error: function (res) {
+                    console.log(res);
+                }
+            });
+        }
+
+        function HideModal() {
+            modal.modal("hide");
+        }
+
+        modal.on('hidden.bs.modal', function () {
+            modalBody.empty();
+            $(this).find(".modal-title").empty();
         });
-    });
 
+        $('.fa-eye-slash').click(toggleEyeIcon);
+
+        function toggleEyeIcon() {
+            $(this).toggleClass('fa fa-eye');
+            $(this).toggleClass('fa fa-eye-slash');
+            $(this).next().toggle();
+        }
+
+        $(".input-set-active").click(SetActiveAjax);
+
+        function SetActiveAjax() {
+            let input = $(this);
+            $.ajax({
+                type: 'Post',
+                url: $('table').data('save-url'),
+                data: { id: input.attr('id') },
+                success: function () {
+                    console.log('changed');
+                    console.log(this);
+                    input.closest(".sensor-row")
+                        .find(".sensor-activated").toggleClass("fa-check-circle fa-times-circle");
+                }
+            });
+        }
+    });
 </script>

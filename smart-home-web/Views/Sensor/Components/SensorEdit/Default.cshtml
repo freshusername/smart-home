@@ -1,0 +1,78 @@
+﻿@model smart_home_web.Models.SensorViewModel.EditSensorViewModel
+
+@if (Model != null)
+{
+    if (User.Identity.IsAuthenticated)
+    {
+        <form method="post" id="modal-form-edit" data-sensor-id="@Model.Id" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Comment" class="control-label"></label>
+                <input asp-for="Comment" class="form-control" />
+                <span asp-validation-for="Comment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.IconFile" class="control-label"></label>
+
+                @if (Model.IconPath != null)
+                {
+                    <img src="@Model.IconPath" width="64" height="64" />
+                }
+                else
+                {
+                    <p>No image was added</p>
+                }
+
+                <input asp-for="@Model.AppUserId" type="hidden" />
+                <input asp-for="@Model.IsValid" type="hidden" />
+                <input asp-for="@Model.IsActive" type="hidden" />
+                <input asp-for="@Model.CreatedOn" type="hidden" />
+                <input asp-for="@Model.Token" type="hidden" />
+                <input asp-for="@Model.IconId" type="hidden" />
+                <input asp-for="@Model.SensorTypeId" type="hidden" />
+
+                <input class="form-control modal-form-file" asp-for="@Model.IconFile" onchange="loadFile(event)" type="file" accept=".jpg, .jpeg, .png" />
+                <img class="img-rounded" id="output" width="64" height="64" style="visibility: hidden" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-warning" />
+                <a class="btn btn-primary back-to-list">Back to List</a>
+            </div>
+        </form>
+
+        <script>
+            var loadFile = function (event) {
+                var reader = new FileReader();
+                reader.onload = function () {
+                    var output = document.getElementById('output');
+                    output.src = reader.result;
+                    output.style.visibility = "visible";
+                };
+                reader.readAsDataURL(event.target.files[0]);
+            };
+        </script>
+
+        @section scripts{
+
+            <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+            <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+        }
+    }
+    else
+    { 
+        <h2 class="text-danger">You don't have permissions for this! Log in first</h2> 
+    }
+
+}
+else
+{
+    <h2 class="text-danger">Error: this sensor doesn't exists!</h2>
+}
+
+

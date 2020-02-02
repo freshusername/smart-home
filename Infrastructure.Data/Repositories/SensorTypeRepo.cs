@@ -32,6 +32,13 @@ namespace Infrastructure.Data.Repositories
 
             return sensorTypes;
         }
+
+        public async Task<SensorType> GetLastSensorType()
+        {
+            var sensorType = await context.SensorTypes.LastOrDefaultAsync();
+
+            return sensorType;
+        }
     }
 }
 

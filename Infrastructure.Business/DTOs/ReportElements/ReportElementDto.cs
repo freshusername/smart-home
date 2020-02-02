@@ -10,7 +10,7 @@ namespace Infrastructure.Business.DTOs.ReportElements
         public int DashboardId { get; set; }
         public string DashboardName { get; set; }
 
-        public int SensorId { get; set; }
+        public int? SensorId { get; set; }
         public string SensorName { get; set; }
         public ReportElementHours Hours { get; set; }
         public string Message { get; set; }

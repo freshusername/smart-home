@@ -50,6 +50,7 @@ namespace Infrastructure.Data.Repositories
         public Sensor GetByToken(Guid token)
         {
             var sensor = context.Sensors
+                                .Include(s => s.User)
                                     .Include(s => s.SensorType)
                                 .FirstOrDefault(e => e.Token == token);
 
@@ -102,6 +103,13 @@ namespace Infrastructure.Data.Repositories
                                        .ThenInclude(st => st.Icon)
                                    .Include(s => s.Icon)
                                .LastOrDefaultAsync(s => s.AppUserId == userId);
+
+            return sensor;
+        }
+
+        public async Task<Sensor> GetLastSensor()
+        {
+            var sensor = await context.Sensors.LastOrDefaultAsync();
 
             return sensor;
         }

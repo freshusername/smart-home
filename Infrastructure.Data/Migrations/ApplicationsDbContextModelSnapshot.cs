@@ -14,7 +14,7 @@ namespace Infrastructure.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
+                .HasAnnotation("ProductVersion", "2.1.14-servicing-32113")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Domain.Core.Model.AppUser", b =>
@@ -197,7 +197,7 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<bool>("IsLocked");
 
-                    b.Property<int>("SensorId");
+                    b.Property<int?>("SensorId");
 
                     b.Property<string>("Type")
                         .IsRequired();
@@ -461,8 +461,7 @@ namespace Infrastructure.Data.Migrations
 
                     b.HasOne("Domain.Core.Model.Sensor", "Sensor")
                         .WithMany("ReportElements")
-                        .HasForeignKey("SensorId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("SensorId");
                 });
 
             modelBuilder.Entity("Domain.Core.Model.Sensor", b =>

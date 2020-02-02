@@ -1,6 +1,5 @@
 ﻿@model smart_home_web.Models.ReportElements.ReportElementViewModel;
 @using Domain.Core.Model.Enums
-
 @if (Model.IsCorrect)
 {
     <figure class="highcharts-figure">
@@ -13,14 +12,31 @@ else
 }
 
 <script>
-    columnminvalues = JSON.parse('@Html.Raw(Json.Serialize(@Model.MinValues))');
-    columnmaxvalues = JSON.parse('@Html.Raw(Json.Serialize(@Model.MaxValues))');
-    columndates = JSON.parse('@Html.Raw(Json.Serialize(@Model.Dates))');
+    debugger;
+    var iterator = 0;
+     var columnminvalues = [];
+        columnminvalues[iterator] = JSON.parse('@Html.Raw(Json.Serialize(@Model.MinValues))');
+    var columnmaxvalues = [];
+        columnmaxvalues[iterator] = JSON.parse('@Html.Raw(Json.Serialize(@Model.MaxValues))');
+    var columndates = [];
+        columndates[iterator] = JSON.parse('@Html.Raw(Json.Serialize(@Model.Dates))');
 
-    let column_values = [];
+    var column_values = [];
+</script>
+
+<script>
+    @*let columnminvalues = [];
+    columnminvalues[@Model.Id] = JSON.parse('@Html.Raw(Json.Serialize(@Model.MinValues))');
+    let columnmaxvalues = []
+    columnmaxvalues[@Model.Id] = JSON.parse('@Html.Raw(Json.Serialize(@Model.MaxValues))');
+    let columndates = []
+    columndates[@Model.Id] = JSON.parse('@Html.Raw(Json.Serialize(@Model.Dates))');*@
+
+
     for (let i = 0; i < columndates.length;i++) {
         column_values.push([columnminvalues[i],columnmaxvalues[i]])
     }
+
     Highcharts.chart('Columnrange'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
 
         chart: {
@@ -36,7 +52,7 @@ else
                 style: {
                     textTransform: 'uppercase'
                 },
-                text: 
+                text:
                 @if((int)Model.Hours == 1)
                 {
                     <text> '<b>Minutes</b>' </text>
@@ -104,4 +120,5 @@ else
             result.setSize(ui.height, ui.width);
         }
     });
+    iterator++;
 </script>

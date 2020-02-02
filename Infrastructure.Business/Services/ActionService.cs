@@ -103,7 +103,7 @@ namespace Infrastructure.Business.Services
 
         public OperationDetails Activate(Guid controlToken , Guid sensorToken , bool isActive)
         {
-            var control = _db.ControlRepo.GetByToken(controlToken); // TODO Get from sensors
+            var control = _db.ControlRepo.GetByToken(controlToken); 
              var sensor = _db.SensorRepo.GetByToken(sensorToken);
 
             if(control == null || sensor == null) return new OperationDetails(false, "", "");
