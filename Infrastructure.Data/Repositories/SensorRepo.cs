@@ -106,5 +106,12 @@ namespace Infrastructure.Data.Repositories
 
             return sensor;
         }
+
+        public async Task<Sensor> GetLastSensor()
+        {
+            var sensor = await context.Sensors.LastOrDefaultAsync();
+
+            return sensor;
+        }
     }
 }

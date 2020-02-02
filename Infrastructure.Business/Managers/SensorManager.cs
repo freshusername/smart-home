@@ -176,5 +176,10 @@ namespace Infrastructure.Business.Managers
             unitOfWork.Save();
         }
 
+        public async Task<SensorDto> GetLastSensor()
+        {
+            var sensor = await unitOfWork.SensorRepo.GetLastSensor();
+            return mapper.Map<Sensor, SensorDto>(sensor);
+        }
     }
 }

@@ -36,7 +36,7 @@
 
         <div class="form-group">
             <label asp-for="@Model.IconFile" class="control-label"></label>
-            <input class="form-control " asp-for="@Model.IconFile" onchange="loadFile(event)" type="file" accept=".jpg, .jpeg, .png" />
+            <input class="form-control modal-form-file" asp-for="@Model.IconFile" onchange="loadFile(event)" type="file" accept=".jpg, .jpeg, .png" />
             <img class="img-rounded" id="output" width="64" height="64" style="visibility: hidden" />
         </div>
 
@@ -46,7 +46,7 @@
 
         <div class="form-group">
             <input type="submit" value="AddSensor" class="btn btn-success" />
-            <a class="btn btn-primary" asp-action="Index"><em class="glyphicon glyphicon-arrow-left"></em> Back to List</a>
+            <a class="btn btn-primary back-to-list">Back to List</a>
         </div>
 
     </form>
