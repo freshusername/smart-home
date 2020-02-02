@@ -30,6 +30,9 @@
         </tr>
     </thead>
     <tbody>
+        <tr class="no-values-row" style="display:none;" >
+            <td colspan="4">No Sensors</td>
+        </tr>
         @foreach (var item in Model)
         {
             @await Component.InvokeAsync("SensorElement", item)
@@ -68,6 +71,16 @@
         $(".sensor-edit").click(SensorEdit);
         $(".sensor-create").click(SensorCreate);
         $(".sensor-delete").click(SensorDeleteConfirm);
+        NoValuesDisplay();
+
+        function NoValuesDisplay() {
+            let row = $(".no-values-row");
+            if (row.siblings().length > 0) {
+                row.hide();
+            } else {
+                row.show();
+            }
+        }
 
         function SensorEdit() {
             currentRow = $(this).closest(".sensor-row");
@@ -131,6 +144,7 @@
                     modal.modal("hide");
                     currentRow.hide(800, function () {
                         currentRow.remove();
+                        NoValuesDisplay();
                     });
                     return true;
                 },
@@ -162,11 +176,13 @@
                     tableBody.on("click", ".sensor-delete", SensorDeleteConfirm);
                     tableBody.on("click", ".fa-eye-slash", toggleEyeIcon);
                     tableBody.on("click", ".input-set-active", SetActiveAjax);
+                    tableBody.on("click", ".input-set-active", SetActiveAjax);
+                    NoValuesDisplay();
                 },
                 error: function (res) {
                     console.log(res);
                 }
-            });
+            })
         }
 
         function ModalFormEditSubmit() {

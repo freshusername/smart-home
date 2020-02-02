@@ -41,6 +41,9 @@
         </tr>
     </thead>
     <tbody>
+        <tr class="no-values-row" style="display:none;">
+            <td colspan="5">No Sensor Types</td>
+        </tr>
         @foreach (var item in Model)
         {
             @await Component.InvokeAsync("SensorTypeElement", item)
@@ -79,6 +82,16 @@
         $(".sensor-type-edit").click(SensorTypeEdit);
         $(".sensor-type-create").click(SensorTypeCreate);
         $(".sensor-type-delete").click(SensorTypeDeleteConfirm);
+        NoValuesDisplay();
+
+        function NoValuesDisplay() {
+            let row = $(".no-values-row");
+            if (row.siblings().length > 0) {
+                row.hide();
+            } else {
+                row.show();
+            }
+        }
 
         function SensorTypeEdit() {
             currentRow = $(this).closest(".sensor-type-row");
@@ -142,6 +155,7 @@
                     modal.modal("hide");
                     currentRow.hide(800, function () {
                         currentRow.remove();
+                        NoValuesDisplay();
                     });
                     return true;
                 },
@@ -171,6 +185,7 @@
                     tableBody.prepend(data);
                     tableBody.on("click", ".sensor-type-edit", SensorTypeEdit);
                     tableBody.on("click", ".sensor-type-delete", SensorTypeDeleteConfirm);
+                    NoValuesDisplay();
                 },
                 error: function (res) {
                     console.log(res);
