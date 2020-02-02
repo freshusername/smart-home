@@ -15,7 +15,9 @@ namespace smart_home_web.Models.Dashboard
         public string Name { get; set; }
         public bool IsPublic { get; set; }
         public string DashCreatorUserName { get; set; }
+        public int? IconId { get; set; }
         public IFormFile IconFile { get; set; }
+        public string IconPath { get; set; }
 
         public ICollection<ReportElementDto> ReportElements { get; set; }
     }
