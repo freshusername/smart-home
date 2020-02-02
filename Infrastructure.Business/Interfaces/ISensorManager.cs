@@ -18,6 +18,7 @@ namespace Infrastructure.Business.Managers
 
 		Task<IEnumerable<SensorDto>> GetAllSensorsAsync();
         Task<IEnumerable<SensorDto>> GetAllSensorsByUserIdAsync(string userId);
+        Task<SensorDto> GetLastSensor();
 
         List<SensorDto> GetSensorsToControl();
 		List<SensorDto> GetControlSensors();

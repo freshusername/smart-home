@@ -62,11 +62,12 @@ namespace smart_home_web.Controllers
                 SensorTypeDto sensorTypefromDB = await _sensorTypeManager.GetLastSensorType();
                 return ViewComponent("SensorTypeElement", _mapper.Map<SensorTypeDto, SensorTypeViewModel>(sensorTypefromDB));
             }
-                
             else
+            {
                 ModelState.AddModelError(res.Property, res.Message);
-
-            return View(sensorTypeViewModel);
+                return View(sensorTypeViewModel);
+            }
+ 
         }
 
         // GET: SensorType/Edit/5

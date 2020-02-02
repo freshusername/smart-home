@@ -4,7 +4,7 @@
 {
     if (User.Identity.IsAuthenticated)
     {
-        <form asp-action="Update" enctype="multipart/form-data">
+        <form method="post" id="modal-form-edit" data-sensor-id="@Model.Id" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
@@ -37,11 +37,12 @@
                 <input asp-for="@Model.IconId" type="hidden" />
                 <input asp-for="@Model.SensorTypeId" type="hidden" />
 
-                <input class="form-control " asp-for="@Model.IconFile" onchange="loadFile(event)" type="file" accept=".jpg, .jpeg, .png" />
+                <input class="form-control modal-form-file" asp-for="@Model.IconFile" onchange="loadFile(event)" type="file" accept=".jpg, .jpeg, .png" />
                 <img class="img-rounded" id="output" width="64" height="64" style="visibility: hidden" />
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-warning" />
+                <a class="btn btn-primary back-to-list">Back to List</a>
             </div>
         </form>
 
