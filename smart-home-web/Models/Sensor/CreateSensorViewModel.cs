@@ -17,8 +17,6 @@ namespace smart_home_web.Models.SensorViewModel
         [StringLength(50)]
         public string Comment { get; set; }
 
-        public int? IconId { get; set; }
-
         [Required(ErrorMessage = "The Sensor type is required.")]
         [Display(Name = "Sensor type")]
         public int SensorTypeId { get; set; }

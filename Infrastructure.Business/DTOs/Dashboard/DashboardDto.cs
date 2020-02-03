@@ -14,6 +14,9 @@ namespace Infrastructure.Business.DTOs.Dashboard
         public string AppUserId { get; set; }
         public AppUser AppUser { get; set; }
 
+        public int? IconId { get; set; }
+        public string IconPath { get; set; }
+
         public ICollection<ReportElement> ReportElements { get; set; }
     }
 }
