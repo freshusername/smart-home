@@ -5,7 +5,7 @@ using Domain.Core.Model;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Business.Infrastructure;
 using Infrastructure.Business.Interfaces;
-using Infrastructure.Business.Managers;
+using Infrastructure.Business.Interfaces;
 using Infrastructure.Business.Services;
 using Infrastructure.Data;
 using Infrastructure.Data.Repositories;

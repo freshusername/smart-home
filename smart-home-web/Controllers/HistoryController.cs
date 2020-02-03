@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Infrastructure.Business.DTOs;
 using Infrastructure.Business.DTOs.History;
-using Infrastructure.Business.Managers;
+using Infrastructure.Business.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using smart_home_web.Models;
 using smart_home_web.Models.History;

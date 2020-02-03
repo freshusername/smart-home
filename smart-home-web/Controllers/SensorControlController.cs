@@ -2,7 +2,7 @@
 using Infrastructure.Business.DTOs;
 using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.Interfaces;
-using Infrastructure.Business.Managers;
+using Infrastructure.Business.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;

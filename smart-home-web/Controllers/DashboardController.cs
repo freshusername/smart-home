@@ -2,7 +2,7 @@
 using Domain.Core.Model;
 using Infrastructure.Business.DTOs.Dashboard;
 using Infrastructure.Business.Infrastructure;
-using Infrastructure.Business.Managers;
+using Infrastructure.Business.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
