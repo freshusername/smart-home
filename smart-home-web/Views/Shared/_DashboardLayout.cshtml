@@ -28,7 +28,7 @@
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
     <script src="https://code.highcharts.com/modules/data.js"></script>
-    <script src="~/js/dashboard.js"></script>
+    @*<script src="~/js/dashboard.js"></script>*@
     <script src="~/lib/toastr/toastr.min.js"></script>
     <script>
         // TOASTR OPTIONS
@@ -62,9 +62,7 @@
 <body>
     <div class="app-container app-theme-gray">
         <partial name="_NavbarPartial" />
-        <div class="increase-padding">
             @RenderBody()
-        </div>
         </div>
 </body>
 </html>

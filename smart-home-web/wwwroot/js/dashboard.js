@@ -1,5 +1,4 @@
 ﻿$(document).ready(function () {
-    console.log("ready!");
     $(".grid-stack").gridstack();
     
     let elements = $(".grid-stack-item");
@@ -16,7 +15,8 @@ let arrToObj = arr => {
     return obj
 }
 
-$('body').on('change', '.grid-stack', function (event, items) {
+$('.grid-stack').on('change', function (event, items) {
+    debugger;
     let options = [];
     options = items.map(i => {
         return { id: parseInt(i.el[0].id), x: i.x, y: i.y, width: i.width, height: i.height }
