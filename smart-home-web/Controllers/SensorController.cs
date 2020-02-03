@@ -87,7 +87,6 @@ namespace smart_home_web.Controllers
                 ModelState.AddModelError(res.Property, res.Message);
                 return View(sensor);
             }
-            return RedirectToAction("Index", "Sensor");
         }
 
         [Authorize]
