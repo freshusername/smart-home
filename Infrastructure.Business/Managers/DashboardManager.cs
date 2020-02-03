@@ -22,7 +22,7 @@ namespace Infrastructure.Business.Interfaces
 
         public async Task<OperationDetails> Create(DashboardDto dashboardDto)
         {
-            var dashboard = mapper.Map<DashboardDto, Dashboard>(dashboardDto);
+            Dashboard dashboard = mapper.Map<DashboardDto, Dashboard>(dashboardDto);
             if (String.IsNullOrEmpty(dashboard.Name))
                 return new OperationDetails(false, "Name is null", "Name");
             await unitOfWork.DashboardRepo.Insert(dashboard);

@@ -83,16 +83,21 @@ namespace smart_home_web.Controllers
         }
 
         [Authorize]
-        [HttpPost]
-        public async Task<IActionResult> Create(string name, bool isPublic)
+        public IActionResult Create()
         {
-            DashboardDto dashboardDto = new DashboardDto()
-            {
-                Name = name,
-                AppUserId = _userManager.GetUserId(User),
-                IsPublic = isPublic
-            };
+            return ViewComponent("DashboardCreate");
+        }
 
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateDashboardViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            DashboardDto dashboardDto = _mapper.Map<CreateDashboardViewModel, DashboardDto>(model);
             OperationDetails result = await _dashboardManager.Create(dashboardDto);
             if (result.Succeeded)
             {
