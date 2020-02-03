@@ -17,7 +17,7 @@
             <tr>
                 <td>@history.Id</td>
                 <td>
-                    <a asp-controller="History" asp-action="Detail" asp-route-sensorId="@history.SensorId">
+                    <a style="color:#da624a" asp-controller="History" asp-action="Detail" asp-route-sensorId="@history.SensorId">
                         @history.SensorName
                     </a>
                 </td>
@@ -37,7 +37,18 @@
                         <td>@history.Value</td>
                     }
                 }
-                <td>@history.MeasurementName</td>
+                        <td>
+                            @{
+                                if (!string.IsNullOrEmpty(@history.MeasurementName))
+                                {
+                                    @history.MeasurementName
+                                }
+                                else
+                                {
+                                    <span style="color:darkgrey">None</span>
+                                }
+                            }
+                        </td>
             </tr>
         }
     }

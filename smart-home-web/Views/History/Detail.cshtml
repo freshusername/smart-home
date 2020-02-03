@@ -5,74 +5,287 @@
 
 @model AllHistoriesViewModel;
 
+@{
+    Layout = "_HistoryLayout";
+}
 
 @{
     ViewData["Title"] = "Detail";
 }
 
-<h2><b>@Model.Histories.First().SensorName</b> Detail <a class="btn btn-success text-center" asp-action="Graph" asp-route-sensorId="@Model.Histories.First().SensorId" asp-route-days="99999"><i class="fas fa-chart-bar"></i></a></h2>
-
-<body>
-    <div class="row text-center">
-        <table class="table table-hover table">
-            <thead>
-                <tr>
-                    <th scope="col" class=" text-center">
-                        @{
-                            var sensor = (FilterDto)Model.FilterDto.Clone();
-                            sensor.sortState = (sensor.sortState == SortState.HistoryAsc) ? SortState.HistoryDesc : SortState.HistoryAsc;
-                            sensor.sensorId = Model.Histories.FirstOrDefault().SensorId;
-                        }
-                        <a href="@Url.Action("Detail", "History",
-                                        sensor,
-                                        null)">
-                            Id <i class="glyphicon glyphicon-sort"></i>
-                        </a>
-                    </th>
-
-                    <th scope="col" class=" text-center">
-                        @{
-                            var date = (FilterDto)Model.FilterDto.Clone();
-                            date.sortState = (date.sortState == SortState.DateAsc) ? SortState.DateDesc : SortState.DateAsc;
-                            date.sensorId = Model.Histories.FirstOrDefault().SensorId;
-                        }
-                        <a href="@Url.Action("Detail", "History",
-                                        date,
-                                        null)">
-                            Date <i class="glyphicon glyphicon-sort"></i>
-                        </a>
-                    </th>
-
-                    <th scope="col" class=" text-center">
-                        Value
-                    </th>
 
 
-                </tr>
-            </thead>
-            <tbody class="text-center">
-                @foreach (var history in Model.Histories)
-                {
-                    <tr>
-                        <td scope="row">@history.Id</td>
-                        <td>@history.Date.DateTime.ToLocalTime()</td>
-                        @{ if (history.Value.ToString() == "False")
-                            {
-                                <td>Inactive</td>
-                            }
-                            else if (history.Value.ToString() == "True")
-                            {
-                                <td>Active</td>
-                            }
-                            else
-                            {
-                                <td>@history.Value</td>
-                            }
-                        }
-                    </tr>
-                }
-            </tbody>
-        </table>
-        <br />
+
+
+
+<div class="app-main">
+    <div class="app-main__outer">
+        <div class="app-main__inner">
+            <div class="app-header">
+                <div class="page-title-heading">
+                    <b>@Model.Histories.First().SensorName</b>
+                    <div class="page-title-subheading opacity-10">
+                        <a class="mb-2 mr-2 btn-icon btn-icon btn-square btn btn-primary"
+                                asp-action="Graph"
+                                asp-route-sensorId="@Model.Histories.First().SensorId"
+                                asp-route-days="99999">
+                            <i class="pe-7s-graph1 btn-icon-wrapper"></i>
+                            Graph
+                        </a>                 
+                    </div>
+                </div>
+            </div>
+            <div class="app-inner-layout app-inner-layout-page">
+                <div class="app-inner-layout__wrapper">
+                    <div class="app-inner-layout__content pt-1">
+                        <div class="tab-content">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="main-card mb-3 card">
+                                            <div class="card-body">
+                                                <div id="example_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                                                    <div class="row">
+                                                        <div class="col-sm-12">
+                                                            <table style="width: 100%;" id="example" class="table table-hover table-bordered dataTable dtr-inline" role="grid" aria-describedby="example_info">
+                                                                <thead>
+
+                                                                    <tr role="row">
+                                                                        <th class="sorting_asc"
+                                                                            tabindex="0"
+                                                                            aria-controls="example"
+                                                                            rowspan="1" colspan="1"
+                                                                            aria-sort="ascending"
+                                                                            aria-label="Name: activate to sort column descending">
+                                                                            ID
+                                                                        </th>
+                                                                        <th class="sorting"
+                                                                            tabindex="0"
+                                                                            aria-controls="example"
+                                                                            rowspan="1"
+                                                                            colspan="1">
+                                                                            Name
+                                                                        </th>
+                                                                        <th class="sorting"
+                                                                            tabindex="0"
+                                                                            aria-controls="example"
+                                                                            rowspan="1" colspan="1">
+                                                                            Date
+                                                                        </th>
+                                                                        <th class="sorting"
+                                                                            tabindex="0"
+                                                                            aria-controls="example"
+                                                                            rowspan="1" colspan="1">
+                                                                            Value
+                                                                        </th>
+                                                                        <th class="sorting"
+                                                                            tabindex="0"
+                                                                            aria-controls="example"
+                                                                            rowspan="1" colspan="1">
+                                                                            Measurement Unit
+                                                                        </th>
+                                                                </thead>
+                                                                @await Component.InvokeAsync("History", new { model = Model })
+                                                                <tfoot>
+                                                                    <tr role="row">
+                                                                        <th class="sorting_asc"
+                                                                            tabindex="0"
+                                                                            aria-controls="example"
+                                                                            rowspan="1" colspan="1"
+                                                                            aria-sort="ascending"
+                                                                            aria-label="Name: activate to sort column descending">
+                                                                            ID
+                                                                        </th>
+                                                                        <th class="sorting"
+                                                                            tabindex="0"
+                                                                            aria-controls="example"
+                                                                            rowspan="1" colspan="1">
+                                                                            Name
+                                                                        </th>
+                                                                        <th class="sorting"
+                                                                            tabindex="0"
+                                                                            aria-controls="example"
+                                                                            rowspan="1" colspan="1">
+                                                                            Date
+                                                                        </th>
+                                                                        <th class="sorting"
+                                                                            tabindex="0"
+                                                                            aria-controls="example"
+                                                                            rowspan="1" colspan="1">
+                                                                            Value
+                                                                        </th>
+                                                                        <th class="sorting"
+                                                                            tabindex="0"
+                                                                            aria-controls="example"
+                                                                            rowspan="1" colspan="1">
+                                                                            Measurement Unit
+                                                                        </th>
+                                                                </tfoot>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-sm-12 col-md-5">
+                                                            <div class="dataTables_info" id="example_info" role="status" aria-live="polite">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-12 col-md-7">
+                                                            <div class="dataTables_paginate paging_simple_numbers" id="example_paginate">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</body>
+</div>
+
+@*HAVE TO BE REMOVED IF WE USE CUSTOM PAGINATION AND SORTING*@
+<script src="~/assets/scripts/main.07a59de7b920cd76b874.js"></script>
+
+
+
+@*DETAIL WITH CUSTOM PAGINATION*@
+
+@*<div class="app-main">
+        <div class="app-main__outer">
+            <div class="app-main__inner">
+                <div class="app-header">
+                    <div class="page-title-heading">
+                        All Histories
+                        <div class="page-title-subheading">
+                            Invalid sensors
+                            <button type="button" id="checkboxInvalidSensors">Inv sensors</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="app-inner-layout app-inner-layout-page">
+                    <div class="app-inner-layout__wrapper">
+                        <div class="app-inner-layout__content pt-1">
+                            <div class="tab-content">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="main-card mb-3 card">
+                                                <div class="card-body">
+                                                    <div id="example_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                                                        <div class="row">
+                                                            <div class="col-sm-12">
+                                                                <table style="width: 100%;" id="example" class="table table-hover table-bordered dataTable dtr-inline" role="grid" aria-describedby="example_info">
+                                                                    <thead>
+
+                                                                        <tr role="row">
+                                                                            <th
+                                                                                tabindex="0"
+                                                                                aria-controls="example"
+                                                                                rowspan="1" colspan="1"
+                                                                                aria-sort="ascending">
+                                                                                ID
+                                                                            </th>
+                                                                            <th
+                                                                                tabindex="0"
+                                                                                aria-controls="example"
+                                                                                rowspan="1" colspan="1">
+                                                                                Name
+                                                                            </th>
+                                                                            <th
+                                                                                tabindex="0"
+                                                                                aria-controls="example"
+                                                                                rowspan="1" colspan="1">
+                                                                                Date
+                                                                            </th>
+                                                                            <th
+                                                                                tabindex="0"
+                                                                                aria-controls="example"
+                                                                                rowspan="1" colspan="1">
+                                                                                Value
+                                                                            </th>
+                                                                            <th
+                                                                                tabindex="0"
+                                                                                aria-controls="example"
+                                                                                rowspan="1" colspan="1">
+                                                                                Measurement Unit
+                                                                            </th>
+                                                                    </thead>
+                                                                    @await Component.InvokeAsync("History", new { model = Model })
+                                                                    <tfoot>
+                                                                        <tr role="row">
+                                                                            <th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending">
+                                                                                ID
+                                                                            </th>
+                                                                            <th
+                                                                                tabindex="0"
+                                                                                aria-controls="example"
+                                                                                rowspan="1" colspan="1">
+                                                                                Name
+                                                                            </th>
+                                                                            <th
+                                                                                tabindex="0"
+                                                                                aria-controls="example"
+                                                                                rowspan="1" colspan="1">
+                                                                                Date
+                                                                            </th>
+                                                                            <th
+                                                                                tabindex="0"
+                                                                                aria-controls="example"
+                                                                                rowspan="1" colspan="1">
+                                                                                Value
+                                                                            </th>
+                                                                            <th
+                                                                                tabindex="0"
+                                                                                aria-controls="example"
+                                                                                rowspan="1" colspan="1">
+                                                                                Measurement Unit
+                                                                            </th>
+                                                                    </tfoot>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-sm-12 col-md-5">
+                                                                <div class="dataTables_info" id="example_info" role="status" aria-live="polite">
+
+                                                                    Showing
+                                                                    @{
+                                                                        var show = (Model.FilterDto.CurrentPage - 1) * Model.FilterDto.PageSize;
+                                                                    }
+                                                                    @show
+                                                                    to
+                                                                    @{
+                                                                        var to = (Model.FilterDto.CurrentPage - 1) * Model.FilterDto.PageSize + Model.FilterDto.PageSize;
+                                                                    }
+                                                                    @to
+                                                                    of
+                                                                    @Model.FilterDto.Amount
+                                                                    entries
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-12 col-md-7">
+                                                                <div class="dataTables_paginate paging_simple_numbers" id="example_paginate">
+                                                                    @await Component.InvokeAsync("Pagination", new { action = "Index", controller = "History", filterDto = Model.FilterDto })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+@*END*@
