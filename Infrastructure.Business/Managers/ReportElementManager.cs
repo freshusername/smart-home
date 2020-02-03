@@ -136,11 +136,11 @@ namespace Infrastructure.Business.Managers
 
             DateTime dateFrom = new DateTime();
             DateTime dateTo = DateTime.Now.AddMinutes(1);
-            //DateTime[] daysArray = new DateTime[24];
-            int[] hoursArray = new int[24];
 
             if (reportElement.Hours != 0)
-                dateFrom = DateTime.Now.AddHours(-(int)reportElement.Hours).Date.AddHours(DateTime.Now.Hour).AddMinutes(DateTime.Now.Minute);
+                dateFrom = DateTime.Now.AddHours(-(int)reportElement.Hours);
+
+            int[] hoursArray = new int[(int)(dateTo - dateFrom).TotalHours];
 
             for (int i = 0; i < hoursArray.Length; i++)
             {
@@ -149,13 +149,11 @@ namespace Infrastructure.Business.Managers
 
             IEnumerable<BoolValuePercentagePerHour> boolValuePercentagesPerHours = await
                 unitOfWork.HistoryRepo.GetBoolValuePercentagesPerHours(reportElement.SensorId, dateFrom, dateTo);
-            //List<BoolValuePercentagePerHour> BoolValuePercentagesPerHours = boolValuePercentagesPerHours.ToList();
             List<BoolValuePercentagePerHour> BoolValuePercentagesPerHours = new List<BoolValuePercentagePerHour>();
 
             int w = 0;
             for (int j = 0; j < hoursArray.Length; j++)
             {
-                int k = hoursArray[j];
                 if (!boolValuePercentagesPerHours.Any(a => a.HourTime == hoursArray[j]))
                 {
 
@@ -173,7 +171,9 @@ namespace Infrastructure.Business.Managers
                 }
                 else
                 {
-                    BoolValuePercentagesPerHours.Add(
+                    if (w != boolValuePercentagesPerHours.Count())
+                    {
+                        BoolValuePercentagesPerHours.Add(
                         new BoolValuePercentagePerHour
                         {
                             DayDate = dateFrom,
@@ -182,8 +182,10 @@ namespace Infrastructure.Business.Managers
                             TrueFalseCount = boolValuePercentagesPerHours.ElementAt(w).TrueFalseCount,
                             TruePercentage = boolValuePercentagesPerHours.ElementAt(w).TruePercentage
                         });
-                    w++;
-                    dateFrom = dateFrom.AddHours(1);
+                        w++;
+                        dateFrom = dateFrom.AddHours(1);
+
+                    }
                 }
             }
 
@@ -500,13 +502,13 @@ namespace Infrastructure.Business.Managers
             ReportElementDto reportElement = mapper.Map<Sensor, ReportElementDto>(reportElementt.Sensor);
             IEnumerable<Sensor> sensors = await unitOfWork.SensorRepo.GetAllSensorsByUserId(UserId);
 
-            foreach(Sensor sensor in sensors)
+            foreach (Sensor sensor in sensors)
             {
                 reportElement.Dates.Add(sensor.Name);
                 History history = unitOfWork.HistoryRepo.GetLastHistoryBySensorId(sensor.Id);
                 dynamic value = null;
                 switch (reportElement.MeasurementType)
-                { 
+                {
                     case MeasurementType.Int:
                         value = history.IntValue.GetValueOrDefault();
                         break;
@@ -519,7 +521,7 @@ namespace Infrastructure.Business.Managers
 
                         break;
                     case MeasurementType.Double:
-                        value = Math.Round(history.DoubleValue.GetValueOrDefault(),2);
+                        value = Math.Round(history.DoubleValue.GetValueOrDefault(), 2);
                         break;
                     case MeasurementType.String:
                         value = history.StringValue;

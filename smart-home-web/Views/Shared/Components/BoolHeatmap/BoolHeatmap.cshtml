@@ -7,8 +7,8 @@
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
-<figure class="highcharts-figure">
-    <div id=@("BoolHeatmap" + Model.Id.ToString()) style="height: 20em; width: 20em; margin: 0 auto"></div>
+<figure class="highcharts-figure" style="height: 20em; width: 30em; margin: 0 auto">
+    <div id=@("BoolHeatmap" + Model.Id.ToString()) style="height: 16em; width: 16em; margin: 0 auto"></div>
 </figure>
 @if (Model.IsCorrect)
 {
@@ -29,21 +29,21 @@
                 daysList.Add(tp.DayDate.ToString("dd/MM/yyyy"));
             }
 
-            for (int i = 0; i < 24; i += 6)
-            {
-                int? temp = hoursList[i + 5];
-                temp++;
-                hoursPeriods.Add(hoursList[i].ToString() + " - " + temp.ToString());
-            }
+            //for (int i = 0; i < 24; i += 6)
+            //{
+            //    int? temp = hoursList[i + 5];
+            //    temp++;
+            //    hoursPeriods.Add(hoursList[i].ToString() + " - " + temp.ToString());
+            //}
 
-            for (int i = 0; i < 24; i += 4)
-            {
-                timesOfDayList.Add(hoursList[i].ToString()); //TODO: fix
-            }
+            //for (int i = 0; i < 24; i += 4)
+            //{
+            //    timesOfDayList.Add(hoursList[i].ToString()); //TODO: fix
+            //}
 
             decimal?[] valArray = truePercentages.ToArray();
-            string[] hoursPeriodsArray = hoursPeriods.ToArray();
-            string[] timesOfDayArray = timesOfDayList.ToArray();
+            //string[] hoursPeriodsArray = hoursPeriods.ToArray();
+            //string[] timesOfDayArray = timesOfDayList.ToArray();
             string[] daydates = daysList.ToArray();
         }
 
@@ -55,7 +55,6 @@
         }
 
         var arr = @Html.Raw(Json.Serialize(hoursList));
-        //var arr = hoursList;
         function getHourForValue(index) {
             var hourTime = '';
             for (var i = 0; i < arr.length; i++) {
@@ -84,12 +83,12 @@
             xAxis: {
                 categories:
                     [
-                        @for (int i = 0; i < daydates.Length; i++)
+                        @*@for (int i = 0; i < daydates.Length; i++)
                         {
                             <text>
                                 @Html.Raw(Json.Serialize(daydates[i])) ,
                             </text>
-                        }
+                        }*@
                     ],
                 visible: false
             },
@@ -97,12 +96,12 @@
             yAxis: {
                 categories:
                     [
-                        @for (int i = 0; i < hoursPeriodsArray.Length; i++)
+                        @*@for (int i = 0; i < hoursPeriodsArray.Length; i++)
                         {
                             <text>
                                 @Html.Raw(Json.Serialize(hoursPeriodsArray[i])) ,
                             </text>
-                        }
+                        }*@
                     ],
 
                 title: null,
@@ -119,7 +118,7 @@
 
             legend: {
             title: {
-                text: 'movings/vibration frecuency'
+                text: 'movings/vibration frequency'
             },
             accessibility: {
                 keyboardNavigation: {
@@ -137,10 +136,13 @@
 
             tooltip: {
                 formatter: function () {
-                    return '<b>' + '</b><br>' + @Html.Raw(Json.Serialize(Model.SensorName))  +
-                        (this.point.value == undefined ? ' has no bool data' : ' has true percentage: <b>' + this.point.value + "% ") +
-                            '</b><br> at <b>' + getPointCategoryName(this.point, 'x') + ', ' +
-                             getHourForValue(this.point.index) + ' </b>';
+                    if (this.point.value == undefined)
+                    {
+                        return '<b>' + '</b><br>' + @Html.Raw(Json.Serialize(Model.SensorName)) + ' has no bool data </b><br> at <b>' +
+                            getPointCategoryName(this.point, 'x') + ' at ' + getHourForValue(this.point.index) + ' </b>';
+                    }
+                    return '<b>' + '</b><br>' + @Html.Raw(Json.Serialize(Model.SensorName))  + ' has true percentage: <b>' + this.point.value + "% " +
+                        '</b><br> at <b>' + getHourForValue(this.point.index) + ' </b>';
                 }
             },
 
@@ -148,20 +150,26 @@
                 name: 'True percentage per hours for bool sensor',
                 borderWidth: 0,
                 borderHeight: 0,
-                colsize: 0.85,
-                rowsize: 0.85,
+                colsize: 0.9,
+                rowsize: 0.9,
                 pointPadding: 1,
                 hide: true,
                 data: [
-                    @{int h = 0;}
-                    @for (int i = 0; i < 4; i++)
-                    {
-                        @for (int j = 0; j < 6; j++)
+                    @{
+                        int h = 0;
+                        int g = (int)Math.Ceiling(valArray.Length / 6.0);
+
+                        @for (int i = 0; i < g; i++)
                         {
-                            <text>
-                                [@Html.Raw(Json.Serialize(j)), @Html.Raw(Json.Serialize(i)), @Html.Raw(Json.Serialize(valArray[h++]))],
-                            </text>
+                            @for (int j = 0; j < 6; j++)
+                            {
+                                <text>
+                                    [@Html.Raw(Json.Serialize(i)), @Html.Raw(Json.Serialize(j)), @Html.Raw(Json.Serialize((h == valArray.Length) ? 1 : valArray[h++]))],
+                                </text>
+
+                            }
                         }
+
                     }
                 ],
             }],
@@ -177,7 +185,7 @@
             responsive: {
                 rules: [{
                     condition: {
-                        maxWidth: 100
+                        maxWidth: 50
                     },
                     chartOptions: {
                         yAxis: {
