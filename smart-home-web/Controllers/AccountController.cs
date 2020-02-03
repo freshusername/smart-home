@@ -74,6 +74,7 @@ namespace smart_home_web.Controllers
             return View();
         }
 
+
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
@@ -207,5 +208,12 @@ namespace smart_home_web.Controllers
 
             return View("AccessDenied");
         }
-    }
+
+
+		[AllowAnonymous]
+		public IActionResult ResetPass()
+		{
+			return View("ResetPasswordConfirmation");
+		}
+	}
 }
