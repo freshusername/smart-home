@@ -17,17 +17,17 @@
                     <div class="row tab-content">
                         <div class="container-fluid">
 
-                            <div class="row justify-content-center" ">
+                            <div class="row justify-content-center">
 
                                 @*<div id="no_dashboards" class="hidden">
                                         <h2>No public dashboards.</h2>
                                     </div>*@
 
-                                <div class="d-flex justify-content-center flex-wrap aligh-content-center" id="dashboards">
+                                <div class="d-flex justify-content-center flex-wrap aligh-content-center dashboards">
 
                                     @foreach (var dashboard in Model.Dashboards)
                                     {
-                                        <div class="col-md-6 col-lg-3 dash_element" data-dashboard-id="@dashboard.Id.ToString()">
+                                        <div class="col-md-6 col-lg-3 dash_element">
                                             @await Component.InvokeAsync("DashboardElement", new { model = dashboard })
                                         </div>
                                     }
@@ -46,29 +46,125 @@
                                 }
                             </div>
                         </div>
-                        @await Component.InvokeAsync("Modals");
+                        @await Component.InvokeAsync("Modals")
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script>
 
         $(function () {
 
-            function no_dashboards_show() {
-                if ($("#dashboards").children(".dash_element").length == 0) {
-                    $("#no_dashboards").show();
-                }
-            }
-            no_dashboards_show();
+            //function no_dashboards_show() {
+            //    if ($("#dashboards").children(".dash_element").length == 0) {
+            //        $("#no_dashboards").show();
+            //    }
+            //}
+            //no_dashboards_show();
+
+            ////function edit_dashboard() {
+            ////    event.preventDefault();
+            ////    let parent = $(this).closest(".dash_element");
+            ////    let open = parent.find(".dash_open");
+            ////    open.toggleClass("disabled");
+            ////    let form = parent.find(".form_edit_name");
+            ////    let name_value = form.find(".form_dash_name").val();
+            ////    let id_value = parent.find(".dash_id").data("dash-id");
+
+            ////    $.ajax({
+            ////        url: form.data("dash-url"),
+            ////        data: { name: name_value, id: id_value },
+            ////        beforeSend: function () {
+            ////            parent.find(".name_header").text(name_value);
+            ////            parent.find(".dash_name_edit").hide();
+            ////            parent.find(".dash_name").show();
+            ////        },
+            ////        error: function (res) {
+            ////            console.log(res);
+            ////        },
+            ////        success: function () {
+            ////            open.toggleClass("disabled");
+            ////        },
+            ////        type: "POST"
+            ////    });
+            ////}
+
+            //function collapse_button() {
+            //    var selector = $(this).data("target");
+            //    $(selector).toggleClass('in');
+            //}
+
+            //function delete_dashboard() {
+            //    let parent = $(this).closest(".dash_element");
+            //    if (confirm("Are you sure?")) {
+            //        $.ajax({
+            //            url: $(this).data("dash-url"),
+            //            data: { id: parent.children().data("dash-id") },
+            //            beforeSend: function () {
+            //                parent.hide(500, function () {
+            //                    parent.remove();
+            //                })
+            //                return true;
+            //            },
+            //            error: function (result) {
+            //                console.log(result);
+            //            },
+            //            success: function () {
+            //                no_dashboards_show();
+            //            }
+            //        });
+            //    }
+            //}
+
+            //function create_dashboard() {
+            //    event.preventDefault();
+            //    $(".dash_name_edit").hide();
+            //    $(".dash_name").show();
+            //    $.ajax({
+            //        url: $(this).data("dash-url"),
+            //        data: { name: $("#form_dash_name").val(), isPublic: $("#form_dash_isPublic").prop('checked') },
+            //        error: function (result) {
+            //            console.log(result);
+            //        },
+            //        success: function (data) {
+            //            let element = $("<div  class='col-md-6 col-lg-3 dash_element' >" + data + "</div>");
+            //            element.hide();
+            //            $('#dashboards').prepend(element);
+            //            element.show(500);
+            //            element.on("click", ".dash_remove", delete_dashboard);
+            //            element.on("click", ".dash_edit", edit_dashboard);
+
+            //            if ($("#no_dashboards").is(":visible")) {
+            //                $("#no_dashboards").hide();
+            //            }
+            //            $("#form_dash_name").val("");
+            //            var selector = $("[data-toggle='toggle']").data("target");
+            //            $(selector).toggleClass('in');
+            //            $("#dash_create_button").children().toggleClass("glyphicon-plus-sign glyphicon-remove-circle");
+            //        },
+            //        type: "POST"
+            //    });
+
+            //}
+
+            //$("#dash_create_button").click(toggle_icon);
+            //$("[data-toggle='toggle']").click(collapse_button);
+            //$("#dash_create").submit(create_dashboard);
+            //$(".dash_remove", ".dash_element").click(delete_dashboard);
+            //$(".dash_icon", ".dash_element").click(create_edit_form);
+            //$(".dash_edit", ".dash_element").click(edit_dashboard);
+
+
 
             let currentElement = null;
             const modal = $("#modalWindow");
             const modalBody = modal.find(".modal-body");
-            $(".sensor-edit").click(SensorEdit);
-            $(".sensor-create").click(SensorCreate);
+            const dashboards = $(".dashboards");
+            $(".sensor-edit").click(DashboardEdit);
+            $(".dashboard-create").click(DashboardCreate);
             $(".sensor-delete").click(SensorDeleteConfirm);
             NoValuesDisplay();
 
@@ -81,7 +177,7 @@
                 }
             }
 
-            function SensorEdit() {
+            function DashboardEdit() {
                 currentElement = $(this).closest(".sensor-row");
                 modal.modal("hide");
                 $.ajax({
@@ -104,15 +200,15 @@
                 });
             }
 
-            function SensorCreate() {
+            function DashboardCreate() {
                 $.ajax({
-                    url: '@Url.Action("Create","Sensor")',
+                    url: '@Url.Action("Create","Dashboard")',
                     beforeSend: function () {
                         modal.fadeIn(600);
                         return true;
                     },
                     success: function (data) {
-                        modal.find(".modal-title").text("Create Sensor");
+                        modal.find(".modal-title").text("Create New Dashboard");
                         modalBody.prepend(data);
                         modalBody.on("submit", "#modal-form-create", ModalFormCreateSubmit);
                         modalBody.on("click", ".back-to-list", HideModal);
@@ -160,7 +256,7 @@
                 var fd = new FormData(form);
                 fd.append('IconFile', inputFile.prop('files')[0]);
                 $.ajax({
-                    url: '@Url.Action("Create","Sensor")',
+                    url: '@Url.Action("Create","Dashboard")',
                     method: "POST",
                     processData: false,
                     contentType: false,
@@ -170,18 +266,19 @@
                         return true;
                     },
                     success: function (data) {
-                        tableBody.prepend(data);
-                        tableBody.on("click", ".sensor-edit", SensorEdit);
-                        tableBody.on("click", ".sensor-delete", SensorDeleteConfirm);
-                        tableBody.on("click", ".fa-eye-slash", toggleEyeIcon);
-                        tableBody.on("click", ".input-set-active", SetActiveAjax);
-                        tableBody.on("click", ".input-set-active", SetActiveAjax);
+
+                        let element = $("<div class='col-md-6 col-lg-3 dash_element'>" + data + "</div>");
+                        element.hide();
+                        dashboards.prepend(element);
+                        element.show(500);
+                        dashboards.on("click", ".dashboard_remove", delete_dashboard);
+                        dashboards.on("click", ".dashboard_edit", edit_dashboard);
                         NoValuesDisplay();
                     },
                     error: function (res) {
                         console.log(res);
                     }
-                })
+                });
             }
 
             function ModalFormEditSubmit() {
@@ -205,7 +302,7 @@
                     success: function (data) {
                         currentElement.replaceWith(data);
                         currentElement.show(800);
-                        tableBody.on("click", ".sensor-edit", SensorEdit);
+                        tableBody.on("click", ".sensor-edit", DashboardEdit);
                         tableBody.on("click", ".sensor-delete", SensorDeleteConfirm);
                         tableBody.on("click", ".fa-eye-slash", toggleEyeIcon);
                         tableBody.on("click", ".input-set-active", SetActiveAjax);
