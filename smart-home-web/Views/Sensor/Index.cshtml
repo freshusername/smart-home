@@ -115,7 +115,7 @@
             modal.find(".modal-title").text("Are you sure ?");
             $("#modal-delete-confirm").clone().prependTo(modalBody);
             $("#modal-delete-confirm").show(0);
-            $("#modal-delete-button").data("sensor-type-id", currentRow.data("sensor-row-id"));
+            $("#modal-delete-button").data("element-id", currentRow.data("sensor-row-id"));
             modalBody.on("click", "#modal-delete-button", SensorTypeDelete);
             modal.fadeIn(600);
             modal.modal("show");

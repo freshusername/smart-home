@@ -5,7 +5,11 @@
 }
 
 @*<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />*@
-
+    <style>
+        .modal-backdrop.in {
+            opacity: 0.5 !important;
+        }
+    </style>
 @*WRAPPER*@
 <div class="app-main">
     <div class="app-main__outer">
@@ -27,7 +31,7 @@
 
                                     @foreach (var dashboard in Model.Dashboards)
                                     {
-                                        <div class="col-md-6 col-lg-3 dash_element">
+                                        <div class="col-md-6 col-lg-3 dashboard_element">
                                             @await Component.InvokeAsync("DashboardElement", new { model = dashboard })
                                         </div>
                                     }
@@ -59,7 +63,7 @@
         $(function () {
 
             //function no_dashboards_show() {
-            //    if ($("#dashboards").children(".dash_element").length == 0) {
+            //    if ($("#dashboards").children(".dashboard_element").length == 0) {
             //        $("#no_dashboards").show();
             //    }
             //}
@@ -67,7 +71,7 @@
 
             ////function edit_dashboard() {
             ////    event.preventDefault();
-            ////    let parent = $(this).closest(".dash_element");
+            ////    let parent = $(this).closest(".dashboard_element");
             ////    let open = parent.find(".dash_open");
             ////    open.toggleClass("disabled");
             ////    let form = parent.find(".form_edit_name");
@@ -98,7 +102,7 @@
             //}
 
             //function delete_dashboard() {
-            //    let parent = $(this).closest(".dash_element");
+            //    let parent = $(this).closest(".dashboard_element");
             //    if (confirm("Are you sure?")) {
             //        $.ajax({
             //            url: $(this).data("dash-url"),
@@ -130,7 +134,7 @@
             //            console.log(result);
             //        },
             //        success: function (data) {
-            //            let element = $("<div  class='col-md-6 col-lg-3 dash_element' >" + data + "</div>");
+            //            let element = $("<div  class='col-md-6 col-lg-3 dashboard_element' >" + data + "</div>");
             //            element.hide();
             //            $('#dashboards').prepend(element);
             //            element.show(500);
@@ -153,9 +157,9 @@
             //$("#dash_create_button").click(toggle_icon);
             //$("[data-toggle='toggle']").click(collapse_button);
             //$("#dash_create").submit(create_dashboard);
-            //$(".dash_remove", ".dash_element").click(delete_dashboard);
-            //$(".dash_icon", ".dash_element").click(create_edit_form);
-            //$(".dash_edit", ".dash_element").click(edit_dashboard);
+            //$(".dash_remove", ".dashboard_element").click(delete_dashboard);
+            //$(".dash_icon", ".dashboard_element").click(create_edit_form);
+            //$(".dash_edit", ".dashboard_element").click(edit_dashboard);
 
 
 
@@ -163,9 +167,9 @@
             const modal = $("#modalWindow");
             const modalBody = modal.find(".modal-body");
             const dashboards = $(".dashboards");
-            $(".sensor-edit").click(DashboardEdit);
+            $(".dashboard-edit").click(DashboardEdit);
             $(".dashboard-create").click(DashboardCreate);
-            $(".sensor-delete").click(SensorDeleteConfirm);
+            $(".dashboard_remove").click(DashboardDeleteConfirm);
             NoValuesDisplay();
 
             function NoValuesDisplay() {
@@ -178,10 +182,10 @@
             }
 
             function DashboardEdit() {
-                currentElement = $(this).closest(".sensor-row");
+                currentElement = $(this).closest(".dashboard_element");
                 modal.modal("hide");
                 $.ajax({
-                    url: '@Url.Action("Edit","Sensor")',
+                    url: '@Url.Action("Edit","Dashboard")',
                     data: { id: currentElement.data("sensor-row-id") },
                     beforeSend: function () {
                         modal.fadeIn(600);
@@ -220,20 +224,20 @@
                 });
             }
 
-            function SensorDeleteConfirm() {
-                currentElement = $(this).closest(".sensor-row");
+            function DashboardDeleteConfirm() {
+                currentElement = $(this).closest(".dashboard_element");
                 modal.find(".modal-title").text("Are you sure ?");
                 $("#modal-delete-confirm").clone().prependTo(modalBody);
                 $("#modal-delete-confirm").show(0);
                 $("#modal-delete-button").data("sensor-type-id", currentElement.data("sensor-row-id"));
-                modalBody.on("click", "#modal-delete-button", SensorTypeDelete);
+                modalBody.on("click", "#modal-delete-button", DashboardDelete);
                 modal.fadeIn(600);
                 modal.modal("show");
             }
 
-            function SensorTypeDelete() {
+            function DashboardDelete() {
                 $.ajax({
-                    url: '@Url.Action("Delete","Sensor")',
+                    url: '@Url.Action("Delete","Dashboard")',
                     data: { Id: $(this).data("sensor-id") },
                     beforeSend: function () {
                         modal.modal("hide");
@@ -267,7 +271,7 @@
                     },
                     success: function (data) {
 
-                        let element = $("<div class='col-md-6 col-lg-3 dash_element'>" + data + "</div>");
+                        let element = $("<div class='col-md-6 col-lg-3 dashboard_element'>" + data + "</div>");
                         element.hide();
                         dashboards.prepend(element);
                         element.show(500);
@@ -289,7 +293,7 @@
                 fd.append('IconFile', inputFile.prop('files')[0]);
 
                 $.ajax({
-                    url: '@Url.Action("Edit","Sensor")',
+                    url: '@Url.Action("Edit","Dashboard")',
                     method: "POST",
                     processData: false,
                     contentType: false,
@@ -303,7 +307,7 @@
                         currentElement.replaceWith(data);
                         currentElement.show(800);
                         tableBody.on("click", ".sensor-edit", DashboardEdit);
-                        tableBody.on("click", ".sensor-delete", SensorDeleteConfirm);
+                        tableBody.on("click", ".sensor-delete", DashboardDeleteConfirm);
                         tableBody.on("click", ".fa-eye-slash", toggleEyeIcon);
                         tableBody.on("click", ".input-set-active", SetActiveAjax);
                     },
