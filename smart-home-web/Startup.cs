@@ -5,7 +5,6 @@ using Domain.Core.Model;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Business.Infrastructure;
 using Infrastructure.Business.Interfaces;
-using Infrastructure.Business.Interfaces;
 using Infrastructure.Business.Services;
 using Infrastructure.Data;
 using Infrastructure.Data.Repositories;
@@ -20,7 +19,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using smart_home_web.AutoMapper;
 using Infrastructure.Business.Hubs;
-using Infrastructure.Business.Interfaces;
 
 namespace smart_home_web
 {
