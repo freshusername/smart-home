@@ -7,8 +7,8 @@
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
-<figure class="highcharts-figure" style="height: 20em; width: 30em; margin: 0 auto">
-    <div id=@("BoolHeatmap" + Model.Id.ToString()) style="height: 16em; width: 16em; margin: 0 auto"></div>
+<figure class="highcharts-figure">
+    <div id=@("BoolHeatmap" + Model.Id.ToString()) style="height: 30%; max-width: unset; width: 80%; margin: 0 auto"></div>
 </figure>
 @if (Model.IsCorrect)
 {
@@ -54,17 +54,32 @@
             return axis.categories[point[isY ? 'y' : 'x']];
         }
 
-        var arr = @Html.Raw(Json.Serialize(hoursList));
+        var hoursArr = @Html.Raw(Json.Serialize(hoursList));
         function getHourForValue(index) {
             var hourTime = '';
-            for (var i = 0; i < arr.length; i++) {
+            for (var i = 0; i < hoursArr.length; i++) {
                 if (i == index) {
-                    hourTime = arr[i];
+                    hourTime = hoursArr[i];
                 }
             }
             var k = parseInt(hourTime);
             k++;
             return hourTime + ":00 - " + k + ":00";
+        }
+
+        var datesArr = @Html.Raw(Json.Serialize(daysList));
+        var dateStart = @Html.Raw(Json.Serialize(daysList.FirstOrDefault()));
+        var dateFinal = @Html.Raw(Json.Serialize(daysList.LastOrDefault()));
+        function getDateForValue(index) {
+            var dateTime = '';
+            for (var i = 0; i < datesArr.length; i++) {
+                if (i == index) {
+                    dateTime = datesArr[i];
+                }
+            }
+            var k = String(dateTime);
+            k++;
+            return String(dateTime);
         }
 
         Highcharts.chart("BoolHeatmap"+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
@@ -77,33 +92,16 @@
             },
 
             title: {
-                text: ''//'True percentage for ' + 'Html.Raw(Json.Serialize(Model.SensorName))' + ' on *Particular date* '
+                text: JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName.ToString()))') + ' on ' + dateStart + ' - ' + dateFinal
             },
 
             xAxis: {
-                categories:
-                    [
-                        @*@for (int i = 0; i < daydates.Length; i++)
-                        {
-                            <text>
-                                @Html.Raw(Json.Serialize(daydates[i])) ,
-                            </text>
-                        }*@
-                    ],
+                categories: [],
                 visible: false
             },
 
             yAxis: {
-                categories:
-                    [
-                        @*@for (int i = 0; i < hoursPeriodsArray.Length; i++)
-                        {
-                            <text>
-                                @Html.Raw(Json.Serialize(hoursPeriodsArray[i])) ,
-                            </text>
-                        }*@
-                    ],
-
+                categories: [],
                 title: null,
                 reversed: true,
                 visible: false
@@ -118,7 +116,9 @@
 
             legend: {
             title: {
-                text: 'movings/vibration frequency'
+                text: 'frequency',
+                width: 'auto'
+
             },
             accessibility: {
                 keyboardNavigation: {
@@ -131,7 +131,7 @@
             floating: true,
             borderWidth: 0,
             backgroundColor: 'transparent',
-            width: 'auto'
+            width: '50%'
             },
 
             tooltip: {
@@ -139,10 +139,10 @@
                     if (this.point.value == undefined)
                     {
                         return '<b>' + '</b><br>' + @Html.Raw(Json.Serialize(Model.SensorName)) + ' has no bool data </b><br> at <b>' +
-                            getPointCategoryName(this.point, 'x') + ' at ' + getHourForValue(this.point.index) + ' </b>';
+                            getHourForValue(this.point.index) + ' on ' + getDateForValue(this.point.index) + ' </b>';
                     }
                     return '<b>' + '</b><br>' + @Html.Raw(Json.Serialize(Model.SensorName))  + ' has true percentage: <b>' + this.point.value + "% " +
-                        '</b><br> at <b>' + getHourForValue(this.point.index) + ' </b>';
+                        '</b><br> at <b>' + getHourForValue(this.point.index) + ' on ' + getDateForValue(this.point.index) + ' </b>';
                 }
             },
 
@@ -154,7 +154,8 @@
                 rowsize: 0.9,
                 pointPadding: 1,
                 hide: true,
-                data: [
+                data:
+                    [
                     @{
                         int h = 0;
                         int g = (int)Math.Ceiling(valArray.Length / 6.0);
@@ -169,9 +170,8 @@
 
                             }
                         }
-
                     }
-                ],
+                    ],
             }],
 
             exporting: {

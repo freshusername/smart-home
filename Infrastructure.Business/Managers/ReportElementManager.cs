@@ -141,10 +141,12 @@ namespace Infrastructure.Business.Managers
                 dateFrom = DateTime.Now.AddHours(-(int)reportElement.Hours);
 
             int[] hoursArray = new int[(int)(dateTo - dateFrom).TotalHours];
+            string[] daysArray = new string[(int)(dateTo - dateFrom).TotalHours];
 
             for (int i = 0; i < hoursArray.Length; i++)
             {
                 hoursArray[i] = dateFrom.AddHours(i).Hour;
+                daysArray[i] = dateFrom.AddHours(i).Date.ToString("dd.MM.yyyy");
             }
 
             IEnumerable<BoolValuePercentagePerHour> boolValuePercentagesPerHours = await
@@ -154,7 +156,7 @@ namespace Infrastructure.Business.Managers
             int w = 0;
             for (int j = 0; j < hoursArray.Length; j++)
             {
-                if (!boolValuePercentagesPerHours.Any(a => a.HourTime == hoursArray[j]))
+                if (!boolValuePercentagesPerHours.Any(a => a.HourTime == hoursArray[j] && a.DayDate.ToString().Contains(daysArray[j])))
                 {
 
                     BoolValuePercentagesPerHours.Add(
@@ -185,6 +187,19 @@ namespace Infrastructure.Business.Managers
                         w++;
                         dateFrom = dateFrom.AddHours(1);
 
+                    }
+                    else
+                    {
+                        BoolValuePercentagesPerHours.Add(
+                        new BoolValuePercentagePerHour
+                        {
+                            DayDate = dateFrom,
+                            HourTime = hoursArray[j],
+                            TrueCount = null,
+                            TrueFalseCount = null,
+                            TruePercentage = null
+                        });
+                        dateFrom = dateFrom.AddHours(1);
                     }
                 }
             }
