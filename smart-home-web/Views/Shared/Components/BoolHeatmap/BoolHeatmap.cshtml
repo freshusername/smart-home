@@ -1,0 +1,215 @@
+﻿@model smart_home_web.Models.ReportElements.BoolHeatmapViewModel;
+@using Domain.Core.Model.Enums;
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/heatmap.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+<figure class="highcharts-figure">
+    <div id=@("BoolHeatmap" + Model.Id.ToString()) style="height: 30%; max-width: unset; width: 80%; margin: 0 auto"></div>
+</figure>
+@if (Model.IsCorrect)
+{
+    <script>
+        @{
+            List<string> daysList = new List<string>();
+            List<int?> hoursList = new List<int?>();
+            List<int> trueFalseCounts = new List<int>();
+            List<int> trueCounts = new List<int>();
+            List<decimal?> truePercentages = new List<decimal?>();
+            List<string> hoursPeriods = new List<string>();
+            List<string> timesOfDayList = new List<string>();
+
+            foreach (var tp in Model.BoolValuePercentagesPerHours)
+            {
+                truePercentages.Add(tp.TruePercentage);
+                hoursList.Add(tp.HourTime);
+                daysList.Add(tp.DayDate.ToString("dd/MM/yyyy"));
+            }
+
+            decimal?[] valArray = truePercentages.ToArray();
+            string[] daydates = daysList.ToArray();
+        }
+
+        function getPointCategoryName(point, dimension) {
+            var series = point.series,
+                isY = dimension === 'y',
+                axis = series[isY ? 'yAxis' : 'xAxis'];
+            return axis.categories[point[isY ? 'y' : 'x']];
+        }
+
+        var hoursArr = @Html.Raw(Json.Serialize(hoursList));
+        function getHourForValue(index) {
+            var hourTime = '';
+            for (var i = 0; i < hoursArr.length; i++) {
+                if (i == index) {
+                    hourTime = hoursArr[i];
+                }
+            }
+            var k = parseInt(hourTime);
+            k++;
+            return hourTime + ":00 - " + k + ":00";
+        }
+
+        var datesArr = @Html.Raw(Json.Serialize(daysList));
+        var dateStart = @Html.Raw(Json.Serialize(daysList.FirstOrDefault()));
+        var dateFinal = @Html.Raw(Json.Serialize(daysList.LastOrDefault()));
+        function getDateForValue(index) {
+            var dateTime = '';
+            for (var i = 0; i < datesArr.length; i++) {
+                if (i == index) {
+                    dateTime = datesArr[i];
+                }
+            }
+            var k = String(dateTime);
+            k++;
+            return String(dateTime);
+        }
+
+        Highcharts.chart("BoolHeatmap"+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
+
+            chart: {
+                type: 'heatmap',
+                marginTop: 40,
+                marginBottom: 80,
+                plotBorderWidth: 0,
+            },
+
+            title: {
+                text: JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName.ToString()))') + ' on ' + dateStart + ' - ' + dateFinal
+            },
+
+            xAxis: {
+                categories: [],
+                visible: false
+            },
+
+            yAxis: {
+                categories: [],
+                title: null,
+                reversed: true,
+                visible: false
+            },
+
+            colorAxis: {
+                min: 0,
+                max: 100,
+                minColor: '#FFFFFF',
+                maxColor: '#000000'
+            },
+
+            legend: {
+            title: {
+                text: 'frequency',
+                width: 'auto'
+
+            },
+            accessibility: {
+                keyboardNavigation: {
+                    enabled: true
+                },
+            },
+            align: 'right',
+            verticalAlign: 'bottom',
+            y: 10,
+            floating: true,
+            borderWidth: 0,
+            backgroundColor: 'transparent',
+            width: '50%'
+            },
+
+            tooltip: {
+                formatter: function () {
+                    if (this.point.value == undefined) {
+                        return '<b>' + '</b><br>' + @Html.Raw(Json.Serialize(Model.SensorName)) + ' has no bool data </b><br> at <b>' +
+                            getHourForValue(this.point.index) + ' on ' + getDateForValue(this.point.index) + ' </b>';
+                    }
+                    else if (this.point.value == 1)
+                    {
+                        this.tooltip.visible = false;
+                    }
+                    return '<b>' + '</b><br>' + @Html.Raw(Json.Serialize(Model.SensorName))  + ' has true percentage: <b>' + this.point.value + "% " +
+                        '</b><br> at <b>' + getHourForValue(this.point.index) + ' on ' + getDateForValue(this.point.index) + ' </b>';
+                }
+            },
+
+            series: [{
+                name: 'True percentage per hours for bool sensor',
+                borderWidth: 0,
+                borderHeight: 0,
+                colsize: 0.9,
+                rowsize: 0.9,
+                pointPadding: 1,
+                hide: true,
+                data:
+                    [
+                    @{
+                        int h = 0;
+                        int g = (int)Math.Ceiling(valArray.Length / 6.0);
+
+                        @for (int i = 0; i < g; i++)
+                        {
+                            @for (int j = 0; j < 6; j++)
+                            {
+                                <text>
+                                    [@Html.Raw(Json.Serialize(i)), @Html.Raw(Json.Serialize(j)), @Html.Raw(Json.Serialize((h == valArray.Length) ? 1 : valArray[h++]))],
+                                </text>
+
+                            }
+                        }
+                    }
+                    ],
+            }],
+
+            exporting: {
+                buttons: {
+                    contextButton: {
+                        enabled: false,
+                    }
+                }
+            },
+
+            responsive: {
+                rules: [{
+                    condition: {
+                        maxWidth: 50
+                    },
+                    chartOptions: {
+                        yAxis: {
+                            labels: {
+                                formatter: function () {
+                                    try {
+                                        return this.value.charAt(0);
+                                    }
+                                    catch (error) {
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }]
+            }
+        });
+    </script>
+}
+else
+{
+    <h4>No Data for bool heatmap for this period of time</h4>
+}
+<script>
+    $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
+        var type = 'BoolHeatmap';
+        try {
+            var result = Highcharts.charts.find(chart => chart.renderTo.id == (type + ui.id).toString());
+        }
+        catch (error) {
+
+        }
+        if (typeof result !== 'undefined') {
+            result.setSize(ui.height, ui.width);
+        }
+    });
+</script>

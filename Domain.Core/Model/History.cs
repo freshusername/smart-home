@@ -11,10 +11,10 @@ namespace Domain.Core.Model
 
         public string StringValue { get; set; } = null;
         public int? IntValue { get; set; } = null;
-		public double? DoubleValue { get; set; } = null;
-		public bool? BoolValue { get; set; } = null;
+        public double? DoubleValue { get; set; } = null;
+        public bool? BoolValue { get; set; } = null;
 
-        public int SensorId { get; set; }		
+        public int SensorId { get; set; }
         public Sensor Sensor { get; set; }
 
         public Message Message { get; set; }
