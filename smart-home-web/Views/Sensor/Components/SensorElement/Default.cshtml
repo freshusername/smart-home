@@ -1,8 +1,89 @@
 ﻿@model smart_home_web.Models.SensorViewModel.SensorViewModel;
 
 
+<li class="list-group-item sensor-row" data-sensor-row-id="@Model.Id">
+    <div class="widget-content p-0">
+        <div class="widget-content-wrapper">
+            <div class="widget-content-left mr-4 ml-3">  
+                @*<label class="rocker rocker-small">
+                    <input id="@Model.Id.ToString()" class="input-set-active" type="checkbox" @Html.Raw(Model.IsActive ? "checked" : " ")>
+                    <span class="switch-left">On</span>
+                    <span class="switch-right">Off</span>
+                </label>*@                
+                <div class="input-set-active" style="box-shadow: 0 0.125rem 0.625rem rgba(218, 98, 74, 0.4), 0 0.0625rem 0.125rem rgba(218, 98, 74, 0.5); border-radius:5px"  id="@Model.Id.ToString()">
+                    <input type="checkbox" class="" @Html.Raw(Model.IsActive ? "checked" : " ") data-toggle="toggle" onChange="SetActiveAjax">
+                </div>                   
+            </div>
+            <div class="widget-content-left mr-4">
+                @if (Model.IconPath != null)
+                {
+                    <img src="@Model.IconPath" width="52" height="52" />
+                }
+                else
+                {
+                    <p>No image was added</p>
+                }
+            </div>
+            <div class="widget-content-left">
+                <div class="widget-heading">
+                    @Model.Name
+                </div>
+                <div class="widget-subheading">
+                    @Model.SensorTypeName
+                </div>
+            </div>
+            <div class="ml-auto" style="margin-right: 40%">
+                <div class="widget-content-right"
+                     style="
+                      text-align: right;
+                      display: inline-block;
+                      margin-left: auto;">
 
-    <tr class="sensor-row" data-sensor-row-id="@Model.Id">
+                    <div class="text-right opacity-6"><b>Created:</b></div>
+                    <div class="text-right opacity-6"><b>Comment:</b></div>
+                    <div class="text-right opacity-6"><b>Token:</b></div>
+                </div>
+
+                <div class="text-left ml-3"
+                     style="display: inline-block;
+                     margin-right: auto;">
+                    <div>@Model.CreatedOn.Value.UtcDateTime.ToString("dd/MM/yyyy on HH:mm")</div>
+                    <div>@Model.Comment</div>                    
+                    <div>@Model.Token</div>
+                </div>
+
+            </div>
+            <div class="mr-3" style="width: 140px;">
+                <div role="group" class="btn-group">
+                    <a class="btn-shadow btn btn-primary sensor-create"
+                       asp-controller="History"
+                       asp-action="Graph"
+                       asp-route-sensorId="@Model.Id"
+                       asp-route-days="99999">
+                        <i class="text-white pe-7s-graph2" style="font-size:20px"></i>
+                    </a>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a class="btn btn-shadow btn-info sensor-edit">
+                            <i class="text-white pe-7s-edit" style="font-size:20px"></i>
+                        </a>
+                        <a class="btn btn-shadow btn-danger sensor-delete p-0 pl-2 pr-2">
+                            <i class="text-white pe-7s-close" style="font-size:30px;"></i>
+                        </a>
+                    }
+                </div>
+
+            </div>
+        </div>
+    </div>
+</li>
+
+
+
+
+
+
+@*<tr class="sensor-row" data-sensor-row-id="@Model.Id">
         <td>
             <label class="rocker rocker-small">
                 <input id="@Model.Id.ToString()" class="input-set-active" type="checkbox" @Html.Raw(Model.IsActive ? "checked" : " ")>
@@ -57,4 +138,4 @@
                 }
             </div>
         </td>
-    </tr>
+    </tr>*@

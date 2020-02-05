@@ -11,63 +11,51 @@
 
 <div class="app-main">
     <div class="app-main__outer">
-        <div class="app-inner-layout app-inner-layout-page">
-            <div class="app-inner-layout__content">
-                <div class="app-header">
-                    <div class="page-title-heading">
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            <div class="button-center">
-                                <a class="btn btn-success sensor-create">Add new sensor</a>
-                            </div>
-                        }
-                    </div>
+        <div class="app-main__inner">
+            <div class="app-header">
+                <div class="page-title-heading" >
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <div class="button-center">
+                            <a class="mb-2 mr-2 btn btn-primary sensor-create text-white">Add new sensor</a>
+                        </div>
+                    }
                 </div>
-                <div class="app-inner-layout app-inner-layout-page">
-                    <div class="app-inner-layout__wrapper">
-                        <div class="app-inner-layout__content pt-1">
-                            <div class="tab-content">
-                                <div class="container-fluid">
+            </div>
+            <div class="app-inner-layout app-inner-layout-page">
+                <div class="app-inner-layout__wrapper">
+                    <div class="app-inner-layout__content" style="padding-top: 0px">
+                        <div class="tab-content">
+                            <div class="container-fluid">
+                                <div class="main-card mb-3 card" data-save-url="@Url.Action("SetActive", "Sensor")">
+                                    <ul class="list-group list-group-flush">
 
-                                    <table class="table text-center" data-save-url="@Url.Action("SetActive", "Sensor")">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">On/Off</th>
-                                                <th scope="col">Icon</th>
-                                                <th scope="col">Sensor</th>
-                                                <th scope="col">Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr class="no-values-row" style="display:none;">
-                                                <td colspan="4">No Sensors</td>
-                                            </tr>
-                                            @foreach (var item in Model)
-                                            {
-                                                @await Component.InvokeAsync("SensorElement", item)
-                                            }
-                                        </tbody>
-                                    </table>
+                                        @foreach (var item in Model)
+                                        {
+                                            @await Component.InvokeAsync("SensorElement", item)
+                                        }
 
-                                    @*class 'fade' don't working in Bootstrap 4*@
-                        
-                                    
-                                    <div class="modal" id="modalWindow" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title"></h4>
-                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                                </div>
-                                                <div class="modal-body"></div>
+                                    </ul>
+                                </div>
+
+                                @*class 'fade' don't working in Bootstrap 4*@
+
+
+                                <div class="modal" id="modalWindow" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title"></h4>
+                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
                                             </div>
+                                            <div class="modal-body"></div>
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div id="modal-delete-confirm">
-                                        <a class="btn btn-primary" id="modal-delete-button" data-sensor-id="">Delete</a>
-                                        <a class="btn btn-secondary" data-dismiss="modal">Cancel</a>
-                                    </div>
+                                <div id="modal-delete-confirm">
+                                    <a class="btn btn-primary" id="modal-delete-button" data-sensor-id="">Delete</a>
+                                    <a class="btn btn-secondary" data-dismiss="modal">Cancel</a>
                                 </div>
                             </div>
                         </div>
@@ -77,6 +65,7 @@
         </div>
     </div>
 </div>
+
 
 <script src="~/lib/jquery/dist/jquery.js"></script>
 <script>
@@ -252,21 +241,20 @@
             $(this).next().toggle();
         }
 
-        $(".input-set-active").click(SetActiveAjax);
-
-        function SetActiveAjax() {
+        var SetActiveAjax = function () {
             let input = $(this);
             $.ajax({
                 type: 'Post',
-                url: $('table').data('save-url'),
+                url: "/Sensor/SetActive",
                 data: { id: input.attr('id') },
-                success: function () {
-                    console.log('changed');
-                    console.log(this);
-                    input.closest(".sensor-row")
-                        .find(".sensor-activated").toggleClass("fa-check-circle fa-times-circle");
-                }
+                //Doesnt work because we cannot find element with "sensor-row"
+                //success: function () {
+                //    console.log(closest(".sensor-row"));
+                //    input.closest(".sensor-row")
+                //        .find(".sensor-activated").toggleClass("fa-check-circle fa-times-circle");
+                //}
             });
         }
+        $(".input-set-active").on("click", SetActiveAjax);
     });
 </script>
