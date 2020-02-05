@@ -150,7 +150,7 @@ namespace Infrastructure.Business.Managers
             }
 
             IEnumerable<BoolValuePercentagePerHour> boolValuePercentagesPerHours = await
-                unitOfWork.HistoryRepo.GetBoolValuePercentagesPerHours(reportElement.SensorId, dateFrom, dateTo);
+                unitOfWork.HistoryRepo.GetBoolValuePercentagesPerHours(reportElement.SensorId.Value, dateFrom, dateTo);
             List<BoolValuePercentagePerHour> BoolValuePercentagesPerHours = new List<BoolValuePercentagePerHour>();
 
             int w = 0;

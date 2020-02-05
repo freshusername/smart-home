@@ -29,21 +29,7 @@
                 daysList.Add(tp.DayDate.ToString("dd/MM/yyyy"));
             }
 
-            //for (int i = 0; i < 24; i += 6)
-            //{
-            //    int? temp = hoursList[i + 5];
-            //    temp++;
-            //    hoursPeriods.Add(hoursList[i].ToString() + " - " + temp.ToString());
-            //}
-
-            //for (int i = 0; i < 24; i += 4)
-            //{
-            //    timesOfDayList.Add(hoursList[i].ToString()); //TODO: fix
-            //}
-
             decimal?[] valArray = truePercentages.ToArray();
-            //string[] hoursPeriodsArray = hoursPeriods.ToArray();
-            //string[] timesOfDayArray = timesOfDayList.ToArray();
             string[] daydates = daysList.ToArray();
         }
 
@@ -136,10 +122,13 @@
 
             tooltip: {
                 formatter: function () {
-                    if (this.point.value == undefined)
-                    {
+                    if (this.point.value == undefined) {
                         return '<b>' + '</b><br>' + @Html.Raw(Json.Serialize(Model.SensorName)) + ' has no bool data </b><br> at <b>' +
                             getHourForValue(this.point.index) + ' on ' + getDateForValue(this.point.index) + ' </b>';
+                    }
+                    else if (this.point.value == 1)
+                    {
+                        this.tooltip.visible = false;
                     }
                     return '<b>' + '</b><br>' + @Html.Raw(Json.Serialize(Model.SensorName))  + ' has true percentage: <b>' + this.point.value + "% " +
                         '</b><br> at <b>' + getHourForValue(this.point.index) + ' on ' + getDateForValue(this.point.index) + ' </b>';
