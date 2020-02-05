@@ -100,6 +100,7 @@ namespace smart_home_web.AutoMapper
             CreateMap<ReportElement, GaugeDto>().ReverseMap();
             CreateMap<GaugeDto, GaugeViewModel>().ReverseMap();
 
+            //Heatmap
             CreateMap<ReportElement, HeatmapDto>().ReverseMap();
             CreateMap<Sensor, HeatmapDto>()
                 .ForMember(gd => gd.SensorId, map => map.MapFrom(s => s.Id))
@@ -108,6 +109,16 @@ namespace smart_home_web.AutoMapper
                 .ForMember(gd => gd.MeasurementType, map => map.MapFrom(s => s.SensorType.MeasurementType))
                 .ForAllOtherMembers(c => c.Ignore());
             CreateMap<HeatmapDto, HeatmapViewModel>().ReverseMap();
+
+            //BoolHeatmap
+            CreateMap<Sensor, BoolHeatmapDto>()
+               .ForMember(gd => gd.SensorId, map => map.MapFrom(s => s.Id))
+               .ForMember(gd => gd.SensorName, map => map.MapFrom(s => s.Name))
+               .ForMember(gd => gd.MeasurementName, map => map.MapFrom(s => s.SensorType.MeasurementName))
+               .ForMember(gd => gd.MeasurementType, map => map.MapFrom(s => s.SensorType.MeasurementType))
+               .ForAllOtherMembers(c => c.Ignore());
+            CreateMap<BoolHeatmapDto, BoolHeatmapViewModel>().ReverseMap();
+
 
             CreateMap<Sensor, ReportElementDto>()
                 .ForMember(gd => gd.SensorId, map => map.MapFrom(s => s.Id))
@@ -157,7 +168,7 @@ namespace smart_home_web.AutoMapper
             .ForMember(gd => gd.Name, map => map.MapFrom(s => s.Name))
             .ForMember(gd => gd.SensorId, map => map.MapFrom(s => s.SensorId))
             .ForMember(gd => gd.ControlId, map => map.MapFrom(s => s.ControlId));
-            
+
 
             CreateMap<SensorControlDto, EditSensorControlViewModel>()
             .ForMember(gd => gd.Name, map => map.MapFrom(s => s.Name))

@@ -17,6 +17,7 @@ namespace Infrastructure.Business.Managers
 
 		Task<ReportElement> GetById(int id);
         Task<HeatmapDto> GetHeatmapById(int ReportElementId);
+        Task<BoolHeatmapDto> GetBoolHeatmapById(int ReportElementId);
         Task<GaugeDto> GetGaugeById(int gaugeId);
         Task<SensorDto> GetLastSensorByUserId(string userId);
 

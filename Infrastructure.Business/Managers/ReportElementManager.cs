@@ -130,11 +130,99 @@ namespace Infrastructure.Business.Managers
             return heatmap;
         }
 
+        public async Task<BoolHeatmapDto> GetBoolHeatmapById(int reportElementId)
+        {
+            ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(reportElementId);
+
+            DateTime dateFrom = new DateTime();
+            DateTime dateTo = DateTime.Now.AddMinutes(1);
+
+            if (reportElement.Hours != 0)
+                dateFrom = DateTime.Now.AddHours(-(int)reportElement.Hours);
+
+            int[] hoursArray = new int[(int)(dateTo - dateFrom).TotalHours];
+            string[] daysArray = new string[(int)(dateTo - dateFrom).TotalHours];
+
+            for (int i = 0; i < hoursArray.Length; i++)
+            {
+                hoursArray[i] = dateFrom.AddHours(i).Hour;
+                daysArray[i] = dateFrom.AddHours(i).Date.ToString("dd.MM.yyyy");
+            }
+
+            IEnumerable<BoolValuePercentagePerHour> boolValuePercentagesPerHours = await
+                unitOfWork.HistoryRepo.GetBoolValuePercentagesPerHours(reportElement.SensorId, dateFrom, dateTo);
+            List<BoolValuePercentagePerHour> BoolValuePercentagesPerHours = new List<BoolValuePercentagePerHour>();
+
+            int w = 0;
+            for (int j = 0; j < hoursArray.Length; j++)
+            {
+                if (!boolValuePercentagesPerHours.Any(a => a.HourTime == hoursArray[j] && a.DayDate.ToString().Contains(daysArray[j])))
+                {
+
+                    BoolValuePercentagesPerHours.Add(
+                    new BoolValuePercentagePerHour
+                    {
+                        DayDate = dateFrom,
+                        HourTime = hoursArray[j],
+                        TrueCount = null,
+                        TrueFalseCount = null,
+                        TruePercentage = null
+                    });
+                    dateFrom = dateFrom.AddHours(1);
+
+                }
+                else
+                {
+                    if (w != boolValuePercentagesPerHours.Count())
+                    {
+                        BoolValuePercentagesPerHours.Add(
+                        new BoolValuePercentagePerHour
+                        {
+                            DayDate = dateFrom,
+                            HourTime = hoursArray[j],
+                            TrueCount = boolValuePercentagesPerHours.ElementAt(w).TrueCount,
+                            TrueFalseCount = boolValuePercentagesPerHours.ElementAt(w).TrueFalseCount,
+                            TruePercentage = boolValuePercentagesPerHours.ElementAt(w).TruePercentage
+                        });
+                        w++;
+                        dateFrom = dateFrom.AddHours(1);
+
+                    }
+                    else
+                    {
+                        BoolValuePercentagesPerHours.Add(
+                        new BoolValuePercentagePerHour
+                        {
+                            DayDate = dateFrom,
+                            HourTime = hoursArray[j],
+                            TrueCount = null,
+                            TrueFalseCount = null,
+                            TruePercentage = null
+                        });
+                        dateFrom = dateFrom.AddHours(1);
+                    }
+                }
+            }
+
+            if (boolValuePercentagesPerHours.Count() == 0)
+                return new BoolHeatmapDto { Id = reportElementId, IsCorrect = false };
+
+            BoolHeatmapDto heatmap = mapper.Map<Sensor, BoolHeatmapDto>(reportElement.Sensor);
+
+            heatmap.Id = reportElement.Id;
+            heatmap.DashboardName = reportElement.Dashboard.Name;
+            heatmap.DashboardId = reportElement.Dashboard.Id;
+            heatmap.BoolValuePercentagesPerHours = BoolValuePercentagesPerHours;
+            heatmap.Hours = reportElement.Hours;
+
+            return heatmap;
+        }
+
         public async Task<ReportElementDto> GetOnOffById(int ReportElementId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
             ReportElementDto onOff = mapper.Map<ReportElement, ReportElementDto>(reportElement);
-            return onOff; 
+            return onOff;
         }
 
         public async Task<ReportElementDto> GetWordCloudById(int ReportElementId)
@@ -429,13 +517,13 @@ namespace Infrastructure.Business.Managers
             ReportElementDto reportElement = mapper.Map<Sensor, ReportElementDto>(reportElementt.Sensor);
             IEnumerable<Sensor> sensors = await unitOfWork.SensorRepo.GetAllSensorsByUserId(UserId);
 
-            foreach(Sensor sensor in sensors)
+            foreach (Sensor sensor in sensors)
             {
                 reportElement.Dates.Add(sensor.Name);
                 History history = unitOfWork.HistoryRepo.GetLastHistoryBySensorId(sensor.Id);
                 dynamic value = null;
                 switch (reportElement.MeasurementType)
-                { 
+                {
                     case MeasurementType.Int:
                         value = history.IntValue.GetValueOrDefault();
                         break;
@@ -448,7 +536,7 @@ namespace Infrastructure.Business.Managers
 
                         break;
                     case MeasurementType.Double:
-                        value = Math.Round(history.DoubleValue.GetValueOrDefault(),2);
+                        value = Math.Round(history.DoubleValue.GetValueOrDefault(), 2);
                         break;
                     case MeasurementType.String:
                         value = history.StringValue;
