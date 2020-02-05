@@ -20,7 +20,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using smart_home_web.AutoMapper;
 using Infrastructure.Business.Hubs;
-using Infrastructure.Business.Interfaces;
 
 namespace smart_home_web
 {
@@ -138,7 +137,6 @@ namespace smart_home_web
                     name: "default",
                     template: "{controller=Account}/{action=Login}/{id?}");
             });
-
         }
     }
 }

@@ -4,15 +4,16 @@
 <li class="list-group-item sensor-row" data-sensor-row-id="@Model.Id">
     <div class="widget-content p-0">
         <div class="widget-content-wrapper">
-            <div class="widget-content-left mr-4 ml-3">  
+            <div class="widget-content-left mr-4 ml-3">
                 @*<label class="rocker rocker-small">
-                    <input id="@Model.Id.ToString()" class="input-set-active" type="checkbox" @Html.Raw(Model.IsActive ? "checked" : " ")>
-                    <span class="switch-left">On</span>
-                    <span class="switch-right">Off</span>
-                </label>*@                
-                <div class="input-set-active" style="box-shadow: 0 0.125rem 0.625rem rgba(218, 98, 74, 0.4), 0 0.0625rem 0.125rem rgba(218, 98, 74, 0.5); border-radius:5px"  id="@Model.Id.ToString()">
-                    <input type="checkbox" class="" @Html.Raw(Model.IsActive ? "checked" : " ") data-toggle="toggle" onChange="SetActiveAjax">
-                </div>                   
+                        <input id="@Model.Id.ToString()" class="input-set-active" type="checkbox" @Html.Raw(Model.IsActive ? "checked" : " ")>
+                        <span class="switch-left">On</span>
+                        <span class="switch-right">Off</span>
+                    </label>*@
+                <div class="input-set-active toggle-shadow"
+                     id="@Model.Id.ToString()">
+                    <input type="checkbox" class="" @Html.Raw(Model.IsActive ? "checked" : " ") data-toggle="toggle">
+                </div>
             </div>
             <div class="widget-content-left mr-4">
                 @if (Model.IconPath != null)
@@ -48,7 +49,7 @@
                      style="display: inline-block;
                      margin-right: auto;">
                     <div>@Model.CreatedOn.Value.UtcDateTime.ToString("dd/MM/yyyy on HH:mm")</div>
-                    <div>@Model.Comment</div>                    
+                    <div>@Model.Comment</div>
                     <div>@Model.Token</div>
                 </div>
 
@@ -77,7 +78,6 @@
         </div>
     </div>
 </li>
-
 
 
 

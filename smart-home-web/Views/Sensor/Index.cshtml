@@ -256,5 +256,9 @@
             });
         }
         $(".input-set-active").on("click", SetActiveAjax);
+
+        $(".input-set-active").on("click", function () {
+            $(this).toggleClass("toggle-shadow");
+        });
     });
 </script>
