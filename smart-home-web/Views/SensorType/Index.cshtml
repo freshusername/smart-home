@@ -4,11 +4,6 @@
     ViewData["Title"] = "SensorTypes";
 }
 
-<style>
-    .modal-backdrop.in {
-        opacity: 0.5 !important;
-    }
-</style>
 
 <div class="app-main">
     <div class="app-main__outer">
@@ -37,9 +32,7 @@
                                         }
 
                                     </ul>
-                                </div>
-
-                                
+                                </div>                    
                             </div>
                         </div>
                     </div>
@@ -49,27 +42,10 @@
     </div>
 </div>
 
-
-
-            @*<th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Comment)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MeasurementType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MeasurementName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IconPath)
-            </th>*@
           
 
     @await Component.InvokeAsync("Modals")
-</div>
+
 
 
 <script src="~/lib/jquery/dist/jquery.js"></script>
@@ -79,7 +55,6 @@
         const modal = $("#modalWindow");
         const modalBody = modal.find(".modal-body");
         const tableBody = $("table").find("tbody");
-        $("#modal-delete-confirm").hide(0);
         $(".sensor-type-edit").click(SensorTypeEdit);
         $(".sensor-type-create").click(SensorTypeCreate);
         $(".sensor-type-delete").click(SensorTypeDeleteConfirm);

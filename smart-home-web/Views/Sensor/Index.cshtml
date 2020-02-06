@@ -7,13 +7,11 @@
 }
 <link href="~/css/OnOff.css" rel="stylesheet" />
 
-@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>*@
-
 <div class="app-main">
     <div class="app-main__outer">
         <div class="app-main__inner">
             <div class="app-header">
-                <div class="page-title-heading" >
+                <div class="page-title-heading">
                     @if (User.Identity.IsAuthenticated)
                     {
                         <div class="button-center">
@@ -37,8 +35,6 @@
 
                                     </ul>
                                 </div>
-
-                                
                             </div>
                         </div>
                     </div>
@@ -47,7 +43,7 @@
         </div>
     </div>
 </div>
-
+@await Component.InvokeAsync("Modals")
 
 <script src="~/lib/jquery/dist/jquery.js"></script>
 <script>

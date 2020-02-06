@@ -19,7 +19,7 @@
         </div>
 
         <div class="form-group">
-            <select asp-for="@Model.SensorTypeId" class="form-control">
+            <select asp-for="@Model.SensorTypeId" class="form-control" required>
                 <option value="@String.Empty">Select type</option>
                 @foreach (var sensortType in ViewBag.SensorTypes)
                 {
