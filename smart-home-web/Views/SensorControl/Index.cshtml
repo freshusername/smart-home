@@ -24,34 +24,32 @@
                     <div class="app-inner-layout__content pt-1">
                         <div class="tab-content">
                             <div class="container-fluid">
-                                <div class="row justify-content-center">
-                                    <div class="d-flex justify-content-center flex-wrap aligh-content-center">
+                                <div class="row">
+                                    <div class="d-flex">
                                         @foreach (var item in Model)
-                                        {<div class="" id="hide_@item.Id">
+                                        {<div class="m-3" id="hide_@item.Id">
                                                 <div class="card-hover-shadow-2x mb-3 card">
                                                     <div class="card-header">
                                                         @item.Name
                                                         <a asp-action="Edit" asp-controller="SensorControl" asp-route-Id="@item.Id" class="ml-auto mr-2">
                                                             <i class="pe-7s-config report-button" style="font-size:20px"></i>
                                                         </a>
-                                                        <a id="@item.Id" onclick="remove(@item.Id)" data-request-url="@Url.Action("Delete", "SensorControl")">
+                                                        <a id="@item.Id" class="link" onclick="remove(@item.Id)" data-request-url="@Url.Action("Delete", "SensorControl")">
                                                             <i class="pe-7s-close report-button" style="font-size:30px; padding:0px"></i>
                                                         </a>
                                                     </div>
-                                                    <div class="card-body">
-                                                        
+                                                    <div class="card-body">                                                        
                                                             <input type="hidden" name="id" value="@item.Id" />
                                                             <img src="https://t4.ftcdn.net/jpg/02/27/91/35/240_F_227913547_rHRaLadM6Wj2BtfS5Tu555SSjI7xB33s.jpg" class="card-img-center" width="120" height="120" />
                                                             <div class="input-set-active 
                                                                  @Html.Raw(item.IsActive ? "toggle-shadow" : " ")"
-                                                                 id="btn_@item.Id"
+                                                                 id="@item.Id"
                                                                  style="width:57px; margin-left:25%">
                                                                 <input type="checkbox"                                                                       
                                                                        @Html.Raw(item.IsActive ? "checked" : " ")
-                                                                       data-toggle="toggle"
-                                                                     
+                                                                       data-toggle="toggle"                                                                     
                                                                        data-request-url="@Url.Action("Change", "SensorControl")"
-                                                                       aria-pressed="@(item.IsActive ? "true" : "false")">
+                                                                       data-active="@Html.Raw(item.IsActive ? "active" : "inactive")">
                                                             </div>                                                     
                                                     </div>
                                                 </div>
@@ -97,15 +95,20 @@
     //    $(this).toggleClass("toggle-shadow");
     //});
 
-
-    $(".input-set-active").on("click", function () {
-        var url = $('#btn_' + clicked_id).attr('data-request-url');
-        debugger;
-        var isActiveAttribute = $('#btn_' + clicked_id).attr('aria-pressed');
-        var isActive = (isActiveAttribute === 'true');
+    $(".input-set-active").on("click", function () {  
+        $(this).toggleClass("toggle-shadow");
+        var isActive;
+        var item = $("#btn_" + this.id);
+        if (item.data("active") == "active") {
+            isActive = true;
+        }
+        else {
+            isActive = false;
+        }
+        
         $.ajax({
-            url: url,
-            data: { 'id': clicked_id, 'isActive': !isActive },
+            url: "@Url.Action("Change", "SensorControl")",
+            data: { 'id': this.id, 'isActive': isActive },
             type: "post",
             cache: false,
             success: function (savingStatus) {
@@ -123,7 +126,7 @@
         $("#hide_" + clicked_id).hide(function () {
 
         });
-
+        debugger;
         $.ajax({
             url: url,
             data: { 'id': clicked_id },
