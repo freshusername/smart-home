@@ -1,6 +1,10 @@
 ﻿@model smart_home_web.Models.SensorViewModel.SensorViewModel;
 
 
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+
 <li class="list-group-item sensor-row" data-sensor-row-id="@Model.Id">
     <div class="widget-content p-0">
         <div class="widget-content-wrapper">
@@ -10,7 +14,7 @@
                         <span class="switch-left">On</span>
                         <span class="switch-right">Off</span>
                     </label>*@
-                <div class="input-set-active toggle-shadow"
+                <div class="input-set-active @Html.Raw(Model.IsActive ? "toggle-shadow" : " ")"
                      id="@Model.Id.ToString()">
                     <input type="checkbox" class="" @Html.Raw(Model.IsActive ? "checked" : " ") data-toggle="toggle">
                 </div>

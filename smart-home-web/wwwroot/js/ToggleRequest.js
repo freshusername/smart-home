@@ -1,5 +1,6 @@
 ﻿function set_active(clicked_id) {
-    var url = $('#btn_'+clicked_id).attr('data-request-url');
+    var url = $('#btn_' + clicked_id).attr('data-request-url');
+    debugger;
     var isActiveAttribute = $('#btn_' + clicked_id).attr('aria-pressed');
     var isActive = (isActiveAttribute === 'true');
     $.ajax({
