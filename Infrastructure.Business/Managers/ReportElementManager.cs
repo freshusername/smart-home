@@ -38,7 +38,7 @@ namespace Infrastructure.Business.Managers
             unitOfWork.Save();
         }
 
-        public async Task CreateReportElement(ReportElementDto reportElementDto, string userId)
+        public async Task<bool> CreateReportElement(ReportElementDto reportElementDto, string userId)
         {
             UserId = userId;
             var reportElements = await unitOfWork.ReportElementRepo.GetAll();
@@ -74,6 +74,7 @@ namespace Infrastructure.Business.Managers
 
                 await unitOfWork.ReportElementRepo.Insert(reportElement);
                 unitOfWork.Save();
+                return true;
             }
             else
             {
@@ -84,8 +85,8 @@ namespace Infrastructure.Business.Managers
                 reportElement.Y = 0;
                 await unitOfWork.ReportElementRepo.Insert(reportElement);
                 unitOfWork.Save();
+                return true;
             }
-
         }
 
         public async Task<HeatmapDto> GetHeatmapById(int reportElementId)
