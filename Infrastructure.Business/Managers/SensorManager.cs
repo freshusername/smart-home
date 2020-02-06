@@ -24,6 +24,10 @@ namespace Infrastructure.Business.Managers
 
         public async Task<OperationDetails> Create(SensorDto sensorDto)
         {
+            if (sensorDto == null || unitOfWork.SensorRepo.GetByToken(sensorDto.Token) != null)
+            {
+                return new OperationDetails(false, "err", "err");
+            }
             try
             {
                 Sensor sensor = mapper.Map<SensorDto, Sensor>(sensorDto);
@@ -48,6 +52,10 @@ namespace Infrastructure.Business.Managers
 
         public OperationDetails Update(SensorDto sensorDto)
         {
+            if (sensorDto == null || unitOfWork.SensorRepo.GetById(sensorDto.Id).Result==null)
+            {
+                return new OperationDetails(false, "err", "err");
+            }
             Sensor sensor = mapper.Map<SensorDto, Sensor>(sensorDto);
             try
             {
@@ -64,6 +72,8 @@ namespace Infrastructure.Business.Managers
         public async Task<OperationDetails> Delete(int sensorId)
         {
             Sensor sensor = await unitOfWork.SensorRepo.GetById(sensorId);
+            if (sensor == null)
+                return new OperationDetails(false, "err", "err");
             try
             {
                 await unitOfWork.SensorRepo.Delete(sensor);
