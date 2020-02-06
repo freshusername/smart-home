@@ -7,7 +7,7 @@
         <input asp-for="Name" class="form-control" required />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
-    @if (!String.IsNullOrEmpty(ViewBag.UserID))
+    @if (User.Identity.IsAuthenticated)
     {
         <div class="form-group">
             <label asp-for="IsPublic" class="control-label"></label>

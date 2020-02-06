@@ -79,7 +79,7 @@
 
         function SensorTypeEdit() {
             currentRow = $(this).closest(".sensor-type-row");
-            modal.modal("hide");
+            
             $.ajax({
                 url: '@Url.Action("Edit","SensorType")',
                 data: { id: currentRow.data("sensor-type-row-id") },
@@ -88,11 +88,12 @@
                     return true;
                 },
                 success: function (data) {
+                    modalBody.empty();
                     modal.find(".modal-title").text("Edit Sensor Type");
                     modalBody.prepend(data);
                     modalBody.on("submit", "#modal-form-edit", ModalFormEditSubmit);
                     modalBody.on("click", ".back-to-list", HideModal);
-                    modal.modal("show");
+                    modal.modal();
                 },
                 error: function (res) {
                     console.log(res);
@@ -121,6 +122,7 @@
         }
 
         function SensorTypeDeleteConfirm() {
+            modal.modal("hide");
             currentRow = $(this).closest(".sensor-type-row");
             modal.find(".modal-title").text("Are you sure ?");
             $("#modal-delete-confirm").clone().prependTo(modalBody);
@@ -191,7 +193,7 @@
                 contentType: false,
                 data: fd,
                 beforeSend: function () {
-                    modal.modal("hide");;
+                    modal.modal("hide");
                     currentRow.hide(800);
                     return true;
                 },

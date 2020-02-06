@@ -76,11 +76,7 @@ namespace smart_home_web.Controllers
         }
 
         [Authorize]
-        public IActionResult Create()
-        {
-            var userId = _userManager.GetUserId(User);
-            return ViewComponent("DashboardCreate", userId);
-        }
+        public IActionResult Create() => ViewComponent("DashboardCreate");
 
         [Authorize]
         [HttpPost]
