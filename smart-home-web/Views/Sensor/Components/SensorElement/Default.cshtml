@@ -25,7 +25,7 @@
                     <p>No image was added</p>
                 }
             </div>
-            <div class="widget-content-left">
+            <div class="widget-content-left" style="width:250px;">
                 <div class="widget-heading">
                     @Model.Name
                 </div>
@@ -33,7 +33,7 @@
                     @Model.SensorTypeName
                 </div>
             </div>
-            <div class="ml-auto" style="margin-right: 40%">
+            <div class="mr-auto">
                 <div class="widget-content-right"
                      style="
                       text-align: right;
@@ -49,7 +49,18 @@
                      style="display: inline-block;
                      margin-right: auto;">
                     <div>@Model.CreatedOn.Value.UtcDateTime.ToString("dd/MM/yyyy on HH:mm")</div>
-                    <div>@Model.Comment</div>
+                    <div>
+                        @{
+                            if (!string.IsNullOrEmpty(@Model.Comment))
+                            {
+                                @Model.Comment
+                            }
+                            else
+                            {
+                                <span style="color:darkgrey">None</span>
+                            }
+                        }
+                    </div>
                     <div>@Model.Token</div>
                 </div>
 
