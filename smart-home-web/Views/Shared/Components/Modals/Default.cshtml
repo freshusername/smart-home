@@ -1,6 +1,6 @@
 ﻿<style>
     .modal-backdrop.in {
-        opacity: 0.3 !important;
+        opacity: 0.5 !important;
     }
 </style>
 
@@ -41,17 +41,14 @@
     modal.on('hidden.bs.modal', ModalCleaning);
 
     NoElementsDisplay();
+
     function NoElementsDisplay() {
-        let row = $(".no-values-row");
+        let row = $(".no-elements-row");
         if (allElementsContainer.children().length > 0) {
             row.hide();
         } else {
             row.show();
         }
-    }
-
-    function HideModal() {
-        modal.modal("hide");
     }
 
     function ModalCleaning() {
@@ -61,20 +58,18 @@
 
     function ElementEdit() {
         currentElement = $(this).closest(".element-container");
-        HideModal();
+        ModalCleaning();
         $.ajax({
             url: '@Url.Action("Edit")',
             data: { id: currentElement.data("element-container-id") },
             beforeSend: function () {
-                ModalCleaning();
                 modal.fadeIn(600);
                 return true;
             },
             success: function (data) {
-                modal.find(".modal-title").text("Edit" + elementName);
+                modal.find(".modal-title").text("Edit " + elementName);
                 modalBody.prepend(data);
                 modalBody.on("submit", ".modal-form-edit", ModalFormEdit);
-                modalBody.on("click", ".back-to-list", HideModal);
                 modal.modal("show");
             },
             error: function (res) {
@@ -97,7 +92,7 @@
             contentType: false,
             data: fd,
             beforeSend: function () {
-                HideModal();
+                modal.modal("hide");
                 currentElement.hide(600);
                 return true;
             },
@@ -117,19 +112,17 @@
     }
 
     function ElementCreate() {
-        HideModal();
+        ModalCleaning();
         $.ajax({
             url: '@Url.Action("Create")',
             beforeSend: function () {
-                ModalCleaning();
                 modal.fadeIn(600);
                 return true;
             },
             success: function (data) {
-                modal.find(".modal-title").text("Create" + elementName);
+                modal.find(".modal-title").text("Create " + elementName);
                 modalBody.prepend(data);
                 modalBody.on("submit", ".modal-form-create", ModalFormCreateSubmit);
-                modalBody.on("click", ".back-to-list", HideModal);
                 modal.modal("show");
             },
             error: function (res) {
@@ -152,7 +145,7 @@
             contentType: false,
             data: fd,
             beforeSend: function () {
-                HideModal();
+                modal.modal("hide");
                 return true;
             },
             success: function (data) {
@@ -168,6 +161,7 @@
     }
 
     function ElementDelete() {
+        ModalCleaning();
         currentElement = $(this).closest(".element-container");
         modal.find(".modal-title").text("Are you sure ?");
         $("#modal-delete-confirm").clone().prependTo(modalBody);
@@ -183,7 +177,7 @@
             url: '@Url.Action("Delete")',
             data: { id: $(this).data("element-id") },
             beforeSend: function () {
-                HideModal();
+                modal.modal("hide");
                 currentElement.hide(600, function () {
                     currentElement.remove();
                     NoElementsDisplay();
