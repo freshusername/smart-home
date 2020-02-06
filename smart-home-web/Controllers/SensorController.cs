@@ -3,7 +3,7 @@ using Domain.Core.Model;
 using Domain.Core.Model.Enums;
 using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.DTOs.SensorType;
-using Infrastructure.Business.Managers;
+using Infrastructure.Business.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -87,7 +87,6 @@ namespace smart_home_web.Controllers
                 ModelState.AddModelError(res.Property, res.Message);
                 return View(sensor);
             }
-            return RedirectToAction("Index", "Sensor");
         }
 
         [Authorize]
@@ -97,14 +96,6 @@ namespace smart_home_web.Controllers
             EditSensorViewModel sensorViewModel = _mapper.Map<SensorDto, EditSensorViewModel>(sensorDto);
             return ViewComponent("SensorEdit", sensorViewModel);
         }
-
-        /*[Authorize]
-        public async Task<ActionResult> Delete(int sensorId)
-        {
-            var sensorDto = await _sensorManager.GetSensorByIdAsync(sensorId);
-            SensorViewModel sensorViewModel = _mapper.Map<SensorDto, SensorViewModel>(sensorDto);
-            return View("Delete", sensorViewModel);
-        }*/
 
         [HttpPost]
         [Authorize]

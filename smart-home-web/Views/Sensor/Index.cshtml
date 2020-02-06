@@ -13,50 +13,35 @@
 </style>
 @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>*@
 
-<h2>Sensors List</h2>
-@if (User.Identity.IsAuthenticated)
-{
-    <div class="button-center">
-        <a class="btn btn-success sensor-create">Add new sensor</a>
-    </div>
-}
-<table class="table text-center" data-save-url="@Url.Action("SetActive", "Sensor")">
-    <thead>
-        <tr>
-            <th scope="col">On/Off</th>
-            <th scope="col">Icon</th>
-            <th scope="col">Sensor</th>
-            <th scope="col">Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr class="no-values-row" style="display:none;" >
-            <td colspan="4">No Sensors</td>
-        </tr>
-        @foreach (var item in Model)
-        {
-            @await Component.InvokeAsync("SensorElement", item)
-        }
-    </tbody>
-</table>
-
-@*class 'fade' don't working in Bootstrap 4*@
-<div class="modal" id="modalWindow" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-        <div class="modal-content">
-
-            <div class="modal-header">
-                <h4 class="modal-title"></h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-body"></div>
+<div class="container">
+    <h2>Sensors List</h2>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="button-center">
+            <a class="btn btn-success sensor-create">Add new sensor</a>
         </div>
-    </div>
-</div>
+    }
+    <table class="table text-center" data-save-url="@Url.Action("SetActive", "Sensor")">
+        <thead>
+            <tr>
+                <th scope="col">On/Off</th>
+                <th scope="col">Icon</th>
+                <th scope="col">Sensor</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="no-values-row" style="display:none;">
+                <td colspan="4">No Sensors</td>
+            </tr>
+            @foreach (var item in Model)
+            {
+                @await Component.InvokeAsync("SensorElement", item)
+            }
+        </tbody>
+    </table>
 
-<div id="modal-delete-confirm">
-    <a class="btn btn-primary" id="modal-delete-button" data-sensor-id="">Delete</a>
-    <a class="btn btn-secondary" data-dismiss="modal">Cancel</a>
+    @await Component.InvokeAsync("Modals")
 </div>
 
 
@@ -130,7 +115,7 @@
             modal.find(".modal-title").text("Are you sure ?");
             $("#modal-delete-confirm").clone().prependTo(modalBody);
             $("#modal-delete-confirm").show(0);
-            $("#modal-delete-button").data("sensor-type-id", currentRow.data("sensor-row-id"));
+            $("#modal-delete-button").data("element-id", currentRow.data("sensor-row-id"));
             modalBody.on("click", "#modal-delete-button", SensorTypeDelete);
             modal.fadeIn(600);
             modal.modal("show");

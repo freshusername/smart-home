@@ -9,7 +9,7 @@ using System.Linq;
 using System;
 using Microsoft.AspNetCore.Identity;
 
-namespace Infrastructure.Business.Managers
+namespace Infrastructure.Business.Interfaces
 {
     public class DashboardManager : BaseManager, IDashboardManager
     {
@@ -22,7 +22,7 @@ namespace Infrastructure.Business.Managers
 
         public async Task<OperationDetails> Create(DashboardDto dashboardDto)
         {
-            var dashboard = mapper.Map<DashboardDto, Dashboard>(dashboardDto);
+            Dashboard dashboard = mapper.Map<DashboardDto, Dashboard>(dashboardDto);
             if (String.IsNullOrEmpty(dashboard.Name))
                 return new OperationDetails(false, "Name is null", "Name");
             await unitOfWork.DashboardRepo.Insert(dashboard);
@@ -74,14 +74,25 @@ namespace Infrastructure.Business.Managers
             return new OperationDetails(true, "Something is wrong", "");
         }
 
-        public async Task Update(int id, string name)
+        public OperationDetails Update(DashboardDto dashboardDto)
         {
-            Dashboard dashboard = await unitOfWork.DashboardRepo.GetById(id);
-            if (dashboard.Name == name)
-                return;
-            dashboard.Name = name;
-            await unitOfWork.DashboardRepo.Update(dashboard);
-            unitOfWork.Save();
+            Dashboard dashboard = mapper.Map<DashboardDto, Dashboard>(dashboardDto);
+            try
+            {
+                unitOfWork.DashboardRepo.Update(dashboard);
+                unitOfWork.Save();
+            }
+            catch (Exception ex)
+            {
+                return new OperationDetails(false, ex.Message, "Error");
+            }
+            return new OperationDetails(true, "New dashboard has been added", "Name");
+        }
+
+        public async Task<DashboardDto> GetLastDashboard()
+        {
+            var dashboard = await unitOfWork.DashboardRepo.GetLastDashboard();
+            return mapper.Map<Dashboard, DashboardDto>(dashboard);
         }
     }
 }

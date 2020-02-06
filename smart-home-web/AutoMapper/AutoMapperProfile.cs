@@ -97,6 +97,9 @@ namespace smart_home_web.AutoMapper
             CreateMap<DashboardDto, DashboardViewModel>()
                 .ForMember(dvm => dvm.DashCreatorUserName, map => map.MapFrom(dto => dto.AppUser.UserName));
 
+            CreateMap<CreateDashboardViewModel, DashboardDto>().ReverseMap();
+            CreateMap<EditDashboardViewModel, DashboardDto>().ReverseMap();
+
             CreateMap<ReportElement, GaugeDto>().ReverseMap();
             CreateMap<GaugeDto, GaugeViewModel>().ReverseMap();
 
