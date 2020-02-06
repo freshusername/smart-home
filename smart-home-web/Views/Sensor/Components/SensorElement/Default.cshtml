@@ -1,58 +1,152 @@
 ﻿@model smart_home_web.Models.SensorViewModel.SensorViewModel;
 
-<tr class="sensor-row" data-sensor-row-id="@Model.Id">
-    <td>
-        <label class="rocker rocker-small">
-            <input id="@Model.Id.ToString()" class="input-set-active" type="checkbox" @Html.Raw(Model.IsActive ? "checked" : " ")>
-            <span class="switch-left">On</span>
-            <span class="switch-right">Off</span>
-        </label>
-    </td>
-    <td>
-        @if (Model.IconPath != null)
-        {
-            <img src="@Model.IconPath" width="64" height="64" />
-        }
-        else
-        {
-            <p>No image was added</p>
-        }
-    </td>
-    <td class="text-left">
-        <div id="sensor-details">
-            <h5>Name: @Model.Name</h5>
-            <h5>Type: @Model.SensorTypeName</h5>
-        </div>
-        <i class="fa fa-eye-slash" style="cursor: help;"></i>
-        <div class="sensor-details-additional" style="display: none;">
-            <h5>Created: @Model.CreatedOn.Value.UtcDateTime.ToString("dd/MM/yyyy on HH:mm")</h5>
-            <h5>Comment: @Model.Comment</h5>
-            <h5>
-                Activated: <i class="fa @(Model.IsActive ? "fa-check-circle" : "fa-times-circle") sensor-activated"></i>
-            </h5>
-            <h5>Token: @Model.Token</h5>
 
-        </div>
-    </td>
+<li class="list-group-item sensor-row" data-sensor-row-id="@Model.Id">
+    <div class="widget-content p-0">
+        <div class="widget-content-wrapper">
+            <div class="widget-content-left mr-4 ml-3">
+                @*<label class="rocker rocker-small">
+                        <input id="@Model.Id.ToString()" class="input-set-active" type="checkbox" @Html.Raw(Model.IsActive ? "checked" : " ")>
+                        <span class="switch-left">On</span>
+                        <span class="switch-right">Off</span>
+                    </label>*@
+                <div class="input-set-active toggle-shadow"
+                     id="@Model.Id.ToString()">
+                    <input type="checkbox" class="" @Html.Raw(Model.IsActive ? "checked" : " ") data-toggle="toggle">
+                </div>
+            </div>
+            <div class="widget-content-left mr-4">
+                @if (Model.IconPath != null)
+                {
+                    <img src="@Model.IconPath" width="52" height="52" />
+                }
+                else
+                {
+                    <p>No image was added</p>
+                }
+            </div>
+            <div class="widget-content-left" style="width:250px;">
+                <div class="widget-heading">
+                    @Model.Name
+                </div>
+                <div class="widget-subheading">
+                    @Model.SensorTypeName
+                </div>
+            </div>
+            <div class="mr-auto">
+                <div class="widget-content-right"
+                     style="
+                      text-align: right;
+                      display: inline-block;
+                      margin-left: auto;">
 
-    <td>
-        <div class="col-xs-3">
-            <a class="btn btn-sm btn-success text-center"
-               asp-controller="History"
-               asp-action="Graph"
-               asp-route-sensorId="@Model.Id"
-               asp-route-days="99999">
-                <i class="fas fa-chart-bar"></i>
-            </a>
-            @if (User.Identity.IsAuthenticated)
+                    <div class="text-right opacity-6"><b>Created:</b></div>
+                    <div class="text-right opacity-6"><b>Comment:</b></div>
+                    <div class="text-right opacity-6"><b>Token:</b></div>
+                </div>
+
+                <div class="text-left ml-3"
+                     style="display: inline-block;
+                     margin-right: auto;">
+                    <div>@Model.CreatedOn.Value.UtcDateTime.ToString("dd/MM/yyyy on HH:mm")</div>
+                    <div>
+                        @{
+                            if (!string.IsNullOrEmpty(@Model.Comment))
+                            {
+                                @Model.Comment
+                            }
+                            else
+                            {
+                                <span style="color:darkgrey">None</span>
+                            }
+                        }
+                    </div>
+                    <div>@Model.Token</div>
+                </div>
+
+            </div>
+            <div class="mr-3" style="width: 140px;">
+                <div role="group" class="btn-group">
+                    <a class="btn-shadow btn btn-primary sensor-create"
+                       asp-controller="History"
+                       asp-action="Graph"
+                       asp-route-sensorId="@Model.Id"
+                       asp-route-days="99999">
+                        <i class="text-white pe-7s-graph2" style="font-size:20px"></i>
+                    </a>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a class="btn btn-shadow btn-info sensor-edit">
+                            <i class="text-white pe-7s-config" style="font-size:20px"></i>
+                        </a>
+                        <a class="btn btn-shadow btn-danger sensor-delete p-0 pl-2 pr-2">
+                            <i class="text-white pe-7s-close" style="font-size:30px;"></i>
+                        </a>
+                    }
+                </div>
+
+            </div>
+        </div>
+    </div>
+</li>
+
+
+
+
+
+@*<tr class="sensor-row" data-sensor-row-id="@Model.Id">
+        <td>
+            <label class="rocker rocker-small">
+                <input id="@Model.Id.ToString()" class="input-set-active" type="checkbox" @Html.Raw(Model.IsActive ? "checked" : " ")>
+                <span class="switch-left">On</span>
+                <span class="switch-right">Off</span>
+            </label>
+        </td>
+        <td>
+            @if (Model.IconPath != null)
             {
-                <a class="btn btn-sm btn-info text-center sensor-edit">
-                    <i class="fa fa-edit"></i>
-                </a>
-                <a class="btn btn-sm btn-danger text-center sensor-delete">
-                    <i class="fa fa-trash"></i>
-                </a>
+                <img src="@Model.IconPath" width="64" height="64" />
             }
-        </div>
-    </td>
-</tr>
+            else
+            {
+                <p>No image was added</p>
+            }
+        </td>
+        <td class="text-left">
+            <div id="sensor-details">
+                <h5>Name: @Model.Name</h5>
+                <h5>Type: @Model.SensorTypeName</h5>
+            </div>
+            <i class="fa fa-eye-slash" style="cursor: help;"></i>
+            <div class="sensor-details-additional" style="display: none;">
+                <h5>Created: @Model.CreatedOn.Value.UtcDateTime.ToString("dd/MM/yyyy on HH:mm")</h5>
+                <h5>Comment: @Model.Comment</h5>
+                <h5>
+                    Activated: <i class="fa @(Model.IsActive ? "fa-check-circle" : "fa-times-circle") sensor-activated"></i>
+                </h5>
+                <h5>Token: @Model.Token</h5>
+
+            </div>
+        </td>
+
+        <td>
+            <div class="col-xs-3">
+                <a class="btn btn-sm btn-success text-center"
+                   asp-controller="History"
+                   asp-action="Graph"
+                   asp-route-sensorId="@Model.Id"
+                   asp-route-days="99999">
+                    <i class="fas fa-chart-bar"></i>
+                </a>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a class="btn btn-sm btn-info text-center sensor-edit">
+                        <i class="fa fa-edit"></i>
+                    </a>
+                    <a class="btn btn-sm btn-danger text-center sensor-delete">
+                        <i class="fa fa-trash"></i>
+                    </a>
+                }
+            </div>
+        </td>
+    </tr>*@

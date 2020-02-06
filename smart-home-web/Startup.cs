@@ -136,7 +136,6 @@ namespace smart_home_web
                     name: "default",
                     template: "{controller=Account}/{action=Login}/{id?}");
             });
-
         }
     }
 }

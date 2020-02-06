@@ -9,47 +9,64 @@
         opacity: 0.5 !important;
     }
 </style>
-<div class="container">
-    <h2>List of sensor types</h2>
 
-    @if (User.Identity.IsAuthenticated)
-    {
-        <div class="button-center">
-            <a class="btn btn-success sensor-type-create">Create New</a>
+<div class="app-main">
+    <div class="app-main__outer">
+        <div class="app-main__inner">
+            <div class="app-header">
+                <div class="page-title-heading">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <div class="button-center">
+                            <a class="mb-2 mr-2 btn btn-primary text-white sensor-type-create">Add new sensor type</a>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="app-inner-layout app-inner-layout-page">
+                <div class="app-inner-layout__wrapper">
+                    <div class="app-inner-layout__content" style="padding-top: 0px">
+                        <div class="tab-content">
+                            <div class="container-fluid">
+                                <div class="main-card mb-3 card">
+                                    <ul class="list-group list-group-flush">
+
+                                        @foreach (var item in Model)
+                                        {
+                                            @await Component.InvokeAsync("SensorTypeElement", item)
+                                        }
+
+                                    </ul>
+                                </div>
+
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    }
+    </div>
+</div>
 
-    <table class="table text-center">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Name)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Comment)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.MeasurementType)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.MeasurementName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.IconPath)
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="no-values-row" style="display:none;">
-                <td colspan="5">No Sensor Types</td>
-            </tr>
-            @foreach (var item in Model)
-            {
-                @await Component.InvokeAsync("SensorTypeElement", item)
-            }
-        </tbody>
-    </table>
+
+
+            @*<th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Comment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MeasurementType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MeasurementName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IconPath)
+            </th>*@
+          
 
     @await Component.InvokeAsync("Modals")
 </div>
