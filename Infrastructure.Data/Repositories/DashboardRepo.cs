@@ -21,6 +21,7 @@ namespace Infrastructure.Data.Repositories
         {
             return await context.Dashboards
                 .Include(d => d.AppUser)
+                .Include(d => d.Icon)
                 .Include(d => d.ReportElements).ToListAsync();
         }
 
@@ -33,6 +34,7 @@ namespace Infrastructure.Data.Repositories
         {
             return await context.Dashboards
                 .Include(d => d.AppUser)
+                .Include(d => d.Icon)
                 .Include(d => d.ReportElements)
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
@@ -43,9 +45,21 @@ namespace Infrastructure.Data.Repositories
                    .Include(d => d.AppUser)
                         .Where(i => i.IsPublic == true && i.AppUserId != userId)
                    .Include(d => d.ReportElements)
+                   .Include(d => d.Icon)
                    .ToListAsync();
 
             return dashs;
+        }
+
+        public async Task<Dashboard> GetLastDashboard()
+        {
+            var dashboard = await context.Dashboards
+                .Include(d => d.AppUser)
+                .Include(d => d.Icon)
+                .Include(d => d.ReportElements)
+                .LastOrDefaultAsync();
+
+            return dashboard;
         }
     }
 }

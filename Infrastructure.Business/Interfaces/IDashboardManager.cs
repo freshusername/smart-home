@@ -14,9 +14,10 @@ namespace Infrastructure.Business.Interfaces
         Task<IEnumerable<DashboardDto>> GetByUserId(string userId);
         Task<IEnumerable<DashboardDto>> GetAllPublic(string userId);
 
-        Task Update(int id, string name);
+        OperationDetails Update(DashboardDto dashboardDto);
 
         Task<OperationDetails> Create(DashboardDto dashboardDto);
         Task<OperationDetails> DeleteById(int id);
+        Task<DashboardDto> GetLastDashboard();
     }
 }

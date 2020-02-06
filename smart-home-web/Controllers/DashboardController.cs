@@ -20,17 +20,20 @@ namespace smart_home_web.Controllers
         private readonly IMapper _mapper;
         private IHostingEnvironment _env;
         private IDashboardManager _dashboardManager;
+        private readonly IIconManager _iconManager;
         private UserManager<AppUser> _userManager;
 
         public DashboardController(
             IMapper mapper,
             IHostingEnvironment env,
             IDashboardManager dashboardManager,
+            IIconManager iconManager,
             UserManager<AppUser> userManager)
         {
             _mapper = mapper;
             _env = env;
             _dashboardManager = dashboardManager;
+            _iconManager = iconManager;
             _userManager = userManager;
         }
 
@@ -43,7 +46,7 @@ namespace smart_home_web.Controllers
         }
 
 
-        public async Task<IActionResult> Index(int id)
+        public async Task<IActionResult> Index()
         {
             var userId = _userManager.GetUserId(User);
             if (User.Identity.IsAuthenticated)
@@ -65,27 +68,18 @@ namespace smart_home_web.Controllers
                 var dashboards = await _dashboardManager.GetAllPublic(userId);
                 var result = _mapper.Map<IEnumerable<DashboardDto>, IEnumerable<DashboardViewModel>>(dashboards);
 
-                if (result.Count() == 0)
+                return View(new DashboardIndexViewModel
                 {
-                    return View(new DashboardIndexViewModel
-                    {
-                        Dashboards = result.Reverse()
-                    });
-                }
-                else
-                {
-                    return View(new DashboardIndexViewModel
-                    {
-                        Dashboards = result.Reverse()
-                    });
-                }
+                    Dashboards = result.Reverse()
+                });
             }
         }
 
         [Authorize]
         public IActionResult Create()
         {
-            return ViewComponent("DashboardCreate");
+            var userId = _userManager.GetUserId(User);
+            return ViewComponent("DashboardCreate", userId);
         }
 
         [Authorize]
@@ -98,12 +92,17 @@ namespace smart_home_web.Controllers
             }
 
             DashboardDto dashboardDto = _mapper.Map<CreateDashboardViewModel, DashboardDto>(model);
+            if (model.IconFile != null)
+                dashboardDto.IconId = await _iconManager.CreateAndGetIconId(model.IconFile);
+
+            if(!dashboardDto.IsPublic)
+                dashboardDto.AppUserId = _userManager.GetUserId(User);
+
             OperationDetails result = await _dashboardManager.Create(dashboardDto);
             if (result.Succeeded)
             {
-                var dashboardDtos = await _dashboardManager.GetAll();
-                var dashboard = _mapper.Map<DashboardDto, DashboardViewModel>(dashboardDtos.Last());
-                return ViewComponent("Dashboard", new { model = dashboard });
+                DashboardDto dashboardDtoFromDB = await _dashboardManager.GetLastDashboard();
+                return ViewComponent("DashboardElement", _mapper.Map<DashboardDto, DashboardViewModel>(dashboardDtoFromDB));
             }
             else
             {
@@ -114,10 +113,37 @@ namespace smart_home_web.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, string name)
+        public async Task<IActionResult> Edit(EditDashboardViewModel model)
         {
-            await _dashboardManager.Update(id, name);
-            return Ok();
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            DashboardDto dashboardDto = _mapper.Map<EditDashboardViewModel, DashboardDto>(model);
+            if (model.IconFile != null)
+            {
+                dashboardDto.IconId = await _iconManager.CreateAndGetIconId(model.IconFile);
+            }
+            if (dashboardDto.IsPublic)
+                dashboardDto.AppUserId = null;
+
+            try
+            {
+                _dashboardManager.Update(dashboardDto);
+                DashboardDto dashboardDtoFromDB = await _dashboardManager.GetLastDashboard();
+                return ViewComponent("DashboardElement", _mapper.Map<DashboardDto, DashboardViewModel>(dashboardDtoFromDB));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        public async Task<ActionResult> Edit(int id)
+        {
+            var dashboardDto = await _dashboardManager.GetById(id);
+            EditDashboardViewModel model = _mapper.Map<DashboardDto, EditDashboardViewModel>(dashboardDto);
+            return ViewComponent("DashboardEdit", model);
         }
 
         [Authorize]

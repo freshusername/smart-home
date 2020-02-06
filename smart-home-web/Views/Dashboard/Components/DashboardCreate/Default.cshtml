@@ -7,11 +7,14 @@
         <input asp-for="Name" class="form-control" required />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label asp-for="IsPublic" class="control-label"></label>
-        <input asp-for="IsPublic" type="checkbox" class="form-control" />
-        <span asp-validation-for="IsPublic" class="text-danger"></span>
-    </div>
+    @if (!String.IsNullOrEmpty(ViewBag.UserID))
+    {
+        <div class="form-group">
+            <label asp-for="IsPublic" class="control-label"></label>
+            <input asp-for="IsPublic" type="checkbox" class="form-control" />
+            <span asp-validation-for="IsPublic" class="text-danger"></span>
+        </div>
+    }
     <div class="form-group">
         <label asp-for="@Model.IconFile" class="control-label"></label>
         <input asp-for="@Model.IconFile" class="form-control modal-form-file" onchange="loadFile(event)" type="file" accept=".jpg, .jpeg, .png" />

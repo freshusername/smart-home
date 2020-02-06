@@ -3,41 +3,37 @@
 @{
     ViewData["Title"] = "Dashboards";
 }
-
 @*<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />*@
-    <style>
-        .modal-backdrop.in {
-            opacity: 0.5 !important;
-        }
-    </style>
+<style>
+    .modal-backdrop.in {
+        opacity: 0.5 !important;
+    }
+</style>
 @*WRAPPER*@
 <div class="app-main">
     <div class="app-main__outer">
         <div class="app-inner-layout app-inner-layout-page">
             <div class="app-inner-layout__wrapper">
                 <div class="app-inner-layout__content">
-
                     @*BODY*@
                     <div class="row tab-content">
                         <div class="container-fluid">
-
                             <div class="row justify-content-center">
-
                                 @*<div id="no_dashboards" class="hidden">
                                         <h2>No public dashboards.</h2>
                                     </div>*@
-
                                 <div class="d-flex justify-content-center flex-wrap aligh-content-center dashboards">
-
+                                    <div class="no-values-row" style="display:none;">
+                                        <p>No Dashboards</p>
+                                    </div>
                                     @foreach (var dashboard in Model.Dashboards)
                                     {
                                         <div class="col-md-6 col-lg-3 dashboard_element">
-                                            @await Component.InvokeAsync("DashboardElement", new { model = dashboard })
+                                            @await Component.InvokeAsync("DashboardElement", dashboard)
                                         </div>
                                     }
                                 </div>
                             </div>
-
                             @*NEW DASHBOARD CREATING*@
                             <div class="d-flex justify-content-center">
                                 @if (User.Identity.IsAuthenticated)
@@ -50,118 +46,19 @@
                                 }
                             </div>
                         </div>
-                        @await Component.InvokeAsync("Modals")
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-    <script src="~/lib/jquery/dist/jquery.js"></script>
-    <script>
+@await Component.InvokeAsync("Modals")
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script>
 
         $(function () {
-
-            //function no_dashboards_show() {
-            //    if ($("#dashboards").children(".dashboard_element").length == 0) {
-            //        $("#no_dashboards").show();
-            //    }
-            //}
-            //no_dashboards_show();
-
-            ////function edit_dashboard() {
-            ////    event.preventDefault();
-            ////    let parent = $(this).closest(".dashboard_element");
-            ////    let open = parent.find(".dash_open");
-            ////    open.toggleClass("disabled");
-            ////    let form = parent.find(".form_edit_name");
-            ////    let name_value = form.find(".form_dash_name").val();
-            ////    let id_value = parent.find(".dash_id").data("dash-id");
-
-            ////    $.ajax({
-            ////        url: form.data("dash-url"),
-            ////        data: { name: name_value, id: id_value },
-            ////        beforeSend: function () {
-            ////            parent.find(".name_header").text(name_value);
-            ////            parent.find(".dash_name_edit").hide();
-            ////            parent.find(".dash_name").show();
-            ////        },
-            ////        error: function (res) {
-            ////            console.log(res);
-            ////        },
-            ////        success: function () {
-            ////            open.toggleClass("disabled");
-            ////        },
-            ////        type: "POST"
-            ////    });
-            ////}
-
-            //function collapse_button() {
-            //    var selector = $(this).data("target");
-            //    $(selector).toggleClass('in');
-            //}
-
-            //function delete_dashboard() {
-            //    let parent = $(this).closest(".dashboard_element");
-            //    if (confirm("Are you sure?")) {
-            //        $.ajax({
-            //            url: $(this).data("dash-url"),
-            //            data: { id: parent.children().data("dash-id") },
-            //            beforeSend: function () {
-            //                parent.hide(500, function () {
-            //                    parent.remove();
-            //                })
-            //                return true;
-            //            },
-            //            error: function (result) {
-            //                console.log(result);
-            //            },
-            //            success: function () {
-            //                no_dashboards_show();
-            //            }
-            //        });
-            //    }
-            //}
-
-            //function create_dashboard() {
-            //    event.preventDefault();
-            //    $(".dash_name_edit").hide();
-            //    $(".dash_name").show();
-            //    $.ajax({
-            //        url: $(this).data("dash-url"),
-            //        data: { name: $("#form_dash_name").val(), isPublic: $("#form_dash_isPublic").prop('checked') },
-            //        error: function (result) {
-            //            console.log(result);
-            //        },
-            //        success: function (data) {
-            //            let element = $("<div  class='col-md-6 col-lg-3 dashboard_element' >" + data + "</div>");
-            //            element.hide();
-            //            $('#dashboards').prepend(element);
-            //            element.show(500);
-            //            element.on("click", ".dash_remove", delete_dashboard);
-            //            element.on("click", ".dash_edit", edit_dashboard);
-
-            //            if ($("#no_dashboards").is(":visible")) {
-            //                $("#no_dashboards").hide();
-            //            }
-            //            $("#form_dash_name").val("");
-            //            var selector = $("[data-toggle='toggle']").data("target");
-            //            $(selector).toggleClass('in');
-            //            $("#dash_create_button").children().toggleClass("glyphicon-plus-sign glyphicon-remove-circle");
-            //        },
-            //        type: "POST"
-            //    });
-
-            //}
-
-            //$("#dash_create_button").click(toggle_icon);
-            //$("[data-toggle='toggle']").click(collapse_button);
-            //$("#dash_create").submit(create_dashboard);
-            //$(".dash_remove", ".dashboard_element").click(delete_dashboard);
-            //$(".dash_icon", ".dashboard_element").click(create_edit_form);
-            //$(".dash_edit", ".dashboard_element").click(edit_dashboard);
-
-
 
             let currentElement = null;
             const modal = $("#modalWindow");
@@ -169,7 +66,8 @@
             const dashboards = $(".dashboards");
             $(".dashboard-edit").click(DashboardEdit);
             $(".dashboard-create").click(DashboardCreate);
-            $(".dashboard_remove").click(DashboardDeleteConfirm);
+            $(".dashboard-remove").click(DashboardDeleteConfirm);
+            modal.on('hidden.bs.modal', ModalCleaning);
             NoValuesDisplay();
 
             function NoValuesDisplay() {
@@ -183,20 +81,55 @@
 
             function DashboardEdit() {
                 currentElement = $(this).closest(".dashboard_element");
+                let child = currentElement.find(".card");
                 modal.modal("hide");
+                ModalCleaning();
                 $.ajax({
                     url: '@Url.Action("Edit","Dashboard")',
-                    data: { id: currentElement.data("sensor-row-id") },
+                    data: { id: child.data("dashboard-id") },
                     beforeSend: function () {
                         modal.fadeIn(600);
+                        ModalCleaning();
                         return true;
                     },
                     success: function (data) {
-                        modal.find(".modal-title").text("Edit Sensor");
+
+                        modal.find(".modal-title").text("Edit Dashboard");
                         modalBody.prepend(data);
                         modalBody.on("submit", "#modal-form-edit", ModalFormEditSubmit);
                         modalBody.on("click", ".back-to-list", HideModal);
                         modal.modal("show");
+                    },
+                    error: function (res) {
+                        console.log(res);
+                    }
+                });
+            }
+
+            function ModalFormEditSubmit() {
+                event.preventDefault();
+                var inputFile = $(this).find(".modal-form-file");
+                var form = document.getElementById($(this).attr("id"));
+                var fd = new FormData(form);
+                fd.append('IconFile', inputFile.prop('files')[0]);
+
+                $.ajax({
+                    url: '@Url.Action("Edit","Dashboard")',
+                    method: "POST",
+                    processData: false,
+                    contentType: false,
+                    data: fd,
+                    beforeSend: function () {
+                        modal.modal("hide");;
+                        currentElement.hide(800);
+                        return true;
+                    },
+                    success: function (data) {
+                        currentElement.replaceWith(data);
+                        currentElement.show(800);
+                        dashboards.on("click", ".dashboard-remove", DashboardDeleteConfirm);
+                        dashboards.on("click", ".dashboard-edit", DashboardEdit);
+                        NoValuesDisplay();
                     },
                     error: function (res) {
                         console.log(res);
@@ -209,6 +142,7 @@
                     url: '@Url.Action("Create","Dashboard")',
                     beforeSend: function () {
                         modal.fadeIn(600);
+                        ModalCleaning();
                         return true;
                     },
                     success: function (data) {
@@ -217,35 +151,6 @@
                         modalBody.on("submit", "#modal-form-create", ModalFormCreateSubmit);
                         modalBody.on("click", ".back-to-list", HideModal);
                         modal.modal("show");
-                    },
-                    error: function (res) {
-                        console.log(res);
-                    }
-                });
-            }
-
-            function DashboardDeleteConfirm() {
-                currentElement = $(this).closest(".dashboard_element");
-                modal.find(".modal-title").text("Are you sure ?");
-                $("#modal-delete-confirm").clone().prependTo(modalBody);
-                $("#modal-delete-confirm").show(0);
-                $("#modal-delete-button").data("sensor-type-id", currentElement.data("sensor-row-id"));
-                modalBody.on("click", "#modal-delete-button", DashboardDelete);
-                modal.fadeIn(600);
-                modal.modal("show");
-            }
-
-            function DashboardDelete() {
-                $.ajax({
-                    url: '@Url.Action("Delete","Dashboard")',
-                    data: { Id: $(this).data("sensor-id") },
-                    beforeSend: function () {
-                        modal.modal("hide");
-                        currentElement.hide(800, function () {
-                            currentElement.remove();
-                            NoValuesDisplay();
-                        });
-                        return true;
                     },
                     error: function (res) {
                         console.log(res);
@@ -275,8 +180,8 @@
                         element.hide();
                         dashboards.prepend(element);
                         element.show(500);
-                        dashboards.on("click", ".dashboard_remove", delete_dashboard);
-                        dashboards.on("click", ".dashboard_edit", edit_dashboard);
+                        dashboards.on("click", ".dashboard-remove", DashboardDeleteConfirm);
+                        dashboards.on("click", ".dashboard-edit", DashboardEdit);
                         NoValuesDisplay();
                     },
                     error: function (res) {
@@ -285,31 +190,28 @@
                 });
             }
 
-            function ModalFormEditSubmit() {
-                event.preventDefault();
-                var inputFile = $(this).find(".modal-form-file");
-                var form = document.getElementById($(this).attr("id"));
-                var fd = new FormData(form);
-                fd.append('IconFile', inputFile.prop('files')[0]);
+            function DashboardDeleteConfirm() {
+                currentElement = $(this).closest(".dashboard_element");
+                modal.find(".modal-title").text("Are you sure ?");
+                $("#modal-delete-confirm").clone().prependTo(modalBody);
+                $("#modal-delete-confirm").show(0);
+                $("#modal-delete-button").data("element-id", currentElement.find(".card").data("dashboard-id"));
+                modalBody.on("click", "#modal-delete-button", DashboardDelete);
+                modal.fadeIn(600);
+                modal.modal("show");
+            }
 
+            function DashboardDelete() {
                 $.ajax({
-                    url: '@Url.Action("Edit","Dashboard")',
-                    method: "POST",
-                    processData: false,
-                    contentType: false,
-                    data: fd,
+                    url: '@Url.Action("Delete","Dashboard")',
+                    data: { Id: $(this).data("element-id") },
                     beforeSend: function () {
-                        modal.modal("hide");;
-                        currentElement.hide(800);
+                        modal.modal("hide");
+                        currentElement.hide(800, function () {
+                            currentElement.remove();
+                            NoValuesDisplay();
+                        });
                         return true;
-                    },
-                    success: function (data) {
-                        currentElement.replaceWith(data);
-                        currentElement.show(800);
-                        tableBody.on("click", ".sensor-edit", DashboardEdit);
-                        tableBody.on("click", ".sensor-delete", DashboardDeleteConfirm);
-                        tableBody.on("click", ".fa-eye-slash", toggleEyeIcon);
-                        tableBody.on("click", ".input-set-active", SetActiveAjax);
                     },
                     error: function (res) {
                         console.log(res);
@@ -321,9 +223,11 @@
                 modal.modal("hide");
             }
 
-            modal.on('hidden.bs.modal', function () {
+            function ModalCleaning() {
                 modalBody.empty();
-                $(this).find(".modal-title").empty();
-            });
+                modal.find(".modal-title").empty();
+            }
+
+            
         });
-    </script>
+</script>
