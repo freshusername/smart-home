@@ -27,7 +27,7 @@
                                 @if (User.Identity.IsAuthenticated)
                                 {
                                     <div class="button-center">
-                                        <a class="btn btn-success element-create">
+                                        <a class="btn btn-success element-create" onclick="ElementCreate()">
                                             <i class="fas fa-plus-circle"> </i> Add new dashboard
                                         </a>
                                     </div>
@@ -41,8 +41,4 @@
     </div>
 </div>
 
-@await Component.InvokeAsync("Modals")
-
-<script>
-    elementName = "Dashboard";
-</script>
+@await Component.InvokeAsync("Modals", "Dashboard")

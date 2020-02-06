@@ -8,6 +8,10 @@ namespace smart_home_web.Components.Others
 {
     public class ModalsViewComponent : ViewComponent
     {
-        public IViewComponentResult Invoke() => View();
+        public IViewComponentResult Invoke(string name)
+        {
+            ViewBag.elementname = name;
+            return View();
+        }
     }
 }

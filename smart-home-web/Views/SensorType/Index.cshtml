@@ -12,7 +12,8 @@
                     @if (User.Identity.IsAuthenticated)
                     {
                         <div class="button-center">
-                            <a class="mb-2 mr-2 btn btn-primary text-white element-create">
+                            <a class="mb-2 mr-2 btn btn-primary text-white element-create"
+                               onclick="ElementCreate()">
                                 Add new sensor type
                             </a>
                         </div>
@@ -43,8 +44,4 @@
     </div>
 </div>
 
-@await Component.InvokeAsync("Modals")
-
-<script>
-    elementName = "Sensor Type";
-</script>
+@await Component.InvokeAsync("Modals", "Sensor Type")

@@ -1,8 +1,4 @@
-﻿<style>
-    .modal-backdrop.in {
-        opacity: 0.5 !important;
-    }
-</style>
+﻿
 
 <div class="modal" id="modalWindow" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-dialog-scrollable" role="document">
@@ -26,9 +22,10 @@
 </div>
 
 <script src="~/lib/jquery/dist/jquery.js"></script>
+@*<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>*@
 <script>
     var currentElement = null;
-    var elementName = null;
+    var elementName = JSON.parse('@Html.Raw(Json.Serialize(ViewBag.elementname))');
     const modal = $("#modalWindow");
     const modalBody = modal.find(".modal-body");
     const allElementsContainer = $(".all-elements-container");
@@ -36,7 +33,6 @@
     allElementsContainer.before(NoElementsRow);
 
     $(".element-edit").click(ElementEdit);
-    $(".element-create").click(ElementCreate);
     $(".element-delete").click(ElementDelete);
     modal.on('hidden.bs.modal', ModalCleaning);
 
@@ -70,7 +66,7 @@
                 modal.find(".modal-title").text("Edit " + elementName);
                 modalBody.prepend(data);
                 modalBody.on("submit", ".modal-form-edit", ModalFormEdit);
-                modal.modal("show");
+                modal.modal();
             },
             error: function (res) {
                 console.log(res);
@@ -122,8 +118,8 @@
             success: function (data) {
                 modal.find(".modal-title").text("Create " + elementName);
                 modalBody.prepend(data);
-                modalBody.on("submit", ".modal-form-create", ModalFormCreateSubmit);
-                modal.modal("show");
+                modalBody.on("submit", ".modal-form-create", ModalFormCreate);
+                modal.modal();
             },
             error: function (res) {
                 console.log(res);
@@ -169,7 +165,7 @@
         $("#modal-delete-button").data("element-id", currentElement.data("element-container-id"));
         modalBody.on("click", "#modal-delete-button", ModalFormDelete);
         modal.fadeIn(600);
-        modal.modal("show");
+        modal.modal();
     }
 
     function ModalFormDelete() {

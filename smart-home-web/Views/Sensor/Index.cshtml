@@ -15,7 +15,10 @@
                     @if (User.Identity.IsAuthenticated)
                     {
                         <div class="button-center">
-                            <a class="mb-2 mr-2 btn btn-primary text-white element-create">Add new sensor</a>
+                            <a class="mb-2 mr-2 btn btn-primary text-white element-create"
+                               onclick="ElementCreate()">
+                                Add new sensor
+                            </a>
                         </div>
                     }
                 </div>
@@ -43,12 +46,10 @@
         </div>
     </div>
 </div>
-@await Component.InvokeAsync("Modals")
+@await Component.InvokeAsync("Modals", "Sensor")
 
-@*<script src="~/lib/jquery/dist/jquery.js"></script>*@
 <script>
     $(function () {
-        elementName = "Sensor";
 
         var SetActiveAjax = function () {
             let input = $(this);
