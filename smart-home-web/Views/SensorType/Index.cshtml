@@ -13,7 +13,9 @@
                     @if (User.Identity.IsAuthenticated)
                     {
                         <div class="button-center">
-                            <a class="mb-2 mr-2 btn btn-primary text-white sensor-type-create">Add new sensor type</a>
+                            <a class="mb-2 mr-2 btn btn-primary text-white element-create">
+                                Add new sensor type
+                            </a>
                         </div>
                     }
                 </div>
@@ -24,7 +26,7 @@
                         <div class="tab-content">
                             <div class="container-fluid">
                                 <div class="main-card mb-3 card">
-                                    <ul class="list-group list-group-flush">
+                                    <ul class="list-group list-group-flush all-elements-container">
 
                                         @foreach (var item in Model)
                                         {
@@ -41,173 +43,8 @@
         </div>
     </div>
 </div>
+@await Component.InvokeAsync("Modals")
 
-          
-
-    @await Component.InvokeAsync("Modals")
-
-
-
-<script src="~/lib/jquery/dist/jquery.js"></script>
 <script>
-    $(function () {
-        let currentRow = null;
-        const modal = $("#modalWindow");
-        const modalBody = modal.find(".modal-body");
-        const tableBody = $("table").find("tbody");
-        $(".sensor-type-edit").click(SensorTypeEdit);
-        $(".sensor-type-create").click(SensorTypeCreate);
-        $(".sensor-type-delete").click(SensorTypeDeleteConfirm);
-        NoValuesDisplay();
-
-        function NoValuesDisplay() {
-            let row = $(".no-values-row");
-            if (row.siblings().length > 0) {
-                row.hide();
-            } else {
-                row.show();
-            }
-        }
-
-        function SensorTypeEdit() {
-            currentRow = $(this).closest(".sensor-type-row");
-            
-            $.ajax({
-                url: '@Url.Action("Edit","SensorType")',
-                data: { id: currentRow.data("sensor-type-row-id") },
-                beforeSend: function () {
-                    modal.fadeIn(600);
-                    return true;
-                },
-                success: function (data) {
-                    modalBody.empty();
-                    modal.find(".modal-title").text("Edit Sensor Type");
-                    modalBody.prepend(data);
-                    modalBody.on("submit", "#modal-form-edit", ModalFormEditSubmit);
-                    modalBody.on("click", ".back-to-list", HideModal);
-                    modal.modal();
-                },
-                error: function (res) {
-                    console.log(res);
-                }
-            });
-        }
-
-        function SensorTypeCreate() {
-            $.ajax({
-                url: '@Url.Action("Create","SensorType")',
-                beforeSend: function () {
-                    modal.fadeIn(600);
-                    return true;
-                },
-                success: function (data) {
-                    modal.find(".modal-title").text("Create Sensor Type");
-                    modalBody.prepend(data);
-                    modalBody.on("submit", "#modal-form-create", ModalFormCreateSubmit);
-                    modalBody.on("click", ".back-to-list", HideModal);
-                    modal.modal("show");
-                },
-                error: function (res) {
-                    console.log(res);
-                }
-            });
-        }
-
-        function SensorTypeDeleteConfirm() {
-            modal.modal("hide");
-            currentRow = $(this).closest(".sensor-type-row");
-            modal.find(".modal-title").text("Are you sure ?");
-            $("#modal-delete-confirm").clone().prependTo(modalBody);
-            $("#modal-delete-confirm").show(0);
-            $("#modal-delete-button").data("element-id", currentRow.data("sensor-type-row-id"));
-            modalBody.on("click", "#modal-delete-button", SensorTypeDelete);
-            modal.fadeIn(600);
-            modal.modal("show");
-        }
-
-        function SensorTypeDelete() {
-            $.ajax({
-                url: '@Url.Action("Delete","SensorType")',
-                data: { Id: $(this).data("sensor-type-id") },
-                beforeSend: function () {
-                    modal.modal("hide");
-                    currentRow.hide(800, function () {
-                        currentRow.remove();
-                        NoValuesDisplay();
-                    });
-                    return true;
-                },
-                error: function (res) {
-                    console.log(res);
-                }
-            });
-        }
-
-        function ModalFormCreateSubmit() {
-            event.preventDefault();
-            var inputFile = $(this).find(".modal-form-file");
-            var form = document.getElementById($(this).attr("id"));
-            var fd = new FormData(form);
-            fd.append('IconFile', inputFile.prop('files')[0]);
-            $.ajax({
-                url: '@Url.Action("Create","SensorType")',
-                method: "POST",
-                processData: false,
-                contentType: false,
-                data: fd,
-                beforeSend: function () {
-                    modal.modal("hide");
-                    return true;
-                },
-                success: function (data) {
-                    tableBody.prepend(data);
-                    tableBody.on("click", ".sensor-type-edit", SensorTypeEdit);
-                    tableBody.on("click", ".sensor-type-delete", SensorTypeDeleteConfirm);
-                    NoValuesDisplay();
-                },
-                error: function (res) {
-                    console.log(res);
-                }
-            });
-        }
-
-        function ModalFormEditSubmit() {
-            event.preventDefault();
-            var inputFile = $(this).find(".modal-form-file");
-            var form = document.getElementById($(this).attr("id"));
-            var fd = new FormData(form);
-            fd.append('IconFile', inputFile.prop('files')[0]);
-
-            $.ajax({
-                url: '@Url.Action("Edit","SensorType")',
-                method: "POST",
-                processData: false,
-                contentType: false,
-                data: fd,
-                beforeSend: function () {
-                    modal.modal("hide");
-                    currentRow.hide(800);
-                    return true;
-                },
-                success: function (data) {
-                    currentRow.replaceWith(data);
-                    currentRow.show(800);
-                    tableBody.on("click", ".sensor-type-edit", SensorTypeEdit);
-                    tableBody.on("click", ".sensor-type-delete", SensorTypeDeleteConfirm);
-                },
-                error: function (res) {
-                    console.log(res);
-                }
-            });
-        }
-
-        function HideModal() {
-            modal.modal("hide");
-        }
-
-        modal.on('hidden.bs.modal', function () {
-            modalBody.empty();
-            $(this).find(".modal-title").empty();
-        });  
-    });
+    elementName = "Sensor Type";
 </script>

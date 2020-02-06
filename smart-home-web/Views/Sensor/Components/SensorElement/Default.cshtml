@@ -1,7 +1,7 @@
 ﻿@model smart_home_web.Models.SensorViewModel.SensorViewModel;
 
 
-<li class="list-group-item sensor-row" data-sensor-row-id="@Model.Id">
+<li class="list-group-item element-container" data-element-container-id="@Model.Id">
     <div class="widget-content p-0">
         <div class="widget-content-wrapper">
             <div class="widget-content-left mr-4 ml-3">
@@ -76,10 +76,10 @@
                     </a>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <a class="btn btn-shadow btn-info sensor-edit">
+                        <a class="btn btn-shadow btn-info element-edit">
                             <i class="text-white pe-7s-config" style="font-size:20px"></i>
                         </a>
-                        <a class="btn btn-shadow btn-danger sensor-delete p-0 pl-2 pr-2">
+                        <a class="btn btn-shadow btn-danger element-delete p-0 pl-2 pr-2">
                             <i class="text-white pe-7s-close" style="font-size:30px;"></i>
                         </a>
                     }
@@ -94,7 +94,7 @@
 
 
 
-@*<tr class="sensor-row" data-sensor-row-id="@Model.Id">
+@*<tr class="element-container" data-element-container-id="@Model.Id">
         <td>
             <label class="rocker rocker-small">
                 <input id="@Model.Id.ToString()" class="input-set-active" type="checkbox" @Html.Raw(Model.IsActive ? "checked" : " ")>
@@ -140,10 +140,10 @@
                 </a>
                 @if (User.Identity.IsAuthenticated)
                 {
-                    <a class="btn btn-sm btn-info text-center sensor-edit">
+                    <a class="btn btn-sm btn-info text-center element-edit">
                         <i class="fa fa-edit"></i>
                     </a>
-                    <a class="btn btn-sm btn-danger text-center sensor-delete">
+                    <a class="btn btn-sm btn-danger text-center element-delete">
                         <i class="fa fa-trash"></i>
                     </a>
                 }

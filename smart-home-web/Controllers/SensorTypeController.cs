@@ -100,11 +100,11 @@ namespace smart_home_web.Controllers
             }
         }
 
-        public async Task<ActionResult> Delete(int Id)
+        public async Task<ActionResult> Delete(int id)
         {
             try
             {
-                var res = await _sensorTypeManager.Delete(Id);
+                var res = await _sensorTypeManager.Delete(id);
                 if (!res.Succeeded) {
                     ModelState.AddModelError(res.Property, res.Message);
                     return View();

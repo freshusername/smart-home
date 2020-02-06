@@ -14,18 +14,11 @@
                     <div class="row tab-content">
                         <div class="container-fluid">
                             <div class="row justify-content-center">
-                                @*<div id="no_dashboards" class="hidden">
-                                        <h2>No public dashboards.</h2>
-                                    </div>*@
-                                <div class="d-flex justify-content-center flex-wrap aligh-content-center dashboards">
-                                    <div class="no-values-row" style="display:none;">
-                                        <p>No Dashboards</p>
-                                    </div>
-                                    @foreach (var dashboard in Model.Dashboards)
+                                <div class="d-flex justify-content-center flex-wrap aligh-content-center all-elements-container">
+
+                                    @foreach (var item in Model.Dashboards)
                                     {
-                                        <div class="col-md-6 col-lg-3 dashboard_element">
-                                            @await Component.InvokeAsync("DashboardElement", dashboard)
-                                        </div>
+                                        @await Component.InvokeAsync("DashboardElement", item)
                                     }
                                 </div>
                             </div>
@@ -34,14 +27,13 @@
                                 @if (User.Identity.IsAuthenticated)
                                 {
                                     <div class="button-center">
-                                        <a class="btn btn-success dashboard-create">
+                                        <a class="btn btn-success element-create">
                                             <i class="fas fa-plus-circle"> </i> Add new dashboard
                                         </a>
                                     </div>
                                 }
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -50,179 +42,6 @@
 </div>
 @await Component.InvokeAsync("Modals")
 
-<script src="~/lib/jquery/dist/jquery.js"></script>
 <script>
-
-        $(function () {
-
-            let currentElement = null;
-            const modal = $("#modalWindow");
-            const modalBody = modal.find(".modal-body");
-            const dashboards = $(".dashboards");
-            $(".dashboard-edit").click(DashboardEdit);
-            $(".dashboard-create").click(DashboardCreate);
-            $(".dashboard-remove").click(DashboardDeleteConfirm);
-            modal.on('hidden.bs.modal', ModalCleaning);
-            NoValuesDisplay();
-
-            function NoValuesDisplay() {
-                let row = $(".no-values-row");
-                if (row.siblings().length > 0) {
-                    row.hide();
-                } else {
-                    row.show();
-                }
-            }
-
-            function DashboardEdit() {
-                currentElement = $(this).closest(".dashboard_element");
-                let child = currentElement.find(".card");
-                modal.modal("hide");
-                ModalCleaning();
-                $.ajax({
-                    url: '@Url.Action("Edit","Dashboard")',
-                    data: { id: child.data("dashboard-id") },
-                    beforeSend: function () {
-                        modal.fadeIn(600);
-                        ModalCleaning();
-                        return true;
-                    },
-                    success: function (data) {
-
-                        modal.find(".modal-title").text("Edit Dashboard");
-                        modalBody.prepend(data);
-                        modalBody.on("submit", "#modal-form-edit", ModalFormEditSubmit);
-                        modalBody.on("click", ".back-to-list", HideModal);
-                        modal.modal("show");
-                    },
-                    error: function (res) {
-                        console.log(res);
-                    }
-                });
-            }
-
-            function ModalFormEditSubmit() {
-                event.preventDefault();
-                var inputFile = $(this).find(".modal-form-file");
-                var form = document.getElementById($(this).attr("id"));
-                var fd = new FormData(form);
-                fd.append('IconFile', inputFile.prop('files')[0]);
-
-                $.ajax({
-                    url: '@Url.Action("Edit","Dashboard")',
-                    method: "POST",
-                    processData: false,
-                    contentType: false,
-                    data: fd,
-                    beforeSend: function () {
-                        modal.modal("hide");
-                        currentElement.hide(800);
-                        return true;
-                    },
-                    success: function (data) {
-                        currentElement.replaceWith(data);
-                        currentElement.show(800);
-                        dashboards.on("click", ".dashboard-remove", DashboardDeleteConfirm);
-                        dashboards.on("click", ".dashboard-edit", DashboardEdit);
-                        NoValuesDisplay();
-                    },
-                    error: function (res) {
-                        console.log(res);
-                    }
-                });
-            }
-
-            function DashboardCreate() {
-                $.ajax({
-                    url: '@Url.Action("Create","Dashboard")',
-                    beforeSend: function () {
-                        modal.fadeIn(600);
-                        ModalCleaning();
-                        return true;
-                    },
-                    success: function (data) {
-                        modal.find(".modal-title").text("Create New Dashboard");
-                        modalBody.prepend(data);
-                        modalBody.on("submit", "#modal-form-create", ModalFormCreateSubmit);
-                        modalBody.on("click", ".back-to-list", HideModal);
-                        modal.modal("show");
-                    },
-                    error: function (res) {
-                        console.log(res);
-                    }
-                });
-            }
-
-            function ModalFormCreateSubmit() {
-                event.preventDefault();
-                var inputFile = $(this).find(".modal-form-file");
-                var form = document.getElementById($(this).attr("id"));
-                var fd = new FormData(form);
-                fd.append('IconFile', inputFile.prop('files')[0]);
-                $.ajax({
-                    url: '@Url.Action("Create","Dashboard")',
-                    method: "POST",
-                    processData: false,
-                    contentType: false,
-                    data: fd,
-                    beforeSend: function () {
-                        modal.modal("hide");
-                        return true;
-                    },
-                    success: function (data) {
-
-                        let element = $("<div class='col-md-6 col-lg-3 dashboard_element'>" + data + "</div>");
-                        element.hide();
-                        dashboards.prepend(element);
-                        element.show(500);
-                        dashboards.on("click", ".dashboard-remove", DashboardDeleteConfirm);
-                        dashboards.on("click", ".dashboard-edit", DashboardEdit);
-                        NoValuesDisplay();
-                    },
-                    error: function (res) {
-                        console.log(res);
-                    }
-                });
-            }
-
-            function DashboardDeleteConfirm() {
-                currentElement = $(this).closest(".dashboard_element");
-                modal.find(".modal-title").text("Are you sure ?");
-                $("#modal-delete-confirm").clone().prependTo(modalBody);
-                $("#modal-delete-confirm").show(0);
-                $("#modal-delete-button").data("element-id", currentElement.find(".card").data("dashboard-id"));
-                modalBody.on("click", "#modal-delete-button", DashboardDelete);
-                modal.fadeIn(600);
-                modal.modal("show");
-            }
-
-            function DashboardDelete() {
-                $.ajax({
-                    url: '@Url.Action("Delete","Dashboard")',
-                    data: { Id: $(this).data("element-id") },
-                    beforeSend: function () {
-                        modal.modal("hide");
-                        currentElement.hide(800, function () {
-                            currentElement.remove();
-                            NoValuesDisplay();
-                        });
-                        return true;
-                    },
-                    error: function (res) {
-                        console.log(res);
-                    }
-                });
-            }
-
-            function HideModal() {
-                modal.modal("hide");
-            }
-
-            function ModalCleaning() {
-                modalBody.empty();
-                modal.find(".modal-title").empty();
-            }
-
-            
-        });
+    elementName = "Dashboard";
 </script>

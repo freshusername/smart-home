@@ -1,6 +1,6 @@
 ﻿@model smart_home_web.Models.Dashboard.DashboardViewModel
 
-<div class="mb-3 card" data-dashboard-id="@Model.Id.ToString()">
+<div class="mb-3 card col-md-6 col-lg-3 m-2 element-container" data-element-container-id="@Model.Id.ToString()">
 
     <div class="card-header-tab card-header">
         <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
@@ -10,10 +10,10 @@
         <div class="btn-actions-pane-right actions-icon-btn">
             @if (User.Identity.IsAuthenticated && User.Claims.ElementAt(1).Value == Model.DashCreatorUserName)
             {
-                <a href="#" class="dashboard-remove float-right">
+                <a href="#" class="element-delete float-right">
                     <span class="fas fa-times mr-1 fsize-2"> </span>
                 </a>
-                <a href="#" class="dashboard-edit float-right">
+                <a href="#" class="element-edit float-right">
                     <span class="fas fa-pen dash_icon mr-1 fsize-1"> </span>
                 </a>
             }
