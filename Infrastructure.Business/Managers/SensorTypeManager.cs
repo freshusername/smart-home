@@ -52,8 +52,8 @@ namespace Infrastructure.Business.Managers
         {
             try
             {
-                SensorType sensorType = await unitOfWork.SensorTypeRepo.GetById(id);
-                unitOfWork.SensorTypeRepo.Delete(sensorType);
+                SensorType sensorType = unitOfWork.SensorTypeRepo.GetById(id).Result;
+                await unitOfWork.SensorTypeRepo.Delete(sensorType);
                 unitOfWork.Save();
             }
             catch (Exception ex)
@@ -77,6 +77,12 @@ namespace Infrastructure.Business.Managers
             var result = mapper.Map<IEnumerable<SensorType>, IEnumerable<SensorTypeDto>>(sensorTypes);
 
             return result;
+        }
+
+        public async Task<SensorTypeDto> GetLastSensorType()
+        {
+            var sensorType = await unitOfWork.SensorTypeRepo.GetLastSensorType();
+            return mapper.Map<SensorType, SensorTypeDto>(sensorType);
         }
     }
 }

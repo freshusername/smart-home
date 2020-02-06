@@ -1,97 +1,121 @@
 ﻿@using Domain.Core.Model.Enums
+
 @model smart_home_web.Models.GraphViewModel
 
-<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+
+
+@*<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />*@
 <link href="~/lib/nice-select/dist/css/nice-select.css" rel="stylesheet" />
-<body>
-    <div class="row">
-        <div class="col-lg-12">
-            @if (Model.IsCorrect)
-            {
-                @if (Model.MeasurementType == MeasurementType.String)
-                {
-                    string title = "Table of measurements (for " + (Model.Days == 99999 ? " all time" : @Model.Days == 1 ? Model.Days.ToString() + " day" : Model.Days.ToString() + " days") + ")" + " of a sensor with name : " + Model.SensorName;
-                    string subtitle = "Sensor type: " + Model.SensorType;
 
-                    <label class="graph-title" style="font-size:18px;">@title</label>
-                    <label class="graph-title" style="font-size:12px;">@subtitle</label>
 
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">Value</th>
-                                <th scope="col">Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @for (int i = 0; i < Model.Values.Count; i++)
-                            {
-                                <tr>
-                                    <th scope="row">@Model.Values[i]</th>
-                                    <td scope="col">@(((new DateTime(1970, 1, 1)).AddMilliseconds(Model.longDates[i])).ToLocalTime())</td>
-
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                }
-                else
-                {
-                    <div id="container" style="min-width:310px; height:400px; margin:0 auto"></div>
-                }
-            }
-            else
-            {
-                <label class="control-label graph-label">There is no history measurement for such sensor for that period of time.</label>
-            }
-            <form asp-action="Graph" asp-controller="History" method="post">
-                <div class="form-group">
-                    <label class="control-label" style="margin-top:20px;">
-                        Select measurement period:
-                    </label>
-                    <div style="margin-bottom:50px">
-                        <select asp-for="Days" class="nice-select col-lg-4 col-md-5 col-sm-6 col-xs-12">
-                            <option value="none" selected disabled hidden>
-                                Select an Option
-                            </option>
-                            <option value="1">1 day</option>
-                            <option value="7">7 days</option>
-                            <option value="14">14 days</option>
-                            <option value="30">30 days</option>
-                            <option value="90">90 days</option>
-                            <option value="99999">For all time</option>
-                        </select>
+<div class="app-main">
+    <div class="app-main__outer">
+        <div class="app-main__inner">
+            <div class="app-header">
+                <div class="page-title-heading">
+                    @Model.SensorName
+                    <div class="page-title-subheading">
                     </div>
                 </div>
+            </div>
+            <div class="app-inner-layout app-inner-layout-page">
+                <div class="app-inner-layout__wrapper">
+                    <div class="app-inner-layout__content pt-1">
+                        <div class="tab-content">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        @if (Model.IsCorrect)
+                                        {
+                                            @if (Model.MeasurementType == MeasurementType.String)
+                                            {
+                                                string title = "Table of measurements (for " + (Model.Days == 99999 ? " all time" : @Model.Days == 1 ? Model.Days.ToString() + " day" : Model.Days.ToString() + " days") + ")";
+                                                string subtitle = "Sensor type: " + Model.SensorType;
 
-                <div class="form-group">
-                    <input type="hidden" asp-for="SensorId" value="@Model.SensorId" />
+                                                <label class="graph-title" style="font-size:18px;">@title</label>
+                                                <label class="graph-title" style="font-size:12px;">@subtitle</label>
+
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Value</th>
+                                                            <th scope="col">Date</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @for (int i = 0; i < Model.Values.Count; i++)
+                                                        {
+                                                            <tr>
+                                                                <th scope="row">@Model.Values[i]</th>
+                                                                <td scope="col">@(((new DateTime(1970, 1, 1)).AddMilliseconds(Model.longDates[i])).ToLocalTime())</td>
+
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            }
+                                            else
+                                            {
+                                                <div id="container" style="min-width:310px; height:400px; margin:0 auto"></div>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <label class="control-label graph-label">There is no history measurement for such sensor for that period of time.</label>
+                                        }
+                                        <form asp-action="Graph" asp-controller="History" method="post">
+                                            <div class="form-group">
+                                                <label class="control-label" style="margin-top:20px;">
+                                                    Select measurement period:
+                                                </label>
+                                                <div style="margin-bottom:50px">
+                                                    <select asp-for="Days" class="nice-select col-lg-4 col-md-5 col-sm-6 col-xs-12">
+                                                        <option value="none" selected disabled hidden>
+                                                            Select an Option
+                                                        </option>
+                                                        <option value="1">1 day</option>
+                                                        <option value="7">7 days</option>
+                                                        <option value="14">14 days</option>
+                                                        <option value="30">30 days</option>
+                                                        <option value="90">90 days</option>
+                                                        <option value="99999">For all time</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <input type="hidden" asp-for="SensorId" value="@Model.SensorId" />
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="submit" value="Choose" class="btn-wide btn btn-primary text-center" />
+                                                @*<a asp-controller="Sensor" asp-action="Index" class="btn btn-primary"><em class="glyphicon glyphicon-arrow-left"></em> Back to Full List of Sensors</a>*@
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input type="submit" value="Choose" class="btn btn-success text-center" style="width:15%" />
-                    <a asp-controller="Sensor" asp-action="Index" class="btn btn-primary"><em class="glyphicon glyphicon-arrow-left"></em> Back to Full List of Sensors</a>
-                </div>
-            </form>
+            </div>
         </div>
-        
     </div>
-</body>
+</div>
 
-@section Scripts {
-    <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="~/lib/nice-select/dist/js/jquery.nice-select.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('select').niceSelect();
-        });
-    </script>
-    <script>
+
+<script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="~/lib/nice-select/dist/js/jquery.nice-select.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('select').niceSelect();
+    });
+</script>
+<script>
         $('#container').highcharts({
             title: {
                 text: 'Graph of measurements (for '
-                    + (@Model.Days== 99999 ? ' all time' : @Model.Days== 1 ? JSON.parse('@Html.Raw(Json.Serialize(@Model.Days))') + ' day' : JSON.parse('@Html.Raw(Json.Serialize(@Model.Days))') + ' days')
-                    + ') of a sensor with name : ' + JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))'),
+                    + (@Model.Days== 99999 ? ' all time' : @Model.Days== 1 ? JSON.parse('@Html.Raw(Json.Serialize(@Model.Days))') + ' day' : JSON.parse('@Html.Raw(Json.Serialize(@Model.Days))') + ' days') + ')',
                 x: -20 //center
             },
             subtitle: {
@@ -101,7 +125,7 @@
             xAxis: {
                 categories: JSON.parse('@Html.Raw(Json.Serialize(@Model.longDates))'),
                 labels: {
-                    formatter: function () {
+                    formatter: function() {
                         return new Date(this.value).toLocaleString();
                     }
                 }
@@ -112,34 +136,31 @@
                 },
             },
             tooltip: {
-                formatter: function () {
+                formatter: function() {
                     var date = new Date(this.x).toLocaleString();
-                    @switch (Model.MeasurementType)
-                    {
-                        case MeasurementType.Int:
-                        case MeasurementType.Double:
+                    @switch(Model.MeasurementType) {
+                    case MeasurementType.Int:
+                    case MeasurementType.Double:
+                    <text >
+                        var result = '<b>' + date + '</b><br>' + this.series.name + ': <b>' + this.y + ' ' +
+                        JSON.parse('@Html.Raw(Json.Serialize(@Model.MeasurementName))') + '</b><br>'
+                        return result;
+                    </text>
+                    break;
 
-                            <text>
-                    var result = '<b>' + date + '</b><br>' + this.series.name + ': <b>' + this.y + ' '
-                        + JSON.parse('@Html.Raw(Json.Serialize(@Model.MeasurementName))') + '</b><br>'
-                    return result;
-                            </text>
-                            break;
+                case MeasurementType.Bool:
+                    <text >
+                        var values = JSON.parse('@Html.Raw(Json.Serialize(@Model.Values))')
+                        var value = values[this.point.index] ? 'true' : 'false'
+                        var result = '<b>' + date + '</b><br>' + this.series.name + ': <b>' + value + '</b><br>'
+                        return result;
+                    </text>
+                break;
 
-                        case MeasurementType.Bool:
-
-                            <text>
-                    var values = JSON.parse('@Html.Raw(Json.Serialize(@Model.Values))')
-                    var value = values[this.point.index] ? 'true' : 'false'
-                    var result = '<b>' + date + '</b><br>' + this.series.name + ': <b>' + value + '</b><br>'
-                    return result;
-                            </text>
-                            break;
-
-                        default:
-                            break;
+                default:
+                break;
                      }
-                }
+                }   
             },
             legend: {
                 layout: 'vertical',
@@ -159,5 +180,4 @@
                 }
             },
         });
-    </script>
-}
+</script>

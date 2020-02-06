@@ -43,7 +43,7 @@ namespace smart_home_web.Controllers
 
         public async Task<IActionResult> UpdateHistoryTable(FilterDto FilterDTO, bool isActivated)
         {
-            return ViewComponent("History", new { model = await GetHistories(FilterDTO, isActivated) });
+            return Ok( await GetHistories(FilterDTO, isActivated) );
         }
 
         private async Task<AllHistoriesViewModel> GetHistories(FilterDto FilterDTO, bool isActivated = true)

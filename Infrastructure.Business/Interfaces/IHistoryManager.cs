@@ -30,5 +30,6 @@ namespace Infrastructure.Business.Managers
 
 		Task<int> GetAmountAsync(bool isActivated);
 		Task<int> GetAmountOfUserHistoriesAsync(bool isActivated, string userId);
+        Task UpdateGraph(Guid token, string value);
     }
 }

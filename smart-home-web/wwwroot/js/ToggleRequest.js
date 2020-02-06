@@ -15,3 +15,32 @@
         }
     });
 }
+
+
+function remove(clicked_id) {
+    var url = $('.link').attr('data-request-url');
+    $("#hide_" + clicked_id).hide(function () {
+        
+    });
+   
+    $.ajax({
+        url: url,
+        data: { 'id': clicked_id},
+        type: "post",
+        cache: false,
+
+        success: function (savingStatus) {
+           
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            window.alert("Error encountered while sending request");
+            console.log(thrownError);
+        }
+    });
+}
+
+
+
+    
+
+   

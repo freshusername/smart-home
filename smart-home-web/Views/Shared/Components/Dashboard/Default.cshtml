@@ -1,7 +1,7 @@
 ﻿@model smart_home_web.Models.Dashboard.DashboardViewModel
 
 
-<div class="col-lg-3 dash_id h-100 " data-dash-id="@Model.Id.ToString()">
+@*<div class="col-lg-3 dash_id h-100 " data-dash-id="@Model.Id.ToString()">
     <div class="text-center p-2 h-100 d-flex flex-column justify-content-between" style="width: 18rem;">
         <div>
             @if (User.Identity.IsAuthenticated && User.Claims.ElementAt(1).Value == Model.DashCreatorUserName)
@@ -36,7 +36,7 @@
             }
             <div>
                 <p>
-                    <span class="badge badge-light">@Model.ReportElements.Count()</span> report element@(Model.ReportElements.Count() != 1 ? "s" : "")
+                    <span class="badge badge-light">@Model.ReportElements.Count()</span> report element @(Model.ReportElements.Count() != 1 ? "s" : "")
                 </p>
             </div>
         </div>
@@ -44,5 +44,51 @@
         <div class="m-3">
             <a asp-controller="Dashboard" asp-action="Detail" asp-route-id="@Model.Id" class="btn btn-primary dash_open">OPEN</a>
         </div>
+    </div>
+</div>*@
+
+<div class="mb-3 card  dash_id" data-dash-id="@Model.Id.ToString()">
+
+    <div class="card-header-tab card-header">
+        <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
+            <i class="header-icon pe-7s-monitor mr-3"> </i>
+            @Model.Name
+        </div>
+        <div class="btn-actions-pane-right actions-icon-btn">
+            @if (User.Identity.IsAuthenticated && User.Claims.ElementAt(1).Value == Model.DashCreatorUserName)
+            {
+                <a href="#" class="dash_remove float-right"
+                   data-dash-url="@Url.Action("Delete", "Dashboard")">
+                    <span class="glyphicon glyphicon-remove mr-1 fsize-4"><i class="pe-7s-close"></i></span>
+                </a>
+            }
+        </div>
+    </div>
+    <img class="card-img-top" style="border-radius: 0" src="https://images.pexels.com/photos/373076/pexels-photo-373076.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" alt="Card image cap">
+    <div class="widget-chart widget-chart2 text-left p-0">
+        <div class="widget-chat-wrapper-outer">
+            <div class="widget-chart-content widget-chart-content-lg">
+                <div class="widget-chart-flex">
+                    <div class="widget-title opacity-5 text-muted text-uppercase">
+                        report elements
+                    </div>
+                </div>
+                <div class="widget-numbers ml-3">
+                    <div class="widget-chart-flex">
+                        @Model.ReportElements.Count()
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="pt-0 pb-0 card-body">
+    </div>
+    <div class="d-block text-right rm-border card-footer">
+        <a asp-controller="Dashboard" asp-action="Detail" asp-route-id="@Model.Id" class="text-uppercase btn btn-primary dash_open">
+            View dashboard
+            <span class="text-white pl-2 opacity-3">
+                <i class="fa fa-arrow-right"></i>
+            </span>
+        </a>
     </div>
 </div>
