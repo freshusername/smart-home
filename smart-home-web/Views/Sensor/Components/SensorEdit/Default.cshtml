@@ -38,7 +38,7 @@
                 <input asp-for="@Model.SensorTypeId" type="hidden" />
 
                 <input class="form-control modal-form-file" asp-for="@Model.IconFile" onchange="loadFile(event)" type="file" accept=".jpg, .jpeg, .png" />
-                <img class="img-rounded" id="output" width="64" height="64" style="visibility: hidden" />
+                <img class="img-rounded" id="modal-form-create-output" width="64" height="64" style="visibility: hidden" />
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-warning" />
@@ -50,7 +50,7 @@
             var loadFile = function (event) {
                 var reader = new FileReader();
                 reader.onload = function () {
-                    var output = document.getElementById('output');
+                    var output = document.getElementById('modal-form-create-output');
                     output.src = reader.result;
                     output.style.visibility = "visible";
                 };
