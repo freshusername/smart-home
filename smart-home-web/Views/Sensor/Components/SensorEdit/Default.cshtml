@@ -4,7 +4,7 @@
 {
     if (User.Identity.IsAuthenticated)
     {
-        <form method="post" id="modal-form-edit" data-sensor-id="@Model.Id" enctype="multipart/form-data">
+        <form method="post" id="modal-form-edit" data-element-container-id="@Model.Id" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
@@ -38,11 +38,11 @@
                 <input asp-for="@Model.SensorTypeId" type="hidden" />
 
                 <input class="form-control modal-form-file" asp-for="@Model.IconFile" onchange="loadFile(event)" type="file" accept=".jpg, .jpeg, .png" />
-                <img class="img-rounded" id="output" width="64" height="64" style="visibility: hidden" />
+                <img class="img-rounded" id="modal-form-create-output" width="64" height="64" style="visibility: hidden" />
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-warning" />
-                <a class="btn btn-primary back-to-list">Back to List</a>
+                <a class="btn btn-primary" data-dismiss="modal">Back to List</a>
             </div>
         </form>
 
@@ -50,7 +50,7 @@
             var loadFile = function (event) {
                 var reader = new FileReader();
                 reader.onload = function () {
-                    var output = document.getElementById('output');
+                    var output = document.getElementById('modal-form-create-output');
                     output.src = reader.result;
                     output.style.visibility = "visible";
                 };

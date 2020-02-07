@@ -3,7 +3,7 @@ using smart_home_web.Models.Dashboard;
 
 namespace smart_home_web.Components.Others
 {
-    public class DashboardViewComponent : ViewComponent
+    public class DashboardElementViewComponent : ViewComponent
     {
         public IViewComponentResult Invoke(DashboardViewModel model) => View(model);
     }
