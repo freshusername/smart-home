@@ -123,5 +123,20 @@ namespace smart_home_web.Tests.ManagerTests
 
             Assert.IsFalse(res.Succeeded);
         }
+
+        [Test]
+        public void Delete_WithDefunctId_ReturnFalse()
+        {
+
+            mockUnitOfWork.Setup(u => u
+                .SensorTypeRepo.GetById(7)).Throws(new Exception());
+
+            mockUnitOfWork.Setup(u => u
+                .SensorTypeRepo.Delete(_sensorType));
+
+            var res = _manager.Delete(7).Result;
+
+            Assert.IsFalse(res.Succeeded);
+        }
     }
 }
