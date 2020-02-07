@@ -21,7 +21,7 @@ namespace Infrastructure.Business.Managers
         private readonly string _uploadPath = Path.Combine("images", "Icons");
         private readonly string _dbPath = @"/images/Icons/";
         private readonly IHostingEnvironment _env;
-        public string UploadPath
+        public virtual string UploadPath
         {
             get { return Path.Combine(_env.WebRootPath, _uploadPath); }
         }
@@ -53,6 +53,8 @@ namespace Infrastructure.Business.Managers
 
         public async Task<OperationDetails> Create(IconDto iconDto)
         {
+            if (iconDto == null)
+                return new OperationDetails(false, "Error", "Error");
             try
             {
                 Icon icon = mapper.Map<IconDto, Icon>(iconDto);
@@ -69,7 +71,10 @@ namespace Infrastructure.Business.Managers
         public async Task<int> CreateAndGetIconId(IFormFile iformFile)
         {
             var newFileName = Guid.NewGuid() + Path.GetExtension(iformFile.FileName);
-            await UploadImage(iformFile, newFileName);
+            
+
+                await UploadImage(iformFile, newFileName);
+            
 
             var iconDto = new IconDto()
             {
