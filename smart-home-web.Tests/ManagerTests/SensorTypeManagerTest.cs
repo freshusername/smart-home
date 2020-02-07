@@ -1,5 +1,6 @@
 ﻿using Domain.Core.Model;
 using Infrastructure.Business.DTOs.SensorType;
+using Infrastructure.Business.Interfaces;
 using Infrastructure.Business.Managers;
 using NUnit.Framework;
 using System;
