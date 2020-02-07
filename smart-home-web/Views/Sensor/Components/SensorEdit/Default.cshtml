@@ -4,7 +4,7 @@
 {
     if (User.Identity.IsAuthenticated)
     {
-        <form method="post" class="modal-form-edit" data-element-container-id="@Model.Id" enctype="multipart/form-data">
+        <form method="post" id="modal-form-edit" data-element-container-id="@Model.Id" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">

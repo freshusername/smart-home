@@ -1,6 +1,4 @@
-﻿
-
-<div class="modal" id="modalWindow" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+﻿<div class="modal" id="modalWindow" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -22,7 +20,7 @@
 </div>
 
 <script src="~/lib/jquery/dist/jquery.js"></script>
-@*<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>*@
+<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
 <script>
     var currentElement = null;
     var elementName = JSON.parse('@Html.Raw(Json.Serialize(ViewBag.elementname))');
@@ -65,7 +63,7 @@
             success: function (data) {
                 modal.find(".modal-title").text("Edit " + elementName);
                 modalBody.prepend(data);
-                modalBody.on("submit", ".modal-form-edit", ModalFormEdit);
+                modalBody.on("submit", "#modal-form-edit", ModalFormEdit);
                 modal.modal();
             },
             error: function (res) {
@@ -76,9 +74,8 @@
 
     function ModalFormEdit() {
         event.preventDefault();
-        var inputFile = $(this).find(".modal-form-file");
-        var form = document.getElementById($(this).attr("id"));
-        var fd = new FormData(form);
+        var inputFile = $(this).find("input[type='file']");
+        var fd = new FormData(document.getElementById("modal-form-create"));
         fd.append('IconFile', inputFile.prop('files')[0]);
 
         $.ajax({
@@ -118,7 +115,7 @@
             success: function (data) {
                 modal.find(".modal-title").text("Create " + elementName);
                 modalBody.prepend(data);
-                modalBody.on("submit", ".modal-form-create", ModalFormCreate);
+                modalBody.on("submit", "#modal-form-create", ModalFormCreate);
                 modal.modal();
             },
             error: function (res) {
@@ -129,9 +126,8 @@
 
     function ModalFormCreate() {
         event.preventDefault();
-        var inputFile = $(this).find(".modal-form-file");
-        var form = document.getElementById($(this).attr("id"));
-        var fd = new FormData(form);
+        var inputFile = $(this).find("input[type='file']");
+        var fd = new FormData(document.getElementById("modal-form-create"));
         fd.append('IconFile', inputFile.prop('files')[0]);
 
         $.ajax({
