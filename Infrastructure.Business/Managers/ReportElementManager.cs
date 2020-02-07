@@ -326,7 +326,6 @@ namespace Infrastructure.Business.Managers
             ReportElementDto columnRange = mapper.Map<Sensor, ReportElementDto>(reportElement.Sensor);
 
             columnRange.Id = ReportElementId;
-            columnRange.DashboardName = reportElement.Dashboard.Name;
             columnRange.Hours = reportElement.Hours;
             columnRange.Dates = new List<string>();
             columnRange.MinValues = new List<dynamic>();
@@ -511,19 +510,21 @@ namespace Infrastructure.Business.Managers
         public async Task<ReportElementDto> GetStatusReport(int ReportElementId, string userid)
         {
             UserId = userid;
-            ReportElement reportElementt = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
-            if (reportElementt == null)
+            ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
+            if (reportElement == null)
                 return new ReportElementDto { IsCorrect = false, Message = "Invalid report element" };
 
-            ReportElementDto reportElement = new ReportElementDto();
             IEnumerable<Sensor> sensors = await unitOfWork.SensorRepo.GetAllSensorsByUserId(UserId);
-
-            reportElement.Dates = new List<string>();
-            reportElement.Values = new List<dynamic>();
+            ReportElementDto statusReport = new ReportElementDto
+            {
+                Dates = new List<string>(),
+                Values = new List<dynamic>()
+            };
             foreach (Sensor sensor in sensors)
             {
-                reportElement.Dates.Add(sensor.Name);
                 History history = unitOfWork.HistoryRepo.GetLastHistoryBySensorId(sensor.Id);
+                if (history == null)
+                    continue;
                 dynamic value = null;
                 switch (sensor.SensorType.MeasurementType)
                 {
@@ -547,10 +548,11 @@ namespace Infrastructure.Business.Managers
                     default:
                         return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "Incorrect sensor type for this element" };
                 }
-                reportElement.Values.Add(value);
+                statusReport.Dates.Add(sensor.Name);
+                statusReport.Values.Add(value);
             }
 
-            return reportElement;
+            return statusReport;
         }
 
         public Task<SensorDto> GetLastSensorByUserId(string userId)
