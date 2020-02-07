@@ -5,7 +5,9 @@
 @{
     ViewData["Title"] = "Sensors";
 }
-<link href="~/css/OnOff.css" rel="stylesheet" />
+@*<link href="~/css/OnOff.css" rel="stylesheet" />*@
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 <div class="app-main">
     <div class="app-main__outer">
@@ -48,6 +50,8 @@
 </div>
 @await Component.InvokeAsync("Modals", "Sensor")
 
+
+@*<script src="~/lib/jquery/dist/jquery.js"></script>*@
 <script>
     $(function () {
 
@@ -68,6 +72,7 @@
         $(".input-set-active").on("click", SetActiveAjax);
 
         $(".input-set-active").on("click", function () {
+            console.log(this);
             $(this).toggleClass("toggle-shadow");
         });
     });

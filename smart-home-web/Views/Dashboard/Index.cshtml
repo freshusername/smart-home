@@ -5,33 +5,58 @@
 }
 
 @*WRAPPER*@
+
 <div class="app-main">
     <div class="app-main__outer">
-        <div class="app-inner-layout app-inner-layout-page">
-            <div class="app-inner-layout__wrapper">
-                <div class="app-inner-layout__content">
-                    @*BODY*@
-                    <div class="row tab-content">
-                        <div class="container-fluid">
-                            <div class="row justify-content-center">
-                                <div class="d-flex justify-content-center flex-wrap aligh-content-center all-elements-container">
+        <div class="app-main__inner">
+            <div class="app-header">
+                <div class="page-title-heading">
+                    Dashboards
+                </div>
+            </div>
+            <div class="app-inner-layout app-inner-layout-page">
+                <div class="app-inner-layout__wrapper">
+                    <div class="app-inner-layout__content pt-1">
+                        <div class="tab-content">
+                            <div class="container-fluid">
 
-                                    @foreach (var item in Model.Dashboards)
-                                    {
-                                        @await Component.InvokeAsync("DashboardElement", item)
-                                    }
-                                </div>
-                            </div>
-                            @*NEW DASHBOARD CREATING*@
-                            <div class="d-flex justify-content-center">
-                                @if (User.Identity.IsAuthenticated)
-                                {
-                                    <div class="button-center">
-                                        <a class="btn btn-success element-create" onclick="ElementCreate()">
-                                            <i class="fas fa-plus-circle"> </i> Add new dashboard
-                                        </a>
+                                <div class="row">
+
+                                    @*<div id="no_dashboards" class="hidden">
+                                            <h2>No public dashboards.</h2>
+                                        </div>*@
+
+                                    <div class="d-flex" id="dashboards">
+
+                                        @foreach (var dashboard in Model.Dashboards)
+                                        {
+                                            <div class="col-md-6 col-lg-3 dash_element">
+                                                @await Component.InvokeAsync("Dashboard", new { model = dashboard })
+                                            </div>
+                                        }
                                     </div>
-                                }
+                                </div>
+
+                                @*NEW DASHBOARD CREATING*@
+                                <div class="d-flex justify-content-center">
+                                    <a class="btn btn-success text-light text-uppercase w-auto" style="height:33px"
+                                       data-toggle="toggle" data-target="#create_elem" id="dash_create_button">
+                                        <span class="glyphicon glyphicon-plus-sign"></span> Add dashboard
+                                    </a>
+                                    <div class="justify-content-center" style="margin-top:40px;">
+                                        <div id="create_elem" class="collapse mr-2">
+                                            <form data-dash-url="@Url.Action("Create","Dashboard")" method="post" id="dash_create">
+                                                <p>
+                                                    <input id="form_dash_name" placeholder="Enter name" size="14" maxlength="35" required />
+                                                    <label for="form_dash_isPublic">public</label>
+                                                    <input id="form_dash_isPublic" size="14" type="checkbox" />
+                                                    <input type="submit" value="Add" class="btn btn-primary" />
+                                                </p>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -40,5 +65,122 @@
         </div>
     </div>
 </div>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script>
 
-@await Component.InvokeAsync("Modals", "Dashboard")
+    $(function () {
+
+        function no_dashboards_show() {
+            if ($("#dashboards").children(".dash_element").length == 0) {
+                $("#no_dashboards").show();
+            }
+        }
+        no_dashboards_show();
+
+        function toggle_icon() {
+            $(this).children().toggleClass("glyphicon-plus-sign glyphicon-remove-circle");
+        }
+        toggle_icon();
+
+        function create_edit_form() {
+            let parent = $(this).closest(".dash_element");
+            $(".dash_name_edit").hide();
+            $(".dash_name").show();
+            parent.find(".dash_name_edit").show();
+            parent.find(".dash_name").hide();
+        }
+
+        function edit_dashboard() {
+            event.preventDefault();
+            let parent = $(this).closest(".dash_element");
+            let open = parent.find(".dash_open");
+            open.toggleClass("disabled");
+            let form = parent.find(".form_edit_name");
+            let name_value = form.find(".form_dash_name").val();
+            let id_value = parent.find(".dash_id").data("dash-id");
+
+            $.ajax({
+                url: form.data("dash-url"),
+                data: { name: name_value, id: id_value },
+                beforeSend: function () {
+                    parent.find(".name_header").text(name_value);
+                    parent.find(".dash_name_edit").hide();
+                    parent.find(".dash_name").show();
+                },
+                error: function (res) {
+                    console.log(res);
+                },
+                success: function () {
+                    open.toggleClass("disabled");
+                },
+                type: "POST"
+            });
+        }
+
+        function collapse_button() {
+            var selector = $(this).data("target");
+            $(selector).toggleClass('in');
+        }
+
+        function delete_dashboard() {
+            let parent = $(this).closest(".dash_element");
+            if (confirm("Are you sure?")) {
+                $.ajax({
+                    url: $(this).data("dash-url"),
+                    data: { id: parent.children().data("dash-id") },
+                    beforeSend: function () {
+                        parent.hide(500, function () {
+                            parent.remove();
+                        })
+                        return true;
+                    },
+                    error: function (result) {
+                        console.log(result);
+                    },
+                    success: function () {
+                        no_dashboards_show();
+                    }
+                });
+            }
+        }
+
+        function create_dashboard() {
+            event.preventDefault();
+            $(".dash_name_edit").hide();
+            $(".dash_name").show();
+            $.ajax({
+                url: $(this).data("dash-url"),
+                data: { name: $("#form_dash_name").val(), isPublic: $("#form_dash_isPublic").prop('checked') },
+                error: function (result) {
+                    console.log(result);
+                },
+                success: function (data) {
+                    let element = $("<div  class='col-md-6 col-lg-3 dash_element' >" + data + "</div>");
+                    element.hide();
+                    $('#dashboards').prepend(element);
+                    element.show(500);
+                    element.on("click", ".dash_remove", delete_dashboard);
+                    element.on("click", ".dash_icon", create_edit_form);
+                    element.on("click", ".dash_edit", edit_dashboard);
+
+                    if ($("#no_dashboards").is(":visible")) {
+                        $("#no_dashboards").hide();
+                    }
+                    $("#form_dash_name").val("");
+                    var selector = $("[data-toggle='toggle']").data("target");
+                    $(selector).toggleClass('in');
+                    $("#dash_create_button").children().toggleClass("glyphicon-plus-sign glyphicon-remove-circle");
+                },
+                type: "POST"
+            });
+
+        }
+
+        $("#dash_create_button").click(toggle_icon);
+        $("[data-toggle='toggle']").click(collapse_button);
+        $("#dash_create").submit(create_dashboard);
+        $(".dash_remove", ".dash_element").click(delete_dashboard);
+        $(".dash_icon", ".dash_element").click(create_edit_form);
+        $(".dash_edit", ".dash_element").click(edit_dashboard);
+    });
+</script>
