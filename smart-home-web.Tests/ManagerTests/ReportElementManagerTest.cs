@@ -9,6 +9,8 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -63,6 +65,64 @@ namespace smart_home_web.Tests.ManagerTests
 
             //assert
             Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void GetWordCloudById_GetsExistingElement_Returns_True()
+        {
+            //arrange
+            var existingElement = new ReportElement()
+            {
+                Id = 1,
+                DashboardId = 3,
+                Height = 0,
+                Width = 0,
+                X = 0,
+                Y = 0,
+                Hours = ReportElementHours.AllTime,
+                IsLocked = true,
+                SensorId = 3,
+                Type = ReportElementType.Wordcloud
+            };
+
+            var reportElementDto = new ReportElementDto() { Id = 1};
+
+            mockMapper.Setup(m => m.Map<ReportElement, ReportElementDto>(existingElement))
+                .Returns(reportElementDto);
+
+           
+            //mockUnitOfWork.Setup(h => h.HistoryRepo
+            //    .GetHistoriesBySensorIdAndDate( reportElementDto.Id, DateTime.Now.AddHours(-(int)(existingElement.Hours))))
+            //        .Returns(Task.FromResult(GetMockHistories())); 
+            
+            mockUnitOfWork.Setup(h => h.HistoryRepo
+                .GetHistoriesBySensorIdAndDate(It.IsAny<int>(), It.IsAny<DateTimeOffset>()))
+                    .Returns((int i, DateTimeOffset date) =>
+                        Task.FromResult(GetMockHistories().Where(x => x.Id == i && x.Date == date)));
+
+            mockUnitOfWork.Setup(h => h.ReportElementRepo.GetById(It.IsAny<int>()))
+                .Returns((int i) => Task.FromResult(existingElement));
+
+
+
+            //act
+            var result = _manager.GetWordCloudById(existingElement.Id).Result;
+
+            //assert
+            Assert.IsNull(result);
+        }
+        private IEnumerable<History> GetMockHistories()
+        {
+            CultureInfo ci = CultureInfo.InvariantCulture;
+
+            var histories = new List<History>
+            {
+                new History { Id = 1, Date = DateTime.ParseExact("02/05/2020", "MM/dd/yyyy", ci), StringValue = null, IntValue = null, DoubleValue = 456.0, BoolValue = null, SensorId = 3 },      
+                //new History { Id = 2, Date = DateTime.ParseExact("02/05/2020", "MM/dd/yyyy", ci), StringValue = null, IntValue = 456, DoubleValue = null, BoolValue = null, SensorId = 6 },
+                //new History { Id = 3, Date = DateTime.ParseExact("02/05/2020", "MM/dd/yyyy", ci), StringValue = null, IntValue = null, DoubleValue = 456.0, BoolValue = null, SensorId = 1 },
+                //new History { Id = 4, Date = DateTime.ParseExact("02/05/2020", "MM/dd/yyyy", ci), StringValue = null, IntValue = null, DoubleValue = null, BoolValue = true, SensorId = 5 },
+            };
+            return histories;
         }
     }
 }
