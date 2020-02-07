@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Business.Interfaces
+namespace Infrastructure.Business.Managers
 {
     public class ReportElementManager : BaseManager, IReportElementManager
     {
@@ -508,21 +508,24 @@ namespace Infrastructure.Business.Interfaces
             unitOfWork.Save();
         }
 
-        public async Task<ReportElementDto> GetStatusReport(int ReportElementId)
+        public async Task<ReportElementDto> GetStatusReport(int ReportElementId, string userid)
         {
+            UserId = userid;
             ReportElement reportElementt = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
             if (reportElementt == null)
                 return new ReportElementDto { IsCorrect = false, Message = "Invalid report element" };
 
-            ReportElementDto reportElement = mapper.Map<Sensor, ReportElementDto>(reportElementt.Sensor);
+            ReportElementDto reportElement = new ReportElementDto();
             IEnumerable<Sensor> sensors = await unitOfWork.SensorRepo.GetAllSensorsByUserId(UserId);
 
+            reportElement.Dates = new List<string>();
+            reportElement.Values = new List<dynamic>();
             foreach (Sensor sensor in sensors)
             {
                 reportElement.Dates.Add(sensor.Name);
                 History history = unitOfWork.HistoryRepo.GetLastHistoryBySensorId(sensor.Id);
                 dynamic value = null;
-                switch (reportElement.MeasurementType)
+                switch (sensor.SensorType.MeasurementType)
                 {
                     case MeasurementType.Int:
                         value = history.IntValue.GetValueOrDefault();

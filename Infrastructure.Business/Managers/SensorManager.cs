@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using Infrastructure.Business.DTOs.SensorType;
 using Domain.Interfaces.Repositories;
 
-namespace Infrastructure.Business.Interfaces
+namespace Infrastructure.Business.Managers
 {
     public class SensorManager : BaseManager, ISensorManager
     {

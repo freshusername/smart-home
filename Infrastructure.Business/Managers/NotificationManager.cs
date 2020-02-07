@@ -10,7 +10,7 @@ using Domain.Interfaces.Repositories;
 using Infrastructure.Business.DTOs.Notification;
 using Infrastructure.Data;
 
-namespace Infrastructure.Business.Interfaces
+namespace Infrastructure.Business.Managers
 {
     public class NotificationManager : BaseManager, INotificationManager
 	{

@@ -10,10 +10,10 @@ namespace Domain.Core.Model.Enums
         Columnrange,
         Gauge,
         Heatmap,
-        BoolHeatmap,
         TimeSeries,
         Wordcloud,
         OnOff,
-        StatusReport
+        StatusReport,
+        BoolHeatmap
     }
 }
