@@ -4,69 +4,71 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Infrastructure.Business.DTOs.Notification;
-using Infrastructure.Business.Interfaces;
+using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Migrations;
 using smart_home_web.Models.Notification;
 
 namespace smart_home_web.Controllers
 {
 	public class NotificationController : Controller
 	{
-		private readonly INotificationManager _notificationManager;
+		private readonly IToastManager _toastManager;
 		private readonly IMapper _mapper;
 
-		public NotificationController(INotificationManager notificationManager, IMapper mapper)
+		public NotificationController(IToastManager toastManager, IMapper mapper)
 		{
-			_notificationManager = notificationManager;
+			_toastManager = toastManager;
 			_mapper = mapper;
 		}
 
-		public async Task<IActionResult> Index()
+		public async Task<IActionResult> Index(int sensorId)
 		{
-			var notifications = await _notificationManager.GetAllNotificationsAsync();
-			var models = _mapper.Map<IEnumerable<NotificationDto>, IEnumerable<NotificationViewModel>>(notifications);
+			var notifications = await _toastManager.GetToastsBySensorId(sensorId);
 
-			return View(new AllNotificationsViewModel
-			{
-				Notifications = models
-			});
+			return View(_mapper.Map<IEnumerable<ToastDto>, IEnumerable<ToastViewModel>>(notifications));
 		}
 
 		public async Task<IActionResult> Read()
 		{
-			var notifications = await _notificationManager.GetAllNotificationsAsync();
-			var models = _mapper.Map<IEnumerable<NotificationDto>, IEnumerable<NotificationViewModel>>(notifications);
+			//var notifications = await _notificationManager.GetAllNotificationsAsync();
+			//var models = _mapper.Map<IEnumerable<NotificationDto>, IEnumerable<NotificationViewModel>>(notifications);
 
-			return View(new AllNotificationsViewModel
-			{
-				Notifications = models
-			});
+			//return View(new AllNotificationsViewModel
+			//{
+			//	Notifications = models
+			//});
+			return View();
 		}
 
 		public async Task<IActionResult> ChangeStatus(int id, string page = "Index")
 		{
-			await _notificationManager.ChangeStatusAsync(id);
+			//await _notificationManager.ChangeStatusAsync(id);
 
-			return RedirectToAction(page);
+			//return RedirectToAction(page);
+			return View();
 		}
 
-		public async Task<IActionResult> All()
+		public ActionResult NotifForSensor(int sensorId)
 		{
-			var notifications = await _notificationManager.GetAllNotificationsAsync();
-			var models = _mapper.Map<IEnumerable<NotificationDto>, IEnumerable<NotificationViewModel>>(notifications);
+			ViewBag.SensorId = sensorId;
+			return View();
+		}
 
-			return View(new AllNotificationsViewModel
+		public ActionResult Create(int sensorId)
+		{
+			CreateToastViewModel model = new CreateToastViewModel
 			{
-				Notifications = models
-			});
+				SensorId = sensorId
+			};
+			return View(model);
 		}
 
 		public async Task<IActionResult> Detail(int id)
 		{
-			var notitification = await _notificationManager.GetNotificationByIdAsync(id);
+			//var notitification = await _notificationManager.GetNotificationByIdAsync(id);
 
-			return View(_mapper.Map<NotificationDto, NotificationViewModel>(notitification));
+			//return View(_mapper.Map<NotificationDto, NotificationViewModel>(notitification));
+			return View();
 		}
 	}
 }

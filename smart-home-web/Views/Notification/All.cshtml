@@ -1,4 +1,4 @@
-﻿@using smart_home_web.Models.Notification;
+﻿﻿@using smart_home_web.Models.Notification;
 
 @model AllNotificationsViewModel;
 @{
@@ -22,12 +22,12 @@
                 </a>
             </div>
             <div class="col-lg-6">
-                @foreach (var messages in Model.Notifications)
+@foreach (var messages in Model.Notifications)
                 {
-                    @if (messages.UserName == User.Identity.Name)
+@if (messages.UserName == User.Identity.Name)
                     {
-                    <div class="alert alert-info">
-                        <p>@messages.Comment</p>
+                <div class="alert alert-info">
+                    <p>@messages.Comment</p>
                         <p>@messages.Date</p>
                         @if (messages.IsRead.ToString() == "False" && messages.UserName == User.Identity.Name)
                         {
@@ -45,10 +45,10 @@
                                 </div>
                             </a>
                         }
-                    </div>
-                    }
-                }
-            </div>
-        </div>
-    </div>
+                </div>
+}
+}
+</div>
+</div>
+</div>
 </body>
