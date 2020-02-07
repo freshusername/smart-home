@@ -20,21 +20,6 @@ namespace Infrastructure.Business.Managers
             _userManager = userManager;
         }
 
-        public async Task<OperationDetails> Create(DashboardDto dashboardDto)
-        {
-            var dashboard = mapper.Map<DashboardDto, Dashboard>(dashboardDto);
-            if (String.IsNullOrEmpty(dashboard.Name))
-                return new OperationDetails(false, "Name is null", "Name");
-            await unitOfWork.DashboardRepo.Insert(dashboard);
-            var res = unitOfWork.Save();
-
-            if (res > 0)
-            {
-                return new OperationDetails(true, "Saved successfully", "");
-            }
-            return new OperationDetails(true, "Something is wrong", "");
-        }
-
         public async Task<IEnumerable<DashboardDto>> GetAll()
         {
             var dashboards = await unitOfWork.DashboardRepo.GetAll();
@@ -45,7 +30,8 @@ namespace Infrastructure.Business.Managers
         {
             var dashboards = await unitOfWork.DashboardRepo.GetAll();
             dashboards = dashboards.Where(d => d.AppUserId == userId);
-            return mapper.Map<IEnumerable<Dashboard>, IEnumerable<DashboardDto>>(dashboards);
+			var res = mapper.Map<IEnumerable<Dashboard>, IEnumerable<DashboardDto>>(dashboards);
+			return res;
         }
 
         public async Task<IEnumerable<DashboardDto>> GetAllPublic(string userId)
@@ -60,6 +46,21 @@ namespace Infrastructure.Business.Managers
             var result = mapper.Map<Dashboard, DashboardDto>(dashboard);
 
             return result;
+        }
+
+        public async Task<OperationDetails> Create(DashboardDto dashboardDto)
+        {
+            var dashboard = mapper.Map<DashboardDto, Dashboard>(dashboardDto);
+            if (String.IsNullOrEmpty(dashboard.Name))
+                return new OperationDetails(false, "Name is null", "Name");
+            await unitOfWork.DashboardRepo.Insert(dashboard);
+            var res = unitOfWork.Save();
+
+            if (res > 0)
+            {
+                return new OperationDetails(true, "Saved successfully", "");
+            }
+            return new OperationDetails(true, "Something is wrong", "");
         }
 
         public async Task<OperationDetails> DeleteById(int id)

@@ -24,6 +24,7 @@ namespace Infrastructure.Business.Managers
             graphHub = hubContext;
         }
 
+
         public async Task<HistoryDto> GetHistoryByIdAsync(int id)
         {
             var history = await unitOfWork.HistoryRepo.GetById(id);

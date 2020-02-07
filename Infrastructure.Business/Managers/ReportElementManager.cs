@@ -3,11 +3,8 @@ using Domain.Core.CalculateModel;
 using Domain.Core.Model;
 using Domain.Core.Model.Enums;
 using Domain.Interfaces.Repositories;
-using Infrastructure.Business.DTOs.History;
 using Infrastructure.Business.DTOs.ReportElements;
 using Infrastructure.Business.DTOs.Sensor;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Business.Managers
 {
-    public class ReportElementManager : BaseManager, IReportElementManager
+	public class ReportElementManager : BaseManager, IReportElementManager
     {
         protected readonly IHistoryManager historyManager;
         private string UserId;
@@ -209,6 +206,7 @@ namespace Infrastructure.Business.Managers
             await unitOfWork.ReportElementRepo.Update(reportElement);
             unitOfWork.Save();
         }
+
         public async Task<ReportElementDto> GetColumnRangeById(int ReportElementId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
