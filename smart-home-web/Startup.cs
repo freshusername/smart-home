@@ -100,7 +100,7 @@ namespace smart_home_web
             services.AddTransient<IDashboardManager, DashboardManager>();
             services.AddTransient<IReportElementManager, ReportElementManager>();
             services.AddTransient<IActionService, ActionService>();
-            services.AddTransient<IMessageManager, MessageManager>();
+            services.AddTransient<IToastManager, ToastManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
