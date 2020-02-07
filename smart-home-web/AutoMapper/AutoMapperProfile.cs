@@ -104,7 +104,10 @@ namespace smart_home_web.AutoMapper
             CreateMap<CreateDashboardViewModel, DashboardDto>().ReverseMap();
             CreateMap<EditDashboardViewModel, DashboardDto>().ReverseMap();
 
-            CreateMap<ReportElement, GaugeDto>().ReverseMap();
+            CreateMap<ReportElement, GaugeDto>()
+                .ForMember(gd => gd.MeasurementName, map => map.MapFrom(s => s.Sensor.SensorType.MeasurementName))
+                .ForMember(gd => gd.SensorName, map => map.MapFrom(s => s.Sensor.Name)).ReverseMap();
+                
             CreateMap<GaugeDto, GaugeViewModel>().ReverseMap();
 
             //Heatmap

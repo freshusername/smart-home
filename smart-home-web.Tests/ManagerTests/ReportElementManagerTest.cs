@@ -1,4 +1,5 @@
 ﻿using Domain.Core.Model;
+using Infrastructure.Business.DTOs.History;
 using Infrastructure.Business.DTOs.ReportElements;
 using Infrastructure.Business.Interfaces;
 using Infrastructure.Business.Managers;
@@ -19,6 +20,9 @@ namespace smart_home_web.Tests.ManagerTests
         private static Mock<IHistoryManager> mockHistoryManager;
         private static List<ReportElement> reportElements;
         private static List<History> histories;
+        private static ReportElement _reportElement;
+        private static GaugeDto _gaugeDto;
+        private static HistoryDto _historyDto;
 
         [SetUp]
         protected override void Initialize()
@@ -66,6 +70,8 @@ namespace smart_home_web.Tests.ManagerTests
                     Sensor = new Sensor() { Id = 1, Name = "Sensor1", SensorType = new SensorType() { MeasurementType = Domain.Core.Model.Enums.MeasurementType.Int} },
                     IntValue = 3
                 }
+
+                
             };
 
             mockUnitOfWork.Setup(u => u.ReportElementRepo
@@ -77,6 +83,29 @@ namespace smart_home_web.Tests.ManagerTests
             .GetHistoriesBySensorIdAndDate(It.IsAny<int>(), It.IsAny<DateTimeOffset>()))
                 .Returns((int i, DateTimeOffset date) =>
                     Task.FromResult(histories.Where(x => x.Id == i && x.Date == date)));
+
+           _reportElement = new ReportElement {
+                Id = 1,
+                Hours = Domain.Core.Model.Enums.ReportElementHours.Hour168,
+                Sensor = new Sensor() { Id = 1, Name = "Sensor1"},
+                SensorId = 1
+            };
+
+            _gaugeDto = new GaugeDto
+            {
+                Id = 1,
+                Hours = Domain.Core.Model.Enums.ReportElementHours.Hour168,
+                SensorId = 1,
+                SensorName = "Sensor1",
+                MeasurementName = "*C"            
+            };
+
+            _historyDto = new HistoryDto
+            {
+                Id = 3,
+                Date = new DateTimeOffset(),                
+                IntValue = 3
+            };
         }
 
         [Test]
@@ -97,6 +126,88 @@ namespace smart_home_web.Tests.ManagerTests
             Assert.AreEqual(2, result.Id);
             Assert.AreEqual("Sensor2", result.SensorName);
             Assert.AreEqual(false, result.IsCorrect);
+        }
+
+        [Test]
+        public void GetGaugeById_InvalidReportElementId_ReturnNotCorrect()
+        {
+            ReportElement _report = null;
+
+            mockUnitOfWork.Setup(u => u
+              .ReportElementRepo.GetById(2)).Returns(Task.FromResult(_report));
+          
+            var result = manager.GetGaugeById(2).Result;
+
+            Assert.IsFalse(result.IsValid);
+        }
+
+        [Test]
+        public void GetGaugeById_InvalidReportElementId_ReturnCorrect()
+        {
+           
+            mockUnitOfWork.Setup(u => u
+              .ReportElementRepo.GetById(1)).Returns(Task.FromResult(_reportElement));
+
+            mockMapper.Setup(m => m
+              .Map<ReportElement, GaugeDto>(_reportElement))
+                  .Returns(_gaugeDto);
+
+            mockHistoryManager.Setup(u => u
+             .GetMinValueForPeriod(_reportElement.SensorId.Value, (int)_reportElement.Hours)).Returns(10);
+
+            mockHistoryManager.Setup(u => u
+             .GetMaxValueForPeriod(_reportElement.SensorId.Value, (int)_reportElement.Hours)).Returns(30);
+
+            mockHistoryManager.Setup(u => u
+            .GetLastHistoryBySensorId(_reportElement.SensorId.Value)).Returns(_historyDto);
+
+            var result = manager.GetGaugeById(1).Result;
+
+            Assert.IsTrue(result.IsValid);
+        }
+
+        [Test]
+        public void GetGaugeById_MinOrMaxNull_ReturnNotCorrect()
+        {
+
+            mockUnitOfWork.Setup(u => u
+              .ReportElementRepo.GetById(1)).Returns(Task.FromResult(_reportElement));
+
+            mockMapper.Setup(m => m
+              .Map<ReportElement, GaugeDto>(_reportElement))
+                  .Returns(_gaugeDto);
+           
+            mockHistoryManager.Setup(u => u
+            .GetLastHistoryBySensorId(_reportElement.SensorId.Value)).Returns(_historyDto);
+
+            var result = manager.GetGaugeById(1).Result;
+
+            Assert.IsFalse(result.IsValid);
+        }
+
+        [Test]
+        public void GetGaugeById_MinAndMaxEqual_ReturnCorrect()
+        {
+
+            mockUnitOfWork.Setup(u => u
+              .ReportElementRepo.GetById(1)).Returns(Task.FromResult(_reportElement));
+
+            mockMapper.Setup(m => m
+              .Map<ReportElement, GaugeDto>(_reportElement))
+                  .Returns(_gaugeDto);
+
+            mockHistoryManager.Setup(u => u
+             .GetMinValueForPeriod(_reportElement.SensorId.Value, (int)_reportElement.Hours)).Returns(20);
+
+            mockHistoryManager.Setup(u => u
+             .GetMaxValueForPeriod(_reportElement.SensorId.Value, (int)_reportElement.Hours)).Returns(20);
+
+            mockHistoryManager.Setup(u => u
+            .GetLastHistoryBySensorId(_reportElement.SensorId.Value)).Returns(_historyDto);
+
+            var result = manager.GetGaugeById(1).Result;
+
+            Assert.IsTrue(result.IsValid);
         }
 
     }

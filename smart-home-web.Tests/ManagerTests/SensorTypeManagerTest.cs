@@ -44,7 +44,7 @@ namespace smart_home_web.Tests.ManagerTests
         }
 
         [Test]
-        public void Create_ValidDto_ReturnFalse()
+        public void Create_InvalidDto_ReturnFalse()
         {
             SensorTypeDto _sensorTypeDto  = null;
              SensorType _sensorType  = null;
@@ -77,7 +77,7 @@ namespace smart_home_web.Tests.ManagerTests
         }
 
         [Test]
-        public void Update_ValidDto_ReturnFalse()
+        public void Update_InvalidDto_ReturnTrue()
         {
             SensorTypeDto _sensorTypeDto = null;
              SensorType _sensorType = null;

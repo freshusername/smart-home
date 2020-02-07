@@ -266,6 +266,7 @@ namespace Infrastructure.Business.Interfaces
         public async Task<GaugeDto> GetGaugeById(int gaugeId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(gaugeId);
+            if (reportElement == null) return new GaugeDto { IsValid = false};
             GaugeDto gaugeDto = mapper.Map<ReportElement, GaugeDto>(reportElement);
 
             gaugeDto.Min = historyManager.GetMinValueForPeriod(reportElement.SensorId.Value, (int)gaugeDto.Hours);
@@ -274,8 +275,6 @@ namespace Infrastructure.Business.Interfaces
             {
                 var value = historyManager.GetLastHistoryBySensorId(reportElement.SensorId.Value);
                 gaugeDto.Value = value.DoubleValue.HasValue ? value.DoubleValue : value.IntValue;
-                gaugeDto.SensorName = reportElement.Sensor.Name;
-                gaugeDto.MeasurementName = reportElement.Sensor.SensorType.MeasurementName;
                 if (gaugeDto.Min == gaugeDto.Max)
                 {
                     gaugeDto.Min--;
