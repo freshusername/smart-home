@@ -1,6 +1,7 @@
 ﻿using Domain.Core.Model;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Business.DTOs.Sensor;
+using Infrastructure.Business.Interfaces;
 using Infrastructure.Business.Managers;
 using Infrastructure.Data.Repositories;
 using Moq;
@@ -32,7 +33,7 @@ namespace smart_home_web.Tests.ManagerTests
         }
         #region Create
         [Test]
-        public void Create_ValidDto_ReturnTrue()
+        public void Create_ValidDto_ReturnNotNull()
         {
             Guid guid = Guid.NewGuid();
             SensorDto newSensorDto = new SensorDto() { Name = "Correct", Token = guid, IsActive = true, IsValid = true};
@@ -42,6 +43,10 @@ namespace smart_home_web.Tests.ManagerTests
                 .Map<SensorDto,Sensor>(newSensorDto))
                     .Returns(newSensor);
 
+            mockMapper.Setup(m => m
+                .Map<Sensor, SensorDto>(newSensor))
+                    .Returns(newSensorDto);
+
             mockUnitOfWork.Setup(uow => uow
                 .SensorRepo.GetByToken(guid));
 
@@ -50,31 +55,33 @@ namespace smart_home_web.Tests.ManagerTests
             
             var result = _manager.Create(newSensorDto);
 
-            Assert.IsTrue(result.Result.Succeeded);
+            Assert.IsNotNull(result.Result);
         }
 
         [Test]
-        public void Create_DtoIsNull_ReturnFalse()
+        public void Create_DtoIsNull_ReturnNull()
         {
             SensorDto newSensorDto = null;
 
             mockUnitOfWork.Setup(uow => uow
-                .SensorRepo.GetByToken(_existingSensor.Token)).Returns(_existingSensor);
+                .SensorRepo.GetByToken(_existingSensor.Token))
+                .Returns(_existingSensor);
 
             var result = _manager.Create(newSensorDto);
 
-            Assert.IsFalse(result.Result.Succeeded);
+            Assert.IsNull(result.Result);
         }
 
         [Test]
-        public void Create_SensorExist_ReturnFalse()
+        public void Create_SensorExist_ReturnNull()
         {
             mockUnitOfWork.Setup(uow => uow
-                .SensorRepo.GetByToken(_existingSensor.Token)).Returns(_existingSensor);
+                .SensorRepo.GetByToken(_existingSensor.Token))
+                .Returns(_existingSensor);
 
             var result = _manager.Create(_existingSensorDto);
 
-            Assert.IsFalse(result.Result.Succeeded);
+            Assert.IsNull(result.Result);
         }
         #endregion Create
         #region Update
@@ -85,42 +92,49 @@ namespace smart_home_web.Tests.ManagerTests
                 .Map<SensorDto, Sensor>(_existingSensorDto))
                     .Returns(_existingSensor);
 
+            mockMapper.Setup(m => m
+                .Map<Sensor, SensorDto>(_existingSensor))
+                    .Returns(_existingSensorDto);
+
             mockUnitOfWork.Setup(uow => uow
-                .SensorRepo.GetById(_existingSensor.Id)).Returns(Task.FromResult(_existingSensor));
+                .SensorRepo.GetById(_existingSensor.Id))
+                .Returns(Task.FromResult(_existingSensor));
 
             mockUnitOfWork.Setup(uow => uow
                 .SensorRepo.Update(_existingSensor));
 
             var result = _manager.Update(_existingSensorDto);
 
-            Assert.IsTrue(result.Succeeded);
+            Assert.IsNotNull(result.Result);
         }
 
         [Test]
-        public void Update_DtoIsNull_ReturnFalse()
+        public void Update_DtoIsNull_ReturnNull()
         {
             SensorDto nullSensorDto = null;
 
             mockUnitOfWork.Setup(uow => uow
-                .SensorRepo.GetById(_existingSensor.Id)).Returns(Task.FromResult(_existingSensor));
+                .SensorRepo.GetById(_existingSensor.Id))
+                .Returns(Task.FromResult(_existingSensor));
 
             var result = _manager.Update(nullSensorDto);
 
-            Assert.IsFalse(result.Succeeded);
+            Assert.IsNull(result.Result);
         }
 
         [Test]
-        public void Update_SensorNotExist_ReturnFalse()
+        public void Update_SensorNotExist_ReturnNull()
         {
             SensorDto notExistingSensorDto = null;
             Sensor notExistingSensor = null;
 
             mockUnitOfWork.Setup(uow => uow
-                .SensorRepo.GetById(0)).Returns(Task.FromResult(notExistingSensor));
+                .SensorRepo.GetById(0))
+                .Returns(Task.FromResult(notExistingSensor));
             
             var result = _manager.Update(notExistingSensorDto);
 
-            Assert.IsFalse(result.Succeeded);
+            Assert.IsNull(result.Result);
         }
         #endregion
         #region Delete

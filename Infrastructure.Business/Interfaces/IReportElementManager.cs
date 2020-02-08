@@ -5,7 +5,7 @@ using Infrastructure.Business.DTOs.Sensor;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Business.Managers
+namespace Infrastructure.Business.Interfaces
 {
 	public interface IReportElementManager
     {
@@ -17,6 +17,7 @@ namespace Infrastructure.Business.Managers
 
 		Task<ReportElement> GetById(int id);
         Task<HeatmapDto> GetHeatmapById(int ReportElementId);
+        Task<BoolHeatmapDto> GetBoolHeatmapById(int ReportElementId);
         Task<GaugeDto> GetGaugeById(int gaugeId);
         Task<SensorDto> GetLastSensorByUserId(string userId);
 

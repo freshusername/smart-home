@@ -1,22 +1,39 @@
 ﻿using AutoMapper;
+using Domain.Core.Model;
 using Domain.Interfaces.Repositories;
+using Infrastructure.Business.DTOs.Notification;
 using Infrastructure.Business.Hubs;
 using Infrastructure.Business.Infrastructure;
 using Infrastructure.Business.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Business.Managers
+namespace Infrastructure.Business.Interfaces
 {
-	public class MessageManager : BaseManager, IMessageManager
+	public class ToastManager : BaseManager, IToastManager
     {
         protected readonly IHubContext<MessageHub> messageHub;
 
-        public MessageManager(IHubContext<MessageHub> hubcontext, IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
+        public ToastManager(IHubContext<MessageHub> hubcontext, IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
             this.messageHub = hubcontext;
+        }
+
+        public async Task<IEnumerable<ToastDto>> GetToastsBySensorId(int sensorId)
+        {
+            var notifications = await unitOfWork.NotificationRepo.GetBySensorId(sensorId);
+
+            return mapper.Map<IEnumerable<Notification>, IEnumerable<ToastDto>>(notifications);
+        }
+
+        public async Task<ToastDto> GetById(int id)
+        {
+            var notifications = await unitOfWork.NotificationRepo.GetById(id);
+
+            return mapper.Map<Notification, ToastDto>(notifications);
         }
 
         public async Task ShowMessage(Guid token, string value)
@@ -41,6 +58,19 @@ namespace Infrastructure.Business.Managers
                     }
                 }
             }
+        }
+
+        public async Task<OperationDetails> Create(ToastDto toastDto)
+        {
+            var toast = mapper.Map<ToastDto, Notification>(toastDto);
+            await unitOfWork.NotificationRepo.Insert(toast);
+            var res = unitOfWork.Save();
+
+            if (res > 0)
+            {
+                return new OperationDetails(true, "Saved successfully", "");
+            }
+            return new OperationDetails(true, "Something has gone wrong", "");
         }
     }
 }

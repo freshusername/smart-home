@@ -9,7 +9,7 @@ using System.Linq;
 using System;
 using Microsoft.AspNetCore.Identity;
 
-namespace Infrastructure.Business.Managers
+namespace Infrastructure.Business.Interfaces
 {
     public class DashboardManager : BaseManager, IDashboardManager
     {
@@ -18,21 +18,6 @@ namespace Infrastructure.Business.Managers
         public DashboardManager(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager) : base(unitOfWork, mapper)
         {
             _userManager = userManager;
-        }
-
-        public async Task<OperationDetails> Create(DashboardDto dashboardDto)
-        {
-            var dashboard = mapper.Map<DashboardDto, Dashboard>(dashboardDto);
-            if (String.IsNullOrEmpty(dashboard.Name))
-                return new OperationDetails(false, "Name is null", "Name");
-            await unitOfWork.DashboardRepo.Insert(dashboard);
-            var res = unitOfWork.Save();
-
-            if (res > 0)
-            {
-                return new OperationDetails(true, "Saved successfully", "");
-            }
-            return new OperationDetails(true, "Something is wrong", "");
         }
 
         public async Task<IEnumerable<DashboardDto>> GetAll()
@@ -62,26 +47,48 @@ namespace Infrastructure.Business.Managers
             return result;
         }
 
-        public async Task<OperationDetails> DeleteById(int id)
+        public async Task<DashboardDto> Create(DashboardDto dashboardDto)
         {
-            await unitOfWork.DashboardRepo.DeleteById(id);
-            var res = unitOfWork.Save();
-
-            if (res > 0)
+            Dashboard dashboard = mapper.Map<DashboardDto, Dashboard>(dashboardDto);
+            try
             {
-                return new OperationDetails(true, "Saved successfully", "");
+                await unitOfWork.DashboardRepo.Insert(dashboard);
+                unitOfWork.Save();
             }
-            return new OperationDetails(true, "Something is wrong", "");
+            catch (Exception)
+            {
+                return null;
+            }
+            return mapper.Map<Dashboard, DashboardDto>(dashboard);
         }
 
-        public async Task Update(int id, string name)
+        public async Task<DashboardDto> Update(DashboardDto dashboardDto)
         {
-            Dashboard dashboard = await unitOfWork.DashboardRepo.GetById(id);
-            if (dashboard.Name == name)
-                return;
-            dashboard.Name = name;
-            await unitOfWork.DashboardRepo.Update(dashboard);
-            unitOfWork.Save();
+            Dashboard dashboard = mapper.Map<DashboardDto, Dashboard>(dashboardDto);
+            try
+            {
+                await unitOfWork.DashboardRepo.Update(dashboard);
+                unitOfWork.Save();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            return mapper.Map<Dashboard, DashboardDto>(dashboard);
+        }
+
+        public async Task<OperationDetails> Delete(int id)
+        {
+            try
+            {
+                await unitOfWork.DashboardRepo.DeleteById(id);
+                unitOfWork.Save();
+            }
+            catch (Exception ex)
+            {
+                return new OperationDetails(false, ex.Message, "Error");
+            }
+            return new OperationDetails(true, "Dashboard has been deleted", "Name");
         }
     }
 }

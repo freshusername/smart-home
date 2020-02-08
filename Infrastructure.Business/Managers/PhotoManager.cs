@@ -8,7 +8,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Business.Managers
+namespace Infrastructure.Business.Interfaces
 {
 	public class PhotoManager : BaseManager, IPhotoManager
     {

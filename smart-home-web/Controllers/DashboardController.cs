@@ -2,7 +2,7 @@
 using Domain.Core.Model;
 using Infrastructure.Business.DTOs.Dashboard;
 using Infrastructure.Business.Infrastructure;
-using Infrastructure.Business.Managers;
+using Infrastructure.Business.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -20,17 +20,20 @@ namespace smart_home_web.Controllers
         private readonly IMapper _mapper;
         private IHostingEnvironment _env;
         private IDashboardManager _dashboardManager;
+        private readonly IIconManager _iconManager;
         private UserManager<AppUser> _userManager;
 
         public DashboardController(
             IMapper mapper,
             IHostingEnvironment env,
             IDashboardManager dashboardManager,
+            IIconManager iconManager,
             UserManager<AppUser> userManager)
         {
             _mapper = mapper;
             _env = env;
             _dashboardManager = dashboardManager;
+            _iconManager = iconManager;
             _userManager = userManager;
         }
 
@@ -43,7 +46,7 @@ namespace smart_home_web.Controllers
         }
 
 
-        public async Task<IActionResult> Index(int id)
+        public async Task<IActionResult> Index()
         {
             var userId = _userManager.GetUserId(User);
             if (User.Identity.IsAuthenticated)
@@ -65,62 +68,99 @@ namespace smart_home_web.Controllers
                 var dashboards = await _dashboardManager.GetAllPublic(userId);
                 var result = _mapper.Map<IEnumerable<DashboardDto>, IEnumerable<DashboardViewModel>>(dashboards);
 
-                if (result.Count() == 0)
+                return View(new DashboardIndexViewModel
                 {
-                    return View(new DashboardIndexViewModel
-                    {
-                        Dashboards = result.Reverse()
-                    });
-                }
-                else
-                {
-                    return View(new DashboardIndexViewModel
-                    {
-                        Dashboards = result.Reverse()
-                    });
-                }
+                    Dashboards = result.Reverse()
+                });
             }
         }
 
         [Authorize]
-        [HttpPost]
-        public async Task<IActionResult> Create(string name, bool isPublic)
-        {
-            DashboardDto dashboardDto = new DashboardDto()
-            {
-                Name = name,
-                AppUserId = _userManager.GetUserId(User),
-                IsPublic = isPublic
-            };
+        public IActionResult Create() => ViewComponent("DashboardCreate");
 
-            OperationDetails result = await _dashboardManager.Create(dashboardDto);
-            if (result.Succeeded)
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateDashboardViewModel model)
+        {
+            if (!ModelState.IsValid)
             {
-                var dashboardDtos = await _dashboardManager.GetAll();
-                var dashboard = _mapper.Map<DashboardDto, DashboardViewModel>(dashboardDtos.Last());
-                return ViewComponent("Dashboard", new { model = dashboard });
+                return View(model);
+            }
+
+            DashboardDto dashboardDto = _mapper.Map<CreateDashboardViewModel, DashboardDto>(model);
+            if (model.IconFile != null)
+                dashboardDto.IconId = await _iconManager.CreateAndGetIconId(model.IconFile);
+
+            if(!dashboardDto.IsPublic)
+                dashboardDto.AppUserId = _userManager.GetUserId(User);
+
+            var res = _dashboardManager.Create(dashboardDto).Result;
+
+            if (res != null)
+            {
+                return ViewComponent("DashboardElement", _mapper.Map<DashboardDto, DashboardViewModel>(res));
             }
             else
             {
-                ModelState.AddModelError(result.Property, result.Message);
-                return NotFound();
+                //ModelState.AddModelError(res.Property, res.Message);
+                return View(model);
             }
         }
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, string name)
+        public async Task<IActionResult> Edit(EditDashboardViewModel model)
         {
-            await _dashboardManager.Update(id, name);
-            return Ok();
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            DashboardDto dashboardDto = _mapper.Map<EditDashboardViewModel, DashboardDto>(model);
+            if (model.IconFile != null)
+            {
+                dashboardDto.IconId = await _iconManager.CreateAndGetIconId(model.IconFile);
+            }
+            if (dashboardDto.IsPublic)
+                dashboardDto.AppUserId = null;
+
+            var res = await _dashboardManager.Update(dashboardDto);
+
+            if (res != null)
+            {
+                return ViewComponent("DashboardElement", _mapper.Map<DashboardDto, DashboardViewModel>(res));
+            }
+            else
+            {
+                //ModelState.AddModelError(res.Property, res.Message);
+                return View(model);
+            }
+        }
+
+        public async Task<ActionResult> Edit(int id)
+        {
+            var dashboardDto = await _dashboardManager.GetById(id);
+            EditDashboardViewModel model = _mapper.Map<DashboardDto, EditDashboardViewModel>(dashboardDto);
+            return ViewComponent("DashboardEdit", model);
         }
 
         [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
-            await _dashboardManager.DeleteById(id);
-            return Ok();
+            try
+            {
+                var res = await _dashboardManager.Delete(id);
+                if (!res.Succeeded)
+                {
+                    ModelState.AddModelError(res.Property, res.Message);
+                    return View();
+                }
 
+                return Ok();
+            }
+            catch
+            {
+                return View();
+            }
         }
     }
 }

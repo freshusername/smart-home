@@ -5,7 +5,7 @@ using Infrastructure.Business.Infrastructure;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Business.Managers
+namespace Infrastructure.Business.Interfaces
 {
     public interface IDashboardManager
     {
@@ -14,9 +14,8 @@ namespace Infrastructure.Business.Managers
         Task<IEnumerable<DashboardDto>> GetByUserId(string userId);
         Task<IEnumerable<DashboardDto>> GetAllPublic(string userId);
 
-        Task Update(int id, string name);
-
-        Task<OperationDetails> Create(DashboardDto dashboardDto);
-        Task<OperationDetails> DeleteById(int id);
+        Task<DashboardDto> Update(DashboardDto dashboardDto);
+        Task<DashboardDto> Create(DashboardDto dashboardDto);
+        Task<OperationDetails> Delete(int id);
     }
 }

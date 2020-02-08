@@ -1,0 +1,60 @@
+﻿@model smart_home_web.Models.Dashboard.DashboardViewModel
+
+<div class="mb-3 card col-md-6 col-lg-3 m-2 element-container" data-element-container-id="@Model.Id.ToString()">
+
+    <div class="card-header-tab card-header">
+        <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
+            <i class="header-icon pe-7s-monitor mr-3"> </i>
+            @Model.Name
+        </div>
+        <div class="btn-actions-pane-right actions-icon-btn">
+            @if (User.Identity.IsAuthenticated && User.Claims.ElementAt(1).Value == Model.DashCreatorUserName)
+            {
+                <a href="#" class="element-delete float-right">
+                    <span class="fas fa-times mr-1 fsize-2"> </span>
+                </a>
+                <a href="#" class="element-edit float-right">
+                    <span class="fas fa-pen dash_icon mr-1 fsize-1"> </span>
+                </a>
+            }
+        </div>
+    </div>
+        @if (Model.IconPath != null)
+        {
+            <img class="card-img-top" style="border-radius: 0; max-height: 170px;"
+                 src="@Model.IconPath"
+                 alt="Image is not found" />
+        }
+        else
+        {
+            <img class="card-img-top" style="border-radius: 0; max-height: 170px;"
+                 src="https://images.pexels.com/photos/373076/pexels-photo-373076.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+                 alt="Card image cap">
+        }
+    <div class="widget-chart widget-chart2 text-left p-0">
+        <div class="widget-chat-wrapper-outer">
+            <div class="widget-chart-content widget-chart-content-lg">
+                <div class="widget-chart-flex">
+                    <div class="widget-title opacity-5 text-muted text-uppercase">
+                        report elements
+                    </div>
+                </div>
+                <div class="widget-numbers ml-3">
+                    <div class="widget-chart-flex">
+                        @Model.ReportElements.Count()
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="pt-0 pb-0 card-body">
+    </div>
+    <div class="d-block text-right rm-border card-footer">
+        <a asp-controller="Dashboard" asp-action="Detail" asp-route-id="@Model.Id" class="text-uppercase btn btn-primary">
+            View dashboard
+            <span class="text-white pl-2 opacity-3">
+                <i class="fa fa-arrow-right"></i>
+            </span>
+        </a>
+    </div>
+</div>

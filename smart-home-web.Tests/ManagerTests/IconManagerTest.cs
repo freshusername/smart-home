@@ -1,5 +1,6 @@
 ﻿using Domain.Core.Model;
 using Infrastructure.Business.DTOs.Icon;
+using Infrastructure.Business.Interfaces;
 using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;

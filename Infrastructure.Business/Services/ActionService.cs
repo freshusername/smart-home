@@ -49,9 +49,9 @@ namespace Infrastructure.Business.Services
         private bool BoolVerification(int sensorId)
         {
 
-            var seconds = DateTimeOffset.Now.AddSeconds(-4);
+            var minutes = DateTimeOffset.Now.AddMinutes(-5);
 
-            var lastHistory = _db.HistoryRepo.GetLastHistoryBySensorIdAndDate(sensorId, seconds);
+            var lastHistory = _db.HistoryRepo.GetLastHistoryBySensorIdAndDate(sensorId, minutes);
             if (lastHistory == null) return false;
             if (lastHistory.BoolValue.Value) return true;
 

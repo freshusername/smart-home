@@ -5,7 +5,6 @@ using Domain.Core.Model;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Business.Infrastructure;
 using Infrastructure.Business.Interfaces;
-using Infrastructure.Business.Managers;
 using Infrastructure.Business.Services;
 using Infrastructure.Data;
 using Infrastructure.Data.Repositories;
@@ -20,7 +19,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using smart_home_web.AutoMapper;
 using Infrastructure.Business.Hubs;
-using Infrastructure.Business.Interfaces;
 
 namespace smart_home_web
 {
@@ -102,7 +100,7 @@ namespace smart_home_web
             services.AddTransient<IDashboardManager, DashboardManager>();
             services.AddTransient<IReportElementManager, ReportElementManager>();
             services.AddTransient<IActionService, ActionService>();
-            services.AddTransient<IMessageManager, MessageManager>();
+            services.AddTransient<IToastManager, ToastManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -138,7 +136,6 @@ namespace smart_home_web
                     name: "default",
                     template: "{controller=Account}/{action=Login}/{id?}");
             });
-
         }
     }
 }

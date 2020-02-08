@@ -30858,7 +30858,7 @@ legend {
     background-size: 32px 32px
 }
 
-.AD {
+/*.AD {
     background: url(assets/fonts/AD.svg) no-repeat
 }
 
@@ -31876,7 +31876,7 @@ legend {
 
 .ZW {
     background: url(assets/fonts/ZW.svg) no-repeat
-}
+}*/
 
 /*!
  * Cropper.js v1.4.3
@@ -42871,4 +42871,9 @@ span.multiselect-native-select select {
 .dash_element {
     min-width: 390px !important;
     max-width: 390px !important;
+}
+
+.toggle-shadow {
+    box-shadow: 0 0.125rem 0.625rem rgba(218, 98, 74, 0.4), 0 0.0625rem 0.125rem rgba(218, 98, 74, 0.5);
+    border-radius: 5px
 }

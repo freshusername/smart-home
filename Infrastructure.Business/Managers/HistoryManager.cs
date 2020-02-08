@@ -13,7 +13,7 @@ using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.Infrastructure;
 using Microsoft.AspNetCore.SignalR;
 
-namespace Infrastructure.Business.Managers
+namespace Infrastructure.Business.Interfaces
 {
     public class HistoryManager : BaseManager, IHistoryManager
     {
@@ -147,8 +147,8 @@ namespace Infrastructure.Business.Managers
                 history.StringValue = valueModel;
 
 
-            //if (!CheckValue(history) || sensor.IsActive == false)
-            //    return new OperationDetails(false, "Operation did not succeed!", "");
+            if (!CheckValue(history) || sensor.IsActive == false)
+                return new OperationDetails(false, "Operation did not succeed!", "");
 
             unitOfWork.HistoryRepo.Insert(history);
             unitOfWork.Save();
@@ -156,16 +156,16 @@ namespace Infrastructure.Business.Managers
             return new OperationDetails(true, "Operation succeed", "");
         }
 
-        //public bool CheckValue(History history)
-        //{
-        //    var lastHistory = unitOfWork.HistoryRepo.GetLastBySensorId(history.SensorId).Result;
+        public bool CheckValue(History history)
+        {
+            var lastHistory = unitOfWork.HistoryRepo.GetLastBySensorId(history.SensorId).Result;
 
-        //    if (lastHistory?.Date.AddMinutes(5) < history.Date)
-        //        return true;
-        //    if (lastHistory?.BoolValue == history.BoolValue && lastHistory?.DoubleValue == history.DoubleValue && lastHistory?.IntValue == history.IntValue && lastHistory?.StringValue == history.StringValue)
-        //        return false;
-        //    return true;
-        //}
+            if (lastHistory?.Date.AddMinutes(5) < history.Date)
+                return true;
+            if (lastHistory?.BoolValue == history.BoolValue && lastHistory?.DoubleValue == history.DoubleValue && lastHistory?.IntValue == history.IntValue && lastHistory?.StringValue == history.StringValue)
+                return false;
+            return true;
+        }
 
         public async Task<int> GetAmountAsync(bool isActivated)
         {

@@ -2,6 +2,7 @@
 using Domain.Core.Model;
 using Infrastructure.Business.DTOs.History;
 using Infrastructure.Business.DTOs.ReportElements;
+using Infrastructure.Business.Interfaces;
 using Infrastructure.Business.Managers;
 using Moq;
 using NUnit.Framework;
@@ -130,6 +131,26 @@ namespace smart_home_web.Tests.ManagerTests
         }
 
         [Test]
+        public void GetDataForTimeSeries_InvalidReportElementId_ReturnNull()
+        {
+
+            var result = manager.GetDataForTimeSeries(0).Result;
+
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public void GetDataForTimeSeries_NoHistories_ReturnNotCorrect()
+        {
+
+            var result = manager.GetDataForTimeSeries(2).Result;
+
+            Assert.AreEqual(2, result.Id);
+            Assert.AreEqual("Sensor2", result.SensorName);
+            Assert.AreEqual(false, result.IsCorrect);
+        }
+
+        [Test]
         public void GetHeatmapById_CorrectId_ReturnCorrect()
         {
             mockMapper.Setup(m => m
@@ -151,8 +172,6 @@ namespace smart_home_web.Tests.ManagerTests
             mockMapper.Setup(m => m
               .Map<Sensor, HeatmapDto>(It.IsAny<Sensor>()))
                   .Returns(new HeatmapDto());
-
-           
 
             var result = manager.GetHeatmapById(0).Result;
 

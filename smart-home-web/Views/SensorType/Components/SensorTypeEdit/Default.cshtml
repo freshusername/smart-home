@@ -2,7 +2,7 @@
 
 @if (Model != null)
 {
-    <form method="post" id="modal-form-edit" data-sensor-type-id="@Model.Id" enctype="multipart/form-data">
+    <form method="post" id="modal-form-edit" data-element-container-id="@Model.Id" enctype="multipart/form-data">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <input type="hidden" asp-for="Id" />
         <div class="form-group">
@@ -41,14 +41,14 @@
                 <p>No image was added</p>
             }
             <input asp-for="@Model.IconId" type="hidden" />
-            <input asp-for="@Model.IconFile" class="form-control modal-form-file" onchange="loadFile(event)" type="file" accept=".jpg, .jpeg, .png"/>
+            <input asp-for="@Model.IconFile" class="form-control" onchange="loadFile(event)" type="file" accept=".jpg, .jpeg, .png"/>
             <img class="img-rounded" id="modal-form-edit-output" width="64" height="64" style="visibility: hidden" />
             <span asp-validation-for="IconFile" class="text-danger"></span>
         </div>
 
         <div class="form-group">
             <input type="submit" value="Save" class="btn btn-success" />
-            <a class="btn btn-primary back-to-list">Back to List</a>
+            <a class="btn btn-primary" data-dismiss="modal">Back to List</a>
         </div>
     </form>
     <script>

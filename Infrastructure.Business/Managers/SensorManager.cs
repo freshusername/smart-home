@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using Infrastructure.Business.DTOs.SensorType;
 using Domain.Interfaces.Repositories;
 
-namespace Infrastructure.Business.Managers
+namespace Infrastructure.Business.Interfaces
 {
     public class SensorManager : BaseManager, ISensorManager
     {
@@ -22,51 +22,42 @@ namespace Infrastructure.Business.Managers
 
         }
 
-        public async Task<OperationDetails> Create(SensorDto sensorDto)
+        public async Task<SensorDto> Create(SensorDto sensorDto)
         {
             if (sensorDto == null || unitOfWork.SensorRepo.GetByToken(sensorDto.Token) != null)
             {
-                return new OperationDetails(false, "err", "err");
-            }
-            try
-            {
-                Sensor sensor = mapper.Map<SensorDto, Sensor>(sensorDto);
-                try
-                {
-                    await unitOfWork.SensorRepo.Insert(sensor);
-
-                    unitOfWork.Save();
-                }
-                catch (Exception ex)
-                {
-                    return new OperationDetails(false, ex.Message, "Error");
-                }
-
-            }
-            catch (Exception ex)
-            {
-                return new OperationDetails(false, ex.Message, "Error");
-            }
-            return new OperationDetails(true, "New sensor has been added", "Name");
-        }
-
-        public OperationDetails Update(SensorDto sensorDto)
-        {
-            if (sensorDto == null || unitOfWork.SensorRepo.GetById(sensorDto.Id).Result==null)
-            {
-                return new OperationDetails(false, "err", "err");
+                return null;
             }
             Sensor sensor = mapper.Map<SensorDto, Sensor>(sensorDto);
             try
             {
-                unitOfWork.SensorRepo.Update(sensor);
+                await unitOfWork.SensorRepo.Insert(sensor);
                 unitOfWork.Save();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return new OperationDetails(false, ex.Message, "Error");
+                return null;
             }
-            return new OperationDetails(true, "Sensor has been updated!", "Name");
+            return mapper.Map<Sensor, SensorDto>(sensor);
+        }
+
+        public async Task<SensorDto> Update(SensorDto sensorDto)
+        {
+            if (sensorDto == null || unitOfWork.SensorRepo.GetById(sensorDto.Id).Result == null)
+            {
+                return null;
+            }
+            Sensor sensor = mapper.Map<SensorDto, Sensor>(sensorDto);
+            try
+            {
+                await unitOfWork.SensorRepo.Update(sensor);
+                unitOfWork.Save();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            return mapper.Map<Sensor, SensorDto>(sensor);
         }
 
         public async Task<OperationDetails> Delete(int sensorId)
@@ -191,5 +182,7 @@ namespace Infrastructure.Business.Managers
             var sensor = await unitOfWork.SensorRepo.GetLastSensor();
             return mapper.Map<Sensor, SensorDto>(sensor);
         }
+
+        
     }
 }
