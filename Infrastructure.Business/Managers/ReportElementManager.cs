@@ -95,10 +95,11 @@ namespace Infrastructure.Business.Managers
 
             DateTime dateFrom = new DateTime();
             DateTime dateTo = DateTime.Now.AddDays(1);
-            DateTime[] daysArray = new DateTime[28];
 
             if (reportElement.Hours != 0)
                 dateFrom = DateTime.Now.AddHours(-(int)reportElement.Hours).Date.AddDays(1);
+
+            DateTime[] daysArray = new DateTime[(int)(dateTo - dateFrom).TotalDays];
 
             for (int i = 0; i < daysArray.Length; i++)
             {

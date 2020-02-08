@@ -1,5 +1,5 @@
-﻿@model smart_home_web.Models.ReportElements.HeatmapViewModel;
-@using Domain.Core.Model.Enums;
+﻿@using Domain.Core.Model.Enums;﻿
+@model smart_home_web.Models.ReportElements.HeatmapViewModel;
 
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/heatmap.js"></script>
@@ -10,6 +10,7 @@
 <figure class="highcharts-figure">
     <div id=@("Heatmap" + Model.Id.ToString())></div>
 </figure>
+
 @if (Model.IsCorrect)
 {
     <script>
@@ -26,9 +27,12 @@
                 daysList.Add(c.WeekDay);
                 weekDaysList.Add(c.WeekDay.ToString("dd/MM/yyyy"));
             }
-            for (int i = 0; i < 28; i += 7)
+
+            int temp;
+            for (int i = 0; i < daysList.Count; i += 7)
             {
-                weeksList.Add(daysList[i].ToString("dd/MM/yyyy") + " - " + daysList[i + 6].ToString("dd/MM/yyyy"));
+                temp = i;
+                weeksList.Add(daysList[i].ToString("dd/MM/yyyy") + " - " + ((temp + 7 < daysList.Count) ? daysList[i + 7].ToString("dd/MM/yyyy") : daysList.LastOrDefault().ToString("dd/MM/yyyy")));            
             }
             for (int i = 0; i < 7; i++)
             {
@@ -53,7 +57,7 @@
             var currDate = '';
                 for (var i = 0; i < arr.length; i++) {
                     if (i == index) {
-                         currDate =  arr[i];
+                        currDate = arr[i];
                     }
                 }
             return currDate;
@@ -75,26 +79,29 @@
 
             xAxis: {
                 categories:
-                    [
-                        @for (int i = 0; i < dayOfWeekArray.Length; i++)
-                        {
-                            <text>
-                                @Html.Raw(Json.Serialize(dayOfWeekArray[i])) ,
-                            </text>
-                        }
-                    ]
+                [
+                    @for (int i = 0; i < weeksArray.Length; i++)
+                    {
+                    <text>
+                        @Html.Raw(Json.Serialize(weeksArray[i])) ,
+                    </text>
+                    }
+                        
+                ],
+                reversed: false
+
             },
 
             yAxis: {
                 categories:
                 [
-                    @for (int i = 0; i < weeksArray.Length; i++)
+                    @for (int i = 0; i < dayOfWeekArray.Length; i++)
                     {
                         <text>
-                            @Html.Raw(Json.Serialize(weeksArray[i])) ,
+                            @Html.Raw(Json.Serialize(dayOfWeekArray[i])) ,
                         </text>
                     }
-                    ],
+                ],
 
                 title: null,
                 reversed: true
@@ -131,7 +138,7 @@
                 formatter: function () {
                     return '<b>' + '</b><br>' + @Html.Raw(Json.Serialize(Model.SensorName))  +
                         (this.point.value == undefined ? ' has no data' : ' has average: <b>' + this.point.value + ' ' + @Html.Raw(Json.Serialize(Model.MeasurementName))) +
-                            '</b><br> on <b>' + getPointCategoryName(this.point, 'x') + ', ' +
+                            '</b><br> on <b>' + getPointCategoryName(this.point, 'y') + ', ' +
                                 getDateForValue(this.point.index) + '</b>';
                 }
             },
@@ -140,16 +147,20 @@
                 name: 'Average sensor values per weekday',
                 borderWidth: 1,
                 data: [
-                    @{int h = 0;}
-                    @for (int i = 0; i < 4; i++)
+                    @{
+                    int h = 0;
+                    int g = (int)Math.Ceiling(valArray.Length / 7.0);
+
+                    @for (int j = 0; j < g; j++)
                     {
-                        @for (int j = 0; j < 7; j++)
+                        @for (int i = 0; i < 7; i++)
                         {
                             <text>
-                                [@Html.Raw(Json.Serialize(j)), @Html.Raw(Json.Serialize(i)), @Html.Raw(Json.Serialize(valArray[h++]))],
+                                [@Html.Raw(Json.Serialize(j)), @Html.Raw(Json.Serialize(i)), @Html.Raw(Json.Serialize((h == valArray.Length) ? null : valArray[h++]))],
                             </text>
                         }
                     }
+                }
                 ],
 
                 dataLabels: {

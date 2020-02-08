@@ -1,6 +1,6 @@
 ﻿$(document).ready(function () {
     $(".grid-stack").gridstack();
-    
+
     let elements = $(".grid-stack-item");
     for (var i = 0; i < elements.length; i++) {
         visualLock(elements[i].id);
@@ -16,7 +16,6 @@ let arrToObj = arr => {
 }
 
 $('.grid-stack').on('change', function (event, items) {
-    debugger;
     let options = [];
     options = items.map(i => {
         return { id: parseInt(i.el[0].id), x: i.x, y: i.y, width: i.width, height: i.height }
@@ -45,7 +44,7 @@ let remove = (id) => {
 
 var lock = (id) => {
     grid = $(".grid-stack").data("gridstack");
-    
+
     let item = $("#" + id);
     if (item != null) {
         if (item[0].dataset.locked == "False") {
