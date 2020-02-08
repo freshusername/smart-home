@@ -137,6 +137,9 @@ namespace Infrastructure.Business.Interfaces
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(reportElementId);
 
+            if (reportElement == null)
+                return new BoolHeatmapDto { IsCorrect = false };
+
             DateTime dateFrom = new DateTime();
             DateTime dateTo = DateTime.Now.AddMinutes(1);
 

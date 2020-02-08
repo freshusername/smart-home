@@ -26,6 +26,7 @@ namespace smart_home_web.Tests.ManagerTests
         private static GaugeDto _gaugeDto;
         private static HistoryDto _historyDto;
         private static AvgSensorValuePerDay _avgSensorValuePerDay;
+        private static BoolValuePercentagePerHour _boolValuePercentagePerHour;
 
         [SetUp]
         protected override void Initialize()
@@ -128,6 +129,15 @@ namespace smart_home_web.Tests.ManagerTests
                 WeekDay = DateTime.Now,
                 AvgValue = 3
             };
+
+            _boolValuePercentagePerHour = new BoolValuePercentagePerHour()
+            {
+                DayDate = DateTime.Now,
+                HourTime = DateTime.Now.Hour,
+                TrueCount = 1,
+                TrueFalseCount = 2,
+                TruePercentage = 50
+            };
         }
 
         [Test]
@@ -149,7 +159,7 @@ namespace smart_home_web.Tests.ManagerTests
             Assert.AreEqual("Sensor2", result.SensorName);
             Assert.AreEqual(false, result.IsCorrect);
         }
-
+        #region Heatmap
         [Test]
         public void GetHeatmapById_CorrectId_ReturnCorrect()
         {
@@ -169,10 +179,6 @@ namespace smart_home_web.Tests.ManagerTests
         [Test]
         public void GetHeatmapById_IncorrectId_ReturnNotCorrect()
         {
-            mockMapper.Setup(m => m
-              .Map<Sensor, HeatmapDto>(It.IsAny<Sensor>()))
-                  .Returns(new HeatmapDto());
-
             var result = manager.GetHeatmapById(0).Result;
 
             Assert.IsFalse(result.IsCorrect);
@@ -188,6 +194,43 @@ namespace smart_home_web.Tests.ManagerTests
 
             Assert.IsFalse(result.IsCorrect);
         }
+        #endregion
+        #region BoolHeatmap
+        [Test]
+        public void GetBoolHeatmapById_CorrectId_ReturnCorrect()
+        {
+            mockMapper.Setup(m => m
+              .Map<Sensor, BoolHeatmapDto>(It.IsAny<Sensor>()))
+                  .Returns(new BoolHeatmapDto());
+
+            mockUnitOfWork.Setup(u => u.HistoryRepo
+                .GetBoolValuePercentagesPerHours(It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+                    .Returns(Task.FromResult<IEnumerable<BoolValuePercentagePerHour>>(new List<BoolValuePercentagePerHour> { _boolValuePercentagePerHour }));
+
+            var result = manager.GetBoolHeatmapById(1).Result;
+
+            Assert.IsTrue(result.IsCorrect);
+        }
+
+        [Test]
+        public void GetBoolHeatmapById_IncorrectId_ReturnNotCorrect()
+        {
+            var result = manager.GetBoolHeatmapById(0).Result;
+
+            Assert.IsFalse(result.IsCorrect);
+        }
+
+        [Test]
+        public void GetBoolHeatmapById_NoBoolValueForSensor_ReturnNotCorrect()
+        {
+            mockUnitOfWork.Setup(u => u.HistoryRepo
+                .GetBoolValuePercentagesPerHours(It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()));
+
+            var result = manager.GetBoolHeatmapById(1).Result;
+
+            Assert.IsFalse(result.IsCorrect);
+        }
+        #endregion
     }
 
 }
