@@ -72,10 +72,8 @@ namespace Infrastructure.Business.Managers
         {
             var newFileName = Guid.NewGuid() + Path.GetExtension(iformFile.FileName);
             
-
-                await UploadImage(iformFile, newFileName);
+            await UploadImage(iformFile, newFileName);
             
-
             var iconDto = new IconDto()
             {
                 Path = _dbPath + newFileName

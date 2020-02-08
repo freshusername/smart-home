@@ -11,7 +11,7 @@ namespace Domain.Interfaces.Repositories
     {
         Task<IEnumerable<History>> GetHistoriesBySensorId(int SensorId);
 
-		History GetLastHistoryBySensorId(int SensorId);
+        History GetLastHistoryBySensorId(int SensorId);
         Task<History> GetLastBySensorId(int sensorId);
 
         double? GetMinValueForPeriod(int sensorId, int? hours);

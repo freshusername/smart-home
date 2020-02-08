@@ -91,6 +91,9 @@ namespace Infrastructure.Business.Managers
         public async Task<HeatmapDto> GetHeatmapById(int reportElementId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(reportElementId);
+            
+            if (reportElement == null)
+                return new HeatmapDto { IsCorrect = false };
 
             DateTime dateFrom = new DateTime();
             DateTime dateTo = DateTime.Now.AddDays(1);

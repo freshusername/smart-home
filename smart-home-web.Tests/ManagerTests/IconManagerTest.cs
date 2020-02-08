@@ -17,16 +17,16 @@ namespace smart_home_web.Tests.ManagerTests
     class IconManagerTest : TestInitializer
     {
         private IconManager _manager;
-        private Mock<IconManager> managermock;
-        private static Mock<IHostingEnvironment> _env;
+        private Mock<IconManager> _mockManager;
+        private static Mock<IHostingEnvironment> _mockEnv;
         [SetUp]
         protected override void Initialize()
         {
             base.Initialize();
 
-            _env = new Mock<IHostingEnvironment>();
-            managermock = new Mock<IconManager>(mockUnitOfWork.Object, mockMapper.Object, _env.Object) { CallBase = true };
-            _manager = new IconManager(mockUnitOfWork.Object, mockMapper.Object, _env.Object);
+            _mockEnv = new Mock<IHostingEnvironment>();
+            _mockManager = new Mock<IconManager>(mockUnitOfWork.Object, mockMapper.Object, _mockEnv.Object);
+            _manager = new IconManager(mockUnitOfWork.Object, mockMapper.Object, _mockEnv.Object);
         }
         #region Create
         [Test]
@@ -62,31 +62,23 @@ namespace smart_home_web.Tests.ManagerTests
         }
         #endregion 
         [Test]
-        public void CreateAndGetIconId_NullDto_ReturnFalse()
+        public void CreateAndGetIconId_ValidFormFile_ReturnTrue()
         {
             var path = Path.Combine("images", "Icons");
-            var r = _env.Object;
-            var f = r.WebRootPath;
             var fileMock = new Mock<IFormFile>();
-            var content = "Hello World from a Fake File";
-            var fileName = "test.png";
-            var ms = new MemoryStream();
-            var writer = new StreamWriter(ms);
-            writer.Write(content);
-            writer.Flush();
-            ms.Position = 0;
-            fileMock.Setup(_ => _.OpenReadStream()).Returns(ms);
-            fileMock.Setup(_ => _.FileName).Returns(fileName);
-            fileMock.Setup(_ => _.Length).Returns(ms.Length);
             var file = fileMock.Object;
-            IconDto newIconDto = new IconDto() { Id = 1, Path = "/images/Icons/light_sensor.png" };
-            Icon newIcon = new Icon() { Id = 1, Path = "/images/Icons/light_sensor.png" };
+
+            Icon newIcon = new Icon() { Id = 1, Path = "/images/Icons/test.png" };
+
+            _mockEnv.Setup(e => e.WebRootPath).Returns("Icons");
+
             mockMapper.Setup(m => m
                 .Map<IconDto, Icon>(It.IsAny<IconDto>()))
-                    .Returns(It.IsAny<Icon>());
-            managermock.SetupAllProperties();
-            managermock.SetupGet(m => m.UploadPath).Returns(()=>Path.Combine(path));
+                    .Returns(newIcon);
 
+            _mockManager.SetupGet(m => m.UploadPath)
+                .Returns(()=>Path.Combine(path));
+            
             mockUnitOfWork.Setup(uof => uof
                 .IconRepo.Insert(newIcon));
 
@@ -94,6 +86,5 @@ namespace smart_home_web.Tests.ManagerTests
 
             Assert.AreEqual(1, result.Result);
         }
-
     }
 }
