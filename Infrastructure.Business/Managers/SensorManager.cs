@@ -12,15 +12,19 @@ using System.Text;
 using System.Threading.Tasks;
 using Infrastructure.Business.DTOs.SensorType;
 using Domain.Interfaces.Repositories;
+using Microsoft.AspNetCore.SignalR;
+using Infrastructure.Business.Hubs;
 
 namespace Infrastructure.Business.Interfaces
 {
     public class SensorManager : BaseManager, ISensorManager
     {
-        public SensorManager(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
+        protected readonly IHubContext<GraphHub> graphHub;
+        public SensorManager(IUnitOfWork unitOfWork, IMapper mapper, IHubContext<GraphHub> hubContext) : base(unitOfWork, mapper)
         {
-
+            graphHub = hubContext;
         }
+
 
         public async Task<SensorDto> Create(SensorDto sensorDto)
         {
@@ -119,11 +123,15 @@ namespace Infrastructure.Business.Interfaces
             if (type == ReportElementType.OnOff)
                 foreach (var sensorControl in Enum.GetValues(typeof(MeasurementType)))
                     sensors.AddRange(await unitOfWork.SensorRepo.GetSensorControlsByMeasurementTypeAndUserId((MeasurementType)sensorControl, dashboard.AppUserId));
-            else if(type != ReportElementType.Clock && type != ReportElementType.StatusReport)
+            else if (type != ReportElementType.Clock && type != ReportElementType.StatusReport)
             {
-                sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.Int, dashboard.AppUserId));
-                sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.Double, dashboard.AppUserId));
-                if (type == ReportElementType.TimeSeries)
+                if (type == ReportElementType.Columnrange || type == ReportElementType.Gauge || type == ReportElementType.Heatmap ||
+                    type == ReportElementType.TimeSeries || type == ReportElementType.Wordcloud)
+                {
+                    sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.Int, dashboard.AppUserId));
+                    sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.Double, dashboard.AppUserId));
+                }
+                if (type == ReportElementType.TimeSeries || type == ReportElementType.BoolHeatmap)
                     sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.Bool, dashboard.AppUserId));
                 if (type == ReportElementType.Wordcloud)
                     sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.String, dashboard.AppUserId));
@@ -160,7 +168,7 @@ namespace Infrastructure.Business.Interfaces
             List<Sensor> sensors = new List<Sensor>();
 
             foreach (var items in tokens)
-            {                
+            {
                 sensors.Add(unitOfWork.SensorRepo.GetByToken(items.Token));
             }
 
@@ -173,6 +181,7 @@ namespace Infrastructure.Business.Interfaces
         {
             Sensor sensor = await unitOfWork.SensorRepo.GetById(id);
             sensor.IsActive = !sensor.IsActive;
+            await graphHub.Clients.All.SendAsync("UpdateOnOff", id, sensor.IsActive);
             await unitOfWork.SensorRepo.Update(sensor);
             unitOfWork.Save();
         }
@@ -183,6 +192,6 @@ namespace Infrastructure.Business.Interfaces
             return mapper.Map<Sensor, SensorDto>(sensor);
         }
 
-        
+
     }
 }
