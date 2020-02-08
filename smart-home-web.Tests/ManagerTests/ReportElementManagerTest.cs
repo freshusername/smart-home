@@ -22,6 +22,7 @@ namespace smart_home_web.Tests.ManagerTests
         private IReportElementManager _manager;
         private IHistoryManager _historyManager;
         private ReportElementDto _mockReportelementDto;
+        private ReportElement _existingElement;
         private IHubContext<GraphHub> _hubContext;
 
         //private GraphDto existingGraphDto;
@@ -36,6 +37,7 @@ namespace smart_home_web.Tests.ManagerTests
             _manager = new ReportElementManager(_historyManager, mockUnitOfWork.Object, mockMapper.Object);
             _mockReportelementDto = new ReportElementDto
             {
+                Id = 1,
                 Type = ReportElementType.Heatmap,
                 Hours = ReportElementHours.Hour24,
                 DashboardId = 3,
@@ -46,6 +48,32 @@ namespace smart_home_web.Tests.ManagerTests
                 Height = 0,
                 IsLocked = false
             };
+            _existingElement = new ReportElement()
+            {
+                Id = 1,
+                DashboardId = 3,
+                Height = 0,
+                Width = 0,
+                X = 0,
+                Y = 0,
+                Hours = ReportElementHours.AllTime,
+                IsLocked = true,
+                SensorId = 3,
+                Type = ReportElementType.Wordcloud
+            };
+
+            mockMapper.Setup(m => m.Map<ReportElement, ReportElementDto>(_existingElement))
+                .Returns(_mockReportelementDto);
+
+            mockUnitOfWork.Setup(h => h.HistoryRepo
+                .GetHistoriesBySensorIdAndDate(It.IsAny<int>(), It.IsAny<DateTimeOffset>()))
+                    .Returns((int i, DateTimeOffset date) =>
+                        Task.FromResult(GetMockHistories().Where(x => x.Id == i && x.Date == date)));
+
+            mockUnitOfWork.Setup(h => h.ReportElementRepo.GetById(It.IsAny<int>()))
+                .Returns((int i) => Task.FromResult(_existingElement));
+
+
         }
 
         [Test]
@@ -71,46 +99,37 @@ namespace smart_home_web.Tests.ManagerTests
         public void GetWordCloudById_GetsExistingElement_Returns_True()
         {
             //arrange
-            var existingElement = new ReportElement()
-            {
-                Id = 1,
-                DashboardId = 3,
-                Height = 0,
-                Width = 0,
-                X = 0,
-                Y = 0,
-                Hours = ReportElementHours.AllTime,
-                IsLocked = true,
-                SensorId = 3,
-                Type = ReportElementType.Wordcloud
-            };
-
-            var reportElementDto = new ReportElementDto() { Id = 1};
-
-            mockMapper.Setup(m => m.Map<ReportElement, ReportElementDto>(existingElement))
-                .Returns(reportElementDto);
-
-           
-            //mockUnitOfWork.Setup(h => h.HistoryRepo
-            //    .GetHistoriesBySensorIdAndDate( reportElementDto.Id, DateTime.Now.AddHours(-(int)(existingElement.Hours))))
-            //        .Returns(Task.FromResult(GetMockHistories())); 
-            
-            mockUnitOfWork.Setup(h => h.HistoryRepo
-                .GetHistoriesBySensorIdAndDate(It.IsAny<int>(), It.IsAny<DateTimeOffset>()))
-                    .Returns((int i, DateTimeOffset date) =>
-                        Task.FromResult(GetMockHistories().Where(x => x.Id == i && x.Date == date)));
-
-            mockUnitOfWork.Setup(h => h.ReportElementRepo.GetById(It.IsAny<int>()))
-                .Returns((int i) => Task.FromResult(existingElement));
-
-
 
             //act
-            var result = _manager.GetWordCloudById(existingElement.Id).Result;
+            var result = _manager.GetWordCloudById(_existingElement.Id).Result;
 
             //assert
             Assert.IsNull(result);
         }
+
+        [Test]
+        public void GetWordCloudById_IfNoHistories_Returns_False()
+        {
+            //arrange
+
+            //act
+            var result = _manager.GetWordCloudById(6).Result;
+
+            //assert
+            Assert.IsFalse(result.IsCorrect);
+        }
+
+        [Test]
+        public void GetWordCloudById_IfNoValues_Returns_False()
+        {
+            //arrange
+
+            //act
+            var result = _manager.GetWordCloudById(6).Result;
+            //assert
+            Assert.IsFalse(result.IsCorrect);
+        }
+
         private IEnumerable<History> GetMockHistories()
         {
             CultureInfo ci = CultureInfo.InvariantCulture;
