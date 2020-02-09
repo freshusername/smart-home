@@ -23,9 +23,9 @@ namespace Infrastructure.Business.Interfaces
         List<SensorDto> GetSensorsToControl();
 		List<SensorDto> GetControlSensors();
 
-        Task<OperationDetails> Create(SensorDto sensorDto);
+        Task<SensorDto> Create(SensorDto sensorDto);
 
-		OperationDetails Update(SensorDto sensorDto);
+		Task<SensorDto> Update(SensorDto sensorDto);
         Task<OperationDetails> Delete(int sensorId);
         OperationDetails AddUnclaimedSensor(Guid token, string value);
         Task SetActive(int id);

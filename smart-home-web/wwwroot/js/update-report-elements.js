@@ -94,3 +94,17 @@ function UpdateGauge(sensorId, sensorValue) {
         }
     });
 }
+
+function UpdateOnOff(sensorId, sensorValue) {
+    $.each($('input[id^="OnOff"]'), function (key, value) {
+        if (sensorId == $(value).data("save-sensorid")) {
+            if (sensorValue == "0") {
+                $(value).prop("checked", false);
+            }
+            else {
+                $(value).prop("checked", true);
+            }
+        }
+    });
+}
+

@@ -57,14 +57,13 @@ namespace smart_home_web.Controllers
 
             var res = _sensorTypeManager.Create(sensorTypeDto).Result;
 
-            if (res.Succeeded)
+            if (res != null) 
             {
-                SensorTypeDto sensorTypefromDB = await _sensorTypeManager.GetLastSensorType();
-                return ViewComponent("SensorTypeElement", _mapper.Map<SensorTypeDto, SensorTypeViewModel>(sensorTypefromDB));
+                return ViewComponent("SensorTypeElement", _mapper.Map<SensorTypeDto, SensorTypeViewModel>(res));
             }
             else
             {
-                ModelState.AddModelError(res.Property, res.Message);
+                //ModelState.AddModelError(res.Property, res.Message);
                 return View(sensorTypeViewModel);
             }
  
@@ -88,15 +87,16 @@ namespace smart_home_web.Controllers
             {
                 sensorTypeDto.IconId = await _iconManager.CreateAndGetIconId(sensorTypeViewModel.IconFile);
             }
-            try
+            var res = await _sensorTypeManager.Update(sensorTypeDto);
+
+            if (res != null)
             {
-                _sensorTypeManager.Update(sensorTypeDto);
-                SensorTypeDto sensorTypefromDB = await _sensorTypeManager.GetSensorTypeByIdAsync(sensorTypeDto.Id);
-                return ViewComponent("SensorTypeElement", _mapper.Map<SensorTypeDto, SensorTypeViewModel>(sensorTypefromDB));
+                return ViewComponent("SensorTypeElement", _mapper.Map<SensorTypeDto, SensorTypeViewModel>(res));
             }
-            catch
+            else
             {
-                return View();
+                //ModelState.AddModelError(res.Property, res.Message);
+                return View(sensorTypeViewModel);
             }
         }
 

@@ -17,11 +17,6 @@
                         .attr("value", value.id)
                         .text(value.name));
             });
-            if ($("input#type").val() == "Heatmap") {
-                $('select#hours-select').attr('disabled', true);
-                $('#hours-select').find('option[value=672]').attr('selected', 'selected');
-                $('#hours-hidden').val(672);
-            }
             if ($("input#type").val() == "OnOff") {
                 $('select#hours-select').attr('disabled', true);
             }
@@ -34,22 +29,14 @@
                     .attr("selected", true)
                     .attr("value", "0")
                     .text("There is not suitable sensor"));
-            if ($("input#type").val() == "3") {
-                $('select#hours-select').attr('disabled', true);
-                $('#hours-select').find('option[value=672]').attr('selected', 'selected');
-                $('#hours-hidden').val(672);
+            if ($("input#type").val() == "Clock") {
+                $('select#sensor-select').attr('disabled', true);
             }
-            if ($("input#type").val() == "OnOff") {
+            if ($("input#type").val() == "OnOff" || $("input#type").val() == "StatusReport" || $("input#type").val() == "Clock") {
                 $('select#hours-select').attr('disabled', true);
             }
             $('#sensor-select').val($('#sensor-id').val());
             $('select').niceSelect('update');
-
         },
-    });
-    $('#hours-hidden').val($("#hours-select").children("option:selected").val());
-    $("#hours-select").change(function () {
-        $('select').niceSelect('update');
-        $('#hours-hidden').val($("#hours-select").children("option:selected").val());
     });
 });

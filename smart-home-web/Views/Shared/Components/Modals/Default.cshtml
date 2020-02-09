@@ -75,7 +75,7 @@
     function ModalFormEdit() {
         event.preventDefault();
         var inputFile = $(this).find("input[type='file']");
-        var fd = new FormData(document.getElementById("modal-form-create"));
+        var fd = new FormData(document.getElementById("modal-form-edit"));
         fd.append('IconFile', inputFile.prop('files')[0]);
 
         $.ajax({
