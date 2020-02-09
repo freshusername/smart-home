@@ -14,6 +14,7 @@ using Infrastructure.Business.DTOs.SensorType;
 using Domain.Interfaces.Repositories;
 using Microsoft.AspNetCore.SignalR;
 using Infrastructure.Business.Hubs;
+using Infrastructure.Business.Managers;
 
 namespace Infrastructure.Business.Interfaces
 {

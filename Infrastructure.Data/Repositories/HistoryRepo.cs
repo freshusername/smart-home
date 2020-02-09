@@ -146,9 +146,10 @@ namespace Infrastructure.Data.Repositories
             var histories = context.Histories.Include(h => h.Sensor)
                                                 .ThenInclude(st => st.SensorType)
                                             .Where(h => h.Sensor.Id == SensorId)
-                                            .OrderBy(h => h.Date)
-                                            .Last();
-            return histories;
+                                            .OrderBy(h => h.Date);
+            if (histories.Count() > 0)
+                return histories.LastOrDefault();
+            return null;
         }
 
         public double? GetMinValueForPeriod(int sensorId, int? hours)
