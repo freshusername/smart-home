@@ -1,11 +1,6 @@
 ﻿@model smart_home_web.Models.SensorViewModel.SensorViewModel;
 
-
-<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
-
-
-<li class="list-group-item sensor-row" data-sensor-row-id="@Model.Id">
+<li class="list-group-item element-container" data-element-container-id="@Model.Id.ToString()">
     <div class="widget-content p-0">
         <div class="widget-content-wrapper">
             <div class="widget-content-left mr-4 ml-3">
@@ -14,7 +9,7 @@
                         <span class="switch-left">On</span>
                         <span class="switch-right">Off</span>
                     </label>*@
-                <div class="input-set-active @Html.Raw(Model.IsActive ? "toggle-shadow" : " ")"
+                <div class="input-set-active toggle-shadow"
                      id="@Model.Id.ToString()">
                     <input type="checkbox" class="" @Html.Raw(Model.IsActive ? "checked" : " ") data-toggle="toggle">
                 </div>
@@ -43,12 +38,10 @@
                       text-align: right;
                       display: inline-block;
                       margin-left: auto;">
-
                     <div class="text-right opacity-6"><b>Created:</b></div>
                     <div class="text-right opacity-6"><b>Comment:</b></div>
                     <div class="text-right opacity-6"><b>Token:</b></div>
                 </div>
-
                 <div class="text-left ml-3"
                      style="display: inline-block;
                      margin-right: auto;">
@@ -67,7 +60,6 @@
                     </div>
                     <div>@Model.Token</div>
                 </div>
-
             </div>
             <div class="mr-3" style="width: 140px;">
                 <div role="group" class="btn-group">
@@ -88,69 +80,7 @@
                         </a>
                     }
                 </div>
-
             </div>
         </div>
     </div>
 </li>
-
-
-
-
-
-@*<tr class="element-container" data-element-container-id="@Model.Id">
-        <td>
-            <label class="rocker rocker-small">
-                <input id="@Model.Id.ToString()" class="input-set-active" type="checkbox" @Html.Raw(Model.IsActive ? "checked" : " ")>
-                <span class="switch-left">On</span>
-                <span class="switch-right">Off</span>
-            </label>
-        </td>
-        <td>
-            @if (Model.IconPath != null)
-            {
-                <img src="@Model.IconPath" width="64" height="64" />
-            }
-            else
-            {
-                <p>No image was added</p>
-            }
-        </td>
-        <td class="text-left">
-            <div id="sensor-details">
-                <h5>Name: @Model.Name</h5>
-                <h5>Type: @Model.SensorTypeName</h5>
-            </div>
-            <i class="fa fa-eye-slash" style="cursor: help;"></i>
-            <div class="sensor-details-additional" style="display: none;">
-                <h5>Created: @Model.CreatedOn.Value.UtcDateTime.ToString("dd/MM/yyyy on HH:mm")</h5>
-                <h5>Comment: @Model.Comment</h5>
-                <h5>
-                    Activated: <i class="fa @(Model.IsActive ? "fa-check-circle" : "fa-times-circle") sensor-activated"></i>
-                </h5>
-                <h5>Token: @Model.Token</h5>
-
-            </div>
-        </td>
-
-        <td>
-            <div class="col-xs-3">
-                <a class="btn btn-sm btn-success text-center"
-                   asp-controller="History"
-                   asp-action="Graph"
-                   asp-route-sensorId="@Model.Id"
-                   asp-route-days="99999">
-                    <i class="fas fa-chart-bar"></i>
-                </a>
-                @if (User.Identity.IsAuthenticated)
-                {
-                    <a class="btn btn-sm btn-info text-center element-edit">
-                        <i class="fa fa-edit"></i>
-                    </a>
-                    <a class="btn btn-sm btn-danger text-center element-delete">
-                        <i class="fa fa-trash"></i>
-                    </a>
-                }
-            </div>
-        </td>
-    </tr>*@

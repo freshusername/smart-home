@@ -14,7 +14,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Business.Interfaces
+namespace Infrastructure.Business.Managers
 {
     public class IconManager : BaseManager, IIconManager
     {

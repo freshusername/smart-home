@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Business.Interfaces
+namespace Infrastructure.Business.Managers
 {
     public interface IPhotoManager
     {

@@ -3,11 +3,12 @@
 
 @if (Model.IsCorrect)
 {
-    <figure class="highcharts-figure d-flex align-items-center justify-content-center h-100">
-        <div id="@("StatusReport"+Model.Id.ToString())">
-            <div class="text-center">
-                <table class="table table-hover table-responsive">
-                    <thead class="text-center">
+    <figure class="highcharts-figure d-flex align-content-center justify-content-center">
+        <div id="@("StatusReport"+Model.Id.ToString())" class="row">
+            <div class="text-center col">
+                <h5>Status of sensors</h5>
+                <table class="table table-hover table-responsive border border-warning rounded p-1" >
+                    <thead class="text-center thead-light">
                         <tr>
                             <th>Name</th>
                             <th>Value</th>

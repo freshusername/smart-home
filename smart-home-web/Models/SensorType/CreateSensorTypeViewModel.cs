@@ -18,7 +18,6 @@ namespace smart_home_web.Models.SensorType
         [DisplayName("Measurement Type")]
         public MeasurementType MeasurementType { get; set; }
 
-        [Required]
         [DisplayName("Measurement Name")]
         public string MeasurementName { get; set; }
 
