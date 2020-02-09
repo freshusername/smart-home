@@ -19,81 +19,65 @@ namespace smart_home_web.Tests.ManagerTests
     [TestFixture]
     class HistoryManagerTest : TestInitializer
     {
-        private IHistoryManager _manager;
-        private IHubContext<GraphHub> _hubContext;
-        private History _existingBoolHistory;
-        private History _existingDoubleHistory;
-        private History _existingStringHistory;
-        private History _existingIntHistory;
-        private HistoryDto _mockHistoryDto;
-
+        private HistoryManager _manager;
+        private Mock<IHubContext<GraphHub>> _hubContext;
+        private static List<History> histories;
+        private HistoryDto _historyDto;
 
 
         [SetUp]
         protected override void Initialize()
         {
             base.Initialize();
-            _manager = new HistoryManager(mockUnitOfWork.Object, mockMapper.Object, _hubContext);
+            _manager = new HistoryManager(mockUnitOfWork.Object, mockMapper.Object, _hubContext.Object);
             CultureInfo ci = CultureInfo.InvariantCulture;
 
-            _existingBoolHistory = new History
-            {
-                Id = 1,
-                Date = DateTime.ParseExact("02/05/2020", "MM/dd/yyyy", ci),
-                StringValue = null,
-                IntValue = null,
-                DoubleValue = null,
-                BoolValue = true,
-                SensorId = 3
+            histories = new List<History>() {
+                new History
+                {
+                    Id = 1,
+                    Date = DateTime.ParseExact("02/05/2020", "MM/dd/yyyy", ci),
+                    BoolValue = true,
+                    Sensor = new Sensor() { Id = 1, Name = "Sensor1" },
+                    SensorId = 1
+                },
+                new History
+                {
+                    Id = 2,
+                    Date = DateTime.ParseExact("02/05/2020", "MM/dd/yyyy", ci),
+                    StringValue = "456",
+                    Sensor = new Sensor() { Id = 2, Name = "Sensor1" },
+                    SensorId = 2
+                },
+                new History
+                {
+                    Id = 3,
+                    Date = DateTime.ParseExact("02/05/2020", "MM/dd/yyyy", ci),
+                    IntValue = 456,
+                    Sensor = new Sensor() { Id = 3, Name = "Sensor1" },
+                    SensorId = 3
+                },
+                new History
+                {
+                    Id = 4,
+                    Date = DateTime.ParseExact("02/05/2020", "MM/dd/yyyy", ci),
+                    DoubleValue = 456.0,
+                    Sensor = new Sensor() { Id = 4, Name = "Sensor1" },
+                    SensorId = 4
+                },
             };
-            _existingStringHistory = new History
-            {
-                Id = 2,
-                Date = DateTime.ParseExact("02/05/2020", "MM/dd/yyyy", ci),
-                StringValue = "456",
-                IntValue = null,
-                DoubleValue = null,
-                BoolValue = null,
-                SensorId = 3
-            };
-            _existingIntHistory = new History
-            {
-                Id = 3,
-                Date = DateTime.ParseExact("02/05/2020", "MM/dd/yyyy", ci),
-                StringValue = null,
-                IntValue = 456,
-                DoubleValue = null,
-                BoolValue = null,
-                SensorId = 3
-            };
-            _existingDoubleHistory = new History
-            {
-                Id = 3,
-                Date = DateTime.ParseExact("02/05/2020", "MM/dd/yyyy", ci),
-                StringValue = null,
-                IntValue = null,
-                DoubleValue = 456.0,
-                BoolValue = null,
-                SensorId = 3
-            };
-
         }
 
         [Test]
         public void CheckLastHistoryBySensorId_IfExists_ReturnsTrue()
         {
             //arrange
-            int sensorId = 5;
-            HistoryDto _historyDto = new HistoryDto();
 
-            //mockMapper.Setup(h => h.Map<History, HistoryDto>(_existingHistory))
-            //    .Returns(_historyDto);
-
-            mockUnitOfWork.Setup(h => h.HistoryRepo.GetLastHistoryBySensorId(sensorId))
-                .Returns(_existingBoolHistory);
+            mockUnitOfWork.Setup(h => h.HistoryRepo.GetLastHistoryBySensorId(4))
+                .Returns(histories.First());
 
             //act
-            var result = _manager.CheckLastHistoryBySensorIdExists(sensorId);
+            var result = _manager.CheckLastHistoryBySensorIdExists(4);
 
             //assert
             Assert.IsTrue(result.Result);
@@ -107,10 +91,11 @@ namespace smart_home_web.Tests.ManagerTests
             int sensorId = 3;
             History newHistory = new History();
 
-            mockMapper.Setup(h => h.Map<HistoryDto, History>(_mockHistoryDto))
+            mockMapper.Setup(h => h.Map<HistoryDto, History>(_historyDto))
                     .Returns(newHistory);
 
             mockUnitOfWork.Setup(h => h.HistoryRepo.Insert(newHistory));
+            mockUnitOfWork.Setup(h => h.SensorRepo.GetById(sensorId));
 
             //act
             var result = _manager.AddHistory(value, sensorId);
@@ -118,8 +103,5 @@ namespace smart_home_web.Tests.ManagerTests
             //assert
             Assert.IsTrue(result.Succeeded);
         }
-
-        
-        
     }
 }
