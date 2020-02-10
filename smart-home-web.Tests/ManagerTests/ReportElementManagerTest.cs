@@ -26,7 +26,6 @@ namespace smart_home_web.Tests.ManagerTests
         private static List<ReportElement> reportElements;
         private static List<History> histories;
         private static ReportElement _reportElement;
-        private static ReportElement _wordcloudReportElement;
         private static ReportElementDto _reportElementDto;
         private static GaugeDto _gaugeDto;
         private static HistoryDto _historyDto;
@@ -212,13 +211,50 @@ namespace smart_home_web.Tests.ManagerTests
             mockUnitOfWork.Setup(u => u
               .ReportElementRepo.GetById(2)).Returns(Task.FromResult(_report));
           
-            var result = manager.GetGaugeById(2).Result;
+            var result = _manager.GetGaugeById(2).Result;
 
             Assert.IsFalse(result.IsValid);
         }
         #endregion
 
         #region BoolHeatmap
+        [Test]
+        public void GetBoolHeatmapById_CorrectId_ReturnCorrect()
+        {
+            mockMapper.Setup(m => m
+              .Map<Sensor, BoolHeatmapDto>(It.IsAny<Sensor>()))
+                  .Returns(new BoolHeatmapDto());
+
+            mockUnitOfWork.Setup(u => u.HistoryRepo
+                .GetBoolValuePercentagesPerHours(It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+                    .Returns(Task.FromResult<IEnumerable<BoolValuePercentagePerHour>>(new List<BoolValuePercentagePerHour> { _boolValuePercentagePerHour }));
+
+            var result = _manager.GetBoolHeatmapById(1).Result;
+
+            Assert.IsTrue(result.IsCorrect);
+        }
+
+        [Test]
+        public void GetBoolHeatmapById_IncorrectId_ReturnNotCorrect()
+        {
+            var result = _manager.GetBoolHeatmapById(0).Result;
+
+            Assert.IsFalse(result.IsCorrect);
+        }
+
+        [Test]
+        public void GetBoolHeatmapById_NoBoolValueForSensor_ReturnNotCorrect()
+        {
+            mockUnitOfWork.Setup(u => u.HistoryRepo
+                .GetBoolValuePercentagesPerHours(It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()));
+
+            var result = _manager.GetBoolHeatmapById(1).Result;
+
+            Assert.IsFalse(result.IsCorrect);
+        }
+        #endregion
+
+        #region Gauge
         [Test]
         public void GetGaugeById_InvalidReportElementId_ReturnCorrect()
         {
@@ -230,17 +266,16 @@ namespace smart_home_web.Tests.ManagerTests
               .Map<ReportElement, GaugeDto>(_reportElement))
                   .Returns(_gaugeDto);
 
-            mockHistoryManager.Setup(u => u
+            _mockHistoryManager.Setup(u => u
              .GetMinValueForPeriod(_reportElement.SensorId.Value, (int)_reportElement.Hours)).Returns(10);
 
-            mockHistoryManager.Setup(u => u
+            _mockHistoryManager.Setup(u => u
              .GetMaxValueForPeriod(_reportElement.SensorId.Value, (int)_reportElement.Hours)).Returns(30);
-            var result = _manager.GetBoolHeatmapById(1).Result;
 
-            mockHistoryManager.Setup(u => u
+            _mockHistoryManager.Setup(u => u
             .GetLastHistoryBySensorId(_reportElement.SensorId.Value)).Returns(_historyDto);
 
-            var result = manager.GetGaugeById(1).Result;
+            var result = _manager.GetGaugeById(1).Result;
 
             Assert.IsTrue(result.IsValid);
         }
@@ -255,12 +290,11 @@ namespace smart_home_web.Tests.ManagerTests
             mockMapper.Setup(m => m
               .Map<ReportElement, GaugeDto>(_reportElement))
                   .Returns(_gaugeDto);
-           
-            mockHistoryManager.Setup(u => u
+
+            _mockHistoryManager.Setup(u => u
             .GetLastHistoryBySensorId(_reportElement.SensorId.Value)).Returns(_historyDto);
 
-            var result = manager.GetGaugeById(1).Result;
-            var result = _manager.GetBoolHeatmapById(0).Result;
+            var result = _manager.GetGaugeById(1).Result;
 
             Assert.IsFalse(result.IsValid);
         }
@@ -276,19 +310,18 @@ namespace smart_home_web.Tests.ManagerTests
               .Map<ReportElement, GaugeDto>(_reportElement))
                   .Returns(_gaugeDto);
 
-            mockHistoryManager.Setup(u => u
+            _mockHistoryManager.Setup(u => u
              .GetMinValueForPeriod(_reportElement.SensorId.Value, (int)_reportElement.Hours)).Returns(20);
 
-            mockHistoryManager.Setup(u => u
+            _mockHistoryManager.Setup(u => u
              .GetMaxValueForPeriod(_reportElement.SensorId.Value, (int)_reportElement.Hours)).Returns(20);
 
-            mockHistoryManager.Setup(u => u
+            _mockHistoryManager.Setup(u => u
             .GetLastHistoryBySensorId(_reportElement.SensorId.Value)).Returns(_historyDto);
 
-            var result = manager.GetGaugeById(1).Result;
-            var result = _manager.GetBoolHeatmapById(1).Result;
+            var result = _manager.GetGaugeById(1).Result;
 
-            Assert.IsFalse(result.IsCorrect);
+            Assert.IsFalse(result.IsValid);
         }
         #endregion
 
