@@ -167,6 +167,8 @@ namespace Infrastructure.Business.Managers
 
         public bool CheckValue(History history)
         {
+            if (history == null)
+                return false;
             var lastHistory = unitOfWork.HistoryRepo.GetLastBySensorId(history.SensorId).Result;
 
             if (lastHistory?.Date.AddMinutes(5) < history.Date)
