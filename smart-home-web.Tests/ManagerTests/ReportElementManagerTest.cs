@@ -26,6 +26,7 @@ namespace smart_home_web.Tests.ManagerTests
         private static List<ReportElement> reportElements;
         private static List<History> histories;
         private static ReportElement _reportElement;
+        private static ReportElement _wordcloudReportElement;
         private static ReportElementDto _reportElementDto;
         private static GaugeDto _gaugeDto;
         private static HistoryDto _historyDto;
@@ -64,6 +65,7 @@ namespace smart_home_web.Tests.ManagerTests
                     Hours = Domain.Core.Model.Enums.ReportElementHours.Hour168,
                     Sensor = new Sensor() { Id = 2, Name = "Sensor2" },
                     Dashboard = new Dashboard(){ Id = 1, Name ="Dashboard1"},
+                    Type = ReportElementType.Wordcloud,
                     SensorId = 2
                 }
             };
@@ -84,13 +86,13 @@ namespace smart_home_web.Tests.ManagerTests
                 new History {
                     Id = 3,
                     Date = new DateTimeOffset(),
-                    Sensor = new Sensor() { Id = 1, Name = "Sensor1", SensorType = new SensorType() { MeasurementType = Domain.Core.Model.Enums.MeasurementType.Int} },
+                    Sensor = new Sensor() { Id = 2, Name = "Sensor2", SensorType = new SensorType() { MeasurementType = Domain.Core.Model.Enums.MeasurementType.Int} },
                     IntValue = 3
                 },
                 new History {
                     Id = 4,
                     Date = DateTimeOffset.Now.AddDays(-(int)_reportElement.Hours),
-                    Sensor = new Sensor() { Id = 1, Name = "Sensor1", SensorType = new SensorType() { MeasurementType = Domain.Core.Model.Enums.MeasurementType.Int} },
+                    Sensor = new Sensor() { Id = 3, Name = "Sensor3", SensorType = new SensorType() { MeasurementType = Domain.Core.Model.Enums.MeasurementType.Int} },
                     IntValue = 3
                 }
             };
@@ -113,7 +115,12 @@ namespace smart_home_web.Tests.ManagerTests
             {
                 Id = 1,
                 Hours = Domain.Core.Model.Enums.ReportElementHours.Hour168,
-                SensorId = 1
+                DashboardId = 1,
+                SensorId = 1,
+                Type = ReportElementType.Wordcloud,
+                IsActive = true,
+                IsLocked = true,
+                DashboardName = "DashboardTest"
             };
 
             _gaugeDto = new GaugeDto
@@ -148,6 +155,8 @@ namespace smart_home_web.Tests.ManagerTests
             };
         }
 
+        #region DataSeries
+
         [Test]
         public void GetDataForTimeSeries_InvalidReportElementId_ReturnNull()
         {
@@ -167,6 +176,8 @@ namespace smart_home_web.Tests.ManagerTests
             Assert.AreEqual("Sensor2", result.SensorName);
             Assert.AreEqual(false, result.IsCorrect);
         }
+
+        #endregion
 
         #region Heatmap
         [Test]
@@ -261,6 +272,8 @@ namespace smart_home_web.Tests.ManagerTests
             //assert
             Assert.IsTrue(result);
         }
+
+
         #endregion
 
         #region WordCloud
@@ -270,14 +283,14 @@ namespace smart_home_web.Tests.ManagerTests
             //arrange
             mockUnitOfWork.Setup(uow => uow.HistoryRepo
                 .GetHistoriesBySensorIdAndDate(It.IsAny<int>(), It.IsAny<DateTimeOffset>()))
-                .Returns(Task.FromResult<IEnumerable<History>>(histories));
+                    .Returns(Task.FromResult<IEnumerable<History>>(histories));
 
             mockMapper.Setup(m => m
-               .Map<ReportElement, ReportElementDto>(_reportElement))
+               .Map<ReportElement, ReportElementDto>(reportElements.ElementAt(1)))
                    .Returns(_reportElementDto);
 
             //act
-            var result = _manager.GetWordCloudById(1).Result;
+            var result = _manager.GetWordCloudById(2).Result;
 
             //assert
             Assert.IsTrue(result.IsCorrect);

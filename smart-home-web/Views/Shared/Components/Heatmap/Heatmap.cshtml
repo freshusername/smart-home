@@ -139,7 +139,7 @@
                     return '<b>' + '</b><br>' + @Html.Raw(Json.Serialize(Model.SensorName))  +
                         (this.point.value == undefined ? ' has no data' : ' has average: <b>' + this.point.value + ' ' + @Html.Raw(Json.Serialize(Model.MeasurementName))) +
                             '</b><br> on <b>' + getPointCategoryName(this.point, 'y') + ', ' +
-                                getDateForValue(this.point.index) + '</b>';
+                                (getDateForValue(this.point.index) == '' ? 'soon...' : getDateForValue(this.point.index)) + '</b>';
                 }
             },
 

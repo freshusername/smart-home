@@ -137,6 +137,10 @@ namespace Infrastructure.Business.Managers
             };
 
             var sensor = unitOfWork.SensorRepo.GetById(sensorId).Result;
+
+            if(sensor == null)
+                return new OperationDetails(false, "Operation did not succeed!", "");
+
             dynamic valueModel;
 
             if (sensor.IsValid)

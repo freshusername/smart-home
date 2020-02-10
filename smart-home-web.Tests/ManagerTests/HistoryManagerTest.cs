@@ -93,7 +93,7 @@ namespace smart_home_web.Tests.ManagerTests
         }
 
         [Test]
-        public void CreateHistory_SensorIsNotActiveReturn_False()
+        public void AddHistory_SensorIsNotActiveReturnsFalse()
         {
             //arrange
             int sensorId = 3;
@@ -111,6 +111,24 @@ namespace smart_home_web.Tests.ManagerTests
 
             //assert
             Assert.IsFalse(result.Succeeded);
+        }
+
+        [Test]
+        public void AddHistory_InvalidSensorId_ReturnsFalse()
+        {
+            //arrange
+            int sensorValue = 456;
+            mockMapper.Setup(h => h.Map<HistoryDto, History>(_historyDto))
+                    .Returns(histories.First());
+
+            mockUnitOfWork.Setup(h => h.SensorRepo.GetById(123));
+
+            //act
+            var result = _manager.AddHistory(sensorValue.ToString(), 123);
+
+            //assert
+            Assert.IsFalse(result.Succeeded);
+
         }
     }
 }

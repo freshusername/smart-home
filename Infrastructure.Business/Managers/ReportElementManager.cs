@@ -236,7 +236,12 @@ namespace Infrastructure.Business.Managers
         public async Task<ReportElementDto> GetWordCloudById(int ReportElementId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
+            if (reportElement == null)
+            {
+                return new ReportElementDto { Id = ReportElementId, IsCorrect = false };
+            }
             DateTime date = new DateTime(1970, 1, 1, 0, 0, 0);
+
             if (reportElement.Hours != 0)
                 date = DateTime.Now.AddHours(-(int)reportElement.Hours);
             IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId.Value, date);
