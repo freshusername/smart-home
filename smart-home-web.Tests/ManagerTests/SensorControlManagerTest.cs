@@ -140,5 +140,41 @@ namespace smart_home_web.Tests.ManagerTests
             Assert.IsTrue(result.Succeeded);
         }
         #endregion
+
+        #region Delete
+        [Test]
+        public void Delete_InvalidId_ReturnSuccededFalse()
+        {
+            var result = _manager.Delete(2);
+
+            Assert.IsFalse(result.Succeeded);
+        }
+
+        [Test]
+        public void Delete_ValidId_ReturnSuccededTrue()
+        {
+            var result = _manager.Delete(1);
+
+            Assert.IsTrue(result.Succeeded);
+        }
+        #endregion
+
+        #region GetById
+        [Test]
+        public void GetById_InvalidId_ReturnNull()
+        {
+            var result = _manager.GetById(2);
+
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public void GetById_ValidId_ReturnNotNull()
+        {
+            var result = _manager.GetById(1);
+
+            Assert.IsNotNull(result);
+        }
+        #endregion
     }
 }
