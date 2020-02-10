@@ -3,6 +3,7 @@ using Domain.Core.Model;
 using Infrastructure.Business.DTOs.Dashboard;
 using Infrastructure.Business.Infrastructure;
 using Infrastructure.Business.Interfaces;
+using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -40,6 +41,7 @@ namespace smart_home_web.Controllers
         public async Task<IActionResult> Detail(int id)
         {
             var userId = _userManager.GetUserId(User);
+            ViewBag.userid = userId;
             var dashboard = await _dashboardManager.GetById(id);
             var result = _mapper.Map<DashboardDto, DashboardViewModel>(dashboard);
             return View(result);
@@ -94,16 +96,16 @@ namespace smart_home_web.Controllers
             if(!dashboardDto.IsPublic)
                 dashboardDto.AppUserId = _userManager.GetUserId(User);
 
-            OperationDetails result = await _dashboardManager.Create(dashboardDto);
-            if (result.Succeeded)
+            var res = _dashboardManager.Create(dashboardDto).Result;
+
+            if (res != null)
             {
-                DashboardDto dashboardDtoFromDB = await _dashboardManager.GetLastDashboard();
-                return ViewComponent("DashboardElement", _mapper.Map<DashboardDto, DashboardViewModel>(dashboardDtoFromDB));
+                return ViewComponent("DashboardElement", _mapper.Map<DashboardDto, DashboardViewModel>(res));
             }
             else
             {
-                ModelState.AddModelError(result.Property, result.Message);
-                return NotFound();
+                //ModelState.AddModelError(res.Property, res.Message);
+                return View(model);
             }
         }
 
@@ -123,15 +125,16 @@ namespace smart_home_web.Controllers
             if (dashboardDto.IsPublic)
                 dashboardDto.AppUserId = null;
 
-            try
+            var res = await _dashboardManager.Update(dashboardDto);
+
+            if (res != null)
             {
-                _dashboardManager.Update(dashboardDto);
-                DashboardDto dashboardDtoFromDB = await _dashboardManager.GetLastDashboard();
-                return ViewComponent("DashboardElement", _mapper.Map<DashboardDto, DashboardViewModel>(dashboardDtoFromDB));
+                return ViewComponent("DashboardElement", _mapper.Map<DashboardDto, DashboardViewModel>(res));
             }
-            catch
+            else
             {
-                return View();
+                //ModelState.AddModelError(res.Property, res.Message);
+                return View(model);
             }
         }
 
@@ -145,9 +148,21 @@ namespace smart_home_web.Controllers
         [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
-            await _dashboardManager.DeleteById(id);
-            return Ok();
+            try
+            {
+                var res = await _dashboardManager.Delete(id);
+                if (!res.Succeeded)
+                {
+                    ModelState.AddModelError(res.Property, res.Message);
+                    return View();
+                }
 
+                return Ok();
+            }
+            catch
+            {
+                return View();
+            }
         }
     }
 }

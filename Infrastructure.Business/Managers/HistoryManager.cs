@@ -13,7 +13,7 @@ using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.Infrastructure;
 using Microsoft.AspNetCore.SignalR;
 
-namespace Infrastructure.Business.Interfaces
+namespace Infrastructure.Business.Managers
 {
     public class HistoryManager : BaseManager, IHistoryManager
     {

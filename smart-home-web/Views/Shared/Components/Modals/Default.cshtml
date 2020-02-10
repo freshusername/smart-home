@@ -29,6 +29,7 @@
     const allElementsContainer = $(".all-elements-container");
     const NoElementsRow = $(".no-elements-row").detach();
     allElementsContainer.before(NoElementsRow);
+    var isFormEditChanged = false;
 
     $(".element-edit").click(ElementEdit);
     $(".element-delete").click(ElementDelete);
@@ -50,6 +51,10 @@
         modal.find(".modal-title").empty();
     }
 
+    function onModalFormEditChange() {
+        isFormEditChanged = true;
+    }
+
     function ElementEdit() {
         currentElement = $(this).closest(".element-container");
         ModalCleaning();
@@ -64,6 +69,7 @@
                 modal.find(".modal-title").text("Edit " + elementName);
                 modalBody.prepend(data);
                 modalBody.on("submit", "#modal-form-edit", ModalFormEdit);
+                modalBody.on("change", ".form-control", onModalFormEditChange);
                 modal.modal();
             },
             error: function (res) {
@@ -74,34 +80,39 @@
 
     function ModalFormEdit() {
         event.preventDefault();
-        var inputFile = $(this).find("input[type='file']");
-        var fd = new FormData(document.getElementById("modal-form-create"));
-        fd.append('IconFile', inputFile.prop('files')[0]);
+        if (isFormEditChanged) {
+            isFormEditChanged = false;
+            let inputFile = $(this).find("input[type='file']");
+            let fd = new FormData(document.getElementById("modal-form-edit"));
+            fd.append('IconFile', inputFile.prop('files')[0]);
 
-        $.ajax({
-            url: '@Url.Action("Edit")',
-            method: "POST",
-            processData: false,
-            contentType: false,
-            data: fd,
-            beforeSend: function () {
-                modal.modal("hide");
-                currentElement.hide(600);
-                return true;
-            },
-            success: function (data) {
-                currentElement.replaceWith(data);
-                currentElement.show(600);
-                allElementsContainer.on("click", ".element-delete", ElementDelete);
-                allElementsContainer.on("click", ".element-edit", ElementEdit);
-                //tableBody.on("click", ".fa-eye-slash", toggleEyeIcon);
-                //tableBody.on("click", ".input-set-active", SetActiveAjax);
-                NoElementsDisplay();
-            },
-            error: function (res) {
-                console.log(res);
-            }
-        });
+            $.ajax({
+                url: '@Url.Action("Edit")',
+                method: "POST",
+                processData: false,
+                contentType: false,
+                data: fd,
+                beforeSend: function () {
+                    modal.modal("hide");
+                    currentElement.hide(600);
+                    return true;
+                },
+                success: function (data) {
+                    currentElement.replaceWith(data);
+                    currentElement.show(600);
+                    allElementsContainer.on("click", ".element-delete", ElementDelete);
+                    allElementsContainer.on("click", ".element-edit", ElementEdit);
+                    //tableBody.on("click", ".fa-eye-slash", toggleEyeIcon);
+                    //tableBody.on("click", ".input-set-active", SetActiveAjax);
+                    NoElementsDisplay();
+                },
+                error: function (res) {
+                    console.log(res);
+                }
+            });
+        } else {
+            modal.modal("hide");
+        }
     }
 
     function ElementCreate() {

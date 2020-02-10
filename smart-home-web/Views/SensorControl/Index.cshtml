@@ -45,7 +45,7 @@
                                                                  @Html.Raw(item.IsActive ? "toggle-shadow" : " ")"
                                                                  id="@item.Id"
                                                                  style="width:57px; margin-left:25%">
-                                                                <input type="checkbox"                                                                       
+                                                                <input type="checkbox"          
                                                                        @Html.Raw(item.IsActive ? "checked" : " ")
                                                                        data-toggle="toggle"                                                                     
                                                                        data-request-url="@Url.Action("Change", "SensorControl")"
@@ -85,16 +85,7 @@
 
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 
-
-@*<script src="~/js/ToggleRequest.js"></script>*@
-
-
 <script>
-    //$(".input-set-active").on("click", function () {
-    //    console.log(this);
-    //    $(this).toggleClass("toggle-shadow");
-    //});
-
     $(".input-set-active").on("click", function () {  
         $(this).toggleClass("toggle-shadow");
         var isActive;
