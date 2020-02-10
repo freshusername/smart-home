@@ -21,7 +21,7 @@ namespace Infrastructure.Business.Managers
         public async Task<SensorTypeDto> Create(SensorTypeDto sensorTypeDto)
         {
             SensorType sensortype = mapper.Map<SensorTypeDto, SensorType>(sensorTypeDto);
-              if(sensortype == null) return new OperationDetails(false, "", "Error");
+              if(sensortype == null) return null;
             try
             {
                 await unitOfWork.SensorTypeRepo.Insert(sensortype);
@@ -37,7 +37,7 @@ namespace Infrastructure.Business.Managers
         public async Task<SensorTypeDto> Update(SensorTypeDto sensorTypeDto)
         {
             SensorType sensortype = mapper.Map<SensorTypeDto, SensorType>(sensorTypeDto);
-            if (sensortype == null) return new OperationDetails(false, "", "Error");
+            if (sensortype == null) return null;
             try
             {
                 await unitOfWork.SensorTypeRepo.Update(sensortype);

@@ -40,7 +40,7 @@ namespace smart_home_web.Tests.ManagerTests
 
             var res = _manager.Create(_sensorTypeDto);
 
-            Assert.IsTrue(res.Result.Succeeded);
+            Assert.IsNotNull(_sensorTypeDto);
         }
 
         [Test]
@@ -58,7 +58,7 @@ namespace smart_home_web.Tests.ManagerTests
 
             var res = _manager.Create(_sensorTypeDto);
 
-            Assert.IsFalse(res.Result.Succeeded);
+            Assert.IsNull(_sensorTypeDto);
         }
 
         [Test]
@@ -73,7 +73,7 @@ namespace smart_home_web.Tests.ManagerTests
 
             var res = _manager.Update(_sensorTypeDto);
 
-            Assert.IsTrue(res.Succeeded);
+            Assert.IsNotNull(_sensorTypeDto);
         }
 
         [Test]
@@ -91,7 +91,7 @@ namespace smart_home_web.Tests.ManagerTests
 
             var res = _manager.Update(_sensorTypeDto);
 
-            Assert.IsFalse(res.Succeeded);
+            Assert.IsNull(_sensorTypeDto);
         }
 
         [Test]

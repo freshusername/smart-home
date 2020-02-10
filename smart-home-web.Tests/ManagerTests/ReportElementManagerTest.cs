@@ -159,7 +159,7 @@ namespace smart_home_web.Tests.ManagerTests
             Assert.AreEqual("Sensor2", result.SensorName);
             Assert.AreEqual(false, result.IsCorrect);
         }
-        #region Heatmap
+      
         [Test]
         public void GetHeatmapById_CorrectId_ReturnCorrect()
         {
