@@ -1,0 +1,37 @@
+﻿@using Domain.Core.Model;
+@using Microsoft.AspNetCore.Identity
+@using smart_home_web.Models;
+
+
+@inject SignInManager<AppUser> SignInManager;
+@inject UserManager<AppUser> UserManager;
+
+<div class="app-header">
+
+    <div class="app-header-right">
+
+        <div class="search-wrapper" style="width: 49rem; border: brown; border-style: dashed;">
+            <i class="search-icon-wrapper typcn typcn-zoom-outline"></i>
+            <input type="text" placeholder="Search...">
+        </div>
+
+        <partial name="_Bell">
+
+
+            <div class="header-btn-lg pr-0">
+                <div class="widget-content p-0">
+                    <div class="widget-content-wrapper">
+                        <div class="widget-content-left">
+                            <div class="btn-group">
+                                <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="p-0 btn">
+                                    <img width="42" class="rounded" src="/assets/images/avatars/3.jpg" alt="">
+                                    <i class="fa fa-angle-down ml-2 opacity-8"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    <div class="app-header-overlay d-none animated fadeIn"></div>
+</div>
