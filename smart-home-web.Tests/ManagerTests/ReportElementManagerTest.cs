@@ -3,7 +3,6 @@ using Domain.Core.Model;
 using Infrastructure.Business.DTOs.History;
 using Infrastructure.Business.DTOs.ReportElements;
 using Infrastructure.Business.Interfaces;
-using Infrastructure.Business.Managers;
 using Moq;
 using NUnit.Framework;
 using System;
