@@ -55,7 +55,17 @@
                                                             <i class="fas report-button i-button"></i>
                                                         </div>
                                                     </div>
-                                                    <div>@await Component.InvokeAsync(report.Type.ToString(), new { reportElementId = report.Id })</div>
+                                                    <div>
+                                                        @if (report.Type != Domain.Core.Model.Enums.ReportElementType.StatusReport)
+                                                        {
+                                                            @await Component.InvokeAsync(report.Type.ToString(), new { reportElementId = report.Id })
+                                                        }
+                                                        else
+                                                        {
+                                                            @await Component.InvokeAsync(report.Type.ToString(), new { reportElementId = report.Id, userid = ViewBag.userid })
+                                                        }
+
+                                                    </div>
                                                 </div>
                                             </div>
                                         }

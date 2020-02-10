@@ -7,7 +7,7 @@ using Infrastructure.Business.DTOs.History;
 using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.Infrastructure;
 
-namespace Infrastructure.Business.Interfaces
+namespace Infrastructure.Business.Managers
 {
 	public interface IHistoryManager
 	{

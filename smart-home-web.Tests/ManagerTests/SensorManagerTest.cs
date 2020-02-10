@@ -1,9 +1,12 @@
 ﻿using Domain.Core.Model;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Business.DTOs.Sensor;
+using Infrastructure.Business.Hubs;
 using Infrastructure.Business.Interfaces;
 using Infrastructure.Business.Managers;
 using Infrastructure.Data.Repositories;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore.Internal;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -24,7 +27,12 @@ namespace smart_home_web.Tests.ManagerTests
         protected override void Initialize()
         {
             base.Initialize();
-            _manager = new SensorManager(mockUnitOfWork.Object, mockMapper.Object);
+            Mock<IHubContext<GraphHub>> hub = new Mock<IHubContext<GraphHub>>();
+
+            _manager = new SensorManager(mockUnitOfWork.Object, mockMapper.Object, hub.Object);
+
+            _manager = new SensorManager(mockUnitOfWork.Object, mockMapper.Object ,hub.Object);
+
 
             Guid guid = new Guid();
 
@@ -36,11 +44,11 @@ namespace smart_home_web.Tests.ManagerTests
         public void Create_ValidDto_ReturnNotNull()
         {
             Guid guid = Guid.NewGuid();
-            SensorDto newSensorDto = new SensorDto() { Name = "Correct", Token = guid, IsActive = true, IsValid = true};
-            Sensor newSensor = new Sensor() { Name = "Correct", Token = guid, IsActive = true, IsValid = true};
+            SensorDto newSensorDto = new SensorDto() { Name = "Correct", Token = guid, IsActive = true, IsValid = true };
+            Sensor newSensor = new Sensor() { Name = "Correct", Token = guid, IsActive = true, IsValid = true };
 
             mockMapper.Setup(m => m
-                .Map<SensorDto,Sensor>(newSensorDto))
+                .Map<SensorDto, Sensor>(newSensorDto))
                     .Returns(newSensor);
 
             mockMapper.Setup(m => m
@@ -52,7 +60,7 @@ namespace smart_home_web.Tests.ManagerTests
 
             mockUnitOfWork.Setup(uow => uow
                 .SensorRepo.Insert(newSensor));
-            
+
             var result = _manager.Create(newSensorDto);
 
             Assert.IsNotNull(result.Result);
@@ -131,7 +139,7 @@ namespace smart_home_web.Tests.ManagerTests
             mockUnitOfWork.Setup(uow => uow
                 .SensorRepo.GetById(0))
                 .Returns(Task.FromResult(notExistingSensor));
-            
+
             var result = _manager.Update(notExistingSensorDto);
 
             Assert.IsNull(result.Result);

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Business.Interfaces
+namespace Infrastructure.Business.Managers
 {
 	public interface INotificationManager
 	{
