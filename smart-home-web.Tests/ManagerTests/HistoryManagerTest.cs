@@ -112,5 +112,7 @@ namespace smart_home_web.Tests.ManagerTests
             //assert
             Assert.IsFalse(result.Succeeded);
         }
+
+        public void GetHistoryByIdAsync_
     }
 }
