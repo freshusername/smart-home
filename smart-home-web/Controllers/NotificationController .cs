@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Infrastructure.Business.DTOs.Notification;
 using Infrastructure.Business.Interfaces;
-using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Mvc;
 using smart_home_web.Models.Notification;
 

@@ -96,7 +96,7 @@ namespace smart_home_web
             services.AddTransient<IHistoryManager, HistoryManager>();
             services.AddTransient<ISensorTypeManager, SensorTypeManager>();
             services.AddTransient<IGenericRepository<Message>, BaseRepository<Message>>();
-            services.AddTransient<INotificationManager, NotificationManager>();
+            services.AddTransient<IInvSensorNotificationManager, InvSensorNotificationManager>();
             services.AddTransient<IDashboardManager, DashboardManager>();
             services.AddTransient<IReportElementManager, ReportElementManager>();
             services.AddTransient<IActionService, ActionService>();

@@ -113,7 +113,7 @@ namespace Infrastructure.Business.Interfaces
             unitOfWork.SensorRepo.Insert(sensor);
 
             unitOfWork.Save();
-            return new OperationDetails(true, "Operation succeed", sensor.Id.ToString());
+            return new OperationDetails(true, "Operation succeed", "", new Dictionary<string, object>() { { "id", sensor.Id } });
         }
 
         public async Task<List<SensorDto>> GetSensorsByReportElementType(ReportElementType type, int dashboardId)

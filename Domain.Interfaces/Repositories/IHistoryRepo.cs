@@ -13,6 +13,7 @@ namespace Domain.Interfaces.Repositories
 
         History GetLastHistoryBySensorId(int SensorId);
         Task<History> GetLastBySensorId(int sensorId);
+        Task<History> GetByIdWithSensor(int id);
 
         double? GetMinValueForPeriod(int sensorId, int? hours);
         double? GetMaxValueForPeriod(int sensorId, int? hours);

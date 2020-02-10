@@ -153,7 +153,7 @@ namespace Infrastructure.Business.Interfaces
             unitOfWork.HistoryRepo.Insert(history);
             unitOfWork.Save();
 
-            return new OperationDetails(true, "Operation succeed", "");
+            return new OperationDetails(true, "Operation succeed", "", new Dictionary<string, object>() { { "id", history.Id } });
         }
 
         public bool CheckValue(History history)

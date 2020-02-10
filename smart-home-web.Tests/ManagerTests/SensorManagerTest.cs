@@ -2,7 +2,6 @@
 using Domain.Interfaces.Repositories;
 using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.Interfaces;
-using Infrastructure.Business.Managers;
 using Infrastructure.Data.Repositories;
 using Moq;
 using NUnit.Framework;
@@ -24,7 +23,7 @@ namespace smart_home_web.Tests.ManagerTests
         protected override void Initialize()
         {
             base.Initialize();
-            _manager = new SensorManager(mockUnitOfWork.Object, mockMapper.Object);
+            //_manager = new SensorManager(mockUnitOfWork.Object, mockMapper.Object);
 
             Guid guid = new Guid();
 
