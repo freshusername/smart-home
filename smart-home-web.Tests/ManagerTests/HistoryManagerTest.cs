@@ -23,12 +23,14 @@ namespace smart_home_web.Tests.ManagerTests
         private Mock<IHubContext<GraphHub>> _hubContext;
         private static List<History> histories;
         private HistoryDto _historyDto;
+        private Sensor _sensor;
 
 
         [SetUp]
         protected override void Initialize()
         {
             base.Initialize();
+            _hubContext = new Mock<IHubContext<GraphHub>>();
             _manager = new HistoryManager(mockUnitOfWork.Object, mockMapper.Object, _hubContext.Object);
             CultureInfo ci = CultureInfo.InvariantCulture;
 
@@ -66,6 +68,13 @@ namespace smart_home_web.Tests.ManagerTests
                     SensorId = 4
                 },
             };
+            _sensor = new Sensor()
+            {
+                Id = 1,
+                Name = "Sensor1",
+                SensorType = new SensorType() { Id = 1, Name = "SensorType1", MeasurementType = Domain.Core.Model.Enums.MeasurementType.Int },
+                IsActive = false
+            };
         }
 
         [Test]
@@ -84,24 +93,24 @@ namespace smart_home_web.Tests.ManagerTests
         }
 
         [Test]
-        public void Create_Return_True()
+        public void CreateHistory_SensorIsNotActiveReturn_False()
         {
             //arrange
-            string value = "true";
             int sensorId = 3;
-            History newHistory = new History();
+            int sensorValue = 456;
 
             mockMapper.Setup(h => h.Map<HistoryDto, History>(_historyDto))
-                    .Returns(newHistory);
+                    .Returns(histories.First());
 
-            mockUnitOfWork.Setup(h => h.HistoryRepo.Insert(newHistory));
-            mockUnitOfWork.Setup(h => h.SensorRepo.GetById(sensorId));
+            mockUnitOfWork.Setup(h => h.HistoryRepo.Insert(histories.First()));
+            mockUnitOfWork.Setup(h => h.SensorRepo.GetById(sensorId))
+                .Returns(Task.FromResult(_sensor));
 
             //act
-            var result = _manager.AddHistory(value, sensorId);
+            var result = _manager.AddHistory(sensorValue.ToString(), sensorId);
 
             //assert
-            Assert.IsTrue(result.Succeeded);
+            Assert.IsFalse(result.Succeeded);
         }
     }
 }

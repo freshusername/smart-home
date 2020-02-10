@@ -1,4 +1,5 @@
-﻿using Domain.Core.Model;
+﻿using Domain.Core.CalculateModel;
+using Domain.Core.Model;
 using Domain.Core.Model.Enums;
 using Infrastructure.Business.DTOs;
 using Infrastructure.Business.DTOs.History;
@@ -35,13 +36,20 @@ namespace smart_home_web.Tests.ManagerTests
         protected override void Initialize()
         {
             base.Initialize();
-            mockHistoryManager = new Mock<IHistoryManager>();
+            _mockHistoryManager = new Mock<IHistoryManager>();
 
-            manager = new ReportElementManager(
-               mockHistoryManager.Object,
+            _manager = new ReportElementManager(
+               _mockHistoryManager.Object,
                mockUnitOfWork.Object,
                mockMapper.Object);
 
+            _reportElement = new ReportElement
+            {
+                Id = 1,
+                Hours = Domain.Core.Model.Enums.ReportElementHours.Hour168,
+                Sensor = new Sensor() { Id = 1, Name = "Sensor1" },
+                SensorId = 1
+            };
 
             reportElements = new List<ReportElement>() {
                 new ReportElement {
@@ -63,9 +71,9 @@ namespace smart_home_web.Tests.ManagerTests
             histories = new List<History>() {
                 new History {
                     Id = 1,
-                    Date = new DateTimeOffset(),
-                    Sensor = new Sensor() { Id = 1, Name = "Sensor1", SensorType = new SensorType() { MeasurementType = Domain.Core.Model.Enums.MeasurementType.Int} },
-                    IntValue = 1
+                    Date = DateTimeOffset.Now.AddDays(-(int)_reportElement.Hours),
+                    Sensor = new Sensor() { Id = 5, Name = "Sensor5", SensorType = new SensorType() { MeasurementType = Domain.Core.Model.Enums.MeasurementType.Bool} },
+                    BoolValue = true
                 },
                 new History {
                     Id = 2,
@@ -78,9 +86,13 @@ namespace smart_home_web.Tests.ManagerTests
                     Date = new DateTimeOffset(),
                     Sensor = new Sensor() { Id = 1, Name = "Sensor1", SensorType = new SensorType() { MeasurementType = Domain.Core.Model.Enums.MeasurementType.Int} },
                     IntValue = 3
+                },
+                new History {
+                    Id = 4,
+                    Date = DateTimeOffset.Now.AddDays(-(int)_reportElement.Hours),
+                    Sensor = new Sensor() { Id = 1, Name = "Sensor1", SensorType = new SensorType() { MeasurementType = Domain.Core.Model.Enums.MeasurementType.Int} },
+                    IntValue = 3
                 }
-
-
             };
 
             mockUnitOfWork.Setup(u => u.ReportElementRepo
@@ -97,13 +109,6 @@ namespace smart_home_web.Tests.ManagerTests
                .GetAvgSensorsValuesPerDays(It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()))
                    .Returns(Task.FromResult<IEnumerable<AvgSensorValuePerDay>>(new List<AvgSensorValuePerDay> { _avgSensorValuePerDay }));
 
-            _reportElement = new ReportElement
-            {
-                Id = 1,
-                Hours = Domain.Core.Model.Enums.ReportElementHours.Hour168,
-                Sensor = new Sensor() { Id = 1, Name = "Sensor1" },
-                SensorId = 1
-            };
             _reportElementDto = new ReportElementDto
             {
                 Id = 1,
@@ -147,7 +152,7 @@ namespace smart_home_web.Tests.ManagerTests
         public void GetDataForTimeSeries_InvalidReportElementId_ReturnNull()
         {
 
-            var result = manager.GetDataForTimeSeries(0).Result;
+            var result = _manager.GetDataForTimeSeries(0).Result;
 
             Assert.IsNull(result);
         }
@@ -156,12 +161,13 @@ namespace smart_home_web.Tests.ManagerTests
         public void GetDataForTimeSeries_NoHistories_ReturnNotCorrect()
         {
 
-            var result = manager.GetDataForTimeSeries(2).Result;
+            var result = _manager.GetDataForTimeSeries(2).Result;
 
             Assert.AreEqual(2, result.Id);
             Assert.AreEqual("Sensor2", result.SensorName);
             Assert.AreEqual(false, result.IsCorrect);
         }
+
         #region Heatmap
         [Test]
         public void GetHeatmapById_CorrectId_ReturnCorrect()
@@ -174,7 +180,7 @@ namespace smart_home_web.Tests.ManagerTests
                 .GetAvgSensorsValuesPerDays(It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()))
                     .Returns(Task.FromResult<IEnumerable<AvgSensorValuePerDay>>(new List<AvgSensorValuePerDay> { _avgSensorValuePerDay }));
 
-            var result = manager.GetHeatmapById(1).Result;
+            var result = _manager.GetHeatmapById(1).Result;
 
             Assert.IsTrue(result.IsCorrect);
         }
@@ -182,7 +188,7 @@ namespace smart_home_web.Tests.ManagerTests
         [Test]
         public void GetHeatmapById_IncorrectId_ReturnNotCorrect()
         {
-            var result = manager.GetHeatmapById(0).Result;
+            var result = _manager.GetHeatmapById(0).Result;
 
             Assert.IsFalse(result.IsCorrect);
         }
@@ -193,11 +199,12 @@ namespace smart_home_web.Tests.ManagerTests
             mockUnitOfWork.Setup(u => u.HistoryRepo
                 .GetAvgSensorsValuesPerDays(It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()));
 
-            var result = manager.GetHeatmapById(1).Result;
+            var result = _manager.GetHeatmapById(1).Result;
 
             Assert.IsFalse(result.IsCorrect);
         }
         #endregion
+
         #region BoolHeatmap
         [Test]
         public void GetBoolHeatmapById_CorrectId_ReturnCorrect()
@@ -210,7 +217,7 @@ namespace smart_home_web.Tests.ManagerTests
                 .GetBoolValuePercentagesPerHours(It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()))
                     .Returns(Task.FromResult<IEnumerable<BoolValuePercentagePerHour>>(new List<BoolValuePercentagePerHour> { _boolValuePercentagePerHour }));
 
-            var result = manager.GetBoolHeatmapById(1).Result;
+            var result = _manager.GetBoolHeatmapById(1).Result;
 
             Assert.IsTrue(result.IsCorrect);
         }
@@ -218,7 +225,7 @@ namespace smart_home_web.Tests.ManagerTests
         [Test]
         public void GetBoolHeatmapById_IncorrectId_ReturnNotCorrect()
         {
-            var result = manager.GetBoolHeatmapById(0).Result;
+            var result = _manager.GetBoolHeatmapById(0).Result;
 
             Assert.IsFalse(result.IsCorrect);
         }
@@ -229,98 +236,13 @@ namespace smart_home_web.Tests.ManagerTests
             mockUnitOfWork.Setup(u => u.HistoryRepo
                 .GetBoolValuePercentagesPerHours(It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()));
 
-            var result = manager.GetBoolHeatmapById(1).Result;
+            var result = _manager.GetBoolHeatmapById(1).Result;
 
             Assert.IsFalse(result.IsCorrect);
         }
         #endregion
-    }
 
-            _historyManager = new Mock<IHistoryManager>();
-            _manager = new ReportElementManager(
-                _historyManager.Object,
-                mockUnitOfWork.Object,
-                mockMapper.Object);
-
-            _reportElement = new ReportElement
-            {
-                Id = 1,
-                Hours = Domain.Core.Model.Enums.ReportElementHours.Hour168,
-                Sensor = new Sensor() { Id = 1, Name = "Sensor1" },
-                SensorId = 1
-            };
-            _reportElementDto = new ReportElementDto
-            {
-                Id = 1,
-                Hours = Domain.Core.Model.Enums.ReportElementHours.Hour168,
-                SensorId = 1
-            };
-            _historyDto = new HistoryDto
-            {
-                Id = 3,
-                Date = new DateTimeOffset(),
-                IntValue = 3
-            };
-
-            reportElements = new List<ReportElement>() {
-                new ReportElement {
-                    Id = 1,
-                    Hours = Domain.Core.Model.Enums.ReportElementHours.Hour168,
-                    Sensor = new Sensor() { Id = 1, Name = "Sensor1" },
-                    Dashboard = new Dashboard(){ Id = 1, Name ="Dashboard1"},
-                    SensorId = 1
-                },
-                new ReportElement {
-                    Id = 2,
-                    Hours = Domain.Core.Model.Enums.ReportElementHours.Hour168,
-                    Sensor = new Sensor() { Id = 2, Name = "Sensor2" },
-                    Dashboard = new Dashboard(){ Id = 1, Name ="Dashboard1"},
-                    SensorId = 2
-                }
-            };
-            histories = new List<History>() {
-                new History {
-                    Id = 1,
-                    Date = DateTimeOffset.Now.AddDays(-(int)_reportElement.Hours),
-                    Sensor = new Sensor() { Id = 1, Name = "Sensor1", SensorType = new SensorType() { MeasurementType = Domain.Core.Model.Enums.MeasurementType.Int} },
-                    BoolValue = true
-                },
-                new History {
-                    Id = 2,
-                    Date = new DateTimeOffset(),
-                    Sensor = new Sensor() { Id = 1, Name = "Sensor1", SensorType = new SensorType() { MeasurementType = Domain.Core.Model.Enums.MeasurementType.Int} },
-                    IntValue = 2
-                },
-                new History {
-                    Id = 3,
-                    Date = new DateTimeOffset(),
-                    Sensor = new Sensor() { Id = 1, Name = "Sensor1", SensorType = new SensorType() { MeasurementType = Domain.Core.Model.Enums.MeasurementType.Int} },
-                    IntValue = 3
-                },
-                //for GetWordCloudById_IfNoHistories_Returns_False
-                new History {
-                    Id = 4,
-                    Date = DateTimeOffset.Now.AddDays(-(int)_reportElement.Hours),
-                    Sensor = new Sensor() { Id = 1, Name = "Sensor1", SensorType = new SensorType() { MeasurementType = Domain.Core.Model.Enums.MeasurementType.Int} },
-                    IntValue = 3
-                }
-            };
-
-
-            mockUnitOfWork.Setup(uow => uow.HistoryRepo
-                .GetHistoriesBySensorIdAndDate(It.IsAny<int>(), It.IsAny<DateTimeOffset>()))
-                .Returns(Task.FromResult<IEnumerable<History>>(histories));
-
-
-            mockUnitOfWork.Setup(h => h.HistoryRepo
-                .GetHistoriesBySensorIdAndDate(It.IsAny<int>(), It.IsAny<DateTimeOffset>()))
-                    .Returns((int i, DateTimeOffset date) =>
-                        Task.FromResult(histories.Where(x => x.Id == i && x.Date == date)));
-
-            mockUnitOfWork.Setup(h => h.ReportElementRepo.GetById(It.IsAny<int>()))
-                .Returns((int i) => Task.FromResult(_reportElement));
-        }
-
+        #region ReportElement
         [Test]
         public void CreateReportElement_Returns_True()
         {
@@ -339,18 +261,20 @@ namespace smart_home_web.Tests.ManagerTests
             //assert
             Assert.IsTrue(result);
         }
+        #endregion
 
+        #region WordCloud
         [Test]
         public void GetWordCloudById_GetsByValidId_Returns_True()
         {
             //arrange
-            mockMapper.Setup(m => m
-                .Map<ReportElement, ReportElementDto>(_reportElement))
-                    .Returns(_reportElementDto);
-
             mockUnitOfWork.Setup(uow => uow.HistoryRepo
                 .GetHistoriesBySensorIdAndDate(It.IsAny<int>(), It.IsAny<DateTimeOffset>()))
                 .Returns(Task.FromResult<IEnumerable<History>>(histories));
+
+            mockMapper.Setup(m => m
+               .Map<ReportElement, ReportElementDto>(_reportElement))
+                   .Returns(_reportElementDto);
 
             //act
             var result = _manager.GetWordCloudById(1).Result;
@@ -358,6 +282,7 @@ namespace smart_home_web.Tests.ManagerTests
             //assert
             Assert.IsTrue(result.IsCorrect);
         }
+
         [Test]
         public void GetWordCloudById_GetsByInValidId_Returns_False()
         {
@@ -393,5 +318,6 @@ namespace smart_home_web.Tests.ManagerTests
             Assert.IsFalse(result.IsCorrect);
         }
 
+        #endregion
     }
 }
