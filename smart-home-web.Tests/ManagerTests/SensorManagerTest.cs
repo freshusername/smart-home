@@ -28,7 +28,11 @@ namespace smart_home_web.Tests.ManagerTests
         {
             base.Initialize();
             Mock<IHubContext<GraphHub>> hub = new Mock<IHubContext<GraphHub>>();
+
+            _manager = new SensorManager(mockUnitOfWork.Object, mockMapper.Object, hub.Object);
+
             _manager = new SensorManager(mockUnitOfWork.Object, mockMapper.Object ,hub.Object);
+
 
             Guid guid = new Guid();
 
