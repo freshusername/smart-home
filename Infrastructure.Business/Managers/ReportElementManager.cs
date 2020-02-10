@@ -92,6 +92,9 @@ namespace Infrastructure.Business.Managers
         public async Task<HeatmapDto> GetHeatmapById(int reportElementId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(reportElementId);
+            
+            if (reportElement == null)
+                return new HeatmapDto { IsCorrect = false };
 
             DateTime dateFrom = new DateTime();
             DateTime dateTo = DateTime.Now.AddDays(1);
@@ -135,6 +138,9 @@ namespace Infrastructure.Business.Managers
         public async Task<BoolHeatmapDto> GetBoolHeatmapById(int reportElementId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(reportElementId);
+
+            if (reportElement == null)
+                return new BoolHeatmapDto { IsCorrect = false };
 
             DateTime dateFrom = new DateTime();
             DateTime dateTo = DateTime.Now.AddMinutes(1);
@@ -328,7 +334,6 @@ namespace Infrastructure.Business.Managers
             ReportElementDto columnRange = mapper.Map<Sensor, ReportElementDto>(reportElement.Sensor);
 
             columnRange.Id = ReportElementId;
-            columnRange.DashboardName = reportElement.Dashboard.Name;
             columnRange.Hours = reportElement.Hours;
             columnRange.Dates = new List<string>();
             columnRange.MinValues = new List<dynamic>();
@@ -510,21 +515,26 @@ namespace Infrastructure.Business.Managers
             unitOfWork.Save();
         }
 
-        public async Task<ReportElementDto> GetStatusReport(int ReportElementId)
+        public async Task<ReportElementDto> GetStatusReport(int ReportElementId, string userid)
         {
-            ReportElement reportElementt = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
-            if (reportElementt == null)
+            UserId = userid;
+            ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
+            if (reportElement == null)
                 return new ReportElementDto { IsCorrect = false, Message = "Invalid report element" };
 
-            ReportElementDto reportElement = mapper.Map<Sensor, ReportElementDto>(reportElementt.Sensor);
             IEnumerable<Sensor> sensors = await unitOfWork.SensorRepo.GetAllSensorsByUserId(UserId);
-
+            ReportElementDto statusReport = new ReportElementDto
+            {
+                Dates = new List<string>(),
+                Values = new List<dynamic>()
+            };
             foreach (Sensor sensor in sensors)
             {
-                reportElement.Dates.Add(sensor.Name);
                 History history = unitOfWork.HistoryRepo.GetLastHistoryBySensorId(sensor.Id);
+                if (history == null)
+                    continue;
                 dynamic value = null;
-                switch (reportElement.MeasurementType)
+                switch (sensor.SensorType.MeasurementType)
                 {
                     case MeasurementType.Int:
                         value = history.IntValue.GetValueOrDefault();
@@ -546,10 +556,11 @@ namespace Infrastructure.Business.Managers
                     default:
                         return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "Incorrect sensor type for this element" };
                 }
-                reportElement.Values.Add(value);
+                statusReport.Dates.Add(sensor.Name);
+                statusReport.Values.Add(value);
             }
 
-            return reportElement;
+            return statusReport;
         }
 
         public Task<SensorDto> GetLastSensorByUserId(string userId)

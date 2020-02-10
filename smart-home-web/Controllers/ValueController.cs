@@ -4,7 +4,6 @@ using Infrastructure.Business.DTOs.Notification;
 using Infrastructure.Business.Hubs;
 using Infrastructure.Business.Infrastructure;
 using Infrastructure.Business.Interfaces;
-using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Identity;
 using Infrastructure.Business.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Infrastructure.Business.Managers;
 
 namespace smart_home_web.Controllers
 {
@@ -21,14 +21,14 @@ namespace smart_home_web.Controllers
     public class ValueController : ControllerBase
     {
         private readonly IHistoryManager _historyManager;
-        private readonly IMessageManager _messageManager;
+        private readonly IToastManager _messageManager;
         private readonly ISensorManager _sensorManager;
         private readonly IActionService _actionService;
         private readonly INotificationManager _notificationManager;
         private readonly IEmailSender _emailSender;
         private readonly UserManager<AppUser> _userManager;
         public ValueController(
-            IMessageManager messageManager,
+            IToastManager messageManager,
             IHistoryManager historyTestManager,
             ISensorManager sensorManager,
             IActionService actionService,

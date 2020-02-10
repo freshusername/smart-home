@@ -10,8 +10,6 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gridstack@0.6.1/dist/gridstack.all.js"></script>*@
 
-
-
 <div class="app-main">
     <div class="app-main__outer">
         <div class="app-inner-layout app-inner-layout-page">
@@ -45,7 +43,8 @@
                                                         <div class="text-center btn-control-icon report-button text-center" onclick=remove(@report.Id)>
                                                             <span><i class="fas fa-times"></i></span>
                                                         </div>
-                                                        @if (report.Type != Domain.Core.Model.Enums.ReportElementType.StatusReport)
+                                                        @if (report.Type != Domain.Core.Model.Enums.ReportElementType.Clock &&
+                                                           report.Type != Domain.Core.Model.Enums.ReportElementType.StatusReport)
                                                         {
                                                             <div class="text-center btn-control-icon text-center">
                                                                 <a asp-controller="ReportElement" asp-action="EditReportElement" asp-route-id="@report.Id"><i class="fas fa-cog report-button"></i></a>
@@ -56,7 +55,17 @@
                                                             <i class="fas report-button i-button"></i>
                                                         </div>
                                                     </div>
-                                                    <div>@await Component.InvokeAsync(report.Type.ToString(), new { reportElementId = report.Id })</div>
+                                                    <div>
+                                                        @if (report.Type != Domain.Core.Model.Enums.ReportElementType.StatusReport)
+                                                        {
+                                                            @await Component.InvokeAsync(report.Type.ToString(), new { reportElementId = report.Id })
+                                                        }
+                                                        else
+                                                        {
+                                                            @await Component.InvokeAsync(report.Type.ToString(), new { reportElementId = report.Id, userid = ViewBag.userid })
+                                                        }
+
+                                                    </div>
                                                 </div>
                                             </div>
                                         }
@@ -99,6 +108,7 @@
             url: $(".grid-stack").data("save-url"),
             data: { options: arrToObj(options) }
         });
+        console.log($(".grid-stack").data("save-url"));
     });
 
     let remove = (id) => {

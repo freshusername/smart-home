@@ -9,6 +9,10 @@ connection.on("UpdateGraph", function (sensorId, value, date) {
     UpdateGraph(sensorId, value, date);
 });
 
+connection.on("UpdateOnOff", function (sensorId, value) {
+    UpdateOnOff(sensorId, value);
+});
+
 connection.start().catch(function (err) {
     return console.log(err.toString());
 });

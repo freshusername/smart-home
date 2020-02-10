@@ -4,7 +4,7 @@ using Domain.Interfaces;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Business.DTOs.Icon;
 using Infrastructure.Business.Infrastructure;
-using Infrastructure.Business.Managers;
+using Infrastructure.Business.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -21,7 +21,7 @@ namespace Infrastructure.Business.Managers
         private readonly string _uploadPath = Path.Combine("images", "Icons");
         private readonly string _dbPath = @"/images/Icons/";
         private readonly IHostingEnvironment _env;
-        public string UploadPath
+        public virtual string UploadPath
         {
             get { return Path.Combine(_env.WebRootPath, _uploadPath); }
         }
@@ -53,6 +53,8 @@ namespace Infrastructure.Business.Managers
 
         public async Task<OperationDetails> Create(IconDto iconDto)
         {
+            if (iconDto == null)
+                return new OperationDetails(false, "Error", "Error");
             try
             {
                 Icon icon = mapper.Map<IconDto, Icon>(iconDto);
@@ -69,8 +71,9 @@ namespace Infrastructure.Business.Managers
         public async Task<int> CreateAndGetIconId(IFormFile iformFile)
         {
             var newFileName = Guid.NewGuid() + Path.GetExtension(iformFile.FileName);
+            
             await UploadImage(iformFile, newFileName);
-
+            
             var iconDto = new IconDto()
             {
                 Path = _dbPath + newFileName

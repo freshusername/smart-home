@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Domain.Core.Model;
 using Infrastructure.Business.DTOs;
+using Infrastructure.Business.Interfaces;
 using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

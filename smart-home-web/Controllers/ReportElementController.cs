@@ -5,6 +5,7 @@ using Domain.Core.Model;
 using Domain.Core.Model.Enums;
 using Infrastructure.Business.DTOs.ReportElements;
 using Infrastructure.Business.DTOs.Sensor;
+using Infrastructure.Business.Interfaces;
 using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

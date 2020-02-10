@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
 using Infrastructure.Business.DTOs.ReportElements;
+using Infrastructure.Business.Interfaces;
 using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Mvc;
 using smart_home_web.Components.ReportElements;
 using smart_home_web.Models.ReportElements;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace smart_home_web.Components

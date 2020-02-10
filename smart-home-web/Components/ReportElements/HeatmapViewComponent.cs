@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Infrastructure.Business.DTOs.ReportElements;
+using Infrastructure.Business.Interfaces;
 using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Mvc;
 using smart_home_web.Models.ReportElements;

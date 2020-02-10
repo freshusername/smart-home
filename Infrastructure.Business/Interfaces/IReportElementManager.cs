@@ -11,7 +11,7 @@ namespace Infrastructure.Business.Managers
     {
 		Task<ReportElementDto> GetWordCloudById(int ReportElementId);
 		Task<ReportElementDto> GetColumnRangeById(int ReportElementId);
-        Task<ReportElementDto> GetStatusReport(int ReportElementId);
+        Task<ReportElementDto> GetStatusReport(int ReportElementId, string userid);
 		Task<ReportElementDto> GetDataForTimeSeries(int id);
 		Task<ReportElementDto> GetOnOffById(int id);
 

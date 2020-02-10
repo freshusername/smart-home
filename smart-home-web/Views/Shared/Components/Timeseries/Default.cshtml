@@ -29,8 +29,7 @@ else
                   height: 380
                 },
                 title: {
-                    text: JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))'),
-                    y: -10
+                    text: JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))')                   
                 },
                 subtitle: {
                     text: document.ontouchstart === undefined ?

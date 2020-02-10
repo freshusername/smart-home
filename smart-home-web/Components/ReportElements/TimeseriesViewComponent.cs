@@ -2,6 +2,7 @@
 using Domain.Core.Model.Enums;
 using Infrastructure.Business.DTOs.ReportElements;
 using Infrastructure.Business.DTOs.SensorType;
+using Infrastructure.Business.Interfaces;
 using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Mvc;
 using smart_home_web.Models;

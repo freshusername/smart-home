@@ -5,7 +5,7 @@
     <div class="row" data-save-url="@Url.Action("SetActive", "Sensor")" style="margin:50px">
         <label class="graph-title" style="width:100%; text-align:left">Sensor : @Model.SensorName</label>
         <label class="rocker text-center">
-            <input id=@("OnOff" + Model.Id.ToString()) type="checkbox" @Html.Raw(Model.IsActive ? "checked" : " ")>
+            <input id=@("OnOff" + Model.Id.ToString()) data-save-sensorid="@Model.SensorId" type="checkbox" @Html.Raw(Model.IsActive ? "checked" : " ")>
             <span class="switch-left">On</span>
             <span class="switch-right">Off</span>
         </label>
@@ -20,10 +20,11 @@ else
         $.ajax({
             type: 'Post',
             url: $(".row").data("save-url"),
-            data: { id: $(this).attr('id').split('OnOff')[1] },
+            data: { id: $(this).data("save-sensorid") },
             success: function () {
                 console.log('changed');
             }
         });
     });
+
 </script>

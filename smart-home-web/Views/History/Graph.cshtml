@@ -2,11 +2,8 @@
 
 @model smart_home_web.Models.GraphViewModel
 
-
-
 @*<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />*@
 <link href="~/lib/nice-select/dist/css/nice-select.css" rel="stylesheet" />
-
 
 <div class="app-main">
     <div class="app-main__outer">
@@ -56,7 +53,7 @@
                                             }
                                             else
                                             {
-                                                <div id="container" style="min-width:310px; height:400px; margin:0 auto"></div>
+                                                <div id="Graph" style="min-width:310px; height:400px; margin:0 auto" data-save-sensorid="@Model.SensorId"></div>
                                             }
                                         }
                                         else
@@ -103,7 +100,7 @@
 </div>
 
 
-<script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="~/lib/nice-select/dist/js/jquery.nice-select.min.js"></script>
 <script>
@@ -112,7 +109,7 @@
     });
 </script>
 <script>
-        $('#container').highcharts({
+        $('#Graph').highcharts({
             title: {
                 text: 'Graph of measurements (for '
                     + (@Model.Days== 99999 ? ' all time' : @Model.Days== 1 ? JSON.parse('@Html.Raw(Json.Serialize(@Model.Days))') + ' day' : JSON.parse('@Html.Raw(Json.Serialize(@Model.Days))') + ' days') + ')',
@@ -160,7 +157,7 @@
                 default:
                 break;
                      }
-                }   
+                }
             },
             legend: {
                 layout: 'vertical',

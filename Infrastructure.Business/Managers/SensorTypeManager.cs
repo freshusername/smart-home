@@ -18,7 +18,7 @@ namespace Infrastructure.Business.Managers
 
         }
 
-        public async Task<OperationDetails> Create(SensorTypeDto sensorTypeDto)
+        public async Task<SensorTypeDto> Create(SensorTypeDto sensorTypeDto)
         {
             SensorType sensortype = mapper.Map<SensorTypeDto, SensorType>(sensorTypeDto);
             try
@@ -26,34 +26,33 @@ namespace Infrastructure.Business.Managers
                 await unitOfWork.SensorTypeRepo.Insert(sensortype);
                 unitOfWork.Save();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return new OperationDetails(false, ex.Message, "Error");
+                return null;
             }
-            return new OperationDetails(true, "New sensor type has been added", "Name");
+            return mapper.Map<SensorType,SensorTypeDto>(sensortype);
         }
 
-        public OperationDetails Update(SensorTypeDto sensorTypeDto)
+        public async Task<SensorTypeDto> Update(SensorTypeDto sensorTypeDto)
         {
             SensorType sensortype = mapper.Map<SensorTypeDto, SensorType>(sensorTypeDto);
             try
             {
-                unitOfWork.SensorTypeRepo.Update(sensortype);
+                await unitOfWork.SensorTypeRepo.Update(sensortype);
                 unitOfWork.Save();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return new OperationDetails(false, ex.Message, "Error");
+                return null;
             }
-            return new OperationDetails(true, "New sensor type has been added", "Name");
+            return mapper.Map<SensorType, SensorTypeDto>(sensortype);
         }
 
         public async Task<OperationDetails> Delete(int id)
         {
             try
             {
-                SensorType sensorType = unitOfWork.SensorTypeRepo.GetById(id).Result;
-                await unitOfWork.SensorTypeRepo.Delete(sensorType);
+                await unitOfWork.SensorTypeRepo.DeleteById(id);
                 unitOfWork.Save();
             }
             catch (Exception ex)
