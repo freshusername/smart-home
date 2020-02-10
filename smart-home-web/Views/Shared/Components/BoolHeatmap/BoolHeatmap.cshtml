@@ -56,7 +56,7 @@
         var datesArr = @Html.Raw(Json.Serialize(daysList));
         var dateStart = @Html.Raw(Json.Serialize(daysList.FirstOrDefault()));
         var dateFinal = @Html.Raw(Json.Serialize(daysList.LastOrDefault()));
-        function getDateForValue(index) {
+        function getDateForVal(index) {
             var dateTime = '';
             for (var i = 0; i < datesArr.length; i++) {
                 if (i == index) {
@@ -124,14 +124,14 @@
                 formatter: function () {
                     if (this.point.value == undefined) {
                         return '<b>' + '</b><br>' + @Html.Raw(Json.Serialize(Model.SensorName)) + ' has no bool data </b><br> at <b>' +
-                            getHourForValue(this.point.index) + ' on ' + getDateForValue(this.point.index) + ' </b>';
+                            getHourForValue(this.point.index) + ' on ' + getDateForVal(this.point.index) + ' </b>';
                     }
                     else if (this.point.value == 1)
                     {
                         this.tooltip.visible = false;
                     }
                     return '<b>' + '</b><br>' + @Html.Raw(Json.Serialize(Model.SensorName))  + ' has true percentage: <b>' + this.point.value + "% " +
-                        '</b><br> at <b>' + getHourForValue(this.point.index) + ' on ' + getDateForValue(this.point.index) + ' </b>';
+                        '</b><br> at <b>' + getHourForValue(this.point.index) + ' on ' + getDateForVal(this.point.index) + ' </b>';
                 }
             },
 
