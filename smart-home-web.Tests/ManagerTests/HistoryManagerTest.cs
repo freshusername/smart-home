@@ -1,4 +1,5 @@
 ﻿using Domain.Core.Model;
+using Domain.Core.Model.Enums;
 using Infrastructure.Business.DTOs;
 using Infrastructure.Business.DTOs.History;
 using Infrastructure.Business.DTOs.ReportElements;
@@ -117,7 +118,7 @@ namespace smart_home_web.Tests.ManagerTests
         [TestCase(10)]
         public void GetHistoryByIdAsync_IfExists_IsNotNull(int id)
         {
-            mockUnitOfWork.Setup(h => h.HistoryRepo.GetById(id)).Returns(Task.FromResult(histories.First()));
+            mockUnitOfWork.Setup(h => h.HistoryRepo.GetById(histories.First().Id)).Returns(Task.FromResult(histories.First()));
 
             var result = _manager.GetHistoryByIdAsync(id);
 
@@ -125,6 +126,7 @@ namespace smart_home_web.Tests.ManagerTests
         }
 
         [TestCase(0)]
+        //[Ignore("The test is not working")]
         public void GetHistoryByIdAsync_IfNotExists_ReturnsNull(int id)
         {
             History history = null;
@@ -137,7 +139,8 @@ namespace smart_home_web.Tests.ManagerTests
         } 
 
         [Test]
-        public void CheckValue_IfParamNotNull_ReturnsTrue()
+        //[Ignore("The test is not working")]
+        public void CheckValue_IfParamIsNotNull_ReturnsTrue()
         {
             mockUnitOfWork.Setup(p => p.HistoryRepo.GetLastBySensorId(histories.First().SensorId))
                 .Returns(Task.FromResult(histories.First()));
@@ -163,8 +166,10 @@ namespace smart_home_web.Tests.ManagerTests
         [Test]
         public void GetAllHistoriesAsync_IfExists_IsNotNull()
         {
-            mockUnitOfWork.Setup(h => h.HistoryRepo.GetAll()).Returns(Task.FromResult(histories));
-            mockMapper.Setup(p => p.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories)).Returns(historyDtos);
+            mockUnitOfWork.Setup(h => h.HistoryRepo.GetAll())
+                .Returns(Task.FromResult(histories));
+            mockMapper.Setup(p => p.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories))
+                .Returns(historyDtos);
 
             var result = _manager.GetAllHistoriesAsync();
 
@@ -178,6 +183,17 @@ namespace smart_home_web.Tests.ManagerTests
             mockMapper.Setup(p => p.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories)).Returns(historyDtos);
 
             var result = _manager.GetHistoriesBySensorIdAsync(id);
+
+            Assert.IsNotNull(result);
+        }
+
+        [TestCase(1, 1, SortState.SensorAsc, true, 0)]
+        public void GetHistoriesAsync_IfExists_ReturnsTrue(int count, int page, SortState sortState, bool IsActivated, int sensorId)
+        {
+            mockUnitOfWork.Setup(p => p.HistoryRepo.GetByPage(count, page, sortState, IsActivated, sensorId));
+            mockMapper.Setup(p => p.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories));
+
+            var result = _manager.GetHistoriesAsync(count, page, sortState, IsActivated, sensorId);
 
             Assert.IsNotNull(result);
         }
