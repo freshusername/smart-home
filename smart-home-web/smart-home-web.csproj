@@ -279,7 +279,6 @@
     <None Include="wwwroot\assets\fonts\ZA.svg" />
     <None Include="wwwroot\assets\fonts\ZM.svg" />
     <None Include="wwwroot\assets\fonts\ZW.svg" />
-    <None Include="wwwroot\assets\scripts\main.07a59de7b920cd76b874.js" />
   </ItemGroup>
 
   <ItemGroup>
