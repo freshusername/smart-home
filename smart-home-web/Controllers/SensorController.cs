@@ -14,6 +14,7 @@ using smart_home_web.Models.SensorViewModel;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using Infrastructure.Business.DTOs.Icon;
 
 namespace smart_home_web.Controllers
 {
@@ -70,16 +71,26 @@ namespace smart_home_web.Controllers
         [Authorize]
         public async Task<ActionResult> Create(CreateSensorViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
             SensorDto sensorDto = _mapper.Map<CreateSensorViewModel, SensorDto>(model);
             if (model.IconFile != null)
             {
                 sensorDto.IconId = await _iconManager.CreateAndGetIconId(model.IconFile);
+            }
+            else
+            {
+                SensorTypeDto sensorType = await _sensorTypeManager.GetSensorTypeByIdAsync(sensorDto.SensorTypeId);
+                sensorDto.IconId = sensorType.IconId;
             }
 
             var res = await _sensorManager.Create(sensorDto);
 
             if (res != null)
             {
+                res.SensorTypeName = _sensorTypeManager.GetSensorTypeByIdAsync(res.SensorTypeId).Result.Name;
                 return ViewComponent("SensorElement", _mapper.Map<SensorDto, SensorViewModel>(res));
             }
             else
@@ -93,8 +104,13 @@ namespace smart_home_web.Controllers
         public async Task<ActionResult> Edit(int id)
         {
             var sensorDto = await _sensorManager.GetSensorByIdAsync(id);
-            EditSensorViewModel sensorViewModel = _mapper.Map<SensorDto, EditSensorViewModel>(sensorDto);
-            return ViewComponent("SensorEdit", sensorViewModel);
+            if (sensorDto != null)
+            {
+                EditSensorViewModel sensorViewModel = _mapper.Map<SensorDto, EditSensorViewModel>(sensorDto);
+                return ViewComponent("SensorEdit", sensorViewModel);
+            }
+            return ViewComponent("SensorEdit", null);
+
         }
 
         [HttpPost]
@@ -103,16 +119,23 @@ namespace smart_home_web.Controllers
         public async Task<ActionResult> Edit(EditSensorViewModel model)
         {
             SensorDto sensorDto = _mapper.Map<EditSensorViewModel, SensorDto>(model);
+            IconDto iconDto = null;
             if (model.IconFile != null)
             {
-                sensorDto.IconId = await _iconManager.CreateAndGetIconId(model.IconFile);
+                sensorDto.IconId = _iconManager.CreateAndGetIconId(model.IconFile).Result;
+                iconDto = await _iconManager.GetById(sensorDto.IconId.GetValueOrDefault());
+                sensorDto.IconPath = iconDto.Path;
             }
 
             var res = await _sensorManager.Update(sensorDto);
 
             if (res != null)
             {
-                return ViewComponent("SensorElement", _mapper.Map<SensorDto, SensorViewModel>(res));
+                res = await _sensorManager.GetSensorByIdAsync(sensorDto.Id);
+                iconDto = await _iconManager.GetById(sensorDto.IconId.GetValueOrDefault());
+                sensorDto.IconPath = iconDto.Path;
+                sensorDto.SensorTypeName = res.SensorTypeName;
+                return ViewComponent("SensorElement", _mapper.Map<SensorDto, SensorViewModel>(sensorDto));
             }
             else
             {

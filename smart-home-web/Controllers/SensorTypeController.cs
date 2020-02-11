@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Infrastructure.Business.DTOs.Icon;
 using Infrastructure.Business.DTOs.SensorType;
 using Infrastructure.Business.Interfaces;
 using Infrastructure.Business.Managers;
@@ -74,8 +75,13 @@ namespace smart_home_web.Controllers
         public async Task<ActionResult> Edit(int id)
         {
             var sensorTypeDto = await _sensorTypeManager.GetSensorTypeByIdAsync(id);
-            EditSensorTypeViewModel sensorTypeViewModel = _mapper.Map<SensorTypeDto, EditSensorTypeViewModel>(sensorTypeDto);
-            return ViewComponent("SensorTypeEdit", sensorTypeViewModel);
+            if (sensorTypeDto != null)
+            {
+                EditSensorTypeViewModel sensorTypeViewModel = _mapper.Map<SensorTypeDto, EditSensorTypeViewModel>(sensorTypeDto);
+                return ViewComponent("SensorTypeEdit", sensorTypeViewModel);
+            }
+            return ViewComponent("SensorTypeEdit", null);
+
         }
 
         // POST: SensorType/Edit/5
@@ -84,15 +90,21 @@ namespace smart_home_web.Controllers
         public async Task<ActionResult> Edit(EditSensorTypeViewModel sensorTypeViewModel)
         {
             SensorTypeDto sensorTypeDto = _mapper.Map<EditSensorTypeViewModel, SensorTypeDto>(sensorTypeViewModel);
+            IconDto iconDto = null;
             if (sensorTypeViewModel.IconFile != null)
             {
                 sensorTypeDto.IconId = await _iconManager.CreateAndGetIconId(sensorTypeViewModel.IconFile);
+                iconDto = await _iconManager.GetById(sensorTypeDto.IconId.GetValueOrDefault());
+                sensorTypeDto.IconPath = iconDto.Path;
             }
             var res = await _sensorTypeManager.Update(sensorTypeDto);
 
             if (res != null)
             {
-                return ViewComponent("SensorTypeElement", _mapper.Map<SensorTypeDto, SensorTypeViewModel>(res));
+                //res = await _sensorTypeManager.GetSensorTypeByIdAsync(sensorTypeDto.Id);
+                iconDto = await _iconManager.GetById(sensorTypeDto.IconId.GetValueOrDefault());
+                sensorTypeDto.IconPath = iconDto.Path;
+                return ViewComponent("SensorTypeElement", _mapper.Map<SensorTypeDto, SensorTypeViewModel>(sensorTypeDto));
             }
             else
             {
