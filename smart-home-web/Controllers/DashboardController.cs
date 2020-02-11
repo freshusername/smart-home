@@ -43,8 +43,12 @@ namespace smart_home_web.Controllers
             var userId = _userManager.GetUserId(User);
             ViewBag.userid = userId;
             var dashboard = await _dashboardManager.GetById(id);
-            var result = _mapper.Map<DashboardDto, DashboardViewModel>(dashboard);
-            return View(result);
+            if (dashboard != null)
+            {
+                var result = _mapper.Map<DashboardDto, DashboardViewModel>(dashboard);
+                return View(result);
+            }
+            return NotFound("The dashboard is not found!");
         }
 
 
@@ -93,13 +97,14 @@ namespace smart_home_web.Controllers
             if (model.IconFile != null)
                 dashboardDto.IconId = await _iconManager.CreateAndGetIconId(model.IconFile);
 
-            if(!dashboardDto.IsPublic)
-                dashboardDto.AppUserId = _userManager.GetUserId(User);
+            dashboardDto.AppUserId = _userManager.GetUserId(User);
 
             var res = _dashboardManager.Create(dashboardDto).Result;
 
             if (res != null)
             {
+                DashboardViewModel dashmodel = _mapper.Map<DashboardDto, DashboardViewModel>(res);
+                dashmodel.DashCreatorUserName = User.Claims.ElementAt(1).Value;
                 return ViewComponent("DashboardElement", _mapper.Map<DashboardDto, DashboardViewModel>(res));
             }
             else
@@ -122,8 +127,6 @@ namespace smart_home_web.Controllers
             {
                 dashboardDto.IconId = await _iconManager.CreateAndGetIconId(model.IconFile);
             }
-            if (dashboardDto.IsPublic)
-                dashboardDto.AppUserId = null;
 
             var res = await _dashboardManager.Update(dashboardDto);
 
@@ -138,11 +141,16 @@ namespace smart_home_web.Controllers
             }
         }
 
+        [Authorize]
         public async Task<ActionResult> Edit(int id)
         {
             var dashboardDto = await _dashboardManager.GetById(id);
-            EditDashboardViewModel model = _mapper.Map<DashboardDto, EditDashboardViewModel>(dashboardDto);
-            return ViewComponent("DashboardEdit", model);
+            if (dashboardDto != null)
+            {
+                EditDashboardViewModel model = _mapper.Map<DashboardDto, EditDashboardViewModel>(dashboardDto);
+                return ViewComponent("DashboardEdit", model);
+            }
+            return NotFound("The dashboard is not found!");
         }
 
         [Authorize]
