@@ -14,5 +14,7 @@ namespace Infrastructure.Business.Managers
         Task<IEnumerable<ToastDto>> GetToastsBySensorId(int sensorId);
         Task<ToastDto> GetById(int id);
         Task<OperationDetails> Create(ToastDto toastDto);
+        Task<OperationDetails> Update(ToastDto toastDto);
+        Task<OperationDetails> Delete(int id);
     }
 }
