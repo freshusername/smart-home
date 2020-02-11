@@ -47,26 +47,48 @@ namespace smart_home_web.Controllers
 
                 return RedirectToAction("Index", "Toast", new { sensorId = toastViewModel.SensorId });
             }
-            catch(Exception ex)
+            catch
             {
                 return View();
             }
         }
 
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return View();
+            var toastDto = await _toastManager.GetById(id);
+            CreateToastViewModel toastViewModel = _mapper.Map<ToastDto, CreateToastViewModel>(toastDto);
+            return View("Edit", toastViewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(CreateToastViewModel toastViewModel)
+        {
+            ToastDto sensorTypeDto = _mapper.Map<CreateToastViewModel, ToastDto>(toastViewModel);
+            var res = await _toastManager.Update(sensorTypeDto);
+
+            if (res.Succeeded)
+            {
+                return RedirectToAction("Index", "Toast", new { sensorId = toastViewModel.SensorId });
+            }
+            else
+            {
+                return View();
+            }
+        }
+
+        public async Task<ActionResult> Delete(int id)
         {
             try
             {
-                // TODO: Add update logic here
+                var res = await _toastManager.Delete(id);
+                if (!res.Succeeded)
+                {
+                    ModelState.AddModelError(res.Property, res.Message);
+                    return View();
+                }
 
-                return RedirectToAction(nameof(Index));
+                return Ok();
             }
             catch
             {
@@ -74,25 +96,5 @@ namespace smart_home_web.Controllers
             }
         }
 
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
     }
 }
