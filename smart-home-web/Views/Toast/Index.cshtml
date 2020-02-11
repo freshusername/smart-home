@@ -26,7 +26,7 @@
 
                                         @foreach (var item in Model)
                                         {
-                                            <li class="list-group-item sensor-row">
+                                            <li class="list-group-item sensor-row element-container" data-element-container-id="@item.Id.ToString()">
                                                 <div class="widget-content p-0">
                                                     <div class="widget-content-wrapper">
                                                         <div class="widget-content-left" style="width:250px;">
@@ -64,7 +64,7 @@
                                                                 {
                                                                     <a class="btn btn-shadow btn-info element-edit" asp-action="Edit" asp-route-id="@item.Id">
                                                                 <i class="text-white pe-7s-config" style="font-size:20px"></i></a>
-                                                                    <a class="btn btn-shadow btn-danger element-delete p-0 pl-2 pr-2" asp-action="Delete" asp-route-id="@item.Id">
+                                                                    <a class="btn btn-shadow btn-danger element-delete p-0 pl-2 pr-2">
                                                                 <i class="text-white pe-7s-close" style="font-size:30px;"></i></a>
                                                                 }
                                                             </div>
@@ -86,3 +86,5 @@
         </div>
     </div>
 </div>
+
+@await Component.InvokeAsync("Modals", "");

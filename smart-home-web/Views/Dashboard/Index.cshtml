@@ -9,27 +9,18 @@
     <div class="app-main__outer">
         <div class="app-main__inner">
             @*NEW DASHBOARD CREATING*@
-            <div class="app-header header-button-move-up" style="margin-left:10px">
+            @if (User.Identity.IsAuthenticated)
+            {
+
+            <div class="app-header header-button-move-up">
                 <div class="page-title-heading">
-                    <a class="btn btn-primary text-white w-auto"
-                       data-toggle="toggle" data-target="#create_elem" id="dash_create_button">
+                    <a class="btn btn-primary text-white w-auto element-create"  onclick="ElementCreate()">
                         <span class="glyphicon glyphicon-plus-sign"></span> Add dashboard
-                    </a>
-                    
-                        <div id="create_elem" class="collapse mr-2">
-                            <form data-dash-url="@Url.Action("Create","Dashboard")" method="post" id="dash_create">
-                                <p>
-                                    <input id="form_dash_name" placeholder="Enter name" size="14" maxlength="35" required />
-                                    <label for="form_dash_isPublic">public</label>
-                                    <input id="form_dash_isPublic" size="14" type="checkbox" />
-                                    <input type="submit" value="Add" class="btn btn-primary" />
-                                </p>
-                            </form>
-                        </div>
-                   
+                    </a>                   
                 </div>
             </div>
 
+            }
             <div class="app-inner-layout app-inner-layout-page">
                 <div class="app-inner-layout__wrapper">
                     <div class="app-inner-layout__content pt-1">
@@ -42,19 +33,16 @@
                                             <h2>No public dashboards.</h2>
                                         </div>*@
 
-                                    <div class="d-flex" id="dashboards">
+                                    <div class="d-flex all-elements-container" >
 
                                         @foreach (var dashboard in Model.Dashboards)
                                         {
-                                            <div class="col-md-6 col-lg-3 dash_element">
+                                            
                                                 @await Component.InvokeAsync("DashboardElement", new { model = dashboard })
-                                            </div>
+                                            
                                         }
                                     </div>
                                 </div>
-
-
-
                             </div>
                         </div>
                     </div>
@@ -64,6 +52,5 @@
     </div>
 </div>
 <script src="~/lib/jquery/dist/jquery.js"></script>
-<script>
 
 @await Component.InvokeAsync("Modals", "Dashboard")
