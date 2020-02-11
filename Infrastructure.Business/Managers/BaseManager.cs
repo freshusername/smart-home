@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Infrastructure.Business.Interfaces
+namespace Infrastructure.Business.Managers
 {
     public abstract class BaseManager
     {

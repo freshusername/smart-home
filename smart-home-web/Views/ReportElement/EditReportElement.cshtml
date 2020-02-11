@@ -3,88 +3,106 @@
     ViewData["Title"] = "Edit Report Element";
 }
 
-<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
 <link href="~/lib/nice-select/dist/css/nice-select.css" rel="stylesheet" />
 
-<body>
-    <div class="row" data-save-url="@Url.Action("GetSensorsByReportElementType", "Sensor")" data-save-dashboardid="@Model.DashboardId">
-
-        <div class="col-lg-8 col-lg-offset-2 col-md-6 col-md-offset-3 col-sm-12">
-            <div class="text-center">
-                <label style="font-size:20px">Edit @Model.Type for @Model.SensorName for @Model.DashboardName</label>
+<div class="app-main">
+    <div class="app-main__outer">
+        <div class="app-main__inner">
+            <div class="app-header header-button-move-up">
+                <div class="page-title-heading">
+                    Edit report element
+                </div>
             </div>
-            <form asp-action="EditReportElement" asp-controller="ReportElement" method="post">
+            <div class="app-inner-layout app-inner-layout-page">
+                <div class="app-inner-layout__wrapper">
+                    <div class="app-inner-layout__content" style="padding-top: 0px">
+                        <div class="tab-content">
+                            <div class="container-fluid">
+                                <div class="row" data-save-url="@Url.Action("GetSensorsByReportElementType", "Sensor")" data-save-dashboardid="@Model.DashboardId">
 
-                <div asp-validation-summary="All" class="text-danger text-center" style="margin-top:10px;"></div>
-                <div class="form-group">
-                    <input type="hidden" asp-for="Id" value="@Model.Id" />
-                </div>
-                <div class="form-group">
-                    <input type="hidden" asp-for="DashboardId" value="@Model.DashboardId" />
-                </div>
-                <div class="form-group">
-                    <input id="sensor-id" type="hidden" value="@Model.SensorId" />
-                </div>
-                <div class="form-group">
-                    <input type="hidden" asp-for="Type" value="@Model.Type" />
-                </div>
-                <div class="form-group">
-                    <input type="hidden" asp-for="X" value="@Model.X" />
-                </div>
-                <div class="form-group">
-                    <input type="hidden" asp-for="Y" value="@Model.Y" />
-                </div>
-                <div class="form-group">
-                    <input type="hidden" asp-for="Width" value="@Model.Width" />
-                </div>
-                <div class="form-group">
-                    <input type="hidden" asp-for="Height" value="@Model.Height" />
-                </div>
-                <div class="form-group">
-                    <input type="hidden" asp-for="SensorName" value="@Model.SensorName" />
-                </div>
-                <div class="form-group">
-                    <input type="hidden" asp-for="DashboardName" value="@Model.DashboardName" />
-                </div>
-                <div class="form-group">
-                    <input type="hidden" disabled="disabled" asp-for="SensorName" value="@Model.SensorName" class="form-control" />
-                </div>
-                <div class="form-group">
-                    <label class="control-label">Dashboard name: </label>
-                    <input type="text" disabled="disabled" asp-for="DashboardName" value="@Model.DashboardName" class="form-control" />
-                </div>
-                <div class="form-group">
-                    <label class="control-label">Report element type: </label>
-                    <input id="type" type="text" disabled="disabled" asp-for="Type" value="@Model.Type" class="form-control" />
-                </div>
-                <div class="form-group">
-                    <label class="control-label">Select sensor name:</label>
-                    <div style="margin-bottom:50px">
-                        <select id="sensor-select" asp-for="SensorId" class="nice-select wide"></select>
+                                    <div class="w-50 ml-5">
+                                        <form asp-action="EditReportElement" asp-controller="ReportElement" method="post">
+
+                                            <div asp-validation-summary="All" class="text-danger text-center" style="margin-top:10px;"></div>
+                                            <div class="form-group">
+                                                <input type="hidden" asp-for="Id" value="@Model.Id" />
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="hidden" asp-for="DashboardId" value="@Model.DashboardId" />
+                                            </div>
+                                            <div class="form-group">
+                                                <input id="sensor-id" type="hidden" value="@Model.SensorId" />
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="hidden" asp-for="Type" value="@Model.Type" />
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="hidden" asp-for="X" value="@Model.X" />
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="hidden" asp-for="Y" value="@Model.Y" />
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="hidden" asp-for="Width" value="@Model.Width" />
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="hidden" asp-for="Height" value="@Model.Height" />
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="hidden" asp-for="SensorName" value="@Model.SensorName" />
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="hidden" asp-for="DashboardName" value="@Model.DashboardName" />
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="hidden" disabled="disabled" asp-for="SensorName" value="@Model.SensorName" class="form-control" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label">Dashboard name: </label>
+                                                <input type="text" disabled="disabled" asp-for="DashboardName" value="@Model.DashboardName" class="form-control" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label">Report element type: </label>
+                                                <input id="type" type="text" disabled="disabled" asp-for="Type" value="@Model.Type" class="form-control" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label">Select sensor name:</label>
+                                                <div style="margin-bottom:50px">
+                                                    <select id="sensor-select" asp-for="SensorId" class="nice-select wide"></select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Select measurement period:
+                                                </label>
+                                                <div id="hours" style="margin-bottom:50px" data-save-hours="@((int)Model.Hours)">
+                                                    <select asp-for="Hours" id="hours-select" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.ReportElementHours>()" class="nice-select wide"></select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group text-center"
+                                                 style="margin-top:70px">
+                                                <button type="submit"
+                                                        value="Save"
+                                                        style="width:20%"
+                                                        class="mb-2 mr-2 btn-icon btn btn-success">
+                                                    <i class="pe-7s-plus btn-icon-wrapper"> </i>Save
+                                                </button>
+                                                <a asp-controller="Dashboard" asp-action="Detail" asp-route-id="@Model.DashboardId" class="mb-2 mr-2 btn btn-primary"><i class="pe-7s-back btn-icon-wrapper fsize-1"></i> Back to dashboard</a>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label class="control-label">
-                        Select measurement period:
-                    </label>
-                    <div id="hours" style="margin-bottom:50px" data-save-hours="@((int)Model.Hours)">
-                        <select asp-for="Hours" id="hours-select" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.ReportElementHours>()" class="nice-select wide"></select>
-                    </div>
-                </div>
-
-                <div class="form-group text-center">
-                    <input type="submit" value="Save" class="btn btn-success text-center" style="width:20%" />
-                    <a asp-controller="Dashboard" asp-action="Detail" asp-route-id="@Model.DashboardId" class="btn btn-primary"><em class="glyphicon glyphicon-arrow-left"></em> Back to dashboard</a>
-                </div>
-            </form>
-        </div>
-    </div>
-
-</body>
-@section Scripts {
-    <script src="~/lib/jquery/dist/jquery.js"></script>
-    <script src="~/lib/nice-select/dist/js/jquery.nice-select.min.js"></script>
-    <script src="~/js/edit-report-element.js"></script>
-    @await Html.PartialAsync("_ValidationScriptsPartial")
-}
+            @section Scripts {
+                <script src="~/lib/jquery/dist/jquery.js"></script>
+                <script src="~/lib/nice-select/dist/js/jquery.nice-select.min.js"></script>
+                <script src="~/js/edit-report-element.js"></script>
+                @await Html.PartialAsync("_ValidationScriptsPartial")
+            }

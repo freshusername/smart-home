@@ -1,17 +1,12 @@
 ﻿@using smart_home_web.Models.ControlSensor
 @model List<SensorControlViewModel>
-@*<link href="~/css/control.css" rel="stylesheet" />*@
-@*<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />*@
 
 <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 <div class="app-main">
     <div class="app-main__outer">
         <div class="app-main__inner">
-            <div class="app-header">
+            <div class="app-header header-button-move-up">
                 <div class="page-title-heading">
                     Controllers
                     <div class="page-title-subheading opacity-10">
@@ -25,54 +20,36 @@
                         <div class="tab-content">
                             <div class="container-fluid">
                                 <div class="row">
-                                    <div class="d-flex">
-                                        @foreach (var item in Model)
-                                        {<div class="m-3" id="hide_@item.Id">
-                                                <div class="card-hover-shadow-2x mb-3 card">
-                                                    <div class="card-header">
-                                                        @item.Name
-                                                        <a asp-action="Edit" asp-controller="SensorControl" asp-route-Id="@item.Id" class="ml-auto mr-2">
-                                                            <i class="pe-7s-config report-button" style="font-size:20px"></i>
-                                                        </a>
-                                                        <a id="@item.Id" class="link" onclick="remove(@item.Id)" data-request-url="@Url.Action("Delete", "SensorControl")">
-                                                            <i class="pe-7s-close report-button" style="font-size:30px; padding:0px"></i>
-                                                        </a>
-                                                    </div>
-                                                    <div class="card-body">                                                        
-                                                            <input type="hidden" name="id" value="@item.Id" />
-                                                            <img src="https://t4.ftcdn.net/jpg/02/27/91/35/240_F_227913547_rHRaLadM6Wj2BtfS5Tu555SSjI7xB33s.jpg" class="card-img-center" width="120" height="120" />
-                                                            <div class="input-set-active 
+                                    @foreach (var item in Model)
+                                    {<div class="col-lg-2" id="hide_@item.Id">
+                                            <div class="card-hover-shadow-2x mb-3 card">
+                                                <div class="card-header">
+                                                    @item.Name
+                                                    <a asp-action="Edit" asp-controller="SensorControl" asp-route-Id="@item.Id" class="ml-auto mr-1">
+                                                        <i class="pe-7s-config report-button" style="font-size:20px; margin-right:-5px"></i>
+                                                    </a>
+                                                    <a id="@item.Id" class="link" onclick="remove(@item.Id)" data-request-url="@Url.Action("Delete", "SensorControl")">
+                                                        <i class="pe-7s-close report-button" style="font-size:30px; padding:0px"></i>
+                                                    </a>
+                                                </div>
+                                                <div class="card-body d-flex flex-column align-items-center">
+                                                    <input type="hidden" name="id" value="@item.Id" />
+                                                    <img src="https://t4.ftcdn.net/jpg/02/27/91/35/240_F_227913547_rHRaLadM6Wj2BtfS5Tu555SSjI7xB33s.jpg" class="card-img-center" width="120" height="120" />
+                                                    <div class="input-set-active
+                                                         edit_@item.Id
                                                                  @Html.Raw(item.IsActive ? "toggle-shadow" : " ")"
-                                                                 id="@item.Id"
-                                                                 style="width:57px; margin-left:25%">
-                                                                <input type="checkbox"                                                                       
-                                                                       @Html.Raw(item.IsActive ? "checked" : " ")
-                                                                       data-toggle="toggle"                                                                     
-                                                                       data-request-url="@Url.Action("Change", "SensorControl")"
-                                                                       data-active="@Html.Raw(item.IsActive ? "active" : "inactive")">
-                                                            </div>                                                     
+                                                         id="@item.Id"
+                                                         style="width:57px"
+                                                         data-request-url="@Url.Action("Change", "SensorControl")"
+                                                         data-active="@Html.Raw(item.IsActive ? "active" : "inactive")">
+                                                        <input type="checkbox"
+                                                               @Html.Raw(item.IsActive ? "checked" : " ")
+                                                               data-toggle="toggle">
                                                     </div>
                                                 </div>
-                                                @*<div class="card">
-                                                    <div class="card-body">
-                                                        <h1 class="card-title text-center">@item.Name</h1>
-
-                                                        <button
-                                                                    id="btn_@item.Id"
-                                                                    type="submit"
-                                                                    onclick="set_active(@item.Id)"
-                                                                    data-request-url="@Url.Action("Change", "SensorControl")"
-                                                                    class="btn btn-toggle bottom @(item.IsActive ? "active" : "")"
-                                                                    data-toggle="button"
-                                                                    aria-pressed="@(item.IsActive ? "true" : "false")">
-                                                                <div class="handle"></div>
-                                                            </button>
-
-                                                    </div>
-                                                </div>*@
                                             </div>
-                                        }
-                                    </div>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -83,35 +60,27 @@
     </div>
 </div>
 
-<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 
 
-@*<script src="~/js/ToggleRequest.js"></script>*@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
 
 
 <script>
-    //$(".input-set-active").on("click", function () {
-    //    console.log(this);
-    //    $(this).toggleClass("toggle-shadow");
-    //});
 
-    $(".input-set-active").on("click", function () {  
+    $(".input-set-active").on("click", function () {
         $(this).toggleClass("toggle-shadow");
         var isActive;
-        var item = $("#btn_" + this.id);
-        if (item.data("active") == "active") {
-            isActive = true;
-        }
-        else {
-            isActive = false;
-        }
-        
+        var item = $(".edit_" + this.id);
+        isActive = item.data("active") == "active";
         $.ajax({
             url: "@Url.Action("Change", "SensorControl")",
-            data: { 'id': this.id, 'isActive': isActive },
+            data: { 'id': this.id, 'isActive': !isActive },
             type: "post",
             cache: false,
             success: function (savingStatus) {
+                item.data("active") = !isActive ? "active" : "inactive";
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 window.alert("Error encountered while sending request");

@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Business.Interfaces
+namespace Infrastructure.Business.Managers
 {
     public class ReportElementManager : BaseManager, IReportElementManager
     {
@@ -38,7 +38,7 @@ namespace Infrastructure.Business.Interfaces
             unitOfWork.Save();
         }
 
-        public async Task CreateReportElement(ReportElementDto reportElementDto, string userId)
+        public async Task<bool> CreateReportElement(ReportElementDto reportElementDto, string userId)
         {
             UserId = userId;
             var reportElements = await unitOfWork.ReportElementRepo.GetAll();
@@ -74,6 +74,7 @@ namespace Infrastructure.Business.Interfaces
 
                 await unitOfWork.ReportElementRepo.Insert(reportElement);
                 unitOfWork.Save();
+                return true;
             }
             else
             {
@@ -84,8 +85,8 @@ namespace Infrastructure.Business.Interfaces
                 reportElement.Y = 0;
                 await unitOfWork.ReportElementRepo.Insert(reportElement);
                 unitOfWork.Save();
+                return true;
             }
-
         }
 
         public async Task<HeatmapDto> GetHeatmapById(int reportElementId)
@@ -97,10 +98,11 @@ namespace Infrastructure.Business.Interfaces
 
             DateTime dateFrom = new DateTime();
             DateTime dateTo = DateTime.Now.AddDays(1);
-            DateTime[] daysArray = new DateTime[28];
 
             if (reportElement.Hours != 0)
                 dateFrom = DateTime.Now.AddHours(-(int)reportElement.Hours).Date.AddDays(1);
+
+            DateTime[] daysArray = new DateTime[(int)(dateTo - dateFrom).TotalDays];
 
             for (int i = 0; i < daysArray.Length; i++)
             {
@@ -234,7 +236,12 @@ namespace Infrastructure.Business.Interfaces
         public async Task<ReportElementDto> GetWordCloudById(int ReportElementId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
+            if (reportElement == null)
+            {
+                return new ReportElementDto { Id = ReportElementId, IsCorrect = false };
+            }
             DateTime date = new DateTime(1970, 1, 1, 0, 0, 0);
+
             if (reportElement.Hours != 0)
                 date = DateTime.Now.AddHours(-(int)reportElement.Hours);
             IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId.Value, date);
@@ -272,6 +279,7 @@ namespace Infrastructure.Business.Interfaces
         public async Task<GaugeDto> GetGaugeById(int gaugeId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(gaugeId);
+            if (reportElement == null) return new GaugeDto { IsValid = false};
             GaugeDto gaugeDto = mapper.Map<ReportElement, GaugeDto>(reportElement);
 
             gaugeDto.Min = historyManager.GetMinValueForPeriod(reportElement.SensorId.Value, (int)gaugeDto.Hours);
@@ -280,8 +288,6 @@ namespace Infrastructure.Business.Interfaces
             {
                 var value = historyManager.GetLastHistoryBySensorId(reportElement.SensorId.Value);
                 gaugeDto.Value = value.DoubleValue.HasValue ? value.DoubleValue : value.IntValue;
-                gaugeDto.SensorName = reportElement.Sensor.Name;
-                gaugeDto.MeasurementName = reportElement.Sensor.SensorType.MeasurementName;
                 if (gaugeDto.Min == gaugeDto.Max)
                 {
                     gaugeDto.Min--;
@@ -332,7 +338,6 @@ namespace Infrastructure.Business.Interfaces
             ReportElementDto columnRange = mapper.Map<Sensor, ReportElementDto>(reportElement.Sensor);
 
             columnRange.Id = ReportElementId;
-            columnRange.DashboardName = reportElement.Dashboard.Name;
             columnRange.Hours = reportElement.Hours;
             columnRange.Dates = new List<string>();
             columnRange.MinValues = new List<dynamic>();
@@ -514,21 +519,26 @@ namespace Infrastructure.Business.Interfaces
             unitOfWork.Save();
         }
 
-        public async Task<ReportElementDto> GetStatusReport(int ReportElementId)
+        public async Task<ReportElementDto> GetStatusReport(int ReportElementId, string userid)
         {
-            ReportElement reportElementt = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
-            if (reportElementt == null)
+            UserId = userid;
+            ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
+            if (reportElement == null)
                 return new ReportElementDto { IsCorrect = false, Message = "Invalid report element" };
 
-            ReportElementDto reportElement = mapper.Map<Sensor, ReportElementDto>(reportElementt.Sensor);
             IEnumerable<Sensor> sensors = await unitOfWork.SensorRepo.GetAllSensorsByUserId(UserId);
-
+            ReportElementDto statusReport = new ReportElementDto
+            {
+                Dates = new List<string>(),
+                Values = new List<dynamic>()
+            };
             foreach (Sensor sensor in sensors)
             {
-                reportElement.Dates.Add(sensor.Name);
                 History history = unitOfWork.HistoryRepo.GetLastHistoryBySensorId(sensor.Id);
+                if (history == null)
+                    continue;
                 dynamic value = null;
-                switch (reportElement.MeasurementType)
+                switch (sensor.SensorType.MeasurementType)
                 {
                     case MeasurementType.Int:
                         value = history.IntValue.GetValueOrDefault();
@@ -550,10 +560,11 @@ namespace Infrastructure.Business.Interfaces
                     default:
                         return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "Incorrect sensor type for this element" };
                 }
-                reportElement.Values.Add(value);
+                statusReport.Dates.Add(sensor.Name);
+                statusReport.Values.Add(value);
             }
 
-            return reportElement;
+            return statusReport;
         }
 
         public Task<SensorDto> GetLastSensorByUserId(string userId)

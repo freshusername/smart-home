@@ -9,7 +9,7 @@ using System.Linq;
 using System;
 using Microsoft.AspNetCore.Identity;
 
-namespace Infrastructure.Business.Interfaces
+namespace Infrastructure.Business.Managers
 {
     public class DashboardManager : BaseManager, IDashboardManager
     {

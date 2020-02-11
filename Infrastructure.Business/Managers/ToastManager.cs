@@ -5,6 +5,7 @@ using Infrastructure.Business.DTOs.Notification;
 using Infrastructure.Business.Hubs;
 using Infrastructure.Business.Infrastructure;
 using Infrastructure.Business.Interfaces;
+using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;

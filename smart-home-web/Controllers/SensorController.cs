@@ -3,7 +3,7 @@ using Domain.Core.Model;
 using Domain.Core.Model.Enums;
 using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.DTOs.SensorType;
-using Infrastructure.Business.Interfaces;
+using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;

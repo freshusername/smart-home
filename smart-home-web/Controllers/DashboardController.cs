@@ -3,6 +3,7 @@ using Domain.Core.Model;
 using Infrastructure.Business.DTOs.Dashboard;
 using Infrastructure.Business.Infrastructure;
 using Infrastructure.Business.Interfaces;
+using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -40,6 +41,7 @@ namespace smart_home_web.Controllers
         public async Task<IActionResult> Detail(int id)
         {
             var userId = _userManager.GetUserId(User);
+            ViewBag.userid = userId;
             var dashboard = await _dashboardManager.GetById(id);
             var result = _mapper.Map<DashboardDto, DashboardViewModel>(dashboard);
             return View(result);
