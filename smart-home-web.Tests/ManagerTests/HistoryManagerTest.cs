@@ -143,12 +143,14 @@ namespace smart_home_web.Tests.ManagerTests
             Assert.IsNotNull(result);
         }
 
-        [TestCase(0)]
+        [TestCase(10000)]
         [Ignore("The test is not working")]
         public void GetHistoryByIdAsync_IfNotExists_ReturnsNull(int id)
         {
             History history = null;
+            HistoryDto historyDto = null;
             mockUnitOfWork.Setup(h => h.HistoryRepo.GetById(id)).Returns(Task.FromResult(history));
+            mockMapper.Setup(p => p.Map<History, HistoryDto>(history)).Returns(historyDto);
 
             var result = _manager.GetHistoryByIdAsync(id);
 
@@ -157,13 +159,13 @@ namespace smart_home_web.Tests.ManagerTests
         } 
 
         [Test]
-        [Ignore("The test is not working")]
+        //[Ignore("The test is not working")]
         public void CheckValue_IfParamIsNotNull_ReturnsTrue()
         {
             mockUnitOfWork.Setup(p => p.HistoryRepo.GetLastBySensorId(histories.First().SensorId))
-                .Returns(Task.FromResult(histories.First()));
+                .Returns(Task.FromResult(histories.ElementAt(1)));
 
-            bool result = _manager.CheckValue(histories.First());
+            bool result = _manager.CheckValue(histories.ElementAt(1));
 
             Assert.IsTrue(result);
         }
