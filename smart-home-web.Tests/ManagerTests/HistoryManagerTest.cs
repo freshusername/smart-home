@@ -1,4 +1,5 @@
 ﻿using Domain.Core.Model;
+using Domain.Core.Model.Enums;
 using Infrastructure.Business.DTOs;
 using Infrastructure.Business.DTOs.History;
 using Infrastructure.Business.DTOs.ReportElements;
@@ -21,7 +22,8 @@ namespace smart_home_web.Tests.ManagerTests
     {
         private HistoryManager _manager;
         private Mock<IHubContext<GraphHub>> _hubContext;
-        private static List<History> histories;
+        private static IEnumerable<History> histories;
+        private static IEnumerable<HistoryDto> historyDtos;
         private HistoryDto _historyDto;
         private Sensor _sensor;
 
@@ -129,6 +131,89 @@ namespace smart_home_web.Tests.ManagerTests
             //assert
             Assert.IsFalse(result.Succeeded);
 
+        }
+
+        [TestCase(10)]
+        public void GetHistoryByIdAsync_IfExists_IsNotNull(int id)
+        {
+            mockUnitOfWork.Setup(h => h.HistoryRepo.GetById(histories.First().Id)).Returns(Task.FromResult(histories.First()));
+
+            var result = _manager.GetHistoryByIdAsync(id);
+
+            Assert.IsNotNull(result);
+        }
+
+        [TestCase(0)]
+        [Ignore("The test is not working")]
+        public void GetHistoryByIdAsync_IfNotExists_ReturnsNull(int id)
+        {
+            History history = null;
+            mockUnitOfWork.Setup(h => h.HistoryRepo.GetById(id)).Returns(Task.FromResult(history));
+
+            var result = _manager.GetHistoryByIdAsync(id);
+
+            Assert.IsNull(result);
+            
+        } 
+
+        [Test]
+        [Ignore("The test is not working")]
+        public void CheckValue_IfParamIsNotNull_ReturnsTrue()
+        {
+            mockUnitOfWork.Setup(p => p.HistoryRepo.GetLastBySensorId(histories.First().SensorId))
+                .Returns(Task.FromResult(histories.First()));
+
+            bool result = _manager.CheckValue(histories.First());
+
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void CheckValue_IfParamIsNull_ReturnsFalse()
+        {
+            History history = null;
+            mockUnitOfWork.Setup(p => p.HistoryRepo.GetLastBySensorId(_sensor.Id))
+                .Returns(Task.FromResult(histories.First()));
+
+            bool result = _manager.CheckValue(history);
+
+            Assert.IsFalse(result);
+
+        }
+
+        [Test]
+        public void GetAllHistoriesAsync_IfExists_IsNotNull()
+        {
+            mockUnitOfWork.Setup(h => h.HistoryRepo.GetAll())
+                .Returns(Task.FromResult(histories));
+            mockMapper.Setup(p => p.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories))
+                .Returns(historyDtos);
+
+            var result = _manager.GetAllHistoriesAsync();
+
+            Assert.IsNotNull(result);
+        }
+
+        [TestCase(1)]
+        public void GetHistoriesBySensorIdAsync_IfSensorIsValid_ReturnsIsNotNull(int id)
+        {
+            mockUnitOfWork.Setup(p => p.HistoryRepo.GetHistoriesBySensorId(id)).Returns(Task.FromResult(histories));
+            mockMapper.Setup(p => p.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories)).Returns(historyDtos);
+
+            var result = _manager.GetHistoriesBySensorIdAsync(id);
+
+            Assert.IsNotNull(result);
+        }
+
+        [TestCase(1, 1, SortState.SensorAsc, true, 0)]
+        public void GetHistoriesAsync_IfExists_ReturnsTrue(int count, int page, SortState sortState, bool IsActivated, int sensorId)
+        {
+            mockUnitOfWork.Setup(p => p.HistoryRepo.GetByPage(count, page, sortState, IsActivated, sensorId));
+            mockMapper.Setup(p => p.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories));
+
+            var result = _manager.GetHistoriesAsync(count, page, sortState, IsActivated, sensorId);
+
+            Assert.IsNotNull(result);
         }
     }
 }

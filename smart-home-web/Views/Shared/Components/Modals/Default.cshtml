@@ -56,20 +56,20 @@
     }
 
     function ElementEdit() {
-        currentElement = $(this).closest(".element-container");
         ModalCleaning();
+        currentElement = $(this).closest(".element-container");
         $.ajax({
             url: '@Url.Action("Edit")',
             data: { id: currentElement.data("element-container-id") },
-            beforeSend: function () {
-                modal.fadeIn(600);
-                return true;
-            },
             success: function (data) {
+                modalBody.find("#modal-form-edit").remove();
                 modal.find(".modal-title").text("Edit " + elementName);
                 modalBody.prepend(data);
                 modalBody.on("submit", "#modal-form-edit", ModalFormEdit);
+                
+                modalBody.on("change", ".checkbox-inline", onModalFormEditChange);
                 modalBody.on("change", ".form-control", onModalFormEditChange);
+                modal.fadeIn(600);
                 modal.modal();
             },
             error: function (res) {
