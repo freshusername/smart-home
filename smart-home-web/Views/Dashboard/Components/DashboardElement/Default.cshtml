@@ -8,7 +8,7 @@
             @Model.Name
         </div>
         <div class="btn-actions-pane-right actions-icon-btn">
-            @if (User.Identity.IsAuthenticated && User.Claims.ElementAt(1).Value == Model.DashCreatorUserName)
+            @if (User.Identity.IsAuthenticated && User.Claims.ElementAt(1).Value == Model.DashCreatorUserName && !Model.IsPublic)
             {
                 <a href="#" class="element-delete float-right">
                     <span class="pe-7s-close fsize-4"> </span>
