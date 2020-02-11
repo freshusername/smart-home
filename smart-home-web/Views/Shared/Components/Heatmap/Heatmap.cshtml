@@ -7,8 +7,8 @@
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
-<figure class="highcharts-figure">
-    <div id=@("Heatmap" + Model.Id.ToString())></div>
+<figure id=@("gauge_figure_" + Model.Id.ToString()) class="highcharts-figure">
+    <div id=@("Heatmap" + Model.Id.ToString()) class="chart-container"></div>
 </figure>
 
 @if (Model.IsCorrect)
@@ -139,7 +139,7 @@
                     return '<b>' + '</b><br>' + @Html.Raw(Json.Serialize(Model.SensorName))  +
                         (this.point.value == undefined ? ' has no data' : ' has average: <b>' + this.point.value + ' ' + @Html.Raw(Json.Serialize(Model.MeasurementName))) +
                             '</b><br> on <b>' + getPointCategoryName(this.point, 'y') + ', ' +
-                                getDateForValue(this.point.index) + '</b>';
+                                (getDateForValue(this.point.index) == '' ? 'soon...' : getDateForValue(this.point.index)) + '</b>';
                 }
             },
 

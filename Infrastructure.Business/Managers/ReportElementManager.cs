@@ -236,7 +236,12 @@ namespace Infrastructure.Business.Managers
         public async Task<ReportElementDto> GetWordCloudById(int ReportElementId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
+            if (reportElement == null)
+            {
+                return new ReportElementDto { Id = ReportElementId, IsCorrect = false };
+            }
             DateTime date = new DateTime(1970, 1, 1, 0, 0, 0);
+
             if (reportElement.Hours != 0)
                 date = DateTime.Now.AddHours(-(int)reportElement.Hours);
             IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId.Value, date);
@@ -274,6 +279,7 @@ namespace Infrastructure.Business.Managers
         public async Task<GaugeDto> GetGaugeById(int gaugeId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(gaugeId);
+            if (reportElement == null) return new GaugeDto { IsValid = false};
             GaugeDto gaugeDto = mapper.Map<ReportElement, GaugeDto>(reportElement);
 
             gaugeDto.Min = historyManager.GetMinValueForPeriod(reportElement.SensorId.Value, (int)gaugeDto.Hours);
@@ -282,8 +288,6 @@ namespace Infrastructure.Business.Managers
             {
                 var value = historyManager.GetLastHistoryBySensorId(reportElement.SensorId.Value);
                 gaugeDto.Value = value.DoubleValue.HasValue ? value.DoubleValue : value.IntValue;
-                gaugeDto.SensorName = reportElement.Sensor.Name;
-                gaugeDto.MeasurementName = reportElement.Sensor.SensorType.MeasurementName;
                 if (gaugeDto.Min == gaugeDto.Max)
                 {
                     gaugeDto.Min--;
