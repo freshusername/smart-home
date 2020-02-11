@@ -5,14 +5,12 @@
 @{
     ViewData["Title"] = "Sensors";
 }
-@*<link href="~/css/OnOff.css" rel="stylesheet" />*@
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 <div class="app-main">
     <div class="app-main__outer">
         <div class="app-main__inner">
-            <div class="app-header">
+            <div class="app-header header-button-move-up">
                 <div class="page-title-heading">
                     @if (User.Identity.IsAuthenticated)
                     {
@@ -51,7 +49,7 @@
 @await Component.InvokeAsync("Modals", "Sensor")
 
 
-@*<script src="~/lib/jquery/dist/jquery.js"></script>*@
+<script src="~/lib/jquery/dist/jquery.js"></script>
 <script>
     $(function () {
 
@@ -61,12 +59,6 @@
                 type: 'Post',
                 url: "/Sensor/SetActive",
                 data: { id: input.attr('id') },
-                //Doesnt work because we cannot find element with "sensor-row"
-                //success: function () {
-                //    console.log(closest(".sensor-row"));
-                //    input.closest(".sensor-row")
-                //        .find(".sensor-activated").toggleClass("fa-check-circle fa-times-circle");
-                //}
             });
         }
         $(".input-set-active").on("click", SetActiveAjax);

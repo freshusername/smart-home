@@ -4,16 +4,32 @@
     ViewData["Title"] = "Dashboards";
 }
 
-@*WRAPPER*@
 
 <div class="app-main">
     <div class="app-main__outer">
         <div class="app-main__inner">
-            <div class="app-header">
+            @*NEW DASHBOARD CREATING*@
+            <div class="app-header header-button-move-up" style="margin-left:10px">
                 <div class="page-title-heading">
-                    Dashboards
+                    <a class="btn btn-primary text-white w-auto"
+                       data-toggle="toggle" data-target="#create_elem" id="dash_create_button">
+                        <span class="glyphicon glyphicon-plus-sign"></span> Add dashboard
+                    </a>
+                    
+                        <div id="create_elem" class="collapse mr-2">
+                            <form data-dash-url="@Url.Action("Create","Dashboard")" method="post" id="dash_create">
+                                <p>
+                                    <input id="form_dash_name" placeholder="Enter name" size="14" maxlength="35" required />
+                                    <label for="form_dash_isPublic">public</label>
+                                    <input id="form_dash_isPublic" size="14" type="checkbox" />
+                                    <input type="submit" value="Add" class="btn btn-primary" />
+                                </p>
+                            </form>
+                        </div>
+                   
                 </div>
             </div>
+
             <div class="app-inner-layout app-inner-layout-page">
                 <div class="app-inner-layout__wrapper">
                     <div class="app-inner-layout__content pt-1">
@@ -37,25 +53,7 @@
                                     </div>
                                 </div>
 
-                                @*NEW DASHBOARD CREATING*@
-                                <div class="d-flex justify-content-center">
-                                    <a class="btn btn-success text-light text-uppercase w-auto" style="height:33px"
-                                       data-toggle="toggle" data-target="#create_elem" id="dash_create_button">
-                                        <span class="glyphicon glyphicon-plus-sign"></span> Add dashboard
-                                    </a>
-                                    <div class="justify-content-center" style="margin-top:40px;">
-                                        <div id="create_elem" class="collapse mr-2">
-                                            <form data-dash-url="@Url.Action("Create","Dashboard")" method="post" id="dash_create">
-                                                <p>
-                                                    <input id="form_dash_name" placeholder="Enter name" size="14" maxlength="35" required />
-                                                    <label for="form_dash_isPublic">public</label>
-                                                    <input id="form_dash_isPublic" size="14" type="checkbox" />
-                                                    <input type="submit" value="Add" class="btn btn-primary" />
-                                                </p>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
+
 
                             </div>
                         </div>

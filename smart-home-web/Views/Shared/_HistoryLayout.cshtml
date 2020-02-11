@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title</title>
+    <title>@ViewData["Title"] - smart_home_web</title>
 
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
@@ -16,9 +16,8 @@
 <body>
     <div class="app-container app-theme-gray">
         <partial name="_NavbarPartial" />
-        <div class="increase-padding">
+        <partial name="_HeaderPartial" />
             @RenderBody()
-        </div>
     </div>
 </body>
 </html>
