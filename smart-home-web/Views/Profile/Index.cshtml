@@ -3,7 +3,6 @@
 
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 
-
 <div class="app-main">
     <div class="app-main__outer">
         <div class="app-inner-layout app-inner-layout-page">
@@ -27,7 +26,7 @@
                                                     <div class="text-center text-sm-left mb-2 mb-sm-0">
                                                         <h4 class="pt-sm-2 pb-1 mb-0 text-nowrap">John Smith</h4>
                                                         <p class="mb-0"></p>
-                                                        <div class="text-muted"><small>Last seen 2 hours ago</small></div>
+
                                                         <div class="mt-2">
                                                             <button class="btn btn-primary" type="button">
                                                                 <i class="fa fa-fw fa-camera"></i>
@@ -36,8 +35,8 @@
                                                         </div>
                                                     </div>
                                                     <div class="text-center text-sm-right">
-                                                        <span class="badge badge-secondary">administrator</span>
-                                                        <div class="text-muted"><small>Joined 09 Dec 2017</small></div>
+                                                        <span class="badge badge-secondary">@(User.IsInRole("Admin") ? "administrator" : "user")</span>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -52,13 +51,13 @@
                                                                 <div class="row">
                                                                     <div class="col">
                                                                         <div class="form-group">
-                                                                            <label>Full Name</label>
+                                                                            <label>First Name</label>
                                                                             <input class="form-control" type="text" name="name" placeholder="@Model.FirstName" value="@Model.FirstName">
                                                                         </div>
                                                                     </div>
                                                                     <div class="col">
                                                                         <div class="form-group">
-                                                                            <label>Username</label>
+                                                                            <label>Last Name</label>
                                                                             <input class="form-control" type="text" name="username" placeholder="@Model.LastName" value="@Model.LastName">
                                                                         </div>
                                                                     </div>
@@ -71,63 +70,60 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                              
+
                                                             </div>
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-12 col-sm-6 mb-3">
-                                                                <div class="mb-2"><b>Change Password</b></div>
-                                                                <div class="row">
-                                                                    <div class="col">
-                                                                        <div class="form-group">
-                                                                            <label>Current Password</label>
-                                                                            <input class="form-control" type="password" placeholder="••••••">
-                                                                        </div>
+                                                        <!-- Button trigger modal -->
+                                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                                                            Launch demo modal
+                                                        </button>
+
+                                                        <!-- Modal -->
+                                                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                            <div class="modal-dialog" role="document">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="exampleModalLabel">Change Password</h5>
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                            <span aria-hidden="true">&times;</span>
+                                                                        </button>
                                                                     </div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col">
-                                                                        <div class="form-group">
-                                                                            <label>New Password</label>
-                                                                            <input class="form-control" type="password" placeholder="••••••">
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col">
-                                                                        <div class="form-group">
-                                                                            <label>Confirm <span class="d-none d-xl-inline">Password</span></label>
-                                                                            <input class="form-control" type="password" placeholder="••••••">
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-12 col-sm-5 offset-sm-1 mb-3">
-                                                                <div class="mb-2"><b>Keeping in Touch</b></div>
-                                                                <div class="row">
-                                                                    <div class="col">
-                                                                        <label>Email Notifications</label>
-                                                                        <div class="custom-controls-stacked px-2">
-                                                                            <div class="custom-control custom-checkbox">
-                                                                                <input type="checkbox" class="custom-control-input" id="notifications-blog" checked="">
-                                                                                <label class="custom-control-label" for="notifications-blog">Blog posts</label>
-                                                                            </div>
-                                                                            <div class="custom-control custom-checkbox">
-                                                                                <input type="checkbox" class="custom-control-input" id="notifications-news" checked="">
-                                                                                <label class="custom-control-label" for="notifications-news">Newsletter</label>
-                                                                            </div>
-                                                                            <div class="custom-control custom-checkbox">
-                                                                                <input type="checkbox" class="custom-control-input" id="notifications-offers" checked="">
-                                                                                <label class="custom-control-label" for="notifications-offers">Personal Offers</label>
+                                                                    <div class="modal-body">
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                <div class="form-group">
+                                                                                    <label>Current Password</label>
+                                                                                    <input class="form-control" type="password" placeholder="••••••">
+                                                                                </div>
                                                                             </div>
                                                                         </div>
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                <div class="form-group">
+                                                                                    <label>New Password</label>
+                                                                                    <input class="form-control" type="password" placeholder="••••••">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                <div class="form-group">
+                                                                                    <label>Confirm <span class="d-none d-xl-inline">Password</span></label>
+                                                                                    <input class="form-control" type="password" placeholder="••••••">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                        <button type="button" class="btn btn-primary">Save changes</button>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="row">
                                                             <div class="col d-flex justify-content-end">
-                                                                <button class="btn btn-primary" type="submit">Save Changes</button>
+                                                                <button class="btn btn-primary" id="update" type="submit">Save Changes</button>
                                                             </div>
                                                         </div>
                                                     </form>
@@ -137,8 +133,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-
+                            </div>                       
                             <div class="col-12 col-md-3 mb-3">
                                 <div class="card mb-3">
                                     <div class="card-body">
@@ -166,3 +161,22 @@
         </div>
     </div>
 </div>
+
+<script>
+    $("#update").on("click", function () {
+        debugger;
+        $.ajax({
+            url: '@Url.Action("Update","Profile")',
+            data: form.serialize(),
+            type: "post",
+            cache: false,
+            success: function (savingStatus) {
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                window.alert("Error encountered while sending request");
+                console.log(thrownError);
+            }
+        });
+    });
+</script>

@@ -49,26 +49,22 @@ namespace smart_home_web.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ChangePassword(IndnexViewModel model)
+        public async Task<IActionResult> ChangePassword(ChangeProfilePasswordViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model.ChangeProfilePasswordViewModel);
-            }
+            if (!ModelState.IsValid)            
+                return View(model);
+            
             var user = await _userManager.GetUserAsync(User);
 
-            if (user == null)
-            {
+            if (user == null)            
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
+            
 
-            var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.ChangeProfilePasswordViewModel.OldPassword, model.ChangeProfilePasswordViewModel.NewPassword);
+            var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
 
-            if (!changePasswordResult.Succeeded)
-            {
-                ModelState.AddModelError("Error", changePasswordResult.Errors.ToString());
-                return View(model);
-            }
+            if (!changePasswordResult.Succeeded)           
+              return BadRequest(changePasswordResult.Errors.ToString());
+            
 
             await _signInManager.SignInAsync(user, isPersistent: false);           
           
@@ -76,14 +72,12 @@ namespace smart_home_web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(IndnexViewModel model)
+        public IActionResult Update(ProfileViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
+            if (!ModelState.IsValid)         
                 return View(model);
-            }
-
-            var user = _mapper.Map<ProfileViewModel,AppUser>(model.ProfileViewModel);           
+            
+            var user = _mapper.Map<ProfileViewModel,AppUser>(model);           
              var result =  _userManager.UpdateAsync(user);
 
             if (!result.Result.Succeeded) return BadRequest();
