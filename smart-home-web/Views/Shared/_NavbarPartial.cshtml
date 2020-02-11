@@ -13,7 +13,7 @@
         <div class="app-sidebar-wrapper">
             <div class="app-sidebar sidebar-shadow">
                 <div class="app-header__logo">
-                    <a asp-area="" asp-controller="Home" asp-action="Index" data-toggle="tooltip" data-placement="bottom" title="" class="logo-src" data-original-title=""></a>
+                    <a asp-area="" asp-controller="Dashboard" asp-action="Index" data-toggle="tooltip" data-placement="bottom" title="" class="logo-src" data-original-title=""></a>
                     <button type="button" class="hamburger hamburger--elastic mobile-toggle-nav">
                         <span class="hamburger-box">
                             <span class="hamburger-inner"></span>
@@ -32,20 +32,59 @@
                                 </a>
                                 <ul class="mm-collapse mm-show" style="">
                                     <li>
-                                        <a asp-area="" asp-controller="Sensor" asp-action="Index">Sensors</a>
+                                        <a asp-area="" asp-controller="Dashboard" asp-action="Index">All Dashboards</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="mm-active">
+                                <a href="#" aria-expanded="true">
+                                    <i class="metismenu-icon pe-7s-signal"></i>
+                                    <span>Sensors</span>
+                                    <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                                </a>
+                                <ul class="mm-collapse mm-show" style="">
+                                    <li>
+                                        <a asp-area="" asp-controller="Sensor" asp-action="Index">All Sensors List</a>
                                     </li>
                                     <li>
-                                        <a asp-area="" asp-controller="SensorType" asp-action="Index">Sensor Types</a>
-                                    </li>
-                                    <li>
-                                        <a asp-area="" asp-controller="History" asp-action="Index">Histories</a>
-                                    </li>                                   
-                                    <li>
-                                        <a asp-area="" asp-controller="Dashboard" asp-action="Index">Dashboards</a>
+                                        <a asp-area="" asp-controller="SensorType" asp-action="Index">All Sensors Types</a>
                                     </li>
                                     <li>
                                         <a asp-area="" asp-controller="SensorControl" asp-action="Index">Sensors Control Panel</a>
-                                    </li>                                   
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="mm-active">
+                                <a href="#" aria-expanded="true">
+                                    <i class="metismenu-icon pe-7s-browser"></i>
+                                    <span>Histories</span>
+                                    <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                                </a>
+                                <ul class="mm-collapse mm-show" style="">
+                                    <li>
+                                        <a asp-area="" asp-controller="History" asp-action="Index">Histories List</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            @*<li class="mm-active">
+                                <a href="#" aria-expanded="true">
+                                    <i class="metismenu-icon pe-7s-note2"></i>
+                                    <span>Notifications</span>
+                                    <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                                </a>
+                                <ul class="mm-collapse mm-show" style="">
+                                    <li>
+                                        <a asp-area="" asp-controller="Toast" asp-action="Index">All Notifications</a>
+                                    </li>
+                                </ul>
+                            </li>*@
+                            <li class="mm-active">
+                                <a href="#" aria-expanded="true">
+                                    <i class="metismenu-icon pe-7s-users"></i>
+                                    <span>Account</span>
+                                    <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                                </a>
+                                <ul class="mm-collapse mm-show" style="">
                                     <li>
                                         <a asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
                                     </li>
@@ -59,7 +98,3 @@
         <div class="app-sidebar-overlay d-none animated fadeIn"></div>
     }
 }
-
-
-
-@*<partial name="_LoginPartial" />*@

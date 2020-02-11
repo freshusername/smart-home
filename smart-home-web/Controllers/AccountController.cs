@@ -94,13 +94,13 @@ namespace smart_home_web.Controllers
                 return View(model);
             }
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Dashboard");
         }
 
         public async Task<IActionResult> Logout()
         {
             await _authenticationManager.Logout();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Dashboard");
         }
 
         [HttpGet]
@@ -184,7 +184,7 @@ namespace smart_home_web.Controllers
             }
             var result = await UserManager.ConfirmEmailAsync(user, code);
             if (result.Succeeded)
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Dashboard");
             else
                 return View("Error");
         }
@@ -205,7 +205,7 @@ namespace smart_home_web.Controllers
                 return RedirectToAction(nameof(Login));
 
             if (result.Succeeded)
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Dashboard");
 
             return View("AccessDenied");
         }

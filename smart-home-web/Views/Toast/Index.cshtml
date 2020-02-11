@@ -62,10 +62,10 @@
 
                                                                 @if (User.Identity.IsAuthenticated)
                                                                 {
-                                                                    @*<a class="btn btn-shadow btn-info element-edit" asp-action="Edit" asp-route-id="@item.Id">
-                                                                <i class="text-white pe-7s-config" style="font-size:20px"></i></a>*@
-                                                                    @*<a class="btn btn-shadow btn-danger element-delete p-0 pl-2 pr-2" asp-action="Delete" asp-route-id="@item.Id">
-                                                                <i class="text-white pe-7s-close" style="font-size:30px;"></i></a>*@
+                                                                    <a class="btn btn-shadow btn-info element-edit" asp-action="Edit" asp-route-id="@item.Id">
+                                                                <i class="text-white pe-7s-config" style="font-size:20px"></i></a>
+                                                                    <a class="btn btn-shadow btn-danger element-delete p-0 pl-2 pr-2" asp-action="Delete" asp-route-id="@item.Id">
+                                                                <i class="text-white pe-7s-close" style="font-size:30px;"></i></a>
                                                                 }
                                                             </div>
 
