@@ -1,4 +1,6 @@
-﻿$(document).ready(function () {
+﻿let listOfHours = $("select#hours-select option");
+
+$(document).ready(function () {
     $('select').niceSelect();
     get();
     $("select#type-select").change(function () {
@@ -27,6 +29,7 @@ function get() {
                         .attr("value", value.id)
                         .text(value.name));
             });
+            set_hours()
             set_disable();
             set_title();
         },
@@ -37,6 +40,7 @@ function get() {
                     .attr("selected", true)
                     .attr("value", "0")
                     .text("There is not suitable sensor"));
+            set_hours()
             set_disable();
             set_title();
         }
@@ -75,4 +79,26 @@ function set_title() {
         $("#create-report-element").attr('title', "Create");
     }
     $('select').niceSelect('update');
+}
+
+function set_hours() {
+    var selected = $("select#type-select").children("option:selected").val();
+    $("select#hours-select").empty();
+    $.each(listOfHours, function (key, value) {
+        $("select#hours-select").append($(this));
+    });
+    if (selected == "3") {
+        $.each($("select#hours-select option"), function (key, value) {
+            if (key >= 0 && key < 8) {
+                $(this).remove();
+            }
+        });
+    }
+    else if (selected == "8") {
+        $.each($("select#hours-select option"), function (key, value) {
+            if (key < 6 || key > 9) {
+                $(this).remove();
+            }
+        });
+    }
 }

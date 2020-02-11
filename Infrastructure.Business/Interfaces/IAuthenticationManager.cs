@@ -2,7 +2,7 @@
 using Infrastructure.Business.Infrastructure;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Business.Interfaces
+namespace Infrastructure.Business.Managers
 {
     public interface IAuthenticationManager
     {

@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Business.Interfaces
+namespace Infrastructure.Business.Managers
 {
     public class SensorTypeManager : BaseManager, ISensorTypeManager
     {
@@ -21,6 +21,7 @@ namespace Infrastructure.Business.Interfaces
         public async Task<SensorTypeDto> Create(SensorTypeDto sensorTypeDto)
         {
             SensorType sensortype = mapper.Map<SensorTypeDto, SensorType>(sensorTypeDto);
+              if(sensortype == null) return null;
             try
             {
                 await unitOfWork.SensorTypeRepo.Insert(sensortype);
@@ -36,6 +37,7 @@ namespace Infrastructure.Business.Interfaces
         public async Task<SensorTypeDto> Update(SensorTypeDto sensorTypeDto)
         {
             SensorType sensortype = mapper.Map<SensorTypeDto, SensorType>(sensorTypeDto);
+            if (sensortype == null) return null;
             try
             {
                 await unitOfWork.SensorTypeRepo.Update(sensortype);

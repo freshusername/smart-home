@@ -28,7 +28,6 @@ namespace smart_home_web.Tests.ManagerTests
             _mockManager = new Mock<IconManager>(mockUnitOfWork.Object, mockMapper.Object, _mockEnv.Object);
             _manager = new IconManager(mockUnitOfWork.Object, mockMapper.Object, _mockEnv.Object);
         }
-        #region Create
         [Test]
         public void Create_ValidDto_ReturnTrue()
         {
@@ -59,32 +58,6 @@ namespace smart_home_web.Tests.ManagerTests
             var result = _manager.Create(newIconDto);
 
             Assert.IsFalse(result.Result.Succeeded);
-        }
-        #endregion 
-        [Test]
-        public void CreateAndGetIconId_ValidFormFile_ReturnTrue()
-        {
-            var path = Path.Combine("images", "Icons");
-            var fileMock = new Mock<IFormFile>();
-            var file = fileMock.Object;
-
-            Icon newIcon = new Icon() { Id = 1, Path = "/images/Icons/test.png" };
-
-            _mockEnv.Setup(e => e.WebRootPath).Returns("Icons");
-
-            mockMapper.Setup(m => m
-                .Map<IconDto, Icon>(It.IsAny<IconDto>()))
-                    .Returns(newIcon);
-
-            _mockManager.SetupGet(m => m.UploadPath)
-                .Returns(()=>Path.Combine(path));
-            
-            mockUnitOfWork.Setup(uof => uof
-                .IconRepo.Insert(newIcon));
-
-            var result = _manager.CreateAndGetIconId(file);
-
-            Assert.AreEqual(1, result.Result);
         }
     }
 }

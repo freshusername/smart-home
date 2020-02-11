@@ -19,6 +19,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using smart_home_web.AutoMapper;
 using Infrastructure.Business.Hubs;
+using Infrastructure.Business.Managers;
 
 namespace smart_home_web
 {

@@ -13,7 +13,7 @@ using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.Infrastructure;
 using Microsoft.AspNetCore.SignalR;
 
-namespace Infrastructure.Business.Interfaces
+namespace Infrastructure.Business.Managers
 {
     public class HistoryManager : BaseManager, IHistoryManager
     {
@@ -40,11 +40,11 @@ namespace Infrastructure.Business.Interfaces
             return result;
         }
 
-		public async Task<IEnumerable<HistoryDto>> GetHistoriesAsync(int count, int page, SortState sortState, bool IsActivated, int sensorId = 0)
-		{
+        public async Task<IEnumerable<HistoryDto>> GetHistoriesAsync(int count, int page, SortState sortState, bool IsActivated, int sensorId = 0)
+        {
             var histories = await unitOfWork.HistoryRepo.GetByPage(count, page, sortState, IsActivated, sensorId);
-			
-			var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories);
+
+            var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories);
 
             return result;
         }
@@ -63,6 +63,15 @@ namespace Infrastructure.Business.Interfaces
             var result = mapper.Map<History, HistoryDto>(history);
 
             return result;
+        }
+        public async Task<bool> CheckLastHistoryBySensorIdExists(int sensorId)
+        {
+            var history = unitOfWork.HistoryRepo.GetLastHistoryBySensorId(sensorId);
+            if (history != null)
+            {
+                return true;
+            }
+            return false;
         }
 
         public double? GetMinValueForPeriod(int sensorId, int? hours)
@@ -128,6 +137,10 @@ namespace Infrastructure.Business.Interfaces
             };
 
             var sensor = unitOfWork.SensorRepo.GetById(sensorId).Result;
+
+            if(sensor == null)
+                return new OperationDetails(false, "Operation did not succeed!", "");
+
             dynamic valueModel;
 
             if (sensor.IsValid)
@@ -172,10 +185,10 @@ namespace Infrastructure.Business.Interfaces
             return await unitOfWork.HistoryRepo.GetAmountAsync(isActivated);
         }
 
-		public async Task<int> GetAmountOfUserHistoriesAsync(bool isActivated, string userId)
-		{
-			return await unitOfWork.HistoryRepo.GetAmountAsync(isActivated, userId);
-		}
+        public async Task<int> GetAmountOfUserHistoriesAsync(bool isActivated, string userId)
+        {
+            return await unitOfWork.HistoryRepo.GetAmountAsync(isActivated, userId);
+        }
 
         public async Task<SensorDto> GetLastSensorByUserId(string userId)
         {

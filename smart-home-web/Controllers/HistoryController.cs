@@ -12,6 +12,7 @@ using Domain.Core.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
+using Infrastructure.Business.Managers;
 
 namespace smart_home_web.Controllers
 {

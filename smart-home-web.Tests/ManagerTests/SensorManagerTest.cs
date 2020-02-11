@@ -51,7 +51,7 @@ namespace smart_home_web.Tests.ManagerTests
 
             mockUnitOfWork.Setup(uow => uow
                 .SensorRepo.Insert(newSensor));
-            
+
             var result = _manager.Create(newSensorDto);
 
             Assert.IsNotNull(result.Result);
@@ -130,7 +130,7 @@ namespace smart_home_web.Tests.ManagerTests
             mockUnitOfWork.Setup(uow => uow
                 .SensorRepo.GetById(0))
                 .Returns(Task.FromResult(notExistingSensor));
-            
+
             var result = _manager.Update(notExistingSensorDto);
 
             Assert.IsNull(result.Result);

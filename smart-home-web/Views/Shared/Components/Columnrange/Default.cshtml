@@ -12,31 +12,13 @@ else
 }
 
 <script>
-    debugger;
-    var iterator = 0;
-     var columnminvalues = [];
-        columnminvalues[iterator] = JSON.parse('@Html.Raw(Json.Serialize(@Model.MinValues))');
-    var columnmaxvalues = [];
-        columnmaxvalues[iterator] = JSON.parse('@Html.Raw(Json.Serialize(@Model.MaxValues))');
-    var columndates = [];
-        columndates[iterator] = JSON.parse('@Html.Raw(Json.Serialize(@Model.Dates))');
-
-    var column_values = [];
-</script>
-
-<script>
-    @*let columnminvalues = [];
-    columnminvalues[@Model.Id] = JSON.parse('@Html.Raw(Json.Serialize(@Model.MinValues))');
-    let columnmaxvalues = []
-    columnmaxvalues[@Model.Id] = JSON.parse('@Html.Raw(Json.Serialize(@Model.MaxValues))');
-    let columndates = []
-    columndates[@Model.Id] = JSON.parse('@Html.Raw(Json.Serialize(@Model.Dates))');*@
-
-
-    for (let i = 0; i < columndates.length;i++) {
-        column_values.push([columnminvalues[i],columnmaxvalues[i]])
+    minValues = JSON.parse('@Html.Raw(Json.Serialize(@Model.MinValues))');
+    maxValues = JSON.parse('@Html.Raw(Json.Serialize(@Model.MaxValues))');
+    dates = JSON.parse('@Html.Raw(Json.Serialize(@Model.Dates))');
+    values = [];
+    for (let i = 0; i < dates.length;i++) {
+        values.push([minValues[i],maxValues[i]])
     }
-
     Highcharts.chart('Columnrange'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))'), {
 
         chart: {
@@ -44,7 +26,7 @@ else
             inverted: true,
         },
         title: {
-            text: 'Column range for <b>' + JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))') + '</b> for <b>' + JSON.parse('@Html.Raw(Json.Serialize(@Model.DashboardName))') + '</b>'
+            text: 'Column range for <b>' + JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))') + '</b>'
         },
 
         xAxis: {
@@ -65,7 +47,7 @@ else
                     <text> '<b>Days</b>' </text>
                 }
             },
-            categories: columndates
+            categories: dates
         },
 
         yAxis: {
@@ -74,7 +56,7 @@ else
                 style: {
                     textTransform: 'uppercase'
                 },
-                text: 'values'
+                text: '<b>values</b>'
             },
             labels: {
                 style: {
@@ -96,7 +78,7 @@ else
 
         series: [{
             name: 'Values',
-            data: column_values
+            data: values
         }],
         exporting: {
             buttons: {
@@ -107,6 +89,11 @@ else
         },
 
     });
+
+    delete minValues;
+    delete maxValues;
+    delete values;
+    delete dates;
 
     $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
         var type = 'Columnrange';
@@ -120,5 +107,4 @@ else
             result.setSize(ui.height, ui.width);
         }
     });
-    iterator++;
 </script>

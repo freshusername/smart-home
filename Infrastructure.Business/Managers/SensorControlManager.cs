@@ -16,9 +16,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Business.Interfaces
+namespace Infrastructure.Business.Managers
 {
-    public class SensorControlManager : BaseManager , ISensorControlManager
+    public class SensorControlManager : BaseManager, ISensorControlManager
     {
         public SensorControlManager(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
@@ -27,19 +27,16 @@ namespace Infrastructure.Business.Interfaces
         public List<SensorControlDto> GetSensorControls()
         {
             var sensorControl = unitOfWork.SensorControlRepo.GetAll().Result;
-             var result = mapper.Map<IEnumerable<SensorControl>, IEnumerable<SensorControlDto>>(sensorControl).ToList();
+            var result = mapper.Map<IEnumerable<SensorControl>, IEnumerable<SensorControlDto>>(sensorControl).ToList();
             return result;
         }
-      
+
         public SensorControlDto GetById(int id)
         {
             var sensorControl = unitOfWork.SensorControlRepo.GetById(id).Result;
-             if (sensorControl == null) return null;
+            if (sensorControl == null) return null;
 
-             var result = mapper.Map<SensorControl,SensorControlDto>(sensorControl);
-
-              var sensor = unitOfWork.SensorRepo.GetByToken(sensorControl.Control.Token);
-            
+            var result = mapper.Map<SensorControl, SensorControlDto>(sensorControl);
 
             return result;
         }
@@ -47,36 +44,47 @@ namespace Infrastructure.Business.Interfaces
         public OperationDetails Update(SensorControlDto controlDto)
         {
             var sensorControl = mapper.Map<SensorControlDto, SensorControl>(controlDto);
-             if (sensorControl == null) return new OperationDetails(false, "", "");
 
-              unitOfWork.SensorControlRepo.Update(sensorControl);
-             unitOfWork.Save();
+            try
+            {
+                unitOfWork.SensorControlRepo.Update(sensorControl);
+                unitOfWork.Save();
+            }
+            catch
+            {
+                return new OperationDetails(false);
+            }
 
-            return new OperationDetails(true , "" , "");
+            return new OperationDetails(true);
         }
 
         public OperationDetails Add(SensorControlDto controlDto)
         {
             var sensorControl = mapper.Map<SensorControlDto, SensorControl>(controlDto);
-            if (sensorControl == null) return new OperationDetails(false, "", "");
-
             sensorControl.IsActive = true;
 
-            unitOfWork.SensorControlRepo.Insert(sensorControl);
-            unitOfWork.Save();
+            try
+            {
+                unitOfWork.SensorControlRepo.Insert(sensorControl);
+                unitOfWork.Save();
+            }
+            catch
+            {
+                return new OperationDetails(false);
+            }
 
-            return new OperationDetails(true, "", "");
+            return new OperationDetails(true);
         }
 
-        public OperationDetails UpdateById(int id,bool isActive)
+        public OperationDetails UpdateById(int id, bool isActive)
         {
             var sensorControl = unitOfWork.SensorControlRepo.GetById(id).Result;
-             if (sensorControl == null) return new OperationDetails(false, "", "");
+            if (sensorControl == null) return new OperationDetails(false, "", "");
 
-              sensorControl.IsActive = isActive;
-              unitOfWork.SensorControlRepo.Update(sensorControl);
+            sensorControl.IsActive = isActive;
+            unitOfWork.SensorControlRepo.Update(sensorControl);
 
-             unitOfWork.Save();
+            unitOfWork.Save();
             return new OperationDetails(true, "", "");
         }
 
@@ -84,7 +92,7 @@ namespace Infrastructure.Business.Interfaces
         {
             var sensorControl = unitOfWork.SensorControlRepo.GetById(id).Result;
             if (sensorControl == null) return new OperationDetails(false, "", "");
-          
+
             unitOfWork.SensorControlRepo.Delete(sensorControl);
 
             unitOfWork.Save();

@@ -2,6 +2,7 @@
     var hours = $('div#hours').data('save-hours');
     $('#hours-select').find('option[value=' + hours + ']').attr('selected', 'selected');
     $('select').niceSelect();
+    set_hours();
     $.ajax({
         type: "Get",
         url: $(".row").data("save-url"),
@@ -40,3 +41,22 @@
         },
     });
 });
+
+function set_hours() {
+    var selected = $("input#type").val();
+    if (selected == "Heatmap") {
+        $.each($("select#hours-select option"), function (key, value) {
+            if (key >= 0 && key < 8) {
+                $(this).remove();
+            }
+        });
+    }
+    else if (selected == "BoolHeatmap") {
+        $.each($("select#hours-select option"), function (key, value) {
+            if (key < 6 || key > 9) {
+                $(this).remove();
+            }
+        });
+    }
+    $('select').niceSelect('update');
+}

@@ -26,5 +26,6 @@ namespace Infrastructure.Business.Infrastructure
         public string Message { get; private set; }
         public string Property { get; private set; }
         public Dictionary<string, object> Data { get; set; }
+
     }
 }

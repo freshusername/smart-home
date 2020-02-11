@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Infrastructure.Business.DTOs.ReportElements;
 using Infrastructure.Business.Interfaces;
+using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Mvc;
 using smart_home_web.Models.ReportElements;
 using System.Threading.Tasks;
@@ -16,9 +17,9 @@ namespace smart_home_web.Components.ReportElements
             _reportElementManager = reportElementManager;
             _mapper = mapper;
         }
-        public async Task<IViewComponentResult> InvokeAsync(int reportElementId)
+        public async Task<IViewComponentResult> InvokeAsync(int reportElementId, string userid)
         {
-            ReportElementDto element = await _reportElementManager.GetStatusReport(reportElementId);
+            ReportElementDto element = await _reportElementManager.GetStatusReport(reportElementId, userid);
             return View(_mapper.Map<ReportElementDto, ReportElementViewModel>(element));
         }
     }
