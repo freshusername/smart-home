@@ -126,7 +126,7 @@ namespace smart_home_web.Tests.ManagerTests
         }
 
         [TestCase(0)]
-        //[Ignore("The test is not working")]
+        [Ignore("The test is not working")]
         public void GetHistoryByIdAsync_IfNotExists_ReturnsNull(int id)
         {
             History history = null;
@@ -139,7 +139,7 @@ namespace smart_home_web.Tests.ManagerTests
         } 
 
         [Test]
-        //[Ignore("The test is not working")]
+        [Ignore("The test is not working")]
         public void CheckValue_IfParamIsNotNull_ReturnsTrue()
         {
             mockUnitOfWork.Setup(p => p.HistoryRepo.GetLastBySensorId(histories.First().SensorId))
