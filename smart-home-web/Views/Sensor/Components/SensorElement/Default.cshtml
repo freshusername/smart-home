@@ -83,6 +83,12 @@
                         <a class="btn btn-shadow btn-info element-edit" onclick="">
                             <i class="text-white pe-7s-config" style="font-size:20px"></i>
                         </a>
+                        <a class="btn btn-shadow btn-warning element-notif" 
+                            asp-controller="Toast"
+                            asp-action="Index"
+                            asp-route-sensorId="@Model.Id">
+                            <i class="text-white pe-7s-bell" style="font-size:20px;"></i>
+                        </a>
                         <a class="btn btn-shadow btn-danger element-delete p-0 pl-2 pr-2" onclick="ElementDelete()">
                             <i class="text-white pe-7s-close" style="font-size:30px;"></i>
                         </a>
