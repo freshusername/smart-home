@@ -6,7 +6,6 @@ using Infrastructure.Business.Interfaces;
 using Infrastructure.Business.Managers;
 using Infrastructure.Data.Repositories;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore.Internal;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -22,17 +21,13 @@ namespace smart_home_web.Tests.ManagerTests
         private SensorManager _manager;
         private SensorDto _existingSensorDto;
         private Sensor _existingSensor;
+        private IHubContext<GraphHub> _hubContext;
 
         [SetUp]
         protected override void Initialize()
         {
             base.Initialize();
-            Mock<IHubContext<GraphHub>> hub = new Mock<IHubContext<GraphHub>>();
-
-            _manager = new SensorManager(mockUnitOfWork.Object, mockMapper.Object, hub.Object);
-
-            _manager = new SensorManager(mockUnitOfWork.Object, mockMapper.Object ,hub.Object);
-
+            _manager = new SensorManager(mockUnitOfWork.Object, mockMapper.Object, _hubContext);
 
             Guid guid = new Guid();
 

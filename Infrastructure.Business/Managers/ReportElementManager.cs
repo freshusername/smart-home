@@ -38,7 +38,7 @@ namespace Infrastructure.Business.Managers
             unitOfWork.Save();
         }
 
-        public async Task CreateReportElement(ReportElementDto reportElementDto, string userId)
+        public async Task<bool> CreateReportElement(ReportElementDto reportElementDto, string userId)
         {
             UserId = userId;
             var reportElements = await unitOfWork.ReportElementRepo.GetAll();
@@ -74,6 +74,7 @@ namespace Infrastructure.Business.Managers
 
                 await unitOfWork.ReportElementRepo.Insert(reportElement);
                 unitOfWork.Save();
+                return true;
             }
             else
             {
@@ -84,8 +85,8 @@ namespace Infrastructure.Business.Managers
                 reportElement.Y = 0;
                 await unitOfWork.ReportElementRepo.Insert(reportElement);
                 unitOfWork.Save();
+                return true;
             }
-
         }
 
         public async Task<HeatmapDto> GetHeatmapById(int reportElementId)
@@ -97,10 +98,11 @@ namespace Infrastructure.Business.Managers
 
             DateTime dateFrom = new DateTime();
             DateTime dateTo = DateTime.Now.AddDays(1);
-            DateTime[] daysArray = new DateTime[28];
 
             if (reportElement.Hours != 0)
                 dateFrom = DateTime.Now.AddHours(-(int)reportElement.Hours).Date.AddDays(1);
+
+            DateTime[] daysArray = new DateTime[(int)(dateTo - dateFrom).TotalDays];
 
             for (int i = 0; i < daysArray.Length; i++)
             {
@@ -234,7 +236,12 @@ namespace Infrastructure.Business.Managers
         public async Task<ReportElementDto> GetWordCloudById(int ReportElementId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
+            if (reportElement == null)
+            {
+                return new ReportElementDto { Id = ReportElementId, IsCorrect = false };
+            }
             DateTime date = new DateTime(1970, 1, 1, 0, 0, 0);
+
             if (reportElement.Hours != 0)
                 date = DateTime.Now.AddHours(-(int)reportElement.Hours);
             IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId.Value, date);

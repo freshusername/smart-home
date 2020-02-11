@@ -21,7 +21,7 @@ namespace Infrastructure.Business.Managers
         Task<GaugeDto> GetGaugeById(int gaugeId);
         Task<SensorDto> GetLastSensorByUserId(string userId);
 
-        Task CreateReportElement(ReportElementDto reportElementDto,string userId);
+        Task<bool> CreateReportElement(ReportElementDto reportElementDto,string userId);
         Task UpdateReportElementHours(int gaugeId, int hours);
         Task EditReportElement(ReportElementDto wordCloud);
 		Task Update(ReportElement reportElement);
