@@ -14,7 +14,7 @@
 
         <div class="form-group">
             <label asp-for="@Model.Comment" class="control-label"></label>
-            <input asp-for="@Model.Comment" class="form-control" placeholder="Enter comment please" />
+            <input asp-for="@Model.Comment" class="form-control" placeholder="Enter comment please" required/>
             <span asp-validation-for="Comment" class="text-danger"></span>
         </div>
 

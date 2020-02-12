@@ -19,17 +19,14 @@
             }
         </div>
     </div>
+
     @if (Model.IconPath != null)
     {
-        <img class="card-img-top" style="border-radius: 0; max-height: 170px;"
-             src="@Model.IconPath"
-             alt="Image is not found" />
+        <img src="@Model.IconPath" class="card-img-top" style="border-radius: 0; max-height: 170px;"  onerror="this.src='https://images.pexels.com/photos/373076/pexels-photo-373076.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'" />
     }
     else
     {
-        <img class="card-img-top" style="border-radius: 0; max-height: 170px;"
-             src="https://images.pexels.com/photos/373076/pexels-photo-373076.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
-             alt="Card image cap">
+        <img src="https://images.pexels.com/photos/373076/pexels-photo-373076.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" class="card-img-top" style="border-radius: 0; max-height: 170px;"  />
     }
     <div class="widget-chart widget-chart2 text-left p-0">
         <div class="widget-chat-wrapper-outer">
