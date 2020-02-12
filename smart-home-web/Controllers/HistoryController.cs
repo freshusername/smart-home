@@ -39,12 +39,12 @@ namespace smart_home_web.Controllers
 
         public async Task<IActionResult> Index(FilterDto FilterDTO, bool isActivated = true)
 		{
-            return View(!isActivated ? "InvalidSensors" : "Index", await GetHistories(FilterDTO, isActivated));
+            return View( await GetHistories(FilterDTO, isActivated));
 		}
 
         public async Task<IActionResult> UpdateHistoryTable(FilterDto FilterDTO, bool isActivated)
         {
-            return Ok( await GetHistories(FilterDTO, isActivated) );
+            return ViewComponent("History", await GetHistories(FilterDTO, isActivated) );
         }
 
         private async Task<AllHistoriesViewModel> GetHistories(FilterDto FilterDTO, bool isActivated = true)
@@ -74,15 +74,6 @@ namespace smart_home_web.Controllers
 				FilterDto = FilterDTO
 			});
 		}
-
-		#region InvalidSensors
-
-		public async Task<IActionResult> InvalidSensors(FilterDto filterDTO)
-		{
-			return await Index(filterDTO, false);
-        }
-
-        #endregion
 
         [HttpGet]
 		public async Task<IActionResult> Graph(int sensorId, int days = 30)

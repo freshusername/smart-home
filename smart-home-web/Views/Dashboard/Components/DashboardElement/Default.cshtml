@@ -1,10 +1,10 @@
 ﻿@model smart_home_web.Models.Dashboard.DashboardViewModel
 
 
-<div class="mb-3 card m-2 col-md-6 col-lg-3 element-container" data-element-container-id="@Model.Id.ToString()">
+<div class="mb-3 card m-2 element-container mr-4" style="width:330px" data-element-container-id="@Model.Id.ToString()">
     <div class="card-header-tab card-header">
         <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
-            <i class="header-icon pe-7s-monitor mr-3"> </i>
+            <i class="header-icon pe-7s-monitor mr-3 w-100" style="word-break:break-word"> </i>
             @Model.Name
         </div>
         <div class="btn-actions-pane-right actions-icon-btn">
@@ -58,3 +58,8 @@
         </a>
     </div>
 </div>
+
+<script>
+    console.log('@Model.DashCreatorUserName');
+    console.log('@User.Claims.ElementAt(1).Value');
+</script>

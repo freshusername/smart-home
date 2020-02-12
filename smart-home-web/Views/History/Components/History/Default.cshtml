@@ -1,0 +1,154 @@
+﻿@model smart_home_web.Models.History.AllHistoriesViewModel
+@using Infrastructure.Business.DTOs;
+@using Domain.Core.Model.Enums;
+
+<div class="app-inner-layout app-inner-layout-page history-table">
+    <div class="app-inner-layout__wrapper">
+        <div class="app-inner-layout__content pt-1">
+            <div class="tab-content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="main-card mb-3 card card-loader" style="width:100%; height:577.23px;">
+                                <div class="card-body">
+                                    <div class="loader-wrapper d-flex justify-content-center align-items-center" style="height:100%; width:100%">
+                                        <div class="loader">
+                                            <div class="ball-pulse-sync">
+                                                <div></div>
+                                                <div></div>
+                                                <div></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="main-card mb-3 card card-hider d-none">
+                                <div class="card-body">
+                                    <div id="example_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <table style="width: 100%;"
+                                                       id="example"
+                                                       class="table table-hover table-bordered dataTable dtr-inline"
+                                                       role="grid"
+                                                       aria-describedby="example_info">
+                                                    <thead>
+                                                        <tr role="row">
+                                                            <th class="sorting_asc"
+                                                                tabindex="0"
+                                                                aria-controls="example"
+                                                                rowspan="1" colspan="1"
+                                                                aria-sort="ascending"
+                                                                aria-label="Name: activate to sort column descending">
+                                                                ID
+                                                            </th>
+                                                            <th class="sorting"
+                                                                tabindex="0"
+                                                                aria-controls="example"
+                                                                rowspan="1"
+                                                                colspan="1">
+                                                                Name
+                                                            </th>
+                                                            <th class="sorting"
+                                                                tabindex="0"
+                                                                aria-controls="example"
+                                                                rowspan="1" colspan="1">
+                                                                Date
+                                                            </th>
+                                                            <th class="sorting"
+                                                                tabindex="0"
+                                                                aria-controls="example"
+                                                                rowspan="1" colspan="1">
+                                                                Value
+                                                            </th>
+                                                            <th class="sorting"
+                                                                tabindex="0"
+                                                                aria-controls="example"
+                                                                rowspan="1" colspan="1">
+                                                                Measurement Unit
+                                                            </th>
+                                                    </thead>
+                                                    <tbody>
+                                                        @if (!Model.Histories.Any())
+                                                        {
+                                                            <tr>
+                                                                <td colspan="5">No histories</td>
+                                                            </tr>
+                                                        }
+                                                        else
+                                                        {
+                                                            @foreach (var history in Model.Histories)
+                                                            {
+                                                                <tr>
+                                                                    <td>@history.Id</td>
+                                                                    <td>
+                                                                        <a style="color:#da624a" asp-controller="History" asp-action="Detail" asp-route-sensorId="@history.SensorId">
+                                                                            @history.SensorName
+                                                                        </a>
+                                                                    </td>
+                                                                    <td>@history.Date.UtcDateTime.ToLocalTime()</td>
+
+                                                                    @{
+                                                                        if (history.Value.ToString() == "False")
+                                                                        {
+                                                                            <td>Inactive</td>
+                                                                        }
+                                                                        else if (history.Value.ToString() == "True")
+                                                                        {
+                                                                            <td>Active</td>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td>@history.Value</td>
+                                                                        }
+                                                                    }
+                                                                    <td>
+                                                                        @{
+                                                                            if (!string.IsNullOrEmpty(@history.MeasurementName))
+                                                                            {
+                                                                                @history.MeasurementName
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <span style="color:darkgrey">None</span>
+                                                                            }
+                                                                        }
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12 col-md-5">
+                                                <div class="dataTables_info" id="example_info" role="status" aria-live="polite">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12 col-md-7">
+                                                <div class="dataTables_paginate paging_simple_numbers" id="example_paginate">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function (e) {
+        $("#example").DataTable(
+            {
+                "initComplete": function () {
+                    $(".card-loader").fadeOut("slow", null, () => { $(".card-hider").removeClass("d-none"); });
+                }
+            });
+    });
+</script>
