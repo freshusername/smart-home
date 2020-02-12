@@ -12835,7 +12835,7 @@ a, button, .btn {
 }
 
     .app-header__logo .logo-src {
-        background: url(assets/images/logotextside.png) 50% 50% no-repeat;
+        background: url("https://i.imgur.com/XkQcLzG.png") 50% 50% no-repeat;
         height: 35px;
         width: 150px;
         background-size: 150px;
@@ -21896,15 +21896,14 @@ legend {
 .app-logo {
     height: 170px;
     width: 680px;
-    background: url(assets/images/logo.png) 50% 50% no-repeat;
-    background-size : 240px;
-
+    background: url("https://i.imgur.com/nOudSu2.png") 50% 50% no-repeat;
+    background-size: 240px;
 }
 
 .app-logo-inverse {
     height: 17px;
     width: 68px;
-    background: url(assets/images/logo-inverse.png) 50% 50% no-repeat
+    background: url("https://i.imgur.com/nOudSu2.png") 50% 50% no-repeat
 }
 
 .app-login-box .app-logo {
