@@ -10,6 +10,9 @@ namespace Domain.Core.Model
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
+        public int? IconId { get; set; }
+        public Icon Icon { get; set; }
+
         public ICollection<Dashboard> Dashboards { get; set; }
     }
 }

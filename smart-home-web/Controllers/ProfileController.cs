@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Core.Model;
+using Infrastructure.Business.Managers;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -17,30 +19,31 @@ namespace smart_home_web.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly IIconManager _iconManager;
         private readonly IMapper _mapper;
 
-        public ProfileController(
-          UserManager<AppUser> userManager,
-          SignInManager<AppUser> signInManager,
-          IMapper mapper)
-        {         
+        public ProfileController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IIconManager iconManager, IMapper mapper)
+        {
             _userManager = userManager;
             _signInManager = signInManager;
+            _iconManager = iconManager;
             _mapper = mapper;
         }
 
-        
+           
         [HttpGet]
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);
+            var image = await _iconManager.GetById(user.IconId.Value);
             var model = new ProfileViewModel
             {
                 Id = user.Id,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 FirstName = user.FirstName,
-                LastName = user.LastName
+                LastName = user.LastName,
+                IconPath = image.Path
             };
 
             return View(model);
@@ -72,17 +75,25 @@ namespace smart_home_web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(ProfileViewModel model)
+        public async Task<IActionResult> Update(ProfileViewModel model)
         {
-            if (!ModelState.IsValid)         
-                return View(model);
-            
-            var user = _mapper.Map<ProfileViewModel,AppUser>(model);           
+            if (!ModelState.IsValid)
+               return BadRequest();
+
+            var id =await _iconManager.CreateAndGetIconId(model.IconFile);
+            var user = await _userManager.GetUserAsync(User);
+
+            user.Email = model.Email;
+            user.PhoneNumber = model.PhoneNumber;
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;             
+            user.IconId = id;
+
              var result =  _userManager.UpdateAsync(user);
 
             if (!result.Result.Succeeded) return BadRequest();
 
-            return Ok();
+            return RedirectToAction("Index" ,"Profile");
         }
     }
 }

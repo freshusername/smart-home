@@ -2,8 +2,52 @@
 @model ProfileViewModel;
 
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
-
+@*<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />*@
+<form method="post">
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Change Password</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label>Current Password</label>
+                                <input class="form-control" type="password" placeholder="••••••">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label>New Password</label>
+                                <input class="form-control" type="password" placeholder="••••••">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label>Confirm <span class="d-none d-xl-inline">Password</span></label>
+                                <input class="form-control" type="password" placeholder="••••••">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" id="changepassword" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
 <div class="app-main">
     <div class="app-main__outer">
         <div class="app-inner-layout app-inner-layout-page">
@@ -12,14 +56,14 @@
                     <div class="col">
                         <div class="row">
                             <div class="col mb-3">
-                                <div class="card">
+                                <div class="card header-button-move-up">
                                     <div class="card-body">
                                         <div class="e-profile">
                                             <div class="row">
                                                 <div class="col-12 col-sm-auto mb-3">
                                                     <div class="mx-auto" style="width: 140px;">
-                                                        <div class="d-flex justify-content-center align-items-center rounded" style="height: 140px; background-color: rgb(233, 236, 239);">
-                                                            <span style="color: rgb(166, 168, 170); font: bold 8pt Arial;">140x140</span>
+                                                        <div class="d-flex justify-content-center align-items-center rounded" style="height: 140px; background-image: url(@Model.IconPath); background-size: 130px;">
+                                                            
                                                         </div>
                                                     </div>
                                                 </div>
@@ -27,17 +71,11 @@
                                                     <div class="text-center text-sm-left mb-2 mb-sm-0">
                                                         <h4 class="pt-sm-2 pb-1 mb-0 text-nowrap">@Model.FirstName @Model.LastName</h4>
                                                         <p class="mb-0"></p>
-
-                                                        <div class="mt-2">
-                                                            <button class="btn btn-primary" type="button">
-                                                                <i class="fa fa-fw fa-camera"></i>
-                                                                <span>Change Photo</span>
-                                                            </button>
-                                                        </div>
+                                                        <input asp-for="IconFile" onchange="loadFile(event)" type="file" accept=".jpg, .jpeg, .png" id="file" class="inputfile" />
+                                                        <label class="btn btn-primary wrapper" for="file">Choose a file</label>
                                                     </div>
                                                     <div class="text-center text-sm-right">
                                                         <span class="badge badge-secondary">@(User.IsInRole("Admin") ? "administrator" : "user")</span>
-
                                                     </div>
                                                 </div>
                                             </div>
@@ -46,20 +84,22 @@
                                             </ul>
                                             <div class="tab-content pt-3">
                                                 <div class="tab-pane active">
-                                                    <form class="form" novalidate="" method="post">
+                                                    <form class="form" id="profileUpdate" method="post">
                                                         <div class="row">
                                                             <div class="col">
                                                                 <div class="row">
                                                                     <div class="col">
                                                                         <div class="form-group">
                                                                             <label>First Name</label>
-                                                                            <input class="form-control" type="text" name="name" placeholder="@Model.FirstName" value="@Model.FirstName">
+                                                                            <input asp-for="FirstName" class="form-control" type="text" placeholder="FirstName" value="@Model.FirstName">
+                                                                            <span asp-validation-for="FirstName" class="text-danger"></span>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col">
                                                                         <div class="form-group">
                                                                             <label>Last Name</label>
-                                                                            <input class="form-control" type="text" name="username" placeholder="@Model.LastName" value="@Model.LastName">
+                                                                            <input asp-for="LastName" class="form-control" type="text" placeholder="LastName" value="@Model.LastName">
+                                                                            <span asp-validation-for="LastName" class="text-danger"></span>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -67,68 +107,31 @@
                                                                     <div class="col">
                                                                         <div class="form-group">
                                                                             <label>Email</label>
-                                                                            <input class="form-control" type="text" placeholder="@Model.Email" value="@Model.Email">
+                                                                            <input asp-for="Email" class="form-control" type="text" placeholder="Email" value="@Model.Email">
+                                                                            <span asp-validation-for="Email" class="text-danger"></span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <div class="form-group">
+                                                                            <label>Phone Number</label>
+                                                                            <input asp-for="PhoneNumber" class="form-control" type="text" placeholder="Email" value="@Model.PhoneNumber">
+                                                                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-
                                                             </div>
                                                         </div>
                                                         <!-- Button trigger modal -->
-                                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                                                        <button  type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
                                                             Launch demo modal
                                                         </button>
                                                         <div class="row">
                                                             <div class="col d-flex justify-content-end">
-                                                                <button class="btn btn-primary" id="update" type="submit">Save Changes</button>
+                                                                <button class="btn btn-primary" id="update" type="button">Save Changes</button>
                                                             </div>
                                                         </div>
                                                     </form>
-                                                    <form method="post">
-                                                        <!-- Modal -->
-                                                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                            <div class="modal-dialog" role="document">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h5 class="modal-title" id="exampleModalLabel">Change Password</h5>
-                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                            <span aria-hidden="true">&times;</span>
-                                                                        </button>
-                                                                    </div>
-                                                                    <div class="modal-body">
-                                                                        <div class="row">
-                                                                            <div class="col">
-                                                                                <div class="form-group">
-                                                                                    <label>Current Password</label>
-                                                                                    <input class="form-control" type="password" placeholder="••••••">
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="row">
-                                                                            <div class="col">
-                                                                                <div class="form-group">
-                                                                                    <label>New Password</label>
-                                                                                    <input class="form-control" type="password" placeholder="••••••">
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="row">
-                                                                            <div class="col">
-                                                                                <div class="form-group">
-                                                                                    <label>Confirm <span class="d-none d-xl-inline">Password</span></label>
-                                                                                    <input class="form-control" type="password" placeholder="••••••">
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                                        <button type="submit" id="changepassword" class="btn btn-primary">Save changes</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </form>
+                                                    
                                                 </div>
                                             </div>
                                         </div>
@@ -163,18 +166,64 @@
     </div>
 </div>
 <script src="~/lib/jquery/dist/jquery.js"></script>
+
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
 }
 
+<style>
+    .inputfile {
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+    }
+
+    .wrapper input[type="file"] {
+        position: relative;
+    }
+
+    .wrapper:before {
+        font-family: 'FontAwesome';
+        color: white;
+        position: relative;
+        left: -5px;
+        content: "\f03e";
+    }
+</style>
+
+
+
+
+
+<script>
+    var loadFile = function (event) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var output = document.getElementById('modal-form-create-output');
+            output.src = reader.result;
+            output.style.visibility = "visible";
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    };
+</script>
+
 <script>
     $("#update").on("click", function () {
+    
+        var inputFile = $(".inputfile");
+        let fd = new FormData(document.getElementById("profileUpdate"));
+        fd.append('IconFile', inputFile.prop('files')[0]);
+        
         debugger;
         $.ajax({
             url: '@Url.Action("Update","Profile")',
-            data: form.serialize(),
+            data: fd,
             type: "post",
-            cache: false,
+            contentType: false,
+            processData: false,
             success: function (savingStatus) {
 
             },
@@ -193,7 +242,7 @@
             url: '@Url.Action("ChangePassword","Profile")',
             data: form.serialize(),
             type: "post",
-            cache: false,
+            cache: false,           
             success: function (savingStatus) {
 
             },

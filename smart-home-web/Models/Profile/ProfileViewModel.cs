@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -20,6 +21,12 @@ namespace smart_home_web.Models
 
         [Required]
         public string PhoneNumber { get; set; }
+
+        public int? IconId { get; set; }
+
+        public string IconPath { get; set; }
+
+        public IFormFile IconFile { get; set; }
 
     }
 }
