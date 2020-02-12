@@ -102,8 +102,8 @@
                     currentElement.show(600);
                     allElementsContainer.on("click", ".element-delete", ElementDelete);
                     allElementsContainer.on("click", ".element-edit", ElementEdit);
-                    //tableBody.on("click", ".fa-eye-slash", toggleEyeIcon);
-                    //tableBody.on("click", ".input-set-active", SetActiveAjax);
+                    $(".input-set-active").on("click", SetActiveAjax);
+                    $(".input-set-active").on("click", ToggleShadow);
                     NoElementsDisplay();
                 },
                 error: function (res) {
@@ -155,6 +155,8 @@
                 allElementsContainer.prepend(data);
                 allElementsContainer.on("click", ".element-delete", ElementDelete);
                 allElementsContainer.on("click", ".element-edit", ElementEdit);
+                $(".input-set-active").on("click", SetActiveAjax);
+                $(".input-set-active").on("click", ToggleShadow);
                 NoElementsDisplay();
             },
             error: function (res) {
@@ -191,6 +193,19 @@
                 console.log(res);
             }
         });
+    }
+
+    var SetActiveAjax = function () {
+        let input = $(this);
+        $.ajax({
+            type: 'Post',
+            url: "/Sensor/SetActive",
+            data: { id: input.attr('id') },
+        });
+    }
+    var ToggleShadow = function () {
+        console.log(this);
+        $(this).toggleClass("toggle-shadow");
     }
     
 </script>

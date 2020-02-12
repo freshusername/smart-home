@@ -50,9 +50,6 @@
 @await Component.InvokeAsync("Modals", "Sensor")
 
 
-<script src="~/lib/jquery/dist/jquery.js"></script>
-
-
 
 <script>
     $(function () {
@@ -65,11 +62,13 @@
                 data: { id: input.attr('id') },
             });
         }
-        $(".input-set-active").on("click", SetActiveAjax);
-
-        $(".input-set-active").on("click", function () {
+        var ToggleShadow = function () {
             console.log(this);
             $(this).toggleClass("toggle-shadow");
-        });
+        }
+
+        $(".input-set-active").on("click", SetActiveAjax);
+
+        $(".input-set-active").on("click", ToggleShadow);
     });
 </script>
