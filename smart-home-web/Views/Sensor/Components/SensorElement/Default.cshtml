@@ -4,12 +4,8 @@
     <div class="widget-content p-0">
         <div class="widget-content-wrapper">
             <div class="widget-content-left mr-4 ml-3">
-                @*<label class="rocker rocker-small">
-                        <input id="@Model.Id.ToString()" class="input-set-active" type="checkbox" @Html.Raw(Model.IsActive ? "checked" : " ")>
-                        <span class="switch-left">On</span>
-                        <span class="switch-right">Off</span>
-                    </label>*@
-                <div class="input-set-active toggle-shadow"
+
+                <div class="input-set-active @Html.Raw(Model.IsActive ? "toggle-shadow" : " ")"
                      id="@Model.Id.ToString()">
                     <input type="checkbox" class="" @Html.Raw(Model.IsActive ? "checked" : " ") data-toggle="toggle">
                 </div>
@@ -17,11 +13,11 @@
             <div class="widget-content-left mr-4">
                 @if (Model.IconPath != null)
                 {
-                    <img src="@Model.IconPath" width="52" height="52" />
+                    <img src="@Model.IconPath" width="52" height="52"/>
                 }
                 else
                 {
-                    <p>No image was added</p>
+                    <p class="text-center">No image <br /> was added</p>
                 }
             </div>
             <div class="widget-content-left" style="width:250px;">
@@ -61,7 +57,7 @@
                     <div>@Model.Token</div>
                 </div>
             </div>
-            <div class="mr-3" style="width: 140px;">
+            <div class="pull-right">
                 <div role="group" class="btn-group">
                     <a class="btn-shadow btn btn-primary"
                        asp-controller="History"
@@ -75,8 +71,14 @@
                         <a class="btn btn-shadow btn-info element-edit" onclick="">
                             <i class="text-white pe-7s-config" style="font-size:20px"></i>
                         </a>
+                        <a class="btn btn-shadow btn-warning element-notif"
+                           asp-controller="Toast"
+                           asp-action="Index"
+                           asp-route-sensorId="@Model.Id">
+                            <i class="text-white pe-7s-bell" style="font-size:20px;"></i>
+                        </a>
                         <a class="btn btn-shadow btn-danger element-delete p-0 pl-2 pr-2" onclick="ElementDelete()">
-                            <i class="text-white pe-7s-close" style="font-size:30px;"></i>
+                            <i class="text-white pe-7s-close" style="font-size:29px;"></i>
                         </a>
                     }
                 </div>

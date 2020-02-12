@@ -1,0 +1,39 @@
+﻿@using Domain.Core.Model;
+@using Microsoft.AspNetCore.Identity
+@using smart_home_web.Models;
+
+
+@inject SignInManager<AppUser> SignInManager;
+@inject UserManager<AppUser> UserManager;
+
+
+
+<div class="app-header" style="margin-left: auto; width: auto;">
+    <div class="app-header-right">
+        @if (User.Identity.IsAuthenticated)
+        {
+            <partial name="_Bell" />
+            <div class="header-btn-lg pr-0">
+                <div class="widget-content p-0">
+                    <div class="widget-content-wrapper">
+                        <div class="widget-content-left">
+                            <div class="btn-group">
+                                <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="p-0 btn">
+                                    <img width="42" class="rounded" src="https://i.imgur.com/f2kiwyi.png" alt="">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <a asp-action="Login" asp-controller="Account" class="btn-wide btn-outline-2x mr-md-2 btn btn-outline-focus btn-sm">
+                Log In
+            </a>
+        }
+    </div>
+</div>
+<div class="app-header-overlay d-none animated fadeIn"></div>
+

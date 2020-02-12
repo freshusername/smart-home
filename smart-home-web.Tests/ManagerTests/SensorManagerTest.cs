@@ -1,11 +1,8 @@
 ﻿using Domain.Core.Model;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Business.DTOs.Sensor;
-using Infrastructure.Business.Hubs;
 using Infrastructure.Business.Interfaces;
-using Infrastructure.Business.Managers;
 using Infrastructure.Data.Repositories;
-using Microsoft.AspNetCore.SignalR;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -21,13 +18,12 @@ namespace smart_home_web.Tests.ManagerTests
         private SensorManager _manager;
         private SensorDto _existingSensorDto;
         private Sensor _existingSensor;
-        private IHubContext<GraphHub> _hubContext;
 
         [SetUp]
         protected override void Initialize()
         {
             base.Initialize();
-            _manager = new SensorManager(mockUnitOfWork.Object, mockMapper.Object, _hubContext);
+            //_manager = new SensorManager(mockUnitOfWork.Object, mockMapper.Object);
 
             Guid guid = new Guid();
 
@@ -39,11 +35,11 @@ namespace smart_home_web.Tests.ManagerTests
         public void Create_ValidDto_ReturnNotNull()
         {
             Guid guid = Guid.NewGuid();
-            SensorDto newSensorDto = new SensorDto() { Name = "Correct", Token = guid, IsActive = true, IsValid = true };
-            Sensor newSensor = new Sensor() { Name = "Correct", Token = guid, IsActive = true, IsValid = true };
+            SensorDto newSensorDto = new SensorDto() { Name = "Correct", Token = guid, IsActive = true, IsValid = true};
+            Sensor newSensor = new Sensor() { Name = "Correct", Token = guid, IsActive = true, IsValid = true};
 
             mockMapper.Setup(m => m
-                .Map<SensorDto, Sensor>(newSensorDto))
+                .Map<SensorDto,Sensor>(newSensorDto))
                     .Returns(newSensor);
 
             mockMapper.Setup(m => m

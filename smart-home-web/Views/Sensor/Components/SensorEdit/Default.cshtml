@@ -9,7 +9,7 @@
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
+                <input asp-for="Name" class="form-control" required/>
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -41,8 +41,8 @@
                 <img class="img-rounded" id="modal-form-create-output" width="64" height="64" style="visibility: hidden" />
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-warning" />
-                <a class="btn btn-primary" data-dismiss="modal">Back to List</a>
+                <input type="submit" value="Save" class="btn btn-warning text-white" />
+                <a class="btn btn-primary text-white" data-dismiss="modal">Back to List</a>
             </div>
         </form>
 
@@ -72,7 +72,7 @@
 }
 else
 {
-    <h2 class="text-danger">Error: this sensor doesn't exists!</h2>
+        <h2 class="text-danger">Error: Sensor with such id was not found</h2>
 }
 
 

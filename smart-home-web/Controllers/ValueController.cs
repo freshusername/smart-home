@@ -21,10 +21,10 @@ namespace smart_home_web.Controllers
     public class ValueController : ControllerBase
     {
         private readonly IHistoryManager _historyManager;
-        private readonly IToastManager _messageManager;
+        private readonly IToastManager _toastManager;
         private readonly ISensorManager _sensorManager;
         private readonly IActionService _actionService;
-        private readonly INotificationManager _notificationManager;
+        private readonly IInvSensorNotificationManager _notificationManager;
         private readonly IEmailSender _emailSender;
         private readonly UserManager<AppUser> _userManager;
         public ValueController(
@@ -32,13 +32,13 @@ namespace smart_home_web.Controllers
             IHistoryManager historyTestManager,
             ISensorManager sensorManager,
             IActionService actionService,
-            INotificationManager notificationManager,
+            IInvSensorNotificationManager notificationManager,
             UserManager<AppUser> userManager,
             IEmailSender emailSender)
         {
             _historyManager = historyTestManager;
             _actionService = actionService;
-            _messageManager = messageManager;
+            _toastManager = messageManager;
             _sensorManager = sensorManager;
             _notificationManager = notificationManager;
             _userManager = userManager;
@@ -53,24 +53,13 @@ namespace smart_home_web.Controllers
                 var result = _sensorManager.AddUnclaimedSensor(token, value);
                 if (result.Succeeded)
                 {
-                    result = _historyManager.AddHistory(value, Convert.ToInt32(result.Property));
+                    result = _historyManager.AddHistory(value, Convert.ToInt32(result.Data["id"]));
+                    if(result.Succeeded)
+                        result = await _notificationManager.CreateNotification(Convert.ToInt32(result.Data["id"]));
+                    if(result.Succeeded)
+                        await _notificationManager.NotifyAboutInvalidSensor(Convert.ToInt32(result.Data["id"]));
                     return Ok(result.Message);
                 }
-
-                //TODO: Notification logic 
-
-                //var unclaimedSensor = _historyManager.GetSensorByToken(token);
-                //var history = _historyManager.GetLastHistoryBySensorId(unclaimedSensor.Id);
-                //var notification = new NotificationDto
-                //{
-                //	Comment = "Unknown sensor sended a value",
-                //	Date = history.Date,
-                //	Id = history.Id,
-                //	IsRead = false,
-                //	UserName = 
-                //}
-                //await _notificationManager.Create(history);
-                //return BadRequest(result.Message);
             }
 
             var historyResult = _historyManager.AddHistory(value, sensor.Id);
@@ -78,7 +67,7 @@ namespace smart_home_web.Controllers
 			if (historyResult.Succeeded)
 			{
                 await _historyManager.UpdateGraph(token, value);
-				await _messageManager.ShowMessage(token, value);
+				await _toastManager.ShowMessage(token, value);
 				return Ok(historyResult.Message);
 			}
 

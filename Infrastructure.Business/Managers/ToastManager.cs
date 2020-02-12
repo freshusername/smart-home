@@ -73,5 +73,34 @@ namespace Infrastructure.Business.Interfaces
             }
             return new OperationDetails(true, "Something has gone wrong", "");
         }
+
+        public async Task<OperationDetails> Update(ToastDto toastDto)
+        {
+            Notification toast = mapper.Map<ToastDto, Notification>(toastDto);
+            try
+            {
+                await unitOfWork.NotificationRepo.Update(toast);
+                unitOfWork.Save();
+            }
+            catch (Exception)
+            {
+                return new OperationDetails(false);
+            }
+            return new OperationDetails(true);
+        }
+
+        public async Task<OperationDetails> Delete(int id)
+        {
+            try
+            {
+                await unitOfWork.NotificationRepo.DeleteById(id);
+                unitOfWork.Save();
+            }
+            catch
+            {
+                return new OperationDetails(false);
+            }
+            return new OperationDetails(true);
+        }
     }
 }

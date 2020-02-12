@@ -33,6 +33,13 @@ namespace Infrastructure.Data.Repositories
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
 
+        public async Task<History> GetByIdWithSensor(int id)
+        {
+            return await context.Histories
+                    .Include(h => h.Sensor)
+                .FirstOrDefaultAsync(s => s.Id == id);
+        }
+
         public async Task<History> GetLastBySensorId(int sensorId)
         {
             var history = await context.Histories

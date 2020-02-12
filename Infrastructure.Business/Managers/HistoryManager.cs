@@ -130,6 +130,7 @@ namespace Infrastructure.Business.Managers
 
         public OperationDetails AddHistory(string value, int sensorId)
         {
+
             var history = new History
             {
                 Date = DateTimeOffset.Now,
@@ -166,11 +167,13 @@ namespace Infrastructure.Business.Managers
             unitOfWork.HistoryRepo.Insert(history);
             unitOfWork.Save();
 
-            return new OperationDetails(true, "Operation succeed", "");
+            return new OperationDetails(true, "Operation succeed", "", new Dictionary<string, object>() { { "id", history.Id } });
         }
 
         public bool CheckValue(History history)
         {
+            if (history == null)
+                return false;
             var lastHistory = unitOfWork.HistoryRepo.GetLastBySensorId(history.SensorId).Result;
 
             if (lastHistory?.Date.AddMinutes(5) < history.Date)
@@ -204,7 +207,7 @@ namespace Infrastructure.Business.Managers
             DateTimeOffset unixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             var dateNow = DateTimeOffset.Now;
             var longDate = (long)dateNow.Subtract(unixEpoch).TotalMilliseconds;
-            await graphHub.Clients.All.SendAsync("UpdateGraph", sensor.Id, value, longDate);
+            await graphHub.Clients.All.SendAsync("UpdateGraph", sensor.Id, value, longDate, sensor.SensorType.MeasurementType);
         }
     }
 }

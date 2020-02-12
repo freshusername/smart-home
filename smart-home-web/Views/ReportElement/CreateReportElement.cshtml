@@ -3,58 +3,77 @@
     ViewData["Title"] = "Create Report Element";
 }
 
-<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
 <link href="~/lib/nice-select/dist/css/nice-select.css" rel="stylesheet" />
 
-<body>
-    <div class="row" data-save-url="@Url.Action("GetSensorsByReportElementType", "Sensor")" data-save-dashboardid="@Model.DashboardId">
-
-        <div class="col-lg-8 col-lg-offset-2 col-md-6 col-md-offset-3 col-sm-12">
-            <div class="text-center">
-                <label style="font-size:20px">Create new report element</label>
+<div class="app-main">
+    <div class="app-main__outer">
+        <div class="app-main__inner">
+            <div class="app-header header-button-move-up">
+                <div class="page-title-heading">
+                    Create new report element
+                </div>
             </div>
-            <form asp-action="CreateReportElement" asp-controller="ReportElement" method="post">
+            <div class="app-inner-layout app-inner-layout-page">
+                <div class="app-inner-layout__wrapper">
+                    <div class="app-inner-layout__content" style="padding-top: 0px">
+                        <div class="tab-content">
+                            <div class="container-fluid">
+                                <div class="row" data-save-url="@Url.Action("GetSensorsByReportElementType", "Sensor")" data-save-dashboardid="@Model.DashboardId">
 
-                <div asp-validation-summary="All" class="text-danger col-lg-4 col-lg-offset-4"></div>
+                                    <div class="w-50 ml-5">
 
-                <div class="form-group">
-                    <input type="hidden" asp-for="@Model.DashboardId" value="@Model.DashboardId" />
-                </div>
-                <div class="form-group col-lg-6 col-lg-offset-3">
-                    <label class="control-label">Select report element type:</label>
-                    <div style="margin-bottom:50px">
-                        <select id="type-select" asp-for="Type" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.ReportElementType>()" class="nice-select wide">
-                        </select>
+                                        <form asp-action="CreateReportElement" asp-controller="ReportElement" method="post">
+
+                                            <div asp-validation-summary="All" class="text-danger"></div>
+
+                                            <div class="form-group">
+                                                <input type="hidden" asp-for="@Model.DashboardId" value="@Model.DashboardId" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label">Select report element type:</label>
+                                                <div style="margin-bottom:50px">
+                                                    <select id="type-select" asp-for="Type" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.ReportElementType>()" class="nice-select wide"></select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label">Select report element type:</label>
+                                                <div style="margin-bottom:50px">
+                                                    <select id="sensor-select" asp-for="SensorId" class="nice-select wide"></select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Select measurement period:
+                                                </label>
+
+                                                <div>
+                                                    <select asp-for="Hours" id="hours-select" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.ReportElementHours>()" class="nice-select wide"></select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group text-center" 
+                                                 style="margin-top:70px">
+                                                <button id="create-report-element"
+                                                        type="submit"
+                                                        value="Create"
+                                                        class="mb-2 mr-2 btn-icon btn btn-success">
+                                                    <i class="pe-7s-plus btn-icon-wrapper"> </i>Success
+                                                </button>
+                                                <a asp-controller="Dashboard" asp-action="Detail" asp-route-id="@Model.DashboardId" class="mb-2 mr-2 btn btn-primary"><i class="pe-7s-back btn-icon-wrapper fsize-1"></i> Back to dashboard</a>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group col-lg-6 col-lg-offset-3">
-                    <label class="control-label">Select report element type:</label>
-                    <div style="margin-bottom:50px">
-                        <select id="sensor-select" asp-for="SensorId" class="nice-select wide">
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group col-lg-6 col-lg-offset-3">
-                    <label class="control-label">
-                        Select measurement period:
-                    </label>
-
-                    <div>
-                        <select asp-for="Hours" id="hours-select" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.ReportElementHours>()" class="nice-select wide">
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group text-center col-lg-6 col-lg-offset-3" style="margin-top:30px">
-                    <input id="create-report-element" type="submit" value="Create" class="btn btn-success text-center" style="width:20%" />
-                    <a asp-controller="Dashboard" asp-action="Detail" asp-route-id="@Model.DashboardId" class="btn btn-primary"><em class="glyphicon glyphicon-arrow-left"></em> Back to dashboard</a>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
+</div>
 
-</body>
 
 @section Scripts {
     <script src="~/lib/jquery/dist/jquery.js"></script>

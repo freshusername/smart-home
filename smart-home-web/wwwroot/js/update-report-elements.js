@@ -1,4 +1,4 @@
-﻿function UpdateGraph(sensorId, sensorValue, date) {
+﻿function UpdateGraph(sensorId, sensorValue, date, type) {
     $.each($("div#Graph"), function (key, value) {
         if (sensorId == $(value).data("save-sensorid")) {
             try {
@@ -13,7 +13,12 @@
                 var series = result.series[0];
                 categories.push(date);
                 xAxis.setCategories(categories);
-                series.addPoint({ y: JSON.parse(sensorValue) }, true);
+                if (type == "Bool") {
+                    series.addPoint({ y: value ? 1 : 0 }, true);
+                }
+                else {
+                    series.addPoint({ y: JSON.parse(sensorValue) }, true);
+                }
             }
         }
     });
@@ -43,7 +48,7 @@ function UpdateWordcloud(sensorId, sensorValue) {
 }
 
 
-function UpdateTimeSeries(sensorId, sensorValue, date) {
+function UpdateTimeSeries(sensorId, sensorValue, date, type) {
     $.each($("div[id^='TimeSeries']"), function (key, value) {
         if (sensorId == $(value).data("save-sensorid")) {
             try {
@@ -58,7 +63,12 @@ function UpdateTimeSeries(sensorId, sensorValue, date) {
                 var series = result.series[0];
                 categories.push(date);
                 xAxis.setCategories(categories);
-                series.addPoint({ y: JSON.parse(sensorValue)},true);
+                if (type == "Bool") {
+                    series.addPoint({ y: value ? 1 : 0 }, true);
+                }
+                else {
+                    series.addPoint({ y: JSON.parse(sensorValue) }, true);
+                }
             }
         }
     });

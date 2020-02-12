@@ -1,11 +1,15 @@
 ﻿@model smart_home_web.Models.Notification.CreateToastViewModel
+@{
+    Layout = "_Layout";
+}
 
 <!DOCTYPE html>
 
+<html>
 <head>
     <meta name="viewport" content="width=device-width" />
     @{
-        ViewData["Title"] = "Create Notification";
+        ViewData["Title"] = "Edit Notification";
     }
 </head>
 
@@ -22,19 +26,21 @@
                     <div class="app-inner-layout__content" style="padding-top: 0px">
                         <div class="tab-content">
                             <div class="container-fluid">
-
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <form asp-action="Create">
+                                        <form asp-action="Edit">
                                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                            <input type="hidden" asp-for="Id" />
                                             <div class="form-group">
                                                 <label asp-for="Rule" class="control-label"></label>
-                                                <select asp-for="Rule" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.RuleEnum>()" class="form-control"></select>
+                                                <select asp-for="Rule" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.RuleEnum>()"
+                                                        class="form-control" required></select>
                                                 <span asp-validation-for="Rule" class="text-danger"></span>
                                             </div>
                                             <div class="form-group">
                                                 <label asp-for="NotificationType" class="control-label"></label>
-                                                <select asp-for="NotificationType" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.ToastTypes>()" class="form-control"></select>
+                                                <select asp-for="NotificationType" asp-items="Html.GetEnumSelectList<Domain.Core.Model.Enums.ToastTypes>()"
+                                                        class="form-control" required></select>
                                                 <span asp-validation-for="NotificationType" class="text-danger"></span>
                                             </div>
                                             <div class="form-group">
@@ -47,10 +53,10 @@
                                                 <input asp-for="Message" class="form-control" />
                                                 <span asp-validation-for="Message" class="text-danger"></span>
                                             </div>
-                                            <input hidden asp-for="SensorId" />
                                             <div class="form-group">
-                                                <input type="submit" value="Create" class="btn btn-success" />
+                                                <input type="submit" value="Save" class="btn btn-success" />
                                             </div>
+                                            <input asp-for="SensorId" type="hidden" />
                                         </form>
                                     </div>
                                 </div>
@@ -63,3 +69,4 @@
     </div>
 </div>
 
+</html>

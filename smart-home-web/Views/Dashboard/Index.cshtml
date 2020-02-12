@@ -4,34 +4,45 @@
     ViewData["Title"] = "Dashboards";
 }
 
-@*WRAPPER*@
+
 <div class="app-main">
     <div class="app-main__outer">
-        <div class="app-inner-layout app-inner-layout-page">
-            <div class="app-inner-layout__wrapper">
-                <div class="app-inner-layout__content">
-                    @*BODY*@
-                    <div class="row tab-content">
-                        <div class="container-fluid">
-                            <div class="row justify-content-center">
-                                <div class="d-flex justify-content-center flex-wrap aligh-content-center all-elements-container">
+        <div class="app-main__inner">
+            @*NEW DASHBOARD CREATING*@
+            @if (User.Identity.IsAuthenticated)
+            {
 
-                                    @foreach (var item in Model.Dashboards)
-                                    {
-                                        @await Component.InvokeAsync("DashboardElement", item)
-                                    }
-                                </div>
-                            </div>
-                            @*NEW DASHBOARD CREATING*@
-                            <div class="d-flex justify-content-center">
-                                @if (User.Identity.IsAuthenticated)
-                                {
-                                    <div class="button-center">
-                                        <a class="btn btn-success element-create" onclick="ElementCreate()">
-                                            <i class="fas fa-plus-circle"> </i> Add new dashboard
-                                        </a>
+            <div class="app-header header-button-move-up">
+                <div class="page-title-heading">
+                    <a class="btn btn-primary text-white w-auto element-create"  onclick="ElementCreate()">
+                        <span class="glyphicon glyphicon-plus-sign"></span> Add dashboard
+                    </a>                   
+                </div>
+            </div>
+
+            }
+            <div class="app-inner-layout app-inner-layout-page">
+                <div class="app-inner-layout__wrapper">
+                    <div class="app-inner-layout__content pt-1">
+                        <div class="tab-content">
+                            <div class="container-fluid">
+
+                                <div class="row">
+
+                                    @*<div id="no_dashboards" class="hidden">
+                                            <h2>No public dashboards.</h2>
+                                        </div>*@
+
+                                    <div class="d-flex all-elements-container" >
+
+                                        @foreach (var dashboard in Model.Dashboards)
+                                        {
+                                            
+                                                @await Component.InvokeAsync("DashboardElement", new { model = dashboard })
+                                            
+                                        }
                                     </div>
-                                }
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -40,5 +51,6 @@
         </div>
     </div>
 </div>
+<script src="~/lib/jquery/dist/jquery.js"></script>
 
 @await Component.InvokeAsync("Modals", "Dashboard")

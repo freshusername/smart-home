@@ -2,55 +2,89 @@
 
 <!DOCTYPE html>
 
-<html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
+    @{
+        ViewData["Title"] = "Create Notification";
+    }
 </head>
-<body>
-<p>
-    <a asp-action="Create" asp-route-sensorId="@ViewBag.SensorId">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Rule)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NotificationType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Value)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Message)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Rule)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NotificationType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Value)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Message)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
-</body>
-</html>
+<div class="app-main">
+    <div class="app-main__outer">
+        <div class="app-main__inner">
+            <div class="app-header header-button-move-up">
+                <div class="page-title-heading header-button-move-up">
+                    <a class="mb-2 mr-2 btn btn-primary text-white" asp-action="Create" asp-route-sensorId="@ViewBag.SensorId">Create New</a>
+                </div>
+            </div>
+            <div class="app-inner-layout app-inner-layout-page">
+                <div class="app-inner-layout__wrapper">
+                    <div class="app-inner-layout__content" style="padding-top: 0px">
+                        <div class="tab-content">
+                            <div class="container-fluid">
+                                <div class="main-card mb-3 card" data-save-url="@Url.Action("SetActive", "Sensor")">
+                                    <ul class="list-group list-group-flush all-elements-container">
+
+                                        @foreach (var item in Model)
+                                        {
+                                            <li class="list-group-item sensor-row element-container" data-element-container-id="@item.Id.ToString()">
+                                                <div class="widget-content p-0">
+                                                    <div class="widget-content-wrapper">
+                                                        <div class="widget-content-left" style="width:250px;">
+                                                            <div class="widget-heading">
+                                                                @item.Rule
+                                                            </div>
+                                                            <div class="widget-subheading">
+                                                                @item.NotificationType
+                                                            </div>
+                                                        </div>
+                                                        <div class="mr-auto">
+                                                            <div class="widget-content-right"
+                                                                 style="
+                                                                  text-align: right;
+                                                                  display: inline-block;
+                                                                  margin-left: auto;">
+
+                                                                <div class="text-right opacity-6"><b>Message:</b></div>
+                                                                <div class="text-right opacity-6"><b>Value:</b></div>
+                                                            </div>
+
+                                                            <div class="text-left ml-3"
+                                                                 style="display: inline-block;
+                                                                        margin-right: auto;">
+                                                                <div>@item.Message</div>
+                                                                <div>@item.Value</div>
+                                                                
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="pull-right">
+                                                            <div role="group" class="btn-group">
+
+                                                                @if (User.Identity.IsAuthenticated)
+                                                                {
+                                                                    <a class="btn btn-shadow btn-info element-edit" asp-action="Edit" asp-route-id="@item.Id">
+                                                                <i class="text-white pe-7s-config" style="font-size:20px"></i></a>
+                                                                    <a class="btn btn-shadow btn-danger element-delete p-0 pl-2 pr-2">
+                                                                <i class="text-white pe-7s-close" style="font-size:30px;"></i></a>
+                                                                }
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+
+                                        }
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@await Component.InvokeAsync("Modals", "");
