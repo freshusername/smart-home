@@ -76,13 +76,14 @@ namespace smart_home_web.Controllers
                 return View(model);
             }
             SensorDto sensorDto = _mapper.Map<CreateSensorViewModel, SensorDto>(model);
+            SensorTypeDto sensorType = await _sensorTypeManager.GetSensorTypeByIdAsync(sensorDto.SensorTypeId);
             if (model.IconFile != null)
             {
                 sensorDto.IconId = await _iconManager.CreateAndGetIconId(model.IconFile);
             }
             else
             {
-                SensorTypeDto sensorType = await _sensorTypeManager.GetSensorTypeByIdAsync(sensorDto.SensorTypeId);
+
                 sensorDto.IconId = sensorType.IconId;
             }
 
@@ -90,7 +91,7 @@ namespace smart_home_web.Controllers
 
             if (res != null)
             {
-                res.SensorTypeName = _sensorTypeManager.GetSensorTypeByIdAsync(res.SensorTypeId).Result.Name;
+                res.SensorTypeName = sensorType.Name;
                 return ViewComponent("SensorElement", _mapper.Map<SensorDto, SensorViewModel>(res));
             }
             else
