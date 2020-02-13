@@ -12602,7 +12602,7 @@ a, button, .btn {
 }
 
 .header-mobile-wrapper .app-header__logo .logo-src {
-    background: url(assets/images/logo-inverse.png) 50% 50% no-repeat
+    background: url(assets/images/LogoNoText.png) 50% 50% no-repeat
 }
 
 .closed-sidebar-mobile.header-mobile-open .app-sidebar-wrapper {
@@ -12835,7 +12835,7 @@ a, button, .btn {
 }
 
     .app-header__logo .logo-src {
-        background: url("https://i.imgur.com/XkQcLzG.png") 50% 50% no-repeat;
+        background: url(assets/images/LogoTextSide.png) 50% 50% no-repeat;
         height: 35px;
         width: 150px;
         background-size: 150px;
@@ -13065,7 +13065,7 @@ a, button, .btn {
 }
 
 .app-sidebar.sidebar-text-light .app-header__logo .logo-src, .app-inner-layout .app-inner-layout__wrapper .sidebar-text-light.app-inner-layout__sidebar.card .app-header__logo .logo-src {
-    background: url(assets/images/logo-inverse.png)
+    background: url(assets/images/LogoTextSide.png)
 }
 
 .app-sidebar.sidebar-text-light .app-header__logo .hamburger-inner, .app-inner-layout .app-inner-layout__wrapper .sidebar-text-light.app-inner-layout__sidebar.card .app-header__logo .hamburger-inner, .app-sidebar.sidebar-text-light .app-header__logo .hamburger-inner::before, .app-inner-layout .app-inner-layout__wrapper .sidebar-text-light.app-inner-layout__sidebar.card .app-header__logo .hamburger-inner::before, .app-sidebar.sidebar-text-light .app-header__logo .hamburger-inner::after, .app-inner-layout .app-inner-layout__wrapper .sidebar-text-light.app-inner-layout__sidebar.card .app-header__logo .hamburger-inner::after {
