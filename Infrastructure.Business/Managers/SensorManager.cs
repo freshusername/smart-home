@@ -156,7 +156,7 @@ namespace Infrastructure.Business.Interfaces
             foreach (var items in allsensors)
             {
                 if (!items.SensorType.IsControl && (items.SensorType.MeasurementType == MeasurementType.Bool || items.SensorType.MeasurementType == MeasurementType.Int))
-                    sensors.Add(unitOfWork.SensorRepo.GetByToken(items.Token));
+                    sensors.Add(items);
             }
             var result = mapper.Map<List<Sensor>, List<SensorDto>>(sensors);
 
