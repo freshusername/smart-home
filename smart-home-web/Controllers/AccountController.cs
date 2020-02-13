@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Domain.Core.Model;
 using Infrastructure.Business.DTOs;
+using Infrastructure.Business.Interfaces;
 using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -74,6 +75,7 @@ namespace smart_home_web.Controllers
             return View();
         }
 
+
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
@@ -92,14 +94,14 @@ namespace smart_home_web.Controllers
                 return View(model);
             }
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Dashboard");
         }
 
         public async Task<IActionResult> Logout()
         {
             await _authenticationManager.Logout();
-            return RedirectToAction("Index", "Home");
-        }
+			return RedirectToAction("Login", "Account");
+		}
 
         [HttpGet]
         [AllowAnonymous]
@@ -182,7 +184,7 @@ namespace smart_home_web.Controllers
             }
             var result = await UserManager.ConfirmEmailAsync(user, code);
             if (result.Succeeded)
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Login", "Account");
             else
                 return View("Error");
         }
@@ -203,9 +205,16 @@ namespace smart_home_web.Controllers
                 return RedirectToAction(nameof(Login));
 
             if (result.Succeeded)
-                return RedirectToAction("Index", "Home");
+				return RedirectToAction("Login", "Account");
 
-            return View("AccessDenied");
+			return View("AccessDenied");
         }
-    }
+
+
+		[AllowAnonymous]
+		public IActionResult ResetPass()
+		{
+			return View("ResetPasswordConfirmation");
+		}
+	}
 }

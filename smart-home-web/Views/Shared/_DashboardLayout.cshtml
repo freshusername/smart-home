@@ -10,8 +10,11 @@
     <link href="~/css/site.css" rel="stylesheet" />
     <link href="~/lib/nice-select/dist/css/nice-select.css" rel="stylesheet" />
     <link href="~/css/ReportElement.css" rel="stylesheet" />
-
+    <link href="/main.07a59de7b920cd76b874.css" rel="stylesheet">
     <link href="~/lib/toastr/toastr.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@0.6.0/dist/gridstack.min.css" />
+    <link href="~/css/OnOff.css" rel="stylesheet" />
 
     <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
             asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
@@ -25,6 +28,7 @@
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
     <script src="https://code.highcharts.com/modules/data.js"></script>
+    @*<script src="~/js/dashboard.js"></script>*@
     <script src="~/lib/toastr/toastr.min.js"></script>
     <script>
         // TOASTR OPTIONS
@@ -48,11 +52,18 @@
     </script>
     <script src="~/lib/signalr/dist/browser/signalr.js"></script>
     <script src="~/js/message.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gridstack@0.6.0/dist/gridstack.all.js"></script>
+    <script type="text/javascript" src="~/assets/scripts/main.07a59de7b920cd76b874.js"></script>
+    <script src="~/js/graph.js"></script>
+    <script src="~/js/update-report-elements.js"></script>
 </head>
 <body>
-    <partial name="_NavbarPartial" />
-    <div class="increase-padding">
-        @RenderBody()
-    </div>
+    <div class="app-container app-theme-gray">
+        <partial name="_NavbarPartial" />
+        <partial name="_HeaderPartial" />
+            @RenderBody()
+        </div>
 </body>
 </html>

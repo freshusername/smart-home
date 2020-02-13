@@ -5,74 +5,39 @@
 
 @model AllHistoriesViewModel;
 
+@{
+    Layout = "_HistoryLayout";
+}
 
 @{
     ViewData["Title"] = "Detail";
 }
 
-<h2><b>@Model.Histories.First().SensorName</b> Detail <a class="btn btn-success text-center" asp-action="Graph" asp-route-sensorId="@Model.Histories.First().SensorId" asp-route-days="99999"><i class="fas fa-chart-bar"></i></a></h2>
 
-<body>
-    <div class="row text-center">
-        <table class="table table-hover table">
-            <thead>
-                <tr>
-                    <th scope="col" class=" text-center">
-                        @{
-                            var sensor = (FilterDto)Model.FilterDto.Clone();
-                            sensor.sortState = (sensor.sortState == SortState.HistoryAsc) ? SortState.HistoryDesc : SortState.HistoryAsc;
-                            sensor.sensorId = Model.Histories.FirstOrDefault().SensorId;
-                        }
-                        <a href="@Url.Action("Detail", "History",
-                                        sensor,
-                                        null)">
-                            Id <i class="glyphicon glyphicon-sort"></i>
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+<div class="app-main">
+    <div class="app-main__outer">
+        <div class="app-main__inner">
+            <div class="app-header header-button-move-up">
+                <div class="page-title-heading">
+                    <b>@Model.Histories.First().SensorName</b>
+                    <div class="page-title-subheading opacity-10">
+                        <a class="mb-2 mr-2 btn-icon btn-icon btn-square btn btn-primary"
+                           asp-action="Graph"
+                           asp-route-sensorId="@Model.Histories.First().SensorId"
+                           asp-route-days="99999">
+                            <i class="pe-7s-graph1 btn-icon-wrapper"></i>
+                            Graph
                         </a>
-                    </th>
-
-                    <th scope="col" class=" text-center">
-                        @{
-                            var date = (FilterDto)Model.FilterDto.Clone();
-                            date.sortState = (date.sortState == SortState.DateAsc) ? SortState.DateDesc : SortState.DateAsc;
-                            date.sensorId = Model.Histories.FirstOrDefault().SensorId;
-                        }
-                        <a href="@Url.Action("Detail", "History",
-                                        date,
-                                        null)">
-                            Date <i class="glyphicon glyphicon-sort"></i>
-                        </a>
-                    </th>
-
-                    <th scope="col" class=" text-center">
-                        Value
-                    </th>
-
-
-                </tr>
-            </thead>
-            <tbody class="text-center">
-                @foreach (var history in Model.Histories)
-                {
-                    <tr>
-                        <td scope="row">@history.Id</td>
-                        <td>@history.Date.DateTime.ToLocalTime()</td>
-                        @{ if (history.Value.ToString() == "False")
-                            {
-                                <td>Inactive</td>
-                            }
-                            else if (history.Value.ToString() == "True")
-                            {
-                                <td>Active</td>
-                            }
-                            else
-                            {
-                                <td>@history.Value</td>
-                            }
-                        }
-                    </tr>
-                }
-            </tbody>
-        </table>
-        <br />
+                    </div>
+                </div>
+            </div>
+            @await Component.InvokeAsync("History", Model)
+        </div>
     </div>
-</body>
+</div>
+
+
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.20/datatables.min.js"></script>

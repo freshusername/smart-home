@@ -1,0 +1,62 @@
+﻿@model smart_home_web.Models.Dashboard.DashboardViewModel
+
+
+<div class="mb-3 card m-2 element-container mr-4" style="width:330px" data-element-container-id="@Model.Id.ToString()">
+    <div class="card-header-tab card-header">
+        <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
+            <i class="header-icon pe-7s-monitor mr-3 w-100" style="word-break:break-word"> </i>
+            @Model.Name
+        </div>
+        <div class="btn-actions-pane-right actions-icon-btn">
+            @if (User.Claims.ElementAt(1).Value == Model.DashCreatorUserName)
+            {
+                <a href="#" class="element-delete float-right">
+                    <span class="pe-7s-close-circle fsize-3"> </span>
+                </a>
+                <a href="#" class="element-edit float-right">
+                    <span class="pe-7s-config fsize-3 mr-2"> </span>
+                </a>
+            }
+        </div>
+    </div>
+
+    @if (Model.IconPath != null)
+    {
+        <img src="@Model.IconPath" class="card-img-top" style="border-radius: 0; max-height: 170px;"  onerror="this.src='https://images.pexels.com/photos/373076/pexels-photo-373076.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'" />
+    }
+    else
+    {
+        <img src="https://images.pexels.com/photos/373076/pexels-photo-373076.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" class="card-img-top" style="border-radius: 0; max-height: 170px;"  />
+    }
+    <div class="widget-chart widget-chart2 text-left p-0">
+        <div class="widget-chat-wrapper-outer">
+            <div class="widget-chart-content widget-chart-content-lg">
+                <div class="widget-chart-flex">
+                    <div class="widget-title opacity-5 text-muted text-uppercase">
+                        report elements
+                    </div>
+                </div>
+                <div class="widget-numbers ml-3">
+                    <div class="widget-chart-flex">
+                        @Model.ReportElements.Count()
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="pt-0 pb-0 card-body">
+    </div>
+    <div class="d-block text-right rm-border card-footer">
+        <a asp-controller="Dashboard" asp-action="Detail" asp-route-id="@Model.Id" class="text-uppercase btn btn-primary">
+            View dashboard
+            <span class="text-white pl-2 opacity-3">
+                <i class="fa fa-arrow-right"></i>
+            </span>
+        </a>
+    </div>
+</div>
+
+<script>
+    console.log('@Model.DashCreatorUserName');
+    console.log('@User.Claims.ElementAt(1).Value');
+</script>

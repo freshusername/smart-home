@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Core.Model;
 using Domain.Core.Model.Enums;
-using Infrastructure.Business.DTOs.Icon;
 using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.DTOs.SensorType;
 using Infrastructure.Business.Managers;
@@ -12,11 +11,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using smart_home_web.Models.SensorType;
 using smart_home_web.Models.SensorViewModel;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
+using System.Linq;
+using Infrastructure.Business.DTOs.Icon;
 
 namespace smart_home_web.Controllers
 {
@@ -51,8 +49,8 @@ namespace smart_home_web.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 string userId = _userManager.GetUserId(HttpContext.User);
-                var sensors = _mapper.Map<IEnumerable<SensorViewModel>>(await _sensorManager.GetAllSensorsByUserIdAsync(userId));
-                return View(sensors);
+                IEnumerable<SensorViewModel> sensors = _mapper.Map<IEnumerable<SensorViewModel>>(await _sensorManager.GetAllSensorsByUserIdAsync(userId));
+                return View(sensors.Reverse());
             }
 
             return RedirectToAction("Login", "Account");
@@ -66,77 +64,104 @@ namespace smart_home_web.Controllers
             var sensorTypes = _mapper.Map<IEnumerable<SensorTypeDto>, IEnumerable<SensorTypeViewModel>>(sensorTypeDtos);
             ViewBag.sensorTypes = sensorTypes;
             ViewBag.loggedUserId = _userManager.GetUserId(HttpContext.User);
-            return View();
+            return ViewComponent("SensorCreate");
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult> AddSensor(CreateSensorViewModel sensor)
+        public async Task<ActionResult> Create(CreateSensorViewModel model)
         {
-            SensorDto sensorDto = _mapper.Map<CreateSensorViewModel, SensorDto>(sensor);
-            if (sensor.IconFile != null)
+            if (!ModelState.IsValid)
             {
-                sensorDto.IconId = await _iconManager.CreateAndGetIconId(sensor.IconFile);
+                return View(model);
+            }
+            SensorDto sensorDto = _mapper.Map<CreateSensorViewModel, SensorDto>(model);
+            SensorTypeDto sensorType = await _sensorTypeManager.GetSensorTypeByIdAsync(sensorDto.SensorTypeId);
+            if (model.IconFile != null)
+            {
+                sensorDto.IconId = await _iconManager.CreateAndGetIconId(model.IconFile);
+            }
+            else
+            {
+
+                sensorDto.IconId = sensorType.IconId;
             }
 
-            await _sensorManager.Create(sensorDto);
-            return RedirectToAction("Index", "Sensor");
+            var res = await _sensorManager.Create(sensorDto);
+
+            if (res != null)
+            {
+                res.SensorTypeName = sensorType.Name;
+                return ViewComponent("SensorElement", _mapper.Map<SensorDto, SensorViewModel>(res));
+            }
+            else
+            {
+                //ModelState.AddModelError(res.Property, res.Message);
+                return View(model);
+            }
         }
 
         [Authorize]
-        public async Task<ActionResult> Update(int sensorId)
+        public async Task<ActionResult> Edit(int id)
         {
-            var sensorDto = await _sensorManager.GetSensorByIdAsync(sensorId);
-            EditSensorViewModel sensorViewModel = _mapper.Map<SensorDto, EditSensorViewModel>(sensorDto);
-            return View("Update", sensorViewModel);
-        }
-
-        [Authorize]
-        public async Task<ActionResult> Delete(int sensorId)
-        {
-            var sensorDto = await _sensorManager.GetSensorByIdAsync(sensorId);
-            SensorViewModel sensorViewModel = _mapper.Map<SensorDto, SensorViewModel>(sensorDto);
-            return View("Delete", sensorViewModel);
-        }
-
-        [HttpPost]
-        [Authorize]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Update(EditSensorViewModel sensorViewModel)
-        {
-            SensorDto sensorDto = _mapper.Map<EditSensorViewModel, SensorDto>(sensorViewModel);
-            if (sensorViewModel.IconFile != null)
+            var sensorDto = await _sensorManager.GetSensorByIdAsync(id);
+            if (sensorDto != null)
             {
-                sensorDto.IconId = await _iconManager.CreateAndGetIconId(sensorViewModel.IconFile);
+                EditSensorViewModel sensorViewModel = _mapper.Map<SensorDto, EditSensorViewModel>(sensorDto);
+                return ViewComponent("SensorEdit", sensorViewModel);
             }
-            try
-            {
-                _sensorManager.Update(sensorDto);
+            return ViewComponent("SensorEdit", null);
 
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View("Update");
-            }
         }
 
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(SensorViewModel sensorViewModel)
+        public async Task<ActionResult> Edit(EditSensorViewModel model)
         {
-            SensorDto sensorDto = _mapper.Map<SensorViewModel, SensorDto>(sensorViewModel);
+            SensorDto sensorDto = _mapper.Map<EditSensorViewModel, SensorDto>(model);
+            IconDto iconDto = null;
+            if (model.IconFile != null)
+            {
+                sensorDto.IconId = _iconManager.CreateAndGetIconId(model.IconFile).Result;
+                iconDto = await _iconManager.GetById(sensorDto.IconId.GetValueOrDefault());
+                sensorDto.IconPath = iconDto.Path;
+            }
 
+            var res = await _sensorManager.Update(sensorDto);
+
+            if (res != null)
+            {
+                res = await _sensorManager.GetSensorByIdAsync(sensorDto.Id);
+                iconDto = await _iconManager.GetById(sensorDto.IconId.GetValueOrDefault());
+                sensorDto.IconPath = iconDto.Path;
+                sensorDto.SensorTypeName = res.SensorTypeName;
+                return ViewComponent("SensorElement", _mapper.Map<SensorDto, SensorViewModel>(sensorDto));
+            }
+            else
+            {
+                //ModelState.AddModelError(res.Property, res.Message);
+                return View(model);
+            }
+        }
+
+        [Authorize]
+        public async Task<ActionResult> Delete(int id)
+        {
             try
             {
-                _sensorManager.Delete(sensorDto);
+                var res = await _sensorManager.Delete(id);
+                if (!res.Succeeded)
+                {
+                    ModelState.AddModelError(res.Property, res.Message);
+                    return View();
+                }
 
-                return RedirectToAction(nameof(Index));
+                return Ok();
             }
             catch
             {
-                return View("Delete");
+                return View();
             }
         }
 

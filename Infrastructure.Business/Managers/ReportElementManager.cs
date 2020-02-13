@@ -3,7 +3,11 @@ using Domain.Core.CalculateModel;
 using Domain.Core.Model;
 using Domain.Core.Model.Enums;
 using Domain.Interfaces.Repositories;
+using Infrastructure.Business.DTOs.History;
 using Infrastructure.Business.DTOs.ReportElements;
+using Infrastructure.Business.DTOs.Sensor;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +18,7 @@ namespace Infrastructure.Business.Managers
     public class ReportElementManager : BaseManager, IReportElementManager
     {
         protected readonly IHistoryManager historyManager;
+        private string UserId;
 
         public ReportElementManager(IHistoryManager historyManager, IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
@@ -33,8 +38,9 @@ namespace Infrastructure.Business.Managers
             unitOfWork.Save();
         }
 
-        public async Task CreateReportElement(ReportElementDto reportElementDto)
+        public async Task<bool> CreateReportElement(ReportElementDto reportElementDto, string userId)
         {
+            UserId = userId;
             var reportElements = await unitOfWork.ReportElementRepo.GetAll();
             reportElements = reportElements.Where(r => r.DashboardId == reportElementDto.DashboardId);
             if (reportElements.Any())
@@ -68,6 +74,7 @@ namespace Infrastructure.Business.Managers
 
                 await unitOfWork.ReportElementRepo.Insert(reportElement);
                 unitOfWork.Save();
+                return true;
             }
             else
             {
@@ -78,20 +85,24 @@ namespace Infrastructure.Business.Managers
                 reportElement.Y = 0;
                 await unitOfWork.ReportElementRepo.Insert(reportElement);
                 unitOfWork.Save();
+                return true;
             }
-
         }
 
         public async Task<HeatmapDto> GetHeatmapById(int reportElementId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(reportElementId);
+            
+            if (reportElement == null)
+                return new HeatmapDto { IsCorrect = false };
 
             DateTime dateFrom = new DateTime();
             DateTime dateTo = DateTime.Now.AddDays(1);
-            DateTime[] daysArray = new DateTime[28];
 
             if (reportElement.Hours != 0)
                 dateFrom = DateTime.Now.AddHours(-(int)reportElement.Hours).Date.AddDays(1);
+
+            DateTime[] daysArray = new DateTime[(int)(dateTo - dateFrom).TotalDays];
 
             for (int i = 0; i < daysArray.Length; i++)
             {
@@ -99,7 +110,7 @@ namespace Infrastructure.Business.Managers
             }
 
             IEnumerable<AvgSensorValuePerDay> avgSensorValuesPerDays = await
-                unitOfWork.HistoryRepo.GetAvgSensorsValuesPerDays(reportElement.SensorId, dateFrom, dateTo);
+                unitOfWork.HistoryRepo.GetAvgSensorsValuesPerDays(reportElement.SensorId.Value, dateFrom, dateTo);
             List<AvgSensorValuePerDay> AvgSensorValuesPerDays = avgSensorValuesPerDays.ToList();
 
             for (int i = 0; i < daysArray.Length; i++)
@@ -124,20 +135,116 @@ namespace Infrastructure.Business.Managers
             return heatmap;
         }
 
+        public async Task<BoolHeatmapDto> GetBoolHeatmapById(int reportElementId)
+        {
+            ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(reportElementId);
+
+            if (reportElement == null)
+                return new BoolHeatmapDto { IsCorrect = false };
+
+            DateTime dateFrom = new DateTime();
+            DateTime dateTo = DateTime.Now.AddMinutes(1);
+
+            if (reportElement.Hours != 0)
+                dateFrom = DateTime.Now.AddHours(-(int)reportElement.Hours);
+
+            int[] hoursArray = new int[(int)(dateTo - dateFrom).TotalHours];
+            string[] daysArray = new string[(int)(dateTo - dateFrom).TotalHours];
+
+            for (int i = 0; i < hoursArray.Length; i++)
+            {
+                hoursArray[i] = dateFrom.AddHours(i).Hour;
+                daysArray[i] = dateFrom.AddHours(i).Date.ToString("dd.MM.yyyy");
+            }
+
+            IEnumerable<BoolValuePercentagePerHour> boolValuePercentagesPerHours = await
+                unitOfWork.HistoryRepo.GetBoolValuePercentagesPerHours(reportElement.SensorId.Value, dateFrom, dateTo);
+            List<BoolValuePercentagePerHour> BoolValuePercentagesPerHours = new List<BoolValuePercentagePerHour>();
+
+            int w = 0;
+            for (int j = 0; j < hoursArray.Length; j++)
+            {
+                if (!boolValuePercentagesPerHours.Any(a => a.HourTime == hoursArray[j] && a.DayDate.ToString().Contains(daysArray[j])))
+                {
+
+                    BoolValuePercentagesPerHours.Add(
+                    new BoolValuePercentagePerHour
+                    {
+                        DayDate = dateFrom,
+                        HourTime = hoursArray[j],
+                        TrueCount = null,
+                        TrueFalseCount = null,
+                        TruePercentage = null
+                    });
+                    dateFrom = dateFrom.AddHours(1);
+
+                }
+                else
+                {
+                    if (w != boolValuePercentagesPerHours.Count())
+                    {
+                        BoolValuePercentagesPerHours.Add(
+                        new BoolValuePercentagePerHour
+                        {
+                            DayDate = dateFrom,
+                            HourTime = hoursArray[j],
+                            TrueCount = boolValuePercentagesPerHours.ElementAt(w).TrueCount,
+                            TrueFalseCount = boolValuePercentagesPerHours.ElementAt(w).TrueFalseCount,
+                            TruePercentage = boolValuePercentagesPerHours.ElementAt(w).TruePercentage
+                        });
+                        w++;
+                        dateFrom = dateFrom.AddHours(1);
+
+                    }
+                    else
+                    {
+                        BoolValuePercentagesPerHours.Add(
+                        new BoolValuePercentagePerHour
+                        {
+                            DayDate = dateFrom,
+                            HourTime = hoursArray[j],
+                            TrueCount = null,
+                            TrueFalseCount = null,
+                            TruePercentage = null
+                        });
+                        dateFrom = dateFrom.AddHours(1);
+                    }
+                }
+            }
+
+            if (boolValuePercentagesPerHours.Count() == 0)
+                return new BoolHeatmapDto { Id = reportElementId, IsCorrect = false };
+
+            BoolHeatmapDto heatmap = mapper.Map<Sensor, BoolHeatmapDto>(reportElement.Sensor);
+
+            heatmap.Id = reportElement.Id;
+            heatmap.DashboardName = reportElement.Dashboard.Name;
+            heatmap.DashboardId = reportElement.Dashboard.Id;
+            heatmap.BoolValuePercentagesPerHours = BoolValuePercentagesPerHours;
+            heatmap.Hours = reportElement.Hours;
+
+            return heatmap;
+        }
+
         public async Task<ReportElementDto> GetOnOffById(int ReportElementId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
             ReportElementDto onOff = mapper.Map<ReportElement, ReportElementDto>(reportElement);
-            return onOff; 
+            return onOff;
         }
 
         public async Task<ReportElementDto> GetWordCloudById(int ReportElementId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
+            if (reportElement == null)
+            {
+                return new ReportElementDto { Id = ReportElementId, IsCorrect = false };
+            }
             DateTime date = new DateTime(1970, 1, 1, 0, 0, 0);
+
             if (reportElement.Hours != 0)
                 date = DateTime.Now.AddHours(-(int)reportElement.Hours);
-            IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
+            IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId.Value, date);
 
             if (!histories.Any())
                 return new ReportElementDto { Id = ReportElementId, IsCorrect = false };
@@ -172,16 +279,15 @@ namespace Infrastructure.Business.Managers
         public async Task<GaugeDto> GetGaugeById(int gaugeId)
         {
             ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(gaugeId);
+            if (reportElement == null) return new GaugeDto { IsValid = false};
             GaugeDto gaugeDto = mapper.Map<ReportElement, GaugeDto>(reportElement);
 
-            gaugeDto.Min = historyManager.GetMinValueForPeriod(reportElement.SensorId, (int)gaugeDto.Hours);
-            gaugeDto.Max = historyManager.GetMaxValueForPeriod(reportElement.SensorId, (int)gaugeDto.Hours);
+            gaugeDto.Min = historyManager.GetMinValueForPeriod(reportElement.SensorId.Value, (int)gaugeDto.Hours);
+            gaugeDto.Max = historyManager.GetMaxValueForPeriod(reportElement.SensorId.Value, (int)gaugeDto.Hours);
             if (gaugeDto.Min.HasValue && gaugeDto.Max.HasValue)
             {
-                var value = historyManager.GetLastHistoryBySensorId(reportElement.SensorId);
+                var value = historyManager.GetLastHistoryBySensorId(reportElement.SensorId.Value);
                 gaugeDto.Value = value.DoubleValue.HasValue ? value.DoubleValue : value.IntValue;
-                gaugeDto.SensorName = reportElement.Sensor.Name;
-                gaugeDto.MeasurementName = reportElement.Sensor.SensorType.MeasurementName;
                 if (gaugeDto.Min == gaugeDto.Max)
                 {
                     gaugeDto.Min--;
@@ -211,7 +317,7 @@ namespace Infrastructure.Business.Managers
             DateTime date = new DateTime(1970, 1, 1, 0, 0, 0);
             if (reportElement.Hours != 0)
                 date = DateTime.Now.AddHours(-(int)reportElement.Hours);
-            IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
+            IEnumerable<History> histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId.Value, date);
             if (!histories.Any())
             {
                 int hours = (int)reportElement.Hours;
@@ -232,7 +338,6 @@ namespace Infrastructure.Business.Managers
             ReportElementDto columnRange = mapper.Map<Sensor, ReportElementDto>(reportElement.Sensor);
 
             columnRange.Id = ReportElementId;
-            columnRange.DashboardName = reportElement.Dashboard.Name;
             columnRange.Hours = reportElement.Hours;
             columnRange.Dates = new List<string>();
             columnRange.MinValues = new List<dynamic>();
@@ -345,7 +450,7 @@ namespace Infrastructure.Business.Managers
             if (reportElement.Hours != 0)
                 date = DateTimeOffset.Now.AddHours(-(int)reportElement.Hours);
 
-            var histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId, date);
+            var histories = await unitOfWork.HistoryRepo.GetHistoriesBySensorIdAndDate(reportElement.SensorId.Value, date);
             if (histories.Count() == 0 || histories == null)
                 return new ReportElementDto
                 {
@@ -412,6 +517,59 @@ namespace Infrastructure.Business.Managers
             result.IsLocked = !reportElement.IsLocked;
             await unitOfWork.ReportElementRepo.Update(result);
             unitOfWork.Save();
+        }
+
+        public async Task<ReportElementDto> GetStatusReport(int ReportElementId, string userid)
+        {
+            UserId = userid;
+            ReportElement reportElement = await unitOfWork.ReportElementRepo.GetById(ReportElementId);
+            if (reportElement == null)
+                return new ReportElementDto { IsCorrect = false, Message = "Invalid report element" };
+
+            IEnumerable<Sensor> sensors = await unitOfWork.SensorRepo.GetAllSensorsByUserId(UserId);
+            ReportElementDto statusReport = new ReportElementDto
+            {
+                Dates = new List<string>(),
+                Values = new List<dynamic>()
+            };
+            foreach (Sensor sensor in sensors)
+            {
+                History history = unitOfWork.HistoryRepo.GetLastHistoryBySensorId(sensor.Id);
+                if (history == null)
+                    continue;
+                dynamic value = null;
+                switch (sensor.SensorType.MeasurementType)
+                {
+                    case MeasurementType.Int:
+                        value = history.IntValue.GetValueOrDefault();
+                        break;
+                    case MeasurementType.Bool:
+                        value = history.BoolValue.GetValueOrDefault();
+                        if (value == true)
+                            value = "Active";
+                        else
+                            value = "Inactive";
+
+                        break;
+                    case MeasurementType.Double:
+                        value = Math.Round(history.DoubleValue.GetValueOrDefault(), 2);
+                        break;
+                    case MeasurementType.String:
+                        value = history.StringValue;
+                        break;
+                    default:
+                        return new ReportElementDto { Id = ReportElementId, IsCorrect = false, Message = "Incorrect sensor type for this element" };
+                }
+                statusReport.Dates.Add(sensor.Name);
+                statusReport.Values.Add(value);
+            }
+
+            return statusReport;
+        }
+
+        public Task<SensorDto> GetLastSensorByUserId(string userId)
+        {
+            return historyManager.GetLastSensorByUserId(userId);
         }
     }
 }

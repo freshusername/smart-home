@@ -32,7 +32,7 @@ namespace Infrastructure.Data.Repositories
         {
             var sensorControl = await context.SensorControls
                 .Include(e => e.Control)
-                 .Include(e => e.Sensor).ToListAsync();
+                 .Include(e => e.Sensor).ThenInclude(e => e.SensorType).Where(e => e.Sensor.SensorType.IsControl != true).ToListAsync();
 
             return sensorControl;
         }

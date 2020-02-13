@@ -12,61 +12,67 @@ using System.Text;
 using System.Threading.Tasks;
 using Infrastructure.Business.DTOs.SensorType;
 using Domain.Interfaces.Repositories;
+using Microsoft.AspNetCore.SignalR;
+using Infrastructure.Business.Hubs;
+using Infrastructure.Business.Managers;
 
-namespace Infrastructure.Business.Managers
+namespace Infrastructure.Business.Interfaces
 {
     public class SensorManager : BaseManager, ISensorManager
     {
-        public SensorManager(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
+        protected readonly IHubContext<GraphHub> graphHub;
+        public SensorManager(IUnitOfWork unitOfWork, IMapper mapper, IHubContext<GraphHub> hubContext) : base(unitOfWork, mapper)
         {
-
+            graphHub = hubContext;
         }
 
-        public async Task<OperationDetails> Create(SensorDto sensorDto)
+
+        public async Task<SensorDto> Create(SensorDto sensorDto)
         {
-            try
+            if (sensorDto == null || unitOfWork.SensorRepo.GetByToken(sensorDto.Token) != null)
             {
-                Sensor sensor = mapper.Map<SensorDto, Sensor>(sensorDto);
-                try
-                {
-                    await unitOfWork.SensorRepo.Insert(sensor);
-
-                    unitOfWork.Save();
-                }
-                catch (Exception ex)
-                {
-                    return new OperationDetails(false, ex.Message, "Error");
-                }
-
+                return null;
             }
-            catch (Exception ex)
-            {
-                return new OperationDetails(false, ex.Message, "Error");
-            }
-            return new OperationDetails(true, "New sensor has been added", "Name");
-        }
-
-        public OperationDetails Update(SensorDto sensorDto)
-        {
             Sensor sensor = mapper.Map<SensorDto, Sensor>(sensorDto);
             try
             {
-                unitOfWork.SensorRepo.Update(sensor);
+                await unitOfWork.SensorRepo.Insert(sensor);
                 unitOfWork.Save();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return new OperationDetails(false, ex.Message, "Error");
+                return null;
             }
-            return new OperationDetails(true, "Sensor has been updated!", "Name");
+            return mapper.Map<Sensor, SensorDto>(sensor);
         }
 
-        public OperationDetails Delete(SensorDto sensorDto)
+        public async Task<SensorDto> Update(SensorDto sensorDto)
         {
+            if (sensorDto == null || unitOfWork.SensorRepo.GetById(sensorDto.Id).Result == null)
+            {
+                return null;
+            }
             Sensor sensor = mapper.Map<SensorDto, Sensor>(sensorDto);
             try
             {
-                unitOfWork.SensorRepo.Delete(sensor);
+                await unitOfWork.SensorRepo.Update(sensor);
+                unitOfWork.Save();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            return mapper.Map<Sensor, SensorDto>(sensor);
+        }
+
+        public async Task<OperationDetails> Delete(int sensorId)
+        {
+            Sensor sensor = await unitOfWork.SensorRepo.GetById(sensorId);
+            if (sensor == null)
+                return new OperationDetails(false, "err", "err");
+            try
+            {
+                await unitOfWork.SensorRepo.Delete(sensor);
                 unitOfWork.Save();
             }
             catch (Exception ex)
@@ -108,19 +114,29 @@ namespace Infrastructure.Business.Managers
             unitOfWork.SensorRepo.Insert(sensor);
 
             unitOfWork.Save();
-            return new OperationDetails(true, "Operation succeed", sensor.Id.ToString());
+            return new OperationDetails(true, "Operation succeed", "", new Dictionary<string, object>() { { "id", sensor.Id } });
         }
 
         public async Task<List<SensorDto>> GetSensorsByReportElementType(ReportElementType type, int dashboardId)
         {
             var dashboard = await unitOfWork.DashboardRepo.GetById(dashboardId);
             var sensors = new List<Sensor>();
-            sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.Int, dashboard.AppUserId));
-            sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.Double, dashboard.AppUserId));
-            if (type == ReportElementType.TimeSeries || type == ReportElementType.Clock)
-                sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.Bool, dashboard.AppUserId));
-            if (type == ReportElementType.Clock || type == ReportElementType.Wordcloud)
-                sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.String, dashboard.AppUserId));
+            if (type == ReportElementType.OnOff)
+                foreach (var sensorControl in Enum.GetValues(typeof(MeasurementType)))
+                    sensors.AddRange(await unitOfWork.SensorRepo.GetSensorControlsByMeasurementTypeAndUserId((MeasurementType)sensorControl, dashboard.AppUserId));
+            else if (type != ReportElementType.Clock && type != ReportElementType.StatusReport)
+            {
+                if (type == ReportElementType.Columnrange || type == ReportElementType.Gauge || type == ReportElementType.Heatmap ||
+                    type == ReportElementType.TimeSeries || type == ReportElementType.Wordcloud)
+                {
+                    sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.Int, dashboard.AppUserId));
+                    sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.Double, dashboard.AppUserId));
+                }
+                if (type == ReportElementType.TimeSeries || type == ReportElementType.BoolHeatmap)
+                    sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.Bool, dashboard.AppUserId));
+                if (type == ReportElementType.Wordcloud)
+                    sensors.AddRange(await unitOfWork.SensorRepo.GetSensorsByMeasurementTypeAndUserId(MeasurementType.String, dashboard.AppUserId));
+            }
             var res = mapper.Map<List<Sensor>, List<SensorDto>>(sensors);
             return res;
         }
@@ -166,8 +182,17 @@ namespace Infrastructure.Business.Managers
         {
             Sensor sensor = await unitOfWork.SensorRepo.GetById(id);
             sensor.IsActive = !sensor.IsActive;
+            await graphHub.Clients.All.SendAsync("UpdateOnOff", id, sensor.IsActive);
             await unitOfWork.SensorRepo.Update(sensor);
             unitOfWork.Save();
         }
+
+        public async Task<SensorDto> GetLastSensor()
+        {
+            var sensor = await unitOfWork.SensorRepo.GetLastSensor();
+            return mapper.Map<Sensor, SensorDto>(sensor);
+        }
+
+
     }
 }

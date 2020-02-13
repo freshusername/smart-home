@@ -12,6 +12,8 @@ namespace Domain.Core.Model.Enums
         Heatmap,
         TimeSeries,
         Wordcloud,
-        OnOff
+        OnOff,
+        StatusReport,
+        BoolHeatmap
     }
 }

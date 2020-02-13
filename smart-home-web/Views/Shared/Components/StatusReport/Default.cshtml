@@ -1,0 +1,43 @@
+﻿@model smart_home_web.Models.ReportElements.ReportElementViewModel;
+
+
+@if (Model.IsCorrect)
+{
+    <figure class="highcharts-figure d-flex align-content-center justify-content-center">
+        <div id="@("StatusReport"+Model.Id.ToString())" class="row">
+            <div class="text-center col">
+                <h5>Status of sensors</h5>
+                <table class="table table-hover table-responsive border border-warning rounded p-1" >
+                    <thead class="text-center thead-light">
+                        <tr>
+                            <th>Name</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                        @if (!Model.Dates.Any())
+                        {
+                            <tr>
+                                <td colspan="2">No Values</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @for (int i = 0; i < Model.Dates.Count(); i++)
+                            {
+                                <tr>
+                                    <td> @Model.Dates[i] </td>
+                                    <td> @Model.Values[i] </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </figure>
+}
+else
+{
+    <label class="control-label graph-label text-center">@Model.Message</label>
+}

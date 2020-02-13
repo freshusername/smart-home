@@ -33,6 +33,13 @@ namespace Infrastructure.Data.Repositories
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
 
+        public async Task<History> GetByIdWithSensor(int id)
+        {
+            return await context.Histories
+                    .Include(h => h.Sensor)
+                .FirstOrDefaultAsync(s => s.Id == id);
+        }
+
         public async Task<History> GetLastBySensorId(int sensorId)
         {
             var history = await context.Histories
@@ -45,10 +52,10 @@ namespace Infrastructure.Data.Repositories
             return await context.Histories.Where(p => p.Sensor.IsValid == isValid).CountAsync();
         }
 
-        public async Task<int> GetAmountAsync(bool isActivated, string userId)
-        {
-            return await context.Histories.Where(p => p.Sensor.IsValid == isActivated & p.Sensor.AppUserId == userId).CountAsync();
-        }
+		public async Task<int> GetAmountAsync(bool isActivated, string userId)
+		{
+			return await context.Histories.Where(p => p.Sensor.IsValid == isActivated & p.Sensor.AppUserId == userId).CountAsync();
+		}
 
         public async Task<IEnumerable<History>> GetHistoriesBySensorId(int SensorId)
         {
@@ -70,14 +77,24 @@ namespace Infrastructure.Data.Repositories
                 .FromSql(query)
                 .ToListAsync();
 
-
             return avgValues;
         }
 
-        public Task<IEnumerable<History>> GetHistoriesBySensorIdAndDatePeriod(int SensorId, DateTime dateFrom, DateTime dateTo)
+        public async Task<IEnumerable<BoolValuePercentagePerHour>> GetBoolValuePercentagesPerHours
+            (int sensorId, DateTime dateFrom, DateTime dateTo)
         {
-            throw new NotImplementedException();
+            var d_from = dateFrom.ToString("yyyy-MM-dd HH:mm");
+            var d_to = dateTo.ToString("yyyy-MM-dd HH:mm");
+
+            string query = $"CALL GetTruePercentagePerHours ({sensorId}, '{d_from}', '{d_to}')";
+            var truePercentages = await context.BoolValuePercentagesPerHours
+                .FromSql(query)
+                .ToListAsync();
+
+            return truePercentages;
         }
+
+
         public async Task<IEnumerable<History>> GetHistoriesBySensorIdAndDatePeriod
             (int sensorId, DateTimeOffset dateFrom, DateTimeOffset dateTo)
         {
@@ -107,14 +124,15 @@ namespace Infrastructure.Data.Repositories
             return lasthistory;
         }
 
-        public async Task<IEnumerable<History>> GetByPage(int count, int page, SortState sortState, bool isValid = true, int sensorId = 0)
+        public async Task<IEnumerable<History>> GetByPage(int count, int page, SortState sortState, bool isValid, int sensorId = 0)
         {
             IQueryable<History> histories = context.Histories
                 .Include(h => h.Sensor)
                 .ThenInclude(s => s.SensorType);
 
             if (!isValid)
-                histories = histories.Where(p => p.Sensor.IsValid == false);
+                histories = histories.Where(p => p.Sensor.IsActive == false);
+
 
             if (sensorId != 0)
             {
@@ -135,9 +153,10 @@ namespace Infrastructure.Data.Repositories
             var histories = context.Histories.Include(h => h.Sensor)
                                                 .ThenInclude(st => st.SensorType)
                                             .Where(h => h.Sensor.Id == SensorId)
-                                            .OrderBy(h => h.Date)
-                                            .Last();
-            return histories;
+                                            .OrderBy(h => h.Date);
+            if (histories.Count() > 0)
+                return histories.LastOrDefault();
+            return null;
         }
 
         public double? GetMinValueForPeriod(int sensorId, int? hours)

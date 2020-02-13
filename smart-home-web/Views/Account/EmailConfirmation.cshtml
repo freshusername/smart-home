@@ -1,8 +1,32 @@
-﻿<section class="sample-text-area">
-    <div class="container box_1170">
-        <h3 class="text-heading">Congratulations! Your account has been created.</h3>
-        <p class="sample-text">
-            Please check your email to complete the registration .
-        </p>
+﻿
+@{
+    Layout = "_AccountLayout";
+
+    ViewData["Title"] = "EmailConfirm";
+}
+
+<section class="login_part padding_top app-main-no-flex" style="display : block !important">
+    <div class="h-100">
+        <div class="h-100 no-gutters row">
+            <div class="h-100 d-md-flex d-sm-block bg-white justify-content-center align-items-center col-md-12 col-lg-7">
+                <div class="mx-auto app-login-box col-sm-12 col-md-10 col-lg-9">
+                    <div class="app-logo"></div>
+                    <h4>
+                        <span class="col-md-12">You account have been successfully create. Check your<span class="text-success"> email</span> to complete the registration</span>
+                    </h4>
+                </div>
+            </div>
+            <div class="d-lg-flex col-lg-5">
+                <div class="slider-light">
+                    <div class="slick-slider slick-initialized">
+                        <div>
+                            <div class="h-100 d-flex justify-content-center align-items-center bg-premium-dark" tabindex="-1">
+                                <div class="slide-img-bg" style="background-image: url('/assets/images/originals/citynights.jpg');"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>

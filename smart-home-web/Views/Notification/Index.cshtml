@@ -1,10 +1,13 @@
-﻿@using smart_home_web.Models.Notification;
+﻿﻿@using smart_home_web.Models.Notification;
+
 
 @model AllNotificationsViewModel;
+
 @{
     ViewData["Title"] = "Unread notifications";
+
 }
-   
+
 <body>
     <h3>Notifications</h3>
     <span class="badge" id="ntCnt"></span>
@@ -22,12 +25,13 @@
                 </a>
             </div>
             <div class="col-lg-6">
-                    @foreach (var messages in Model.Notifications)
+
+@foreach (var messages in Model.Notifications)
                     {
                         if (messages.IsRead.ToString() == "True" && messages.UserName == User.Identity.Name)
                         {
-                    <div class="alert alert-info">
-                        <p>@messages.Comment</p>
+                <div class="alert alert-info">
+                    <p>@messages.Comment</p>
                         <p>@messages.Date</p>
                         <a href="@Url.Action("ChangeStatus", "Notification", new { id = messages.Id, page = "Index"}, null)">
                             <div class="right">
@@ -37,9 +41,9 @@
                     </div>
                         }
                     }
+                </div>
             </div>
         </div>
-    </div>
 </body>
 
 <script src="~/lib/jquery/dist/jquery.js"></script>

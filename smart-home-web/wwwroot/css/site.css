@@ -65,10 +65,10 @@ a.disabledclass {
     display: block;
 }
 
-.increase-padding {
+/*.increase-padding {
     padding-right: 1rem;
     padding-left: 1rem;
-}
+}*/
 
 .report-button{
     color: #111111;
@@ -82,30 +82,6 @@ a.disabledclass {
         transform: scale(1.5);
     }
 
-
-/* Page of dashboards */ 
-#create_elem {
-    -webkit-transition: width 0.5s ease;
-    -moz-transition: width 0.5s ease;
-    -o-transition: width 0.5s ease;
-    transition: width 0.5s ease;
-    display: inline-block;
-    overflow: hidden;
-    white-space: nowrap;
-    vertical-align: middle;
-    line-height: 30px;
-    height: 37px;
-    width: 0px;
-}
-
-#create_elem.in {
-    width: 320px;
-}
-
-.dash_edit {
-    background: none;
-    color: #337ab7;
-    border: none;
-    padding: 0;
-    outline: none;
+.modal-backdrop.in {
+    opacity: 0.3 !important;
 }

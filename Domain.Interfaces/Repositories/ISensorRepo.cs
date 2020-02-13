@@ -12,8 +12,11 @@ namespace Domain.Interfaces.Repositories
         Sensor GetByToken(Guid token);
         Task<Sensor> GetSensorById(int id);
         Task<IEnumerable<Sensor>> GetAllSensorsByUserId(string userId);
+        Task<Sensor> GetLastSensorByUserId(string userId);
         Task<IEnumerable<Sensor>> GetSensorsByMeasurementTypeAndUserId(MeasurementType type, string UserId);
+        Task<IEnumerable<Sensor>> GetSensorControlsByMeasurementTypeAndUserId(MeasurementType type, string UserId);
         Task<IEnumerable<Sensor>> GetSensorControls();
+        Task<Sensor> GetLastSensor();
 
     }
 }

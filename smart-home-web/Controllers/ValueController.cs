@@ -4,7 +4,6 @@ using Infrastructure.Business.DTOs.Notification;
 using Infrastructure.Business.Hubs;
 using Infrastructure.Business.Infrastructure;
 using Infrastructure.Business.Interfaces;
-using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Identity;
 using Infrastructure.Business.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Infrastructure.Business.Managers;
 
 namespace smart_home_web.Controllers
 {
@@ -21,24 +21,24 @@ namespace smart_home_web.Controllers
     public class ValueController : ControllerBase
     {
         private readonly IHistoryManager _historyManager;
-        private readonly IMessageManager _messageManager;
+        private readonly IToastManager _toastManager;
         private readonly ISensorManager _sensorManager;
         private readonly IActionService _actionService;
-        private readonly INotificationManager _notificationManager;
+        private readonly IInvSensorNotificationManager _notificationManager;
         private readonly IEmailSender _emailSender;
         private readonly UserManager<AppUser> _userManager;
         public ValueController(
-            IMessageManager messageManager,
+            IToastManager messageManager,
             IHistoryManager historyTestManager,
             ISensorManager sensorManager,
             IActionService actionService,
-            INotificationManager notificationManager,
+            IInvSensorNotificationManager notificationManager,
             UserManager<AppUser> userManager,
             IEmailSender emailSender)
         {
             _historyManager = historyTestManager;
             _actionService = actionService;
-            _messageManager = messageManager;
+            _toastManager = messageManager;
             _sensorManager = sensorManager;
             _notificationManager = notificationManager;
             _userManager = userManager;
@@ -53,33 +53,23 @@ namespace smart_home_web.Controllers
                 var result = _sensorManager.AddUnclaimedSensor(token, value);
                 if (result.Succeeded)
                 {
-                    result = _historyManager.AddHistory(value, Convert.ToInt32(result.Property));
+                    result = _historyManager.AddHistory(value, Convert.ToInt32(result.Data["id"]));
+                    if(result.Succeeded)
+                        result = await _notificationManager.CreateNotification(Convert.ToInt32(result.Data["id"]));
+                    if(result.Succeeded)
+                        await _notificationManager.NotifyAboutInvalidSensor(Convert.ToInt32(result.Data["id"]));
                     return Ok(result.Message);
                 }
-
-                //TODO: Notification logic 
-
-                //var unclaimedSensor = _historyManager.GetSensorByToken(token);
-                //var history = _historyManager.GetLastHistoryBySensorId(unclaimedSensor.Id);
-                //var notification = new NotificationDto
-                //{
-                //	Comment = "Unknown sensor sended a value",
-                //	Date = history.Date,
-                //	Id = history.Id,
-                //	IsRead = false,
-                //	UserName = 
-                //}
-                //await _notificationManager.Create(history);
-                //return BadRequest(result.Message);
             }
 
             var historyResult = _historyManager.AddHistory(value, sensor.Id);
 
-            if (historyResult.Succeeded)
-            {
-                await _messageManager.ShowMessage(token, value);
-                return Ok(historyResult.Message);
-            }
+			if (historyResult.Succeeded)
+			{
+                await _historyManager.UpdateGraph(token, value);
+				await _toastManager.ShowMessage(token, value);
+				return Ok(historyResult.Message);
+			}
 
             return BadRequest(historyResult.Message);
         }
@@ -92,8 +82,9 @@ namespace smart_home_web.Controllers
                 return 0;
 
             var sensor = _sensorManager.GetSensorByToken(token);
-             var date = DateTime.Now.ToLocalTime();
-            _emailSender.SendEmailAsync(sensor.User.Email, "🏠Smart home", $"<span style=\"font-size: 20px\">Sensor : <b>{sensor.Name}</b>.<br/>Value : <b>true</b>❗.<br/>Date : {date}</span>");
+             var userEmail = _userManager.FindByIdAsync(sensor.AppUserId).Result.Email;
+            var date = DateTime.Now.ToLocalTime();
+             _emailSender.SendEmailAsync(userEmail, "🏠Smart home", $"<span style=\"font-size: 20px\">Sensor : <b>{sensor.Name}</b>.<br/>Value : <b>true</b>❗.<br/>Date : {date}</span>");
             return 1;
         }
 

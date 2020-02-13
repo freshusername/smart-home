@@ -6,7 +6,7 @@
         @if (Model.IsValid)
         {
             <figure id=@("gauge_figure_" + Model.Id.ToString()) class="highcharts-figure">
-                <div id=@("Gauge" + Model.Id.ToString()) class="chart-container"></div>
+                <div id=@("Gauge" + Model.Id.ToString()) class="chart-container" data-save-sensorid="@Model.SensorId"></div>
             </figure>
         }
         else
@@ -150,39 +150,6 @@
         }]
 
     }));
-
-    // Bring life to the dials
-    setInterval(function () {
-        var point;
-        $.ajax({
-        type: "GET",
-        url: "/api/Gauge/GetGauge/@Model.Id",
-        contentType: "application/json; charset=utf-8",
-            success: function (res) {
-                var gaugeChart = Highcharts.charts[$("#@("Gauge" + Model.Id.ToString())").data('highchartsChart')];
-                if (gaugeChart) {
-                    if (res.isValid === true) {
-                        point = gaugeChart.series[0].points[0];
-                        point.update(res.value);
-                        gaugeChart.yAxis[0].update({
-                            min: res.min,
-                            max: res.max
-                        });
-                        gaugeChart.yAxis[0].tickPositions = [res.min, res.max];
-                        gaugeChart.yAxis[0].update({
-                            tickPositions: gaugeChart.yAxis[0].tickPositions
-                        });
-                        $('#gauge_figure_'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))')).addClass("d-inline").removeClass("d-none");
-                        $('#alertMessage'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))')).addClass("d-none").removeClass("d-inline");
-                    }
-                    else {
-                        $('#gauge_figure_'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))')).addClass("d-none").removeClass("d-inline");
-                        $('#alertMessage'+JSON.parse('@Html.Raw(Json.Serialize(@Model.Id.ToString()))')).addClass("d-inline").removeClass("d-none");
-                    }
-                }
-            }
-        });
-    }, 2000);
 
     $('body').on('gsresizestop', '.grid-stack', function (event, ui) {
         var type = 'Gauge';

@@ -1,0 +1,211 @@
+﻿<div class="modal" id="modalWindow" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"></h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body"></div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-delete-confirm" style="display:none;">
+    <a class="btn btn-primary text-white" id="modal-delete-button" data-element-id="">Delete</a>
+    <a class="btn btn-secondary text-white" data-dismiss="modal">Cancel</a>
+</div>
+
+<div class="no-elements-row" style="display:none;">
+    <h2>No Public Elements</h2>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<script>
+    var currentElement = null;
+    var elementName = JSON.parse('@Html.Raw(Json.Serialize(ViewBag.elementname))');
+    const modal = $("#modalWindow");
+    const modalBody = modal.find(".modal-body");
+    const allElementsContainer = $(".all-elements-container");
+    const NoElementsRow = $(".no-elements-row").detach();
+    allElementsContainer.before(NoElementsRow);
+    var isFormEditChanged = false;
+
+    $(".element-edit").click(ElementEdit);
+    $(".element-delete").click(ElementDelete);
+    modal.on('hidden.bs.modal', ModalCleaning);
+
+    NoElementsDisplay();
+
+    function NoElementsDisplay() {
+        let row = $(".no-elements-row");
+        if (allElementsContainer.children().length > 0) {
+            row.hide();
+        } else {
+            row.show();
+        }
+    }
+
+    function ModalCleaning() {
+        modalBody.empty();
+        modal.find(".modal-title").empty();
+    }
+
+    function onModalFormEditChange() {
+        isFormEditChanged = true;
+    }
+
+    function ElementEdit() {
+        ModalCleaning();
+        currentElement = $(this).closest(".element-container");
+        $.ajax({
+            url: '@Url.Action("Edit")',
+            data: { id: currentElement.data("element-container-id") },
+            success: function (data) {
+                modalBody.find("#modal-form-edit").remove();
+                modal.find(".modal-title").text("Edit " + elementName);
+                modalBody.prepend(data);
+                modalBody.on("submit", "#modal-form-edit", ModalFormEdit);
+                
+                modalBody.on("change", ".checkbox-inline", onModalFormEditChange);
+                modalBody.on("change", ".form-control", onModalFormEditChange);
+                modal.fadeIn(600);
+                modal.modal();
+            },
+            error: function (res) {
+                console.log(res);
+            }
+        });
+    }
+
+    function ModalFormEdit() {
+        event.preventDefault();
+        if (isFormEditChanged) {
+            isFormEditChanged = false;
+            let inputFile = $(this).find("input[type='file']");
+            let fd = new FormData(document.getElementById("modal-form-edit"));
+            fd.append('IconFile', inputFile.prop('files')[0]);
+
+            $.ajax({
+                url: '@Url.Action("Edit")',
+                method: "POST",
+                processData: false,
+                contentType: false,
+                data: fd,
+                beforeSend: function () {
+                    modal.modal("hide");
+                    currentElement.hide(600);
+                    return true;
+                },
+                success: function (data) {
+                    currentElement.replaceWith(data);
+                    currentElement.show(600);
+                    allElementsContainer.on("click", ".element-delete", ElementDelete);
+                    allElementsContainer.on("click", ".element-edit", ElementEdit);
+                    $(".input-set-active").on("click", SetActiveAjax);
+                    $(".input-set-active").on("click", ToggleShadow);
+                    NoElementsDisplay();
+                },
+                error: function (res) {
+                    console.log(res);
+                }
+            });
+        } else {
+            modal.modal("hide");
+        }
+    }
+
+    function ElementCreate() {
+        ModalCleaning();
+        $.ajax({
+            url: '@Url.Action("Create")',
+            beforeSend: function () {
+                modal.fadeIn(600);
+                return true;
+            },
+            success: function (data) {
+                modal.find(".modal-title").text("Create " + elementName);
+                modalBody.prepend(data);
+                modalBody.on("submit", "#modal-form-create", ModalFormCreate);
+                modal.modal();
+            },
+            error: function (res) {
+                console.log(res);
+            }
+        });
+    }
+
+    function ModalFormCreate() {
+        event.preventDefault();
+        var inputFile = $(this).find("input[type='file']");
+        var fd = new FormData(document.getElementById("modal-form-create"));
+        fd.append('IconFile', inputFile.prop('files')[0]);
+
+        $.ajax({
+            url: '@Url.Action("Create")',
+            method: "POST",
+            processData: false,
+            contentType: false,
+            data: fd,
+            beforeSend: function () {
+                modal.modal("hide");
+                return true;
+            },
+            success: function (data) {
+                allElementsContainer.prepend(data);
+                allElementsContainer.on("click", ".element-delete", ElementDelete);
+                allElementsContainer.on("click", ".element-edit", ElementEdit);
+                $(".input-set-active").on("click", SetActiveAjax);
+                $(".input-set-active").on("click", ToggleShadow);
+                NoElementsDisplay();
+            },
+            error: function (res) {
+                console.log(res);
+            }
+        });
+    }
+
+    function ElementDelete() {
+        ModalCleaning();
+        currentElement = $(this).closest(".element-container");
+        modal.find(".modal-title").text("Are you sure ?");
+        $("#modal-delete-confirm").clone().prependTo(modalBody);
+        $("#modal-delete-confirm").show();
+        $("#modal-delete-button").data("element-id", currentElement.data("element-container-id"));
+        modalBody.on("click", "#modal-delete-button", ModalFormDelete);
+        modal.fadeIn(600);
+        modal.modal();
+    }
+
+    function ModalFormDelete() {
+        $.ajax({
+            url: '@Url.Action("Delete")',
+            data: { id: $(this).data("element-id") },
+            beforeSend: function () {
+                modal.modal("hide");
+                currentElement.hide(600, function () {
+                    currentElement.remove();
+                    NoElementsDisplay();
+                });
+                return true;
+            },
+            error: function (res) {
+                console.log(res);
+            }
+        });
+    }
+
+    var SetActiveAjax = function () {
+        let input = $(this);
+        $.ajax({
+            type: 'Post',
+            url: "/Sensor/SetActive",
+            data: { id: input.attr('id') },
+        });
+    }
+    var ToggleShadow = function () {
+        console.log(this);
+        $(this).toggleClass("toggle-shadow");
+    }
+    
+</script>

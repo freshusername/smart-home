@@ -8,15 +8,20 @@ using Domain.Core.Model.Enums;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Business.DTOs;
 using Infrastructure.Business.DTOs.History;
+using Infrastructure.Business.Hubs;
+using Infrastructure.Business.DTOs.Sensor;
 using Infrastructure.Business.Infrastructure;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Infrastructure.Business.Managers
 {
     public class HistoryManager : BaseManager, IHistoryManager
     {
-        public HistoryManager(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
-        {
+        protected readonly IHubContext<GraphHub> graphHub;
 
+        public HistoryManager(IUnitOfWork unitOfWork, IMapper mapper, IHubContext<GraphHub> hubContext) : base(unitOfWork, mapper)
+        {
+            graphHub = hubContext;
         }
 
         public async Task<HistoryDto> GetHistoryByIdAsync(int id)
@@ -35,9 +40,9 @@ namespace Infrastructure.Business.Managers
             return result;
         }
 
-        public async Task<IEnumerable<HistoryDto>> GetHistoriesAsync(int count, int page, SortState sortState, bool isActivated = true, int sensorId = 0)
+        public async Task<IEnumerable<HistoryDto>> GetHistoriesAsync(int count, int page, SortState sortState, bool IsActivated, int sensorId = 0)
         {
-            var histories = await unitOfWork.HistoryRepo.GetByPage(count, page, sortState, isActivated, sensorId);
+            var histories = await unitOfWork.HistoryRepo.GetByPage(count, page, sortState, IsActivated, sensorId);
 
             var result = mapper.Map<IEnumerable<History>, IEnumerable<HistoryDto>>(histories);
 
@@ -58,6 +63,15 @@ namespace Infrastructure.Business.Managers
             var result = mapper.Map<History, HistoryDto>(history);
 
             return result;
+        }
+        public async Task<bool> CheckLastHistoryBySensorIdExists(int sensorId)
+        {
+            var history = unitOfWork.HistoryRepo.GetLastHistoryBySensorId(sensorId);
+            if (history != null)
+            {
+                return true;
+            }
+            return false;
         }
 
         public double? GetMinValueForPeriod(int sensorId, int? hours)
@@ -116,6 +130,7 @@ namespace Infrastructure.Business.Managers
 
         public OperationDetails AddHistory(string value, int sensorId)
         {
+
             var history = new History
             {
                 Date = DateTimeOffset.Now,
@@ -123,6 +138,10 @@ namespace Infrastructure.Business.Managers
             };
 
             var sensor = unitOfWork.SensorRepo.GetById(sensorId).Result;
+
+            if(sensor == null)
+                return new OperationDetails(false, "Operation did not succeed!", "");
+
             dynamic valueModel;
 
             if (sensor.IsValid)
@@ -142,25 +161,27 @@ namespace Infrastructure.Business.Managers
                 history.StringValue = valueModel;
 
 
-            //if (!CheckValue(history) || sensor.IsActive == false)
-            //    return new OperationDetails(false, "Operation did not succeed!", "");
+            if (!CheckValue(history) || sensor.IsActive == false)
+                return new OperationDetails(false, "Operation did not succeed!", "");
 
             unitOfWork.HistoryRepo.Insert(history);
             unitOfWork.Save();
 
-            return new OperationDetails(true, "Operation succeed", "");
+            return new OperationDetails(true, "Operation succeed", "", new Dictionary<string, object>() { { "id", history.Id } });
         }
 
-        //public bool CheckValue(History history)
-        //{
-        //    var lastHistory = unitOfWork.HistoryRepo.GetLastBySensorId(history.SensorId).Result;
+        public bool CheckValue(History history)
+        {
+            if (history == null)
+                return false;
+            var lastHistory = unitOfWork.HistoryRepo.GetLastBySensorId(history.SensorId).Result;
 
-        //    if (lastHistory?.Date.AddMinutes(5) < history.Date)
-        //        return true;
-        //    if (lastHistory?.BoolValue == history.BoolValue && lastHistory?.DoubleValue == history.DoubleValue && lastHistory?.IntValue == history.IntValue && lastHistory?.StringValue == history.StringValue)
-        //        return false;
-        //    return true;
-        //}
+            if (lastHistory?.Date.AddMinutes(5) < history.Date)
+                return true;
+            if (lastHistory?.BoolValue == history.BoolValue && lastHistory?.DoubleValue == history.DoubleValue && lastHistory?.IntValue == history.IntValue && lastHistory?.StringValue == history.StringValue)
+                return false;
+            return true;
+        }
 
         public async Task<int> GetAmountAsync(bool isActivated)
         {
@@ -170,6 +191,23 @@ namespace Infrastructure.Business.Managers
         public async Task<int> GetAmountOfUserHistoriesAsync(bool isActivated, string userId)
         {
             return await unitOfWork.HistoryRepo.GetAmountAsync(isActivated, userId);
+        }
+
+        public async Task<SensorDto> GetLastSensorByUserId(string userId)
+        {
+            Sensor sensor = await unitOfWork.SensorRepo.GetLastSensorByUserId(userId);
+
+            return mapper.Map<Sensor, SensorDto>(sensor);
+
+        }
+
+        public async Task UpdateGraph(Guid token, string value)
+        {
+            var sensor = unitOfWork.SensorRepo.GetByToken(token);
+            DateTimeOffset unixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            var dateNow = DateTimeOffset.Now;
+            var longDate = (long)dateNow.Subtract(unixEpoch).TotalMilliseconds;
+            await graphHub.Clients.All.SendAsync("UpdateGraph", sensor.Id, value, longDate, sensor.SensorType.MeasurementType);
         }
     }
 }

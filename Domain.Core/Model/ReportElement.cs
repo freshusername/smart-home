@@ -14,7 +14,7 @@ namespace Domain.Core.Model
         public int DashboardId { get; set; }
         public Dashboard Dashboard { get; set; }
 
-        public int SensorId { get; set; }
+        public int? SensorId { get; set; }
         public Sensor Sensor { get; set; }
 
         public int X { get; set; }

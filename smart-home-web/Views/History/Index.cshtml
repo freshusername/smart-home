@@ -5,76 +5,85 @@
 
 @model AllHistoriesViewModel;
 
-
 @{
+    Layout = "_HistoryLayout";
+
     ViewData["Title"] = "Histories";
 }
 
-<body class="body-content">
-    <div class="d-flex flex-column align-items-center">
-        <table class="table table-hover table">
-            <thead class="text-center">
-                <tr>
-                    <th scope="col" class=" text-center">
-                        @{
-                            var sensor = (FilterDto)Model.FilterDto.Clone();
-                            sensor.sortState = (sensor.sortState == SortState.HistoryAsc) ? SortState.HistoryDesc : SortState.HistoryAsc;
-                        }
-                        <a href="@Url.Action("Index", "History",
-                                        sensor,
-                                        null)">
-                            Id <i class="glyphicon glyphicon-sort"></i>
-                        </a>
-                    </th>
-                    <th class="text-center">SensorName</th>
-                    <th scope="col" class=" text-center">
-                        @{
-                            var date = (FilterDto)Model.FilterDto.Clone();
-                            date.sortState = (date.sortState == SortState.DateAsc) ? SortState.DateDesc : SortState.DateAsc;
-                        }
-                        <a href="@Url.Action("Index", "History",
-                                        date,
-                                        null)">
-                            Date <i class="glyphicon glyphicon-sort"></i>
-                        </a>
-                    </th>
-                    <th class="text-center">Value</th>
-                    <th class="text-center">MeasurementUnit</th>
-                </tr>
-            </thead>
-            <tbody class="text-center">
-                @foreach (var history in Model.Histories)
-                {
-                    <tr>
-                        <td>@history.Id</td>
-                        <td>
-                            <a asp-controller="History" asp-action="Detail" asp-route-sensorId="@history.SensorId">
-                                @history.SensorName
-                            </a>
-                        </td>
-                        <td>@history.Date.UtcDateTime.ToLocalTime()</td>
 
-                        @{
-                            if (history.Value.ToString() == "False")
-                            {
-                                <td>Inactive</td>
-                            }
-                            else if (history.Value.ToString() == "True")
-                            {
-                                <td>Active</td>
-                            }
-                            else
-                            {
-                                <td>@history.Value</td>
-                            }
-                        }
-                        <td>@history.MeasurementName</td>
-                    </tr>
-                }
-            </tbody>
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 
-        </table>
-        <br />
-        @await Component.InvokeAsync("Pagination", new { action = "Index", controller = "History", filterDto = Model.FilterDto })
+<div class="app-main">
+    <div class="app-main__outer">
+        <div class="app-main__inner">
+            <div class="app-header header-button-move-up">
+                <div class="page-title-heading">
+                    All Histories
+                    <div class="page-title-subheading opacity-10 ml-4">
+                        <label class="checkbox-inline text-center">
+                            <input id="checkboxInvalidSensors" type="checkbox"
+                                   data-toggle="toggle" data-off="Valid Sensors" data-on="Invalid Sensors">
+                        </label>
+                    </div>
+                </div>
+            </div>
+            @await Component.InvokeAsync("History", Model)
+        </div>
     </div>
-</body>
+</div>
+
+
+
+
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.20/datatables.min.js"></script>
+
+<script>
+    let isActivated = true;
+    $(document).ready(function () {
+        $("#checkboxInvalidSensors").change(function () {
+            $("#checkboxInvalidSensors").attr('disabled', true);
+
+            $.ajax({
+                url:"@Url.Action("UpdateHistoryTable", "History")",
+                data: {
+                    FilterDTO: JSON.parse('@Html.Raw(Json.Serialize(@Model.FilterDto))'),
+                    isActivated: !($(this).prop('checked'))
+                },
+                error: function (res) {
+                    console.log(res);
+                },
+                success: function (data) {
+                    $(".history-table").replaceWith(data);
+                    console.log(data);
+                },
+                complete: function () {
+                    $("#checkboxInvalidSensors").attr('disabled', false);
+
+                }
+            });
+        });
+    });
+
+    $(function () {
+
+        var SetActiveAjax = function () {
+            let input = $(this);
+            $.ajax({
+                type: 'Post',
+                url: "/Sensor/SetActive",
+                data: { id: input.attr('id') },
+            });
+        }
+        $(".input-set-active").on("click", SetActiveAjax);
+
+        $(".input-set-active").on("click", function () {
+            console.log(this);
+            $(this).toggleClass("toggle-shadow");
+        });
+    });
+
+
+</script>
+

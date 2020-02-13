@@ -15,7 +15,7 @@
 else
 {
     <figure class="highcharts-figure">
-        <div id=@("TimeSeries"+Model.Id.ToString())></div>
+        <div id=@("TimeSeries"+Model.Id.ToString()) data-save-sensorid="@Model.SensorId"></div>
     </figure>
 }
 <script>
@@ -29,8 +29,7 @@ else
                   height: 380
                 },
                 title: {
-                    text: JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))'),
-                    y: -10
+                    text: JSON.parse('@Html.Raw(Json.Serialize(@Model.SensorName))')                   
                 },
                 subtitle: {
                     text: document.ontouchstart === undefined ?

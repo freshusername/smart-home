@@ -4,8 +4,12 @@ var connection = new signalR.HubConnectionBuilder().withUrl("/messages").build()
 
 connection.on("ShowToastMessage", function (type, message) {
     var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    //var encodedMsg = user + " returned value " + msg;
     toastr[type](msg);
+});
+
+connection.on("NotifyAboutInvalidSensor", function (message) {
+    var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    
 });
 
 connection.start().then(function () {

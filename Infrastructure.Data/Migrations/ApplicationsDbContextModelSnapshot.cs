@@ -14,7 +14,7 @@ namespace Infrastructure.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.14-servicing-32113")
+                .HasAnnotation("ProductVersion", "2.1.8-servicing-32085")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Domain.Core.Model.AppUser", b =>
@@ -31,6 +31,12 @@ namespace Infrastructure.Data.Migrations
                         .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
+
+                    b.Property<string>("FirstName");
+
+                    b.Property<int?>("IconId");
+
+                    b.Property<string>("LastName");
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -56,6 +62,8 @@ namespace Infrastructure.Data.Migrations
                         .HasMaxLength(256);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("IconId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
@@ -86,6 +94,8 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<string>("AppUserId");
 
+                    b.Property<int?>("IconId");
+
                     b.Property<bool>("IsPublic");
 
                     b.Property<string>("Name");
@@ -93,6 +103,8 @@ namespace Infrastructure.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AppUserId");
+
+                    b.HasIndex("IconId");
 
                     b.ToTable("Dashboards");
                 });
@@ -139,8 +151,6 @@ namespace Infrastructure.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("AppUserId");
-
-                    b.Property<string>("Comment");
 
                     b.Property<int>("HistoryId");
 
@@ -193,7 +203,7 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<bool>("IsLocked");
 
-                    b.Property<int>("SensorId");
+                    b.Property<int?>("SensorId");
 
                     b.Property<string>("Type")
                         .IsRequired();
@@ -409,11 +419,22 @@ namespace Infrastructure.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Domain.Core.Model.AppUser", b =>
+                {
+                    b.HasOne("Domain.Core.Model.Icon", "Icon")
+                        .WithMany()
+                        .HasForeignKey("IconId");
+                });
+
             modelBuilder.Entity("Domain.Core.Model.Dashboard", b =>
                 {
                     b.HasOne("Domain.Core.Model.AppUser", "AppUser")
                         .WithMany("Dashboards")
                         .HasForeignKey("AppUserId");
+
+                    b.HasOne("Domain.Core.Model.Icon", "Icon")
+                        .WithMany()
+                        .HasForeignKey("IconId");
                 });
 
             modelBuilder.Entity("Domain.Core.Model.History", b =>
@@ -453,8 +474,7 @@ namespace Infrastructure.Data.Migrations
 
                     b.HasOne("Domain.Core.Model.Sensor", "Sensor")
                         .WithMany("ReportElements")
-                        .HasForeignKey("SensorId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("SensorId");
                 });
 
             modelBuilder.Entity("Domain.Core.Model.Sensor", b =>

@@ -1,13 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿
 using System.Threading.Tasks;
 using AutoMapper;
 using Domain.Core.Model;
+using Domain.Core.Model.Enums;
 using Infrastructure.Business.DTOs.ReportElements;
+using Infrastructure.Business.DTOs.Sensor;
+using Infrastructure.Business.Interfaces;
 using Infrastructure.Business.Managers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using smart_home_web.Models;
 using smart_home_web.Models.ReportElements;
@@ -19,11 +21,13 @@ namespace smart_home_web.Controllers
     {
         private readonly IReportElementManager _reportElementManager;
         private readonly IMapper _mapper;
+        private readonly UserManager<AppUser> _userManager;
 
-        public ReportElementController(IReportElementManager reportElementManager, IMapper mapper)
+        public ReportElementController(IReportElementManager reportElementManager, IMapper mapper,UserManager<AppUser> userManager)
         {
             _reportElementManager = reportElementManager;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -41,13 +45,10 @@ namespace smart_home_web.Controllers
         {
             if (!ModelState.IsValid)
                 return View(model);
-            if (model.SensorId == 0)
-            {
-                ModelState.AddModelError("", "There is not such sensor");
-                return View(model);
-            }
+
+            string userId = _userManager.GetUserId(User);
             ReportElementDto reportElement = _mapper.Map<CreateReportElementViewModel, ReportElementDto>(model);
-            await _reportElementManager.CreateReportElement(reportElement);
+            await _reportElementManager.CreateReportElement(reportElement, userId);
             return RedirectToAction("Detail", "Dashboard", new { id = model.DashboardId});
         }
 
@@ -66,11 +67,6 @@ namespace smart_home_web.Controllers
         {
             if (!ModelState.IsValid)
                 return View(model);
-            if (model.SensorId == 0)
-            {
-                ModelState.AddModelError("", "There is not such sensor");
-                return View(model);
-            }
             ReportElementDto reportElement = _mapper.Map<EditReportElementViewModel, ReportElementDto>(model);
             await _reportElementManager.EditReportElement(reportElement);
             return RedirectToAction("Detail", "Dashboard", new { id = model.DashboardId });

@@ -4,78 +4,44 @@
     ViewData["Title"] = "SensorTypes";
 }
 
-<h2>List of sensor types</h2>
+<div class="app-main">
+    <div class="app-main__outer">
+        <div class="app-main__inner">
+            <div class="app-header header-button-move-up">
+                <div class="page-title-heading">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <div class="button-center">
+                            <a class="mb-2 mr-2 btn btn-primary text-white element-create"
+                               onclick="ElementCreate()">
+                                Add new sensor type
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="app-inner-layout app-inner-layout-page">
+                <div class="app-inner-layout__wrapper">
+                    <div class="app-inner-layout__content" style="padding-top: 0px">
+                        <div class="tab-content">
+                            <div class="container-fluid">
+                                <div class="main-card mb-3 card">
+                                    <ul class="list-group list-group-flush all-elements-container">
 
-@if (User.Identity.IsAuthenticated)
-{
-    <div class="button-center">
-        <a asp-action="Create" class="btn btn-success">Create New</a>
+                                        @foreach (var item in Model)
+                                         {
+                                            @await Component.InvokeAsync("SensorTypeElement", item)
+                                         }
+
+                                    </ul>
+                                </div>                    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-}
+</div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Comment)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MeasurementType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MeasurementName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IconPath)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-        <tr height="64">
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Comment)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MeasurementType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MeasurementName)
-            </td>
-            <td>
-                @if (item.IconPath != null)
-                {
-                    <img src="@item.IconPath" width="64" height="64" />
-                }
-                else
-                {
-                    <p>No image was added</p>
-                }
-            </td>
-                @if (User.Identity.IsAuthenticated)
-                {
-                    <td>
-                        <a class="btn btn-sm btn-info text-center"
-                           asp-action="Edit"
-                           asp-route-id="@item.Id">
-                            <i class="fa fa-edit"></i>
-                        </a>
-                        <a class="btn btn-sm btn-danger text-center"
-                           asp-action="Delete"
-                           asp-route-id="@item.Id">
-                            <i class="fa fa-trash"></i>
-                        </a>
-                    </td>
-                }
-        </tr>
-         }
-    </tbody>
-</table>
+@await Component.InvokeAsync("Modals", "Sensor Type")
