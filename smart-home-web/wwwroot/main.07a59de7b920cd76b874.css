@@ -12834,11 +12834,12 @@ a, button, .btn {
     height: 12px
 }
 
-.app-header__logo .logo-src {
-    background: url(assets/images/logo.png) 50% 50% no-repeat;
-    height: 17px;
-    width: 68px
-}
+    .app-header__logo .logo-src {
+        background: url("https://i.imgur.com/XkQcLzG.png") 50% 50% no-repeat;
+        height: 35px;
+        width: 150px;
+        background-size: 150px;
+    }
 
 .app-sidebar__heading {
     text-transform: uppercase;
@@ -21893,15 +21894,16 @@ legend {
 }
 
 .app-logo {
-    height: 17px;
-    width: 68px;
-    background: url(assets/images/logo.png) 50% 50% no-repeat
+    height: 170px;
+    width: 680px;
+    background: url("https://i.imgur.com/nOudSu2.png") 50% 50% no-repeat;
+    background-size: 240px;
 }
 
 .app-logo-inverse {
     height: 17px;
     width: 68px;
-    background: url(assets/images/logo-inverse.png) 50% 50% no-repeat
+    background: url("https://i.imgur.com/nOudSu2.png") 50% 50% no-repeat
 }
 
 .app-login-box .app-logo {

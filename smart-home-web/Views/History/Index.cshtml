@@ -11,150 +11,79 @@
     ViewData["Title"] = "Histories";
 }
 
+
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
 <div class="app-main">
     <div class="app-main__outer">
         <div class="app-main__inner">
             <div class="app-header header-button-move-up">
                 <div class="page-title-heading">
                     All Histories
-                    <div class="page-title-subheading">
-                        Invalid sensors
-                        <button type="button" id="checkboxInvalidSensors">Inv sensors</button>
+                    <div class="page-title-subheading opacity-10 ml-4">
+                        <label class="checkbox-inline text-center">
+                            <input id="checkboxInvalidSensors" type="checkbox"
+                                   data-toggle="toggle" data-off="Valid Sensors" data-on="Invalid Sensors">
+                        </label>
                     </div>
                 </div>
             </div>
-            <div class="app-inner-layout app-inner-layout-page">
-                <div class="app-inner-layout__wrapper">
-                    <div class="app-inner-layout__content pt-1">
-                        <div class="tab-content">
-                            <div class="container-fluid">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="main-card mb-3 card card-loader" style="width:100%; height:577.23px;">
-                                            <div class="card-body">
-                                                <div class="loader-wrapper d-flex justify-content-center align-items-center" style="height:100%; width:100%">
-                                                    <div class="loader">
-                                                        <div class="ball-pulse-sync">
-                                                            <div></div>
-                                                            <div></div>
-                                                            <div></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="main-card mb-3 card card-hider d-none">
-                                            <div class="card-body">
-                                                <div id="example_wrapper" class="dataTables_wrapper dt-bootstrap4">
-                                                    <div class="row">
-                                                        <div class="col-sm-12">
-                                                            <table style="width: 100%;"
-                                                                   id="example"
-                                                                   class="table table-hover table-bordered dataTable dtr-inline"
-                                                                   role="grid"
-                                                                   aria-describedby="example_info">
-                                                                <thead>
-                                                                    <tr role="row">
-                                                                        <th class="sorting_asc"
-                                                                            tabindex="0"
-                                                                            aria-controls="example"
-                                                                            rowspan="1" colspan="1"
-                                                                            aria-sort="ascending"
-                                                                            aria-label="Name: activate to sort column descending">
-                                                                            ID
-                                                                        </th>
-                                                                        <th class="sorting"
-                                                                            tabindex="0"
-                                                                            aria-controls="example"
-                                                                            rowspan="1"
-                                                                            colspan="1">
-                                                                            Name
-                                                                        </th>
-                                                                        <th class="sorting"
-                                                                            tabindex="0"
-                                                                            aria-controls="example"
-                                                                            rowspan="1" colspan="1">
-                                                                            Date
-                                                                        </th>
-                                                                        <th class="sorting"
-                                                                            tabindex="0"
-                                                                            aria-controls="example"
-                                                                            rowspan="1" colspan="1">
-                                                                            Value
-                                                                        </th>
-                                                                        <th class="sorting"
-                                                                            tabindex="0"
-                                                                            aria-controls="example"
-                                                                            rowspan="1" colspan="1">
-                                                                            Measurement Unit
-                                                                        </th>
-                                                                </thead>
-                                                                @await Component.InvokeAsync("History", new { model = Model })
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-sm-12 col-md-5">
-                                                            <div class="dataTables_info" id="example_info" role="status" aria-live="polite">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-12 col-md-7">
-                                                            <div class="dataTables_paginate paging_simple_numbers" id="example_paginate">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @await Component.InvokeAsync("History", Model)
         </div>
     </div>
 </div>
 
 
-<script src="~/lib/jquery/dist/jquery.js"></script>
+
+
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.20/datatables.min.js"></script>
 
-
 <script>
-
+    let isActivated = true;
     $(document).ready(function () {
-        $("#checkboxInvalidSensors").click(UpdateHistoryTable);
-    });
+        $("#checkboxInvalidSensors").change(function () {
+            $("#checkboxInvalidSensors").attr('disabled', true);
 
-    let UpdateHistoryTable = () => {
+            $.ajax({
+                url:"@Url.Action("UpdateHistoryTable", "History")",
+                data: {
+                    FilterDTO: JSON.parse('@Html.Raw(Json.Serialize(@Model.FilterDto))'),
+                    isActivated: !($(this).prop('checked'))
+                },
+                error: function (res) {
+                    console.log(res);
+                },
+                success: function (data) {
+                    $(".history-table").replaceWith(data);
+                    console.log(data);
+                },
+                complete: function () {
+                    $("#checkboxInvalidSensors").attr('disabled', false);
 
-        $.ajax({
-            url:"@Url.Action("UpdateHistoryTable", "History")",
-            data: {
-                FilterDTO: JSON.parse('@Html.Raw(Json.Serialize(@Model.FilterDto))'),
-                isActivated: $("#checkboxInvalidSensors").prop('checked'),
-                onlyLast: $("#checkboxLastValues").prop('checked')
-            },
-            error: function (res) {
-                console.log(res);
-            },
-            success: function (data) {
-                console.log(data);
-            }
-        });
-    }
-
-    $(function (e) {
-        $("#example").DataTable(
-            {
-                "initComplete": function () {
-                    $(".card-loader").fadeOut("slow", null, () => { $(".card-hider").removeClass("d-none"); });                   
                 }
-            })        
+            });
+        });
     });
+
+    $(function () {
+
+        var SetActiveAjax = function () {
+            let input = $(this);
+            $.ajax({
+                type: 'Post',
+                url: "/Sensor/SetActive",
+                data: { id: input.attr('id') },
+            });
+        }
+        $(".input-set-active").on("click", SetActiveAjax);
+
+        $(".input-set-active").on("click", function () {
+            console.log(this);
+            $(this).toggleClass("toggle-shadow");
+        });
+    });
+
 
 </script>
-
 

@@ -100,8 +100,8 @@ namespace smart_home_web.Controllers
         public async Task<IActionResult> Logout()
         {
             await _authenticationManager.Logout();
-            return RedirectToAction("Index", "Dashboard");
-        }
+			return RedirectToAction("Login", "Account");
+		}
 
         [HttpGet]
         [AllowAnonymous]
@@ -184,7 +184,7 @@ namespace smart_home_web.Controllers
             }
             var result = await UserManager.ConfirmEmailAsync(user, code);
             if (result.Succeeded)
-                return RedirectToAction("Index", "Dashboard");
+                return RedirectToAction("Login", "Account");
             else
                 return View("Error");
         }
@@ -205,9 +205,9 @@ namespace smart_home_web.Controllers
                 return RedirectToAction(nameof(Login));
 
             if (result.Succeeded)
-                return RedirectToAction("Index", "Dashboard");
+				return RedirectToAction("Login", "Account");
 
-            return View("AccessDenied");
+			return View("AccessDenied");
         }
 
 

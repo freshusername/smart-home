@@ -124,14 +124,14 @@ namespace Infrastructure.Data.Repositories
             return lasthistory;
         }
 
-        public async Task<IEnumerable<History>> GetByPage(int count, int page, SortState sortState, bool isValid = true, int sensorId = 0)
+        public async Task<IEnumerable<History>> GetByPage(int count, int page, SortState sortState, bool isValid, int sensorId = 0)
         {
             IQueryable<History> histories = context.Histories
                 .Include(h => h.Sensor)
                 .ThenInclude(s => s.SensorType);
 
             if (!isValid)
-                histories = histories.Where(p => p.Sensor.IsValid == false);
+                histories = histories.Where(p => p.Sensor.IsActive == false);
 
 
             if (sensorId != 0)

@@ -6,6 +6,7 @@
     ViewData["Title"] = "Sensors";
 }
 
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 
 <div class="app-main">
     <div class="app-main__outer">
@@ -49,7 +50,7 @@
 @await Component.InvokeAsync("Modals", "Sensor")
 
 
-<script src="~/lib/jquery/dist/jquery.js"></script>
+
 <script>
     $(function () {
 
@@ -61,11 +62,13 @@
                 data: { id: input.attr('id') },
             });
         }
-        $(".input-set-active").on("click", SetActiveAjax);
-
-        $(".input-set-active").on("click", function () {
+        var ToggleShadow = function () {
             console.log(this);
             $(this).toggleClass("toggle-shadow");
-        });
+        }
+
+        $(".input-set-active").on("click", SetActiveAjax);
+
+        $(".input-set-active").on("click", ToggleShadow);
     });
 </script>

@@ -34,14 +34,14 @@
             <label asp-for="IconFile" class="control-label"></label>
             @if (Model.IconPath != null)
             {
-                <img src="@Model.IconPath" width="64" height="64" />
+                <img src="@Model.IconPath" width="52" height="52" onerror="this.src='https://static.thenounproject.com/png/340719-200.png'" />
             }
             else
             {
-                <p>No image was added</p>
+                <img src="https://static.thenounproject.com/png/340719-200.png" width="52" height="52" />
             }
             <input asp-for="@Model.IconId" type="hidden" />
-            <input asp-for="@Model.IconFile" class="form-control" onchange="loadFile(event)" type="file" accept=".jpg, .jpeg, .png"/>
+            <input asp-for="@Model.IconFile" class="form-control" onchange="loadFile(event)" type="file" accept=".jpg, .jpeg, .png" />
             <img class="img-rounded" id="modal-form-edit-output" width="64" height="64" style="visibility: hidden" />
             <span asp-validation-for="IconFile" class="text-danger"></span>
         </div>

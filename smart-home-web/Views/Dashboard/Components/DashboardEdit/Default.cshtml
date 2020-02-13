@@ -7,7 +7,7 @@
         <input type="hidden" asp-for="Id" />
         <div class="form-group">
             <label asp-for="Name" class="control-label"></label>
-            <input asp-for="Name" class="form-control" required />
+            <input asp-for="Name" class="form-control" required maxlength="15" />
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
         <div class="form-group">
@@ -19,11 +19,11 @@
             <label asp-for="IconFile" class="control-label"></label>
             @if (Model.IconPath != null)
             {
-                <img src="@Model.IconPath" width="64" height="64" />
+                <img src="@Model.IconPath" style="border-radius: 0; max-height: 170px;" width="64" height="64" onerror="this.src='https://images.pexels.com/photos/373076/pexels-photo-373076.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'" />
             }
             else
             {
-                <p>No image was added</p>
+                <img src="https://images.pexels.com/photos/373076/pexels-photo-373076.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" width="64" height="64" style="border-radius: 0; max-height: 170px;" />
             }
             <input asp-for="@Model.IconId" type="hidden" />
             <input asp-for="@Model.IconFile" class="form-control" onchange="loadFile(event)" type="file" accept=".jpg, .jpeg, .png" />
