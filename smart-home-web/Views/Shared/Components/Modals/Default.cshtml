@@ -71,9 +71,6 @@
                 modalBody.on("change", ".form-control", onModalFormEditChange);
                 modal.fadeIn(600);
                 modal.modal();
-            },
-            error: function (res) {
-                console.log(res);
             }
         });
     }
@@ -104,10 +101,6 @@
                     allElementsContainer.on("click", ".element-edit", ElementEdit);
                     $(".input-set-active").on("click", SetActiveAjax);
                     $(".input-set-active").on("click", ToggleShadow);
-                    NoElementsDisplay();
-                },
-                error: function (res) {
-                    console.log(res);
                 }
             });
         } else {
@@ -128,9 +121,6 @@
                 modalBody.prepend(data);
                 modalBody.on("submit", "#modal-form-create", ModalFormCreate);
                 modal.modal();
-            },
-            error: function (res) {
-                console.log(res);
             }
         });
     }
@@ -157,10 +147,9 @@
                 allElementsContainer.on("click", ".element-edit", ElementEdit);
                 $(".input-set-active").on("click", SetActiveAjax);
                 $(".input-set-active").on("click", ToggleShadow);
-                NoElementsDisplay();
             },
-            error: function (res) {
-                console.log(res);
+            complete: function () {
+                NoElementsDisplay();
             }
         });
     }
@@ -188,9 +177,6 @@
                     NoElementsDisplay();
                 });
                 return true;
-            },
-            error: function (res) {
-                console.log(res);
             }
         });
     }
