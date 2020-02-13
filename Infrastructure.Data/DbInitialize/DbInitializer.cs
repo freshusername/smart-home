@@ -56,6 +56,8 @@ namespace Infrastructure.Data.DbInitialize
             var admin = new AppUser
             {
                 Email = "admin@admin.com",
+                FirstName = "Admin",
+                LastName = "Admin",
                 UserName = "admin@admin.com",
                 PhoneNumber = "+380930000000",
                 EmailConfirmed = true
@@ -64,7 +66,8 @@ namespace Infrastructure.Data.DbInitialize
             var user = new AppUser
             {
                 Email = "user@user.com",
-                UserName = "user@user.com",
+                FirstName = "User",
+                LastName = "User",
                 PhoneNumber = "+380930000000",
                 EmailConfirmed = true
             };

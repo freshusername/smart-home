@@ -1,0 +1,251 @@
+﻿@using smart_home_web.Models.Profile;
+@model IndnexViewModel;
+
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+@*<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />*@
+<form method="post" id="changep">
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Change Password</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label>Current Password</label>
+                                <input asp-for="ChangeProfilePasswordViewModel.OldPassword" class="form-control" type="password" placeholder="••••••">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label>New Password</label>
+                                <input asp-for="ChangeProfilePasswordViewModel.NewPassword" class="form-control" type="password" placeholder="••••••">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label>Confirm <span class="d-none d-xl-inline">Password</span></label>
+                                <input asp-for="ChangeProfilePasswordViewModel.ConfirmPassword" class="form-control" type="password" placeholder="••••••">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" id="changepassword" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="app-main">
+    <div class="app-main__outer">
+        <div class="app-inner-layout app-inner-layout-page">
+            <div class="app-inner-layout__wrapper">
+                <div class="app-inner-layout__content">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col mb-3">
+                                <div class="card header-button-move-up">
+                                    <div class="card-body">
+                                        <div class="e-profile">
+                                            <div class="row">
+                                                <div class="col-12 col-sm-auto mb-3">
+                                                    <div class="mx-auto" style="width: 140px;">
+                                                        <div class="d-flex justify-content-center align-items-center rounded" style="height: 140px; background-image: url(@Model.ProfileViewModel.IconPath); background-size: 130px;">
+                                                            <input type="hidden" value="@Model.ProfileViewModel.IconId">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col d-flex flex-column flex-sm-row justify-content-between mb-3">
+                                                    <div class="text-center text-sm-left mb-2 mb-sm-0">
+                                                        <h4 class="pt-sm-2 pb-1 mb-0 text-nowrap">@Model.ProfileViewModel.FirstName @Model.ProfileViewModel.LastName</h4>
+                                                        <p class="mb-0"></p>
+                                                        <input asp-for="ProfileViewModel.IconFile" onchange="loadFile(event)" type="file" accept=".jpg, .jpeg, .png" id="file" class="inputfile" />
+                                                        <label class="btn btn-primary wrapper" for="file">Choose a file</label>
+                                                    </div>
+                                                    <div class="text-center text-sm-right">
+                                                        <span class="badge badge-secondary">@(User.IsInRole("Admin") ? "administrator" : "user")</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <ul class="nav nav-tabs">
+                                                <li class="nav-item"><a href="" class="active nav-link">Settings</a></li>
+                                            </ul>
+                                            <div class="tab-content pt-3">
+                                                <div class="tab-pane active">
+                                                    <form class="form" id="profileUpdate" method="post">
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <div class="row">
+                                                                    <div class="col">
+                                                                        <div class="form-group">
+                                                                            <label>First Name</label>
+                                                                            <input asp-for="ProfileViewModel.FirstName" class="form-control" type="text" placeholder="FirstName" value="@Model.ProfileViewModel.FirstName">
+                                                                            <span asp-validation-for="ProfileViewModel.FirstName" class="text-danger"></span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <div class="form-group">
+                                                                            <label>Last Name</label>
+                                                                            <input asp-for="ProfileViewModel.LastName" class="form-control" type="text" placeholder="LastName" value="@Model.ProfileViewModel.LastName">
+                                                                            <span asp-validation-for="ProfileViewModel.LastName" class="text-danger"></span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col">
+                                                                        <div class="form-group">
+                                                                            <label>Email</label>
+                                                                            <input asp-for="ProfileViewModel.Email" class="form-control" type="text" placeholder="Email" value="@Model.ProfileViewModel.Email">
+                                                                            <span asp-validation-for="ProfileViewModel.Email" class="text-danger"></span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <div class="form-group">
+                                                                            <label>Phone Number</label>
+                                                                            <input asp-for="ProfileViewModel.PhoneNumber" class="form-control" type="text" placeholder="Email" value="@Model.ProfileViewModel.PhoneNumber">
+                                                                            <span asp-validation-for="ProfileViewModel.PhoneNumber" class="text-danger"></span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Button trigger modal -->
+                                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                                                            Change Password
+                                                        </button>
+                                                        <div class="row">
+                                                            <div class="col d-flex justify-content-end">
+                                                                <button class="btn btn-primary" id="update" type="button">Save Changes</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-3 mb-3">
+                                <div class="card mb-3">
+                                    <div class="card-body hidden">
+                                        <div class="px-xl-3">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body hidden">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+
+<style>
+    .inputfile {
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+    }
+
+    .wrapper input[type="file"] {
+        position: relative;
+    }
+
+    .wrapper:before {
+        font-family: 'FontAwesome';
+        color: white;
+        position: relative;
+        left: -5px;
+        content: "\f03e";
+    }
+</style>
+
+
+@section scripts{
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
+
+
+<script>
+    var loadFile = function (event) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var output = document.getElementById('modal-form-create-output');
+            output.src = reader.result;
+            output.style.visibility = "visible";
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    };
+</script>
+
+<script>
+    $("#update").on("click", function () {
+
+        var inputFile = $(".inputfile");
+        let fd = new FormData(document.getElementById("profileUpdate"));
+        fd.append('IconFile', inputFile.prop('files')[0]);
+
+        debugger;
+        $.ajax({
+            url: '@Url.Action("Update","Profile")',
+            data: fd,
+            type: "post",
+            contentType: false,
+            processData: false,
+            success: function (savingStatus) {
+                location.reload();
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                window.alert("Error encountered while sending request");
+                console.log(thrownError);
+            }
+        });
+    });
+</script>
+
+<script>
+    $("#changepassword").on("click", function () {
+        debugger;
+        var data = $("#changep").serialize();
+
+        $.ajax({
+            url: '@Url.Action("ChangePassword","Profile")',
+            data: data,
+            type: "post",
+            cache: false,
+            success: function (savingStatus) {
+                $('#exampleModal').modal('hide');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                window.alert("Incorrect current password");
+                console.log(thrownError);
+            }
+        });
+    });
+</script>

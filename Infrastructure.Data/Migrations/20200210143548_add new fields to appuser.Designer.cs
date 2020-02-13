@@ -3,14 +3,16 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationsDbContext))]
-    partial class ApplicationsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200210143548_add new fields to appuser")]
+    partial class addnewfieldstoappuser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,8 +35,6 @@ namespace Infrastructure.Data.Migrations
                     b.Property<bool>("EmailConfirmed");
 
                     b.Property<string>("FirstName");
-
-                    b.Property<int?>("IconId");
 
                     b.Property<string>("LastName");
 
@@ -62,8 +62,6 @@ namespace Infrastructure.Data.Migrations
                         .HasMaxLength(256);
 
                     b.HasKey("Id");
-
-                    b.HasIndex("IconId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
@@ -151,6 +149,8 @@ namespace Infrastructure.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("AppUserId");
+
+                    b.Property<string>("Comment");
 
                     b.Property<int>("HistoryId");
 
@@ -417,13 +417,6 @@ namespace Infrastructure.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("Domain.Core.Model.AppUser", b =>
-                {
-                    b.HasOne("Domain.Core.Model.Icon", "Icon")
-                        .WithMany()
-                        .HasForeignKey("IconId");
                 });
 
             modelBuilder.Entity("Domain.Core.Model.Dashboard", b =>

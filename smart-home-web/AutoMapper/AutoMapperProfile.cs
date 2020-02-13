@@ -185,7 +185,7 @@ namespace smart_home_web.AutoMapper
             .ForMember(gd => gd.SensorId, map => map.MapFrom(s => s.SensorId))
             .ForMember(gd => gd.ControlId, map => map.MapFrom(s => s.ControlId));
 
-
+            CreateMap<ProfileViewModel, AppUser>();
 
 
         }
