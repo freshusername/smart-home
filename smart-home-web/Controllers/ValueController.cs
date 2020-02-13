@@ -20,6 +20,7 @@ namespace smart_home_web.Controllers
     [Route("api/[controller]")]
     public class ValueController : ControllerBase
     {
+        private static DateTimeOffset _date;
         private readonly IHistoryManager _historyManager;
         private readonly IToastManager _toastManager;
         private readonly ISensorManager _sensorManager;
@@ -80,11 +81,13 @@ namespace smart_home_web.Controllers
             var result = _actionService.CheckStatus(token).Result;
             if (!result.Succeeded)
                 return 0;
-
-            var sensor = _sensorManager.GetSensorByToken(token);
-             var userEmail = _userManager.FindByIdAsync(sensor.AppUserId).Result.Email;
-            var date = DateTime.Now.ToLocalTime();
-             _emailSender.SendEmailAsync(userEmail, "🏠Smart home", $"<span style=\"font-size: 20px\">Sensor : <b>{sensor.Name}</b>.<br/>Value : <b>true</b>❗.<br/>Date : {date}</span>");
+            if (_date == default(DateTimeOffset))
+            {
+                _date = DateTimeOffset.Now;
+                SendEmail(token);
+            }
+            if (_date < DateTimeOffset.Now.AddMinutes(-5))
+                SendEmail(token);
             return 1;
         }
 
@@ -97,6 +100,14 @@ namespace smart_home_web.Controllers
 
             return Ok();
 
+        }
+
+        private void SendEmail(Guid token)
+        {
+            var sensor = _sensorManager.GetSensorByToken(token);
+            var userEmail = _userManager.FindByIdAsync(sensor.AppUserId).Result.Email;
+            var date = DateTime.Now.ToLocalTime();
+            _emailSender.SendEmailAsync(userEmail, "🏠Not Master", $"<span style=\"font-size: 20px\">Sensor : <b>{sensor.Name}</b>.<br/>Value : <b>true</b>❗.<br/>Date : {date}</span>");
         }
     }
 }
