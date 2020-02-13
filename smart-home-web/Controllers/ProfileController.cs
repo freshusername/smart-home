@@ -43,19 +43,20 @@ namespace smart_home_web.Controllers
                 PhoneNumber = user.PhoneNumber,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                IconPath = image.Path
+                IconPath = image.Path,
+                IconId = image.Id
             };
 
-            return View(model);
+            return View(new IndnexViewModel { ProfileViewModel = model });
         }
 
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ChangePassword(ChangeProfilePasswordViewModel model)
+        public async Task<IActionResult> ChangePassword(IndnexViewModel model)
         {
             if (!ModelState.IsValid)            
-                return View(model);
+                return BadRequest("Invalid current password");
             
             var user = await _userManager.GetUserAsync(User);
 
@@ -63,7 +64,7 @@ namespace smart_home_web.Controllers
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             
 
-            var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+            var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.ChangeProfilePasswordViewModel.OldPassword, model.ChangeProfilePasswordViewModel.NewPassword);
 
             if (!changePasswordResult.Succeeded)           
               return BadRequest(changePasswordResult.Errors.ToString());
@@ -75,25 +76,28 @@ namespace smart_home_web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Update(ProfileViewModel model)
+        public async Task<IActionResult> Update(IndnexViewModel model)
         {
             if (!ModelState.IsValid)
-               return BadRequest();
+               return Ok();
 
-            var id =await _iconManager.CreateAndGetIconId(model.IconFile);
             var user = await _userManager.GetUserAsync(User);
-
-            user.Email = model.Email;
-            user.PhoneNumber = model.PhoneNumber;
-            user.FirstName = model.FirstName;
-            user.LastName = model.LastName;             
-            user.IconId = id;
+          
+            if (model.ProfileViewModel.IconFile != null) {
+               var id  =await _iconManager.CreateAndGetIconId(model.ProfileViewModel.IconFile);
+                user.IconId = id;
+            }                      
+            user.Email = model.ProfileViewModel.Email;
+            user.PhoneNumber = model.ProfileViewModel.PhoneNumber;
+            user.FirstName = model.ProfileViewModel.FirstName;
+            user.LastName = model.ProfileViewModel.LastName;             
+            
 
              var result =  _userManager.UpdateAsync(user);
 
             if (!result.Result.Succeeded) return BadRequest();
 
-            return RedirectToAction("Index" ,"Profile");
+            return Ok();
         }
     }
 }
