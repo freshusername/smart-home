@@ -81,6 +81,7 @@ namespace smart_home_web.Controllers
             var result = _actionService.CheckStatus(token).Result;
             if (!result.Succeeded)
                 return 0;
+
             if (_date == default(DateTimeOffset))
             {
                 _date = DateTimeOffset.Now;
@@ -88,6 +89,7 @@ namespace smart_home_web.Controllers
             }
             if (_date < DateTimeOffset.Now.AddMinutes(-5))
                 SendEmail(token);
+
             return 1;
         }
 
